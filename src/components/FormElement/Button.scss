@@ -1,0 +1,58 @@
+.button {
+  font: inherit;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #0d0e10;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  margin-right: 1rem;
+  text-decoration: none;
+  display: inline-block;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover,
+  &:active {
+    opacity: 0.5;
+  }
+
+  &--inverse {
+    background: transparent;
+    color: #0d0e10;
+
+    &:hover,
+    &:active {
+      opacity: 0.5;
+    }
+  }
+
+  &--danger {
+    background: #e8973e;
+    border-color: #e8973e;
+
+    &:hover,
+    &:active {
+      background: #f0b06a;
+      border-color: #f0b06a;
+    }
+  }
+
+  &:disabled,
+  &:hover:disabled,
+  &:active:disabled {
+    background: #ccc;
+    color: #979797;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  &--small {
+    font-size: 0.8rem;
+  }
+
+  &--big {
+    font-size: 1.5rem;
+  }
+}
