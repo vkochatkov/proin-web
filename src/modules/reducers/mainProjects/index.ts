@@ -1,26 +1,21 @@
 import { createReducer } from 'redux-act';
 import { addProject, updateProjects } from '../../actions/mainProjects';
 
-interface Project {
+export interface Project {
   id: number;
-  name: string;
+  projectName: string;
   description: string;
+  logoUrl: string;
 }
 
 const initialState: Project[] = [];
 
 export const mainProjects = createReducer({}, initialState);
 
-mainProjects.on(addProject, (state: any, payload: Project) => {
-  return {
-    ...state,
-    projects: state.projects.concat([payload]),
-  };
+mainProjects.on(addProject, (state: any, payload: Project[]) => {
+  return [...state, ...payload];
 });
 
 mainProjects.on(updateProjects, (state: any, payload: Project[]) => {
-  return {
-    ...state,
-    projects: [...payload],
-  };
+  return [...state, ...payload];
 });

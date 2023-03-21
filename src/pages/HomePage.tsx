@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useHttpClient } from '../hooks/http-hook';
 import { useHttpClient } from '../hooks/useHttpClient';
 import { updateProjects } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store';
+import { ListItems } from '../components/ListItems';
+import { MainNavigation } from '../components/Navigation/MainNavigation';
+import { Button } from '../components/FormElement/Button';
+import './HomePage.scss';
 
 export const HomePage: React.FC = () => {
   const { sendRequest, isLoading } = useHttpClient();
   const projects = useSelector((state: RootState) => state.mainProjects);
   const { userId } = useSelector((state: RootState) => state.user);
-  const [isPressed, setIsPressed] = useState<boolean>(false);
+  // const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,35 +22,38 @@ export const HomePage: React.FC = () => {
       const res = await sendRequest(
         `http://localhost:5000/projects/user/${userId}`
       );
-      // dispatch(updateProjects(res.projects));
+      dispatch(updateProjects(res.projects));
     };
     fetchProjects();
   }, [sendRequest, userId, dispatch]);
 
-  const handlePress = () => {
+  const handleClick = () => {
     // navigation.navigate('Form');
   };
 
   return (
     <>
-      <div>
-        {!isLoading && (
-          <div>
-            {/* <Entypo.Button
-              name="plus"
-              size={40}
-              backgroundColor="transparent"
-              onPress={handlePress}
-              onPressIn={() => setIsPressed(true)}
-              onPressOut={() => setIsPressed(false)}
-              style={[isPressed ? styles.buttonPressed : styles.button]}
-            /> */}
+      <div className="home-page__container">
+        <MainNavigation>
+          <Button
+            size="small"
+            transparent={true}
+            icon={true}
+            onClick={handleClick}
+          >
+            <img
+              src="/plus_icon.svg"
+              className="button__icon"
+              alt="button icon"
+            />
+          </Button>
+        </MainNavigation>
+        {isLoading && (
+          <div className="loading">
+            <LoadingSpinner />
           </div>
         )}
-        {isLoading && <LoadingSpinner />}
-        <div>Projects list</div>
-        {/* {!isLoading && <ProjectsList projects={projects} />} */}
-        <div />
+        {!isLoading && <ListItems projects={projects} />}
       </div>
     </>
   );

@@ -1,0 +1,31 @@
+@import '../../utils/variables.scss';
+
+@media (max-width: 600px) {
+  .header {
+    height: 60px;
+    background-color: $mainBackgroundColor;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    .menu-toggle {
+      display: block;
+      width: 24px;
+      height: 24px;
+      // background-image: url('menu-toggle.svg');
+      background-repeat: no-repeat;
+      background-size: 24px 24px;
+      background-position: center;
+      cursor: pointer;
+    }
+  }
+}
