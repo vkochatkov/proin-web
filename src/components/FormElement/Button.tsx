@@ -15,6 +15,7 @@ interface Props {
   disabled?: boolean;
   transparent?: boolean;
   icon?: boolean;
+  customClassName?: string;
 }
 
 export const Button: React.FC<Props> = ({
@@ -29,12 +30,13 @@ export const Button: React.FC<Props> = ({
   disabled = false,
   transparent = false,
   icon = false,
+  customClassName,
 }) => {
-  const buttonClassList = `button ${icon && 'button__icon'} button--${size} ${
-    inverse ? 'button--inverse' : ''
-  } ${danger ? 'button--danger' : ''} ${
-    transparent ? 'button--transparent' : ''
-  }`;
+  const buttonClassList = `button ${customClassName && `${customClassName}`} ${
+    icon && 'button__icon'
+  } button--${size} ${inverse ? 'button--inverse' : ''} ${
+    danger ? 'button--danger' : ''
+  } ${transparent ? 'button--transparent' : ''}`;
 
   if (href) {
     return (

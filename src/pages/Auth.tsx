@@ -18,7 +18,7 @@ export const Auth = () => {
   const dispatch = useDispatch();
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [formState, inputHandler] = useForm(
+  const { formState, inputHandler } = useForm(
     {
       email: {
         value: '',
@@ -60,8 +60,8 @@ export const Auth = () => {
     } else {
       try {
         const formData = new FormData();
-        formData.append('email', formState.inputs.email.value);
-        formData.append('password', formState.inputs.password.value);
+        formData.append('email', formState.inputs.email?.value || '');
+        formData.append('password', formState.inputs.password?.value || '');
 
         const responseData = await sendRequest(
           'http://localhost:5000/users/signup',

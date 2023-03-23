@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeFormInput, setFormDataAction } from '../modules/actions/form';
-import { FormState, ISetFormData } from '../modules/reducers/formReducer';
+import { FormState, SetFormDataType } from '../modules/reducers/formReducer';
 import { RootState } from '../modules/store';
 
 type InputHandler = (id: string, value: string, isValid: boolean) => void;
@@ -9,7 +9,11 @@ type InputHandler = (id: string, value: string, isValid: boolean) => void;
 export const useForm = (
   initialInputs: FormState['inputs'],
   initialFormValidity: FormState['isValid']
-): [FormState, InputHandler, ISetFormData] => {
+): {
+  formState: FormState;
+  inputHandler: InputHandler;
+  setFormData: SetFormDataType;
+} => {
   const formState = useSelector((state: RootState) => state.formData);
   const dispatch = useDispatch();
 
@@ -36,7 +40,7 @@ export const useForm = (
     [dispatch]
   );
 
-  const ISetFormData = useCallback<ISetFormData>(
+  const setFormData = useCallback<SetFormDataType>(
     (inputData, formValidity) => {
       dispatch(
         setFormDataAction({
@@ -48,5 +52,5 @@ export const useForm = (
     [dispatch]
   );
 
-  return [formState, inputHandler, ISetFormData];
+  return { formState, inputHandler, setFormData };
 };

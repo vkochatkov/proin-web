@@ -3,9 +3,9 @@ import { Card } from './UIElements/Card';
 import './Item.scss';
 
 interface Props {
-  name: string;
+  name?: string;
   logo?: string;
-  description: string;
+  description?: string;
 }
 
 export const Item: React.FC<Props> = ({ name, logo, description }) => {
@@ -14,7 +14,8 @@ export const Item: React.FC<Props> = ({ name, logo, description }) => {
   );
   return (
     <Card className="item">
-      {img}
+      {!logo && <div className="item__image-empty" />}
+      {logo && img}
       <div className="item__text-container">
         <p>{name}</p>
         <p>{description}</p>

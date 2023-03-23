@@ -11,7 +11,7 @@ export type FormState = {
   isValid: boolean;
 };
 
-export type ISetFormData = (
+export type SetFormDataType = (
   inputData: FormState['inputs'],
   formValidity: FormState['isValid']
 ) => void;

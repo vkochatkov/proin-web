@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useHttpClient } from '../hooks/http-hook';
 import { useHttpClient } from '../hooks/useHttpClient';
-import { updateProjects } from '../modules/actions/mainProjects';
+import { editProject, updateProjects } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store';
 import { ListItems } from '../components/ListItems';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Button } from '../components/FormElement/Button';
+import { useNavigate } from 'react-router-dom';
 import './HomePage.scss';
 
 export const HomePage: React.FC = () => {
   const { sendRequest, isLoading } = useHttpClient();
-  const projects = useSelector((state: RootState) => state.mainProjects);
-  const { userId } = useSelector((state: RootState) => state.user);
-  // const [isPressed, setIsPressed] = useState<boolean>(false);
+  const { projects, currentProject } = useSelector(
+    (state: RootState) => state.mainProjects
+  );
+  const { userId, token } = useSelector((state: RootState) => state.user);
+  const navigate = useNavigate();
+  const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,13 +30,21 @@ export const HomePage: React.FC = () => {
     fetchProjects();
   }, [sendRequest, userId, dispatch]);
 
+  useEffect(() => {
+    if (isPressed && currentProject && currentProject.status === 'success') {
+      navigate(`/project-edit/${currentProject._id}`);
+      setIsPressed(false);
+    }
+  }, [currentProject, isPressed, navigate]);
+
   const handleClick = () => {
-    // navigation.navigate('Form');
+    setIsPressed(true);
+    dispatch(editProject(token) as any);
   };
 
   return (
     <>
-      <div className="home-page__container">
+      <div className="container">
         <MainNavigation>
           <Button
             size="small"

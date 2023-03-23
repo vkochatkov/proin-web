@@ -1,21 +1,46 @@
 import { createReducer } from 'redux-act';
-import { addProject, updateProjects } from '../../actions/mainProjects';
+import {
+  editProjectFailure,
+  editProjectSuccess,
+  updateProjects,
+} from '../../actions/mainProjects';
 
 export interface Project {
-  id: number;
-  projectName: string;
-  description: string;
-  logoUrl: string;
+  _id: string;
+  projectName?: string;
+  description?: string;
+  logoUrl?: string;
+  creator: string;
+  status?: string;
 }
 
-const initialState: Project[] = [];
+const initialState: {
+  projects: Project[];
+  currentProject: Project | null;
+} = {
+  projects: [],
+  currentProject: null,
+};
 
 export const mainProjects = createReducer({}, initialState);
 
-mainProjects.on(addProject, (state: any, payload: Project[]) => {
-  return [...state, ...payload];
+mainProjects.on(editProjectSuccess, (state: any, payload: any) => {
+  return { ...state, currentProject: { ...payload, status: 'success' } };
+});
+
+mainProjects.on(editProjectFailure, (state: any, payload: any) => {
+  return {
+    ...state,
+    currentProject: {
+      status: 'failure',
+      error: payload.message,
+    },
+  };
 });
 
 mainProjects.on(updateProjects, (state: any, payload: Project[]) => {
-  return [...state, ...payload];
+  return {
+    ...state,
+    projects: payload,
+  };
 });
