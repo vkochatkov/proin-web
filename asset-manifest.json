@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/proin-web/static/css/main.f58dc9b5.css",
+    "main.js": "/proin-web/static/js/main.abda2d34.js",
+    "static/css/284.a11928ee.chunk.css": "/proin-web/static/css/284.a11928ee.chunk.css",
+    "static/js/284.03c7dc9d.chunk.js": "/proin-web/static/js/284.03c7dc9d.chunk.js",
+    "static/css/88.463c3db1.chunk.css": "/proin-web/static/css/88.463c3db1.chunk.css",
+    "static/js/88.d1876dc8.chunk.js": "/proin-web/static/js/88.d1876dc8.chunk.js",
+    "static/css/671.8748d033.chunk.css": "/proin-web/static/css/671.8748d033.chunk.css",
+    "static/js/671.15c772fb.chunk.js": "/proin-web/static/js/671.15c772fb.chunk.js",
+    "static/js/787.d37eaa31.chunk.js": "/proin-web/static/js/787.d37eaa31.chunk.js",
+    "index.html": "/proin-web/index.html",
+    "main.f58dc9b5.css.map": "/proin-web/static/css/main.f58dc9b5.css.map",
+    "main.abda2d34.js.map": "/proin-web/static/js/main.abda2d34.js.map",
+    "284.a11928ee.chunk.css.map": "/proin-web/static/css/284.a11928ee.chunk.css.map",
+    "284.03c7dc9d.chunk.js.map": "/proin-web/static/js/284.03c7dc9d.chunk.js.map",
+    "88.463c3db1.chunk.css.map": "/proin-web/static/css/88.463c3db1.chunk.css.map",
+    "88.d1876dc8.chunk.js.map": "/proin-web/static/js/88.d1876dc8.chunk.js.map",
+    "671.8748d033.chunk.css.map": "/proin-web/static/css/671.8748d033.chunk.css.map",
+    "671.15c772fb.chunk.js.map": "/proin-web/static/js/671.15c772fb.chunk.js.map",
+    "787.d37eaa31.chunk.js.map": "/proin-web/static/js/787.d37eaa31.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f58dc9b5.css",
+    "static/js/main.abda2d34.js"
+  ]
+}
