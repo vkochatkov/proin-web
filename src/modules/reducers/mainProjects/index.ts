@@ -1,5 +1,6 @@
 import { createReducer } from 'redux-act';
 import {
+  clearCurrentProject,
   editProjectFailure,
   editProjectSuccess,
   updateProjects,
@@ -12,6 +13,7 @@ export interface Project {
   logoUrl?: string;
   creator: string;
   status?: string;
+  [key: string]: any;
 }
 
 const initialState: {
@@ -35,6 +37,13 @@ mainProjects.on(editProjectFailure, (state: any, payload: any) => {
       status: 'failure',
       error: payload.message,
     },
+  };
+});
+
+mainProjects.on(clearCurrentProject, (state, payload) => {
+  return {
+    ...state,
+    currentProject: null,
   };
 });
 

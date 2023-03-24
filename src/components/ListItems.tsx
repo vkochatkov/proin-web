@@ -12,6 +12,7 @@ export const ListItems: React.FC<Props> = ({ projects }) => {
       {projects.map((project) => (
         <Item
           key={project._id}
+          projectId={project._id}
           name={project.projectName}
           logo={project.logoUrl}
           description={project.description}

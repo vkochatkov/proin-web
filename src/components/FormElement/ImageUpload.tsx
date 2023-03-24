@@ -3,14 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Button } from './Button';
 import { getAuth } from '../../modules/selectors/user';
-import './ImageUpload.scss';
 import { editProjectSuccess } from '../../modules/actions/mainProjects';
+import { getCurrentProject } from '../../modules/selectors/mainProjects';
+import { endLoading } from '../../modules/actions/loading';
+import './ImageUpload.scss';
 
 type ImageUploadProps = {
   id: string;
   center?: boolean;
   projectId?: string;
   onInput: (id: string, value: string, isValid: boolean) => void;
+  stateToUpdate?: boolean;
 };
 
 export const ImageUpload: FC<ImageUploadProps> = ({
@@ -18,14 +21,29 @@ export const ImageUpload: FC<ImageUploadProps> = ({
   center,
   onInput,
   projectId,
+  stateToUpdate,
 }) => {
   const [file, setFile] = useState<File | undefined>();
   const [previewUrl, setPreviewUrl] = useState<string | undefined>('');
   const [isValid, setIsValid] = useState<boolean>(false);
   const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
+  const currentProject = useSelector(getCurrentProject);
 
   const filePickerRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (stateToUpdate && currentProject) {
+      const isNotEmptyValue = Boolean(currentProject[id]);
+
+      if (isNotEmptyValue) {
+        const logoUrl = `http://localhost:5000/${currentProject[id]}`;
+        setPreviewUrl(logoUrl);
+        onInput(id, logoUrl, true);
+        dispatch(endLoading());
+      }
+    }
+  }, [currentProject, stateToUpdate]);
 
   useEffect(() => {
     if (!file) {

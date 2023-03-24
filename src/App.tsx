@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import { Auth } from './pages/Auth';
 import { HomePage } from './pages/HomePage';
-import { NewProject } from './pages/NewProject';
+import { EditProject } from './pages/EditProject';
 import './App.scss';
 
 export const App: React.FC = () => {
@@ -21,7 +21,7 @@ export const App: React.FC = () => {
     routes = (
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/project-edit/:pid" element={<NewProject />} />
+        <Route path="/project-edit/:pid" element={<EditProject />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );

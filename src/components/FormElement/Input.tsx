@@ -22,6 +22,8 @@ type InputProps = {
   isAnyValue?: boolean;
   projectId?: string;
   token?: string;
+  stateToUpdate?: boolean;
+  project?: any;
 };
 
 export const Input = (props: InputProps) => {
@@ -38,13 +40,30 @@ export const Input = (props: InputProps) => {
     onInput(id, value, isValid);
   }, [id, value, isValid, onInput]);
 
+  useEffect(() => {
+    if (
+      props.stateToUpdate &&
+      props.project !== null &&
+      props.project !== undefined
+    ) {
+      const inputValue = props.project[id];
+
+      if (inputValue) {
+        setInputState((prevState) => ({
+          ...prevState,
+          value: props.project[id],
+        }));
+      }
+    }
+  }, [props.project, props.stateToUpdate, id]);
+
   const saveChanges = useCallback(
-    debounce((data: any, token: string) => {
+    debounce((data: any, token: string, projectId: string) => {
       const request = axios.CancelToken.source();
 
       axios({
         method: 'PATCH',
-        url: `http://localhost:5000/projects/${props.projectId}`,
+        url: `http://localhost:5000/projects/${projectId}`,
         data,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -73,7 +92,7 @@ export const Input = (props: InputProps) => {
         : validate(newValue, props.validators),
     }));
     if (props.isAutosave && props.token) {
-      saveChanges({ [id]: newValue }, props.token);
+      saveChanges({ [id]: newValue }, props.token, props.projectId);
     }
   };
 

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHttpClient } from '../hooks/useHttpClient';
-import { editProject, updateProjects } from '../modules/actions/mainProjects';
+import {
+  createNewProject,
+  updateProjects,
+} from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store';
 import { ListItems } from '../components/ListItems';
@@ -39,7 +42,7 @@ export const HomePage: React.FC = () => {
 
   const handleClick = () => {
     setIsPressed(true);
-    dispatch(editProject(token) as any);
+    dispatch(createNewProject(token) as any);
   };
 
   return (
@@ -59,12 +62,12 @@ export const HomePage: React.FC = () => {
             />
           </Button>
         </MainNavigation>
-        {isLoading && (
+        {isPressed && (
           <div className="loading">
             <LoadingSpinner />
           </div>
         )}
-        {!isLoading && <ListItems projects={projects} />}
+        {!isPressed && <ListItems projects={projects} />}
       </div>
     </>
   );
