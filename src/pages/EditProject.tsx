@@ -14,7 +14,7 @@ import { endLoading } from '../modules/actions/loading';
 
 type Props = {};
 
-export const EditProject: React.FC<Props> = () => {
+const EditProject: React.FC<Props> = () => {
   const { token } = useSelector(getAuth);
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
@@ -101,3 +101,5 @@ export const EditProject: React.FC<Props> = () => {
     </div>
   );
 };
+
+export default EditProject;

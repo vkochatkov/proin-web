@@ -31,7 +31,10 @@ export const Item: React.FC<Props> = ({
   };
 
   const img = (
-    <img src={logo ? `http://localhost:5000/${logo}` : ''} alt="logo" />
+    <img
+      src={logo ? `${process.env.REACT_APP_BACKEND_URL}/${logo}` : ''}
+      alt="logo"
+    />
   );
 
   return (

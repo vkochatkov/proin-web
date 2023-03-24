@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { updateLogin } from '../modules/actions/user';
 import './Auth.scss';
 
-export const Auth = () => {
+const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, sendRequest } = useHttpClient();
   const dispatch = useDispatch();
@@ -42,7 +42,7 @@ export const Auth = () => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          'http://localhost:5000/users/login',
+          `${process.env.REACT_APP_BACKEND_URL}/users/login`,
           'POST',
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -64,7 +64,7 @@ export const Auth = () => {
         formData.append('password', formState.inputs.password?.value || '');
 
         const responseData = await sendRequest(
-          'http://localhost:5000/users/signup',
+          `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
           'POST',
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -118,3 +118,5 @@ export const Auth = () => {
     </React.Fragment>
   );
 };
+
+export default Auth;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './modules/store';
 import {
@@ -7,10 +7,12 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { Auth } from './pages/Auth';
-import { HomePage } from './pages/HomePage';
-import { EditProject } from './pages/EditProject';
 import './App.scss';
+import { LoadingSpinner } from './components/UIElements/LoadingSpinner';
+
+const Auth = React.lazy(() => import('./pages/Auth'));
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const EditProject = React.lazy(() => import('./pages/EditProject'));
 
 export const App: React.FC = () => {
   const { token } = useSelector((state: RootState) => state.user);
@@ -36,7 +38,17 @@ export const App: React.FC = () => {
 
   return (
     <Router>
-      <main>{routes}</main>
+      <main>
+        <Suspense
+          fallback={
+            <div className="center">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          {routes}
+        </Suspense>
+      </main>
     </Router>
   );
 };

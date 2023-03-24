@@ -10,12 +10,12 @@
     padding: 0 16px;
 
     &__btn-transparent {
-      background: transparent;
+      background: transparent !important;
       color: white;
-      border: none;
+      border: none !important;
       margin: 0;
-      padding: 0.5rem 0;
-      font-size: 20px;
+      padding: 0.5rem 0 !important;
+      font-size: 20px !important;
     }
 
     .logo {

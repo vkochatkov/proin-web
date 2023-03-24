@@ -37,7 +37,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
       const isNotEmptyValue = Boolean(currentProject[id]);
 
       if (isNotEmptyValue) {
-        const logoUrl = `http://localhost:5000/${currentProject[id]}`;
+        const logoUrl = `${process.env.REACT_APP_BACKEND_URL}/${currentProject[id]}`;
         setPreviewUrl(logoUrl);
         onInput(id, logoUrl, true);
         dispatch(endLoading());
@@ -66,7 +66,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
     try {
       const response = await axios({
         method: 'PATCH',
-        url: `http://localhost:5000/projects/${id}`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
         data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',

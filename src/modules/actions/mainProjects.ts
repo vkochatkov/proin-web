@@ -15,7 +15,7 @@ export const createNewProject =
     try {
       const response = await axios({
         method: 'POST',
-        url: 'http://localhost:5000/projects',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,7 +33,7 @@ export const editCurrentProject =
     try {
       const res = await axios({
         method: 'GET',
-        url: `http://localhost:5000/projects/${id}`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

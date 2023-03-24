@@ -63,7 +63,7 @@ export const Input = (props: InputProps) => {
 
       axios({
         method: 'PATCH',
-        url: `http://localhost:5000/projects/${projectId}`,
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${projectId}`,
         data,
         headers: {
           'Content-Type': 'multipart/form-data',

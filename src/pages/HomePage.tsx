@@ -13,7 +13,7 @@ import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.scss';
 
-export const HomePage: React.FC = () => {
+const HomePage: React.FC = () => {
   const { sendRequest, isLoading } = useHttpClient();
   const { projects, currentProject } = useSelector(
     (state: RootState) => state.mainProjects
@@ -26,7 +26,7 @@ export const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       const res = await sendRequest(
-        `http://localhost:5000/projects/user/${userId}`
+        `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`
       );
       dispatch(updateProjects(res.projects));
     };
@@ -62,13 +62,15 @@ export const HomePage: React.FC = () => {
             />
           </Button>
         </MainNavigation>
-        {isPressed && (
+        {isLoading && (
           <div className="loading">
             <LoadingSpinner />
           </div>
         )}
-        {!isPressed && <ListItems projects={projects} />}
+        {!isLoading && <ListItems projects={projects} />}
       </div>
     </>
   );
 };
+
+export default HomePage;
