@@ -30,12 +30,7 @@ export const Item: React.FC<Props> = ({
     navigate(`/project-edit/${id}`);
   };
 
-  const img = (
-    <img
-      src={logo ? `${process.env.REACT_APP_BACKEND_URL}/${logo}` : ''}
-      alt="logo"
-    />
-  );
+  const img = <img src={logo ? `${logo}` : ''} alt="logo" />;
 
   return (
     <div onClick={() => handleClick(projectId)}>

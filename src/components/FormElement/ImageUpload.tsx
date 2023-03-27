@@ -37,7 +37,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
       const isNotEmptyValue = Boolean(currentProject[id]);
 
       if (isNotEmptyValue) {
-        const logoUrl = `${process.env.REACT_APP_BACKEND_URL}/${currentProject[id]}`;
+        const logoUrl = `${currentProject[id]}`;
         setPreviewUrl(logoUrl);
         onInput(id, logoUrl, true);
         dispatch(endLoading());
