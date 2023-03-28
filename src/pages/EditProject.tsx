@@ -36,6 +36,7 @@ const EditProject: React.FC<Props> = () => {
 
   useEffect(() => {
     dispatch(endLoading());
+    // eslint-disable-next-line
   }, []);
 
   const handleClick = () => {

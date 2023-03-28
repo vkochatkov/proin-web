@@ -43,7 +43,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
         dispatch(endLoading());
       }
     }
-  }, [currentProject, stateToUpdate]);
+  }, [currentProject, stateToUpdate, onInput, dispatch, id]);
 
   useEffect(() => {
     if (!file) {
