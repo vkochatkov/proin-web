@@ -4,6 +4,7 @@ import {
   editProjectFailure,
   editProjectSuccess,
   updateProjects,
+  clearProjects,
 } from '../../actions/mainProjects';
 
 export interface Project {
@@ -51,5 +52,12 @@ mainProjects.on(updateProjects, (state: any, payload: Project[]) => {
   return {
     ...state,
     projects: payload,
+  };
+});
+
+mainProjects.on(clearProjects, (state) => {
+  return {
+    ...state,
+    projects: initialState.projects,
   };
 });

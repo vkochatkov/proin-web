@@ -7,6 +7,7 @@ export const editProjectSuccess = createAction<Project>('EDIT_PROJECT_SUCCESS');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
 export const editProjectFailure = createAction<string>('EDIT_PROJECT_FAILURE');
 export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
+export const clearProjects = createAction('CLEAR_PROJECTS');
 
 const httpSource = axios.CancelToken.source();
 

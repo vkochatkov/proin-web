@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHttpClient } from '../hooks/useHttpClient';
 import {
+  clearProjects,
   createNewProject,
   updateProjects,
 } from '../modules/actions/mainProjects';
@@ -39,6 +40,10 @@ const HomePage: React.FC = () => {
       dispatch(endLoading());
     };
     fetchProjects();
+
+    return () => {
+      dispatch(clearProjects());
+    };
   }, [sendRequest, userId, dispatch]);
 
   useEffect(() => {
