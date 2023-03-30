@@ -143,18 +143,19 @@ export const Input = (props: InputProps) => {
 
   return (
     <div
-      className={`form-control ${
-        !props.isAnyValue &&
-        !inputState.isValid &&
-        inputState.isTouched &&
-        'form-control--invalid'
-      }`}
+      className={
+        'form-control'
+        // !props.isAnyValue &&
+        // !inputState.isValid &&
+        // inputState.isTouched &&
+        // 'form-control--invalid'
+      }
     >
       <label htmlFor={props.id}>{props.label}</label>
       {element}
-      {!props.isAnyValue && !inputState.isValid && inputState.isTouched && (
+      {/* {!props.isAnyValue && !inputState.isValid && inputState.isTouched && (
         <p>{props.errorText}</p>
-      )}
+      )} */}
     </div>
   );
 };
