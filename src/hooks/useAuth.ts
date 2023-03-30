@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateLogin } from '../modules/actions/user';
+import { useSelector, useDispatch } from 'react-redux';
+import { signin, signout } from '../modules/actions/user';
+import { getAuth } from '../modules/selectors/user';
 
 interface UserData {
   userId: string;
@@ -14,9 +15,8 @@ export const useAuth = (): {
   logout: () => void;
   userId: string;
 } => {
-  const [token, setToken] = useState<string>('');
+  const { token, userId } = useSelector(getAuth);
   const [tokenExpirationDate, setTokenExpirationDate] = useState<Date | null>();
-  const [userId, setUserId] = useState<string>('');
   const dispatch = useDispatch();
 
   const login = useCallback(
@@ -25,28 +25,25 @@ export const useAuth = (): {
       token: string,
       expirationDate: Date = new Date(new Date().getTime() + 1000 * 60 * 60)
     ) => {
-      setToken(token);
-      setUserId(uid);
-      const tokenExpirationDate = expirationDate;
       setTokenExpirationDate(tokenExpirationDate);
       localStorage.setItem(
         'userData',
         JSON.stringify({
           userId: uid,
-          token: token,
-          expiration: tokenExpirationDate.toISOString(),
+          token,
+          expiration: expirationDate.toISOString(),
         })
       );
+      //@ts-ignore
+      dispatch(signin(uid, token));
     },
-    []
+    [dispatch, signin]
   );
 
   const logout = useCallback(() => {
-    setToken('');
-    setTokenExpirationDate(null);
-    setUserId('');
-    localStorage.removeItem('userData');
-  }, []);
+    //@ts-ignore
+    dispatch(signout());
+  }, [signout]);
 
   useEffect(() => {
     let logoutTimer: NodeJS.Timeout;
@@ -71,12 +68,6 @@ export const useAuth = (): {
           storedData.userId,
           storedData.token,
           new Date(storedData.expiration)
-        );
-        dispatch(
-          updateLogin({
-            userId: storedData.userId,
-            token: storedData.token,
-          })
         );
       }
     }

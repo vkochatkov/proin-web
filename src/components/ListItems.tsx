@@ -62,7 +62,11 @@ export const ListItems = ({ projects }: Props) => {
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver)}
+            style={
+              projects.length > 0
+                ? getListStyle(snapshot.isDraggingOver)
+                : undefined
+            }
           >
             {projects.map((item: any, index: number) => {
               return (

@@ -11,10 +11,12 @@ import { ListItems } from '../components/ListItems';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
+import { getIsLoading } from '../modules/selectors/loading';
+import { endLoading, startLoading } from '../modules/actions/loading';
 import './HomePage.scss';
 
 const HomePage: React.FC = () => {
-  const { sendRequest, isLoading } = useHttpClient();
+  const { sendRequest } = useHttpClient();
   const { projects, currentProject } = useSelector(
     (state: RootState) => state.mainProjects
   );
@@ -22,6 +24,11 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const isLoading = useSelector(getIsLoading);
+
+  useEffect(() => {
+    dispatch(startLoading());
+  }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -29,6 +36,7 @@ const HomePage: React.FC = () => {
         `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`
       );
       dispatch(updateProjects(res.projects));
+      dispatch(endLoading());
     };
     fetchProjects();
   }, [sendRequest, userId, dispatch]);

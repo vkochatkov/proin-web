@@ -41,7 +41,7 @@ export const App: React.FC = () => {
       <main>
         <Suspense
           fallback={
-            <div className="center">
+            <div className="loading">
               <LoadingSpinner />
             </div>
           }

@@ -8,14 +8,14 @@ import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from '../utils/validators';
 import { useForm } from '../hooks/useForm';
 import { useHttpClient } from '../hooks/useHttpClient';
 import { useAuth } from '../hooks/useAuth';
-import { useDispatch } from 'react-redux';
-import { updateLogin } from '../modules/actions/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { endLoading, startLoading } from '../modules/actions/loading';
+import { getIsLoading } from '../modules/selectors/loading';
 import './Auth.scss';
 
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const { isLoading, sendRequest } = useHttpClient();
-  const dispatch = useDispatch();
+  const { sendRequest } = useHttpClient();
   const { login } = useAuth();
   const navigate = useNavigate();
   const { formState, inputHandler } = useForm(
@@ -31,6 +31,8 @@ const Auth = () => {
     },
     false
   );
+  const dispatch = useDispatch();
+  const isLoading = useSelector(getIsLoading);
 
   const switchModeHandler = () => {
     setIsLoginMode((prevMode) => !prevMode);
@@ -38,6 +40,8 @@ const Auth = () => {
 
   const authSubmitHandler = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
+    dispatch(startLoading());
 
     if (isLoginMode) {
       try {
@@ -52,11 +56,12 @@ const Auth = () => {
             'Content-Type': 'application/json',
           }
         );
-        navigate('/');
-        dispatch(updateLogin(responseData));
 
         login(responseData.userId, responseData.token);
-      } catch (err) {}
+        navigate('/');
+      } catch (err) {
+        dispatch(endLoading());
+      }
     } else {
       try {
         const formData = new FormData();
@@ -74,10 +79,9 @@ const Auth = () => {
             'Content-Type': 'application/json',
           }
         );
-        navigate('/');
-        dispatch(updateLogin(responseData));
 
         login(responseData.userId, responseData.token);
+        navigate('/');
       } catch (err) {}
     }
   };
