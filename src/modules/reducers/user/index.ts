@@ -20,4 +20,4 @@ userReducer.on(loginSuccess, (state: UserState, payload: UserState) => {
   };
 });
 
-userReducer.on(logoutSuccess, (state: UserState) => state);
+userReducer.on(logoutSuccess, () => initialState);

@@ -1,13 +1,30 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { getAuth } from '../../modules/selectors/user';
 import '../Navigation/NavLinks.scss';
 
 export const NavLinks = () => {
+  const { token } = useSelector(getAuth);
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <nav className="nav-links">
-      <li>
-        <NavLink to="/">PROJECTS</NavLink>
-      </li>
+      {token && (
+        <li>
+          <NavLink to="/">PROJECTS</NavLink>
+        </li>
+      )}
+      {token && (
+        <li>
+          <button onClick={handleLogout}>LOGOUT</button>
+        </li>
+      )}
     </nav>
   );
 };

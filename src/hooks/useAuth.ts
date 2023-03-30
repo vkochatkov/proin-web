@@ -41,6 +41,7 @@ export const useAuth = (): {
   );
 
   const logout = useCallback(() => {
+    localStorage.removeItem('userData');
     //@ts-ignore
     dispatch(signout());
   }, [signout]);
