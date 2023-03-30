@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { Input } from '../components/FormElement/Input';
@@ -10,7 +10,7 @@ import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Navigation/Header';
 import { getIsLoading } from '../modules/selectors/loading';
-import { endLoading } from '../modules/actions/loading';
+import { clearCurrentProject } from '../modules/actions/mainProjects';
 
 type Props = {};
 
@@ -34,13 +34,13 @@ const EditProject: React.FC<Props> = () => {
     true
   );
 
-  useEffect(() => {
-    dispatch(endLoading());
-    // eslint-disable-next-line
-  }, []);
-
   const handleClick = () => {
+    // navigate('/');
+  };
+
+  const handleCloseProject = () => {
     navigate('/');
+    dispatch(clearCurrentProject());
   };
 
   return (
@@ -51,16 +51,18 @@ const EditProject: React.FC<Props> = () => {
           transparent={true}
           icon={true}
           customClassName="header__btn-close"
-          onClick={handleClick}
+          onClick={handleCloseProject}
         >
           <img src="/close.svg" alt="close_logo" className="button__icon" />
         </Button>
         <Button customClassName="header__btn-transparent" onClick={handleClick}>
-          СТВОРИТИ
+          ВИДАЛИТИ
         </Button>
       </Header>
-      {isLoading ? (
-        <LoadingSpinner />
+      {isLoading && !currentProject ? (
+        <div className="loading">
+          <LoadingSpinner />
+        </div>
       ) : (
         <div>
           <>
@@ -69,7 +71,7 @@ const EditProject: React.FC<Props> = () => {
               id="logoUrl"
               onInput={inputHandler}
               projectId={currentProject ? currentProject._id : undefined}
-              stateToUpdate={true}
+              isUpdateValue={true}
             />
             <Input
               id="projectName"
@@ -81,7 +83,7 @@ const EditProject: React.FC<Props> = () => {
               isAutosave={true}
               projectId={currentProject ? currentProject._id : undefined}
               token={token}
-              stateToUpdate={true}
+              isUpdateValue={true}
               project={currentProject}
             />
             <Input
@@ -93,7 +95,7 @@ const EditProject: React.FC<Props> = () => {
               isAutosave={true}
               projectId={currentProject ? currentProject._id : undefined}
               token={token}
-              stateToUpdate={true}
+              isUpdateValue={true}
               project={currentProject}
             />
           </>

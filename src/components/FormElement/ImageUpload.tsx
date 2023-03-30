@@ -13,7 +13,7 @@ type ImageUploadProps = {
   center?: boolean;
   projectId?: string;
   onInput: (id: string, value: string, isValid: boolean) => void;
-  stateToUpdate?: boolean;
+  isUpdateValue?: boolean;
 };
 
 export const ImageUpload: FC<ImageUploadProps> = ({
@@ -21,7 +21,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
   center,
   onInput,
   projectId,
-  stateToUpdate,
+  isUpdateValue,
 }) => {
   const [file, setFile] = useState<File | undefined>();
   const [previewUrl, setPreviewUrl] = useState<string | undefined>('');
@@ -33,17 +33,16 @@ export const ImageUpload: FC<ImageUploadProps> = ({
   const filePickerRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (stateToUpdate && currentProject) {
+    if (isUpdateValue && currentProject) {
       const isNotEmptyValue = Boolean(currentProject[id]);
 
       if (isNotEmptyValue) {
         const logoUrl = `${currentProject[id]}`;
         setPreviewUrl(logoUrl);
         onInput(id, logoUrl, true);
-        dispatch(endLoading());
       }
     }
-  }, [currentProject, stateToUpdate, onInput, dispatch, id]);
+  }, [currentProject, isUpdateValue, onInput, id]);
 
   useEffect(() => {
     if (!file) {
@@ -121,11 +120,9 @@ export const ImageUpload: FC<ImageUploadProps> = ({
         onChange={pickedHandler}
       />
       <div className={`image-upload ${center ? 'center' : ''}`}>
-        {previewUrl && (
-          <div className="image-upload__preview">
-            <img src={previewUrl} alt="Preview" />
-          </div>
-        )}
+        <div className="image-upload__preview">
+          {previewUrl && <img src={previewUrl} alt="Preview" />}
+        </div>
         <Button type="button" onClick={pickImageHandler}>
           Обери лого
         </Button>

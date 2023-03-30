@@ -10,6 +10,8 @@ export interface ChangeFormInput {
 export const changeFormInput =
   createAction<ChangeFormInput>('CHANGE_FORM_INPUT');
 
+export const clearFormInput = createAction('CLEAR_FORM_INPUT');
+
 export const setFormDataAction = createAction<{
   inputs: FormState['inputs'];
   formIsValid: FormState['isValid'];

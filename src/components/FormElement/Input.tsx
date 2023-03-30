@@ -3,8 +3,10 @@ import { validate } from '../../utils/validators';
 import { debounce } from '../../utils/debounce';
 import axios from 'axios';
 import { editProjectSuccess } from '../../modules/actions/mainProjects';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIsLoading } from '../../modules/selectors/loading';
 import './Input.scss';
+import { endLoading } from '../../modules/actions/loading';
 
 type InputProps = {
   id: string;
@@ -22,7 +24,7 @@ type InputProps = {
   isAnyValue?: boolean;
   projectId?: string;
   token?: string;
-  stateToUpdate?: boolean;
+  isUpdateValue?: boolean;
   project?: any;
 };
 
@@ -35,6 +37,7 @@ export const Input = (props: InputProps) => {
   const dispatch = useDispatch();
   const { id, onInput } = props;
   const { value, isValid } = inputState;
+  const isLoading = useSelector(getIsLoading);
 
   useEffect(() => {
     onInput(id, value, isValid);
@@ -42,7 +45,7 @@ export const Input = (props: InputProps) => {
 
   useEffect(() => {
     if (
-      props.stateToUpdate &&
+      props.isUpdateValue &&
       props.project !== null &&
       props.project !== undefined
     ) {
@@ -55,7 +58,13 @@ export const Input = (props: InputProps) => {
         }));
       }
     }
-  }, [props.project, props.stateToUpdate, id]);
+  }, [props.project, props.isUpdateValue, id]);
+
+  useEffect(() => {
+    if (isLoading && props.isUpdateValue) {
+      dispatch(endLoading());
+    }
+  }, [dispatch, props.isUpdateValue, inputState, isLoading]);
 
   const saveChanges = useCallback(
     debounce((data: any, token: string, projectId: string) => {

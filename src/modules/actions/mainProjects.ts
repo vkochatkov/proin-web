@@ -6,6 +6,9 @@ import axios from 'axios';
 export const editProjectSuccess = createAction<Project>('EDIT_PROJECT_SUCCESS');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
 export const editProjectFailure = createAction<string>('EDIT_PROJECT_FAILURE');
+export const createProjectSuccess = createAction<Project>(
+  'CREATE_PROJECT_SUCCESS'
+);
 export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
 export const clearProjects = createAction('CLEAR_PROJECTS');
 
@@ -23,7 +26,7 @@ export const createNewProject =
         cancelToken: httpSource.token,
       });
 
-      dispatch(editProjectSuccess(response.data.project));
+      dispatch(createProjectSuccess(response.data.project));
     } catch (e) {
       dispatch(editProjectFailure((e as any).message));
     }

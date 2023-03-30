@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     dispatch(startLoading());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -56,6 +56,7 @@ const HomePage: React.FC = () => {
   const handleClick = () => {
     setIsPressed(true);
     dispatch(createNewProject(token) as any);
+    dispatch(startLoading());
   };
 
   return (

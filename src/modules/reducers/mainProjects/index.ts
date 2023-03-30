@@ -5,6 +5,7 @@ import {
   editProjectSuccess,
   updateProjects,
   clearProjects,
+  createProjectSuccess,
 } from '../../actions/mainProjects';
 
 export interface Project {
@@ -27,6 +28,11 @@ const initialState: {
 
 export const mainProjects = createReducer({}, initialState);
 
+mainProjects.on(createProjectSuccess, (state, payload) => ({
+  ...state,
+  currentProject: { ...payload, status: 'success' },
+}));
+
 mainProjects.on(editProjectSuccess, (state: any, payload: any) => {
   return { ...state, currentProject: { ...payload, status: 'success' } };
 });
@@ -41,10 +47,10 @@ mainProjects.on(editProjectFailure, (state: any, payload: any) => {
   };
 });
 
-mainProjects.on(clearCurrentProject, (state, payload) => {
+mainProjects.on(clearCurrentProject, (state) => {
   return {
     ...state,
-    currentProject: null,
+    currentProject: initialState.currentProject,
   };
 });
 

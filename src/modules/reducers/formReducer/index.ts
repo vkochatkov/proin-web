@@ -1,5 +1,9 @@
 import { createReducer } from 'redux-act';
-import { changeFormInput, setFormDataAction } from '../../actions/form';
+import {
+  changeFormInput,
+  clearFormInput,
+  setFormDataAction,
+} from '../../actions/form';
 
 export type FormState = {
   inputs: {
@@ -41,6 +45,8 @@ formReducer.on(changeFormInput, (state, payload) => {
     isValid: updatedFormIsValid,
   };
 });
+
+formReducer.on(clearFormInput, () => initialState);
 
 formReducer.on(setFormDataAction, (_, payload) => {
   return {
