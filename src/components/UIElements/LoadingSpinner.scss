@@ -1,3 +1,5 @@
+@import '../../utils/variables.scss';
+
 .lds-dual-ring {
   display: inline-block;
   width: 64px;
@@ -14,6 +16,11 @@
     border-color: #fff transparent #fff transparent;
     animation: lds-dual-ring 1.2s linear infinite;
   }
+}
+
+.blue.lds-dual-ring:after {
+  border-color: $mainBackgroundColor transparent $mainBackgroundColor
+    transparent;
 }
 
 .loading-spinner__overlay {

@@ -89,7 +89,7 @@ const Auth = () => {
   return (
     <React.Fragment>
       <Card className="authentication">
-        {isLoading && <LoadingSpinner asOverlay />}
+        {isLoading && <LoadingSpinner asOverlay blue />}
         {isLoginMode ? <h2>Логін</h2> : <h2>Реєстрація</h2>}
         <hr />
         <form onSubmit={authSubmitHandler}>
