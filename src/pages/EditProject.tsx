@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { Input } from '../components/FormElement/Input';
@@ -56,7 +56,7 @@ const EditProject: React.FC<Props> = () => {
           <img src="/close.svg" alt="close_logo" className="button__icon" />
         </Button>
         <Button customClassName="header__btn-transparent" onClick={handleClick}>
-          ВИДАЛИТИ
+          <img src="/delete-icon.svg" alt="delete icon" />
         </Button>
       </Header>
       {isLoading && !currentProject ? (

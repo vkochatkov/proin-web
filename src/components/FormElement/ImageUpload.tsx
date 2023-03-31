@@ -5,7 +5,6 @@ import { Button } from './Button';
 import { getAuth } from '../../modules/selectors/user';
 import { editProjectSuccess } from '../../modules/actions/mainProjects';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
-import { endLoading } from '../../modules/actions/loading';
 import './ImageUpload.scss';
 
 type ImageUploadProps = {
