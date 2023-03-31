@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { Button } from './Button';
 import { getAuth } from '../../modules/selectors/user';
 import { editProjectSuccess } from '../../modules/actions/mainProjects';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
+import { useHttpClient } from '../../hooks/useHttpClient';
 import './ImageUpload.scss';
 
 type ImageUploadProps = {
@@ -28,6 +28,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
   const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
   const currentProject = useSelector(getCurrentProject);
+  const { sendRequest } = useHttpClient();
 
   const filePickerRef = useRef<HTMLInputElement>(null);
 
@@ -54,26 +55,22 @@ export const ImageUpload: FC<ImageUploadProps> = ({
     fileReader.readAsDataURL(file);
   }, [file]);
 
-  const sendRequest = async (id: string, token: string, file: File) => {
-    const httpSource = axios.CancelToken.source();
-
+  const request = async (id: string, token: string, file: File) => {
     const formData = new FormData();
 
     formData.append('image', file);
 
     try {
-      const response = await axios({
-        method: 'PATCH',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-        cancelToken: httpSource.token,
-      });
+      const res = await sendRequest(
+        `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
+        'PATCH',
+        formData,
+        {
+          Authorization: 'Bearer ' + token,
+        }
+      );
 
-      return response.data;
+      return res.data;
     } catch (e) {
       throw e;
     }
@@ -95,9 +92,8 @@ export const ImageUpload: FC<ImageUploadProps> = ({
     let value;
 
     if (projectId && pickedFile) {
-      const res = await sendRequest(projectId, token, pickedFile);
+      const res = await request(projectId, token, pickedFile);
       value = res.project.logoUrl;
-
       dispatch(editProjectSuccess(res.project));
     }
 

@@ -5,8 +5,8 @@ import axios from 'axios';
 import { editProjectSuccess } from '../../modules/actions/mainProjects';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoading } from '../../modules/selectors/loading';
-import './Input.scss';
 import { endLoading } from '../../modules/actions/loading';
+import './Input.scss';
 
 type InputProps = {
   id: string;
@@ -38,6 +38,15 @@ export const Input = (props: InputProps) => {
   const { id, onInput } = props;
   const { value, isValid } = inputState;
   const isLoading = useSelector(getIsLoading);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const textarea = textareaRef.current;
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [inputState.value, textareaRef.current]);
 
   useEffect(() => {
     onInput(id, value, isValid);
@@ -112,16 +121,14 @@ export const Input = (props: InputProps) => {
     }));
   };
 
-  const elementRef = useRef(null);
-
-  const openFullscreen = () => {
-    const element = elementRef.current;
-    //@ts-ignore because of openFullscreen
-    if (element && element.requestFullscreen) {
-      //@ts-ignore
-      element.requestFullscreen();
-    }
-  };
+  // const openFullscreen = () => {
+  //   const element = elementRef.current;
+  //   //@ts-ignore because of openFullscreen
+  //   if (element && element.requestFullscreen) {
+  //     //@ts-ignore
+  //     element.requestFullscreen();
+  //   }
+  // };
 
   const element =
     props.element === 'input' ? (
@@ -140,13 +147,15 @@ export const Input = (props: InputProps) => {
         onChange={changeHandler}
         onBlur={touchHandler}
         value={inputState.value}
-        ref={elementRef}
-        onClick={openFullscreen}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') {
-            document.exitFullscreen();
-          }
-        }}
+        ref={textareaRef}
+        // style={{ minHeight: '100px' }}
+
+        // onClick={openFullscreen}
+        // onKeyDown={(event) => {
+        //   if (event.key === 'Escape') {
+        //     document.exitFullscreen();
+        //   }
+        // }}
       />
     );
 
