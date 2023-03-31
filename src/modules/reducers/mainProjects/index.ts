@@ -42,7 +42,7 @@ mainProjects.on(editProjectFailure, (state: any, payload: any) => {
     ...state,
     currentProject: {
       status: 'failure',
-      error: payload.message,
+      error: payload,
     },
   };
 });

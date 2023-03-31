@@ -4,13 +4,20 @@ import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { Input } from '../components/FormElement/Input';
 import { useForm } from '../hooks/useForm';
 import { ImageUpload } from '../components/FormElement/ImageUpload';
-import { getCurrentProject } from '../modules/selectors/mainProjects';
+import {
+  getCurrentProject,
+  getCurrentProjects,
+} from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Navigation/Header';
 import { getIsLoading } from '../modules/selectors/loading';
-import { clearCurrentProject } from '../modules/actions/mainProjects';
+import {
+  clearCurrentProject,
+  deleteCurrentProject,
+  updateProjects,
+} from '../modules/actions/mainProjects';
 
 type Props = {};
 
@@ -18,6 +25,7 @@ const EditProject: React.FC<Props> = () => {
   const { token } = useSelector(getAuth);
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
+  const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { inputHandler } = useForm(
@@ -34,8 +42,20 @@ const EditProject: React.FC<Props> = () => {
     true
   );
 
-  const handleClick = () => {
-    // navigate('/');
+  const handleRemoveCurrentProject = async (
+    token: string,
+    projectId: string
+  ) => {
+    try {
+      await dispatch(deleteCurrentProject(token, projectId) as any);
+
+      const updatedProjectsList = projects.filter(
+        (project) => project._id !== projectId
+      );
+
+      dispatch(updateProjects(updatedProjectsList));
+      navigate('/');
+    } catch (error) {}
   };
 
   const handleCloseProject = () => {
@@ -55,7 +75,14 @@ const EditProject: React.FC<Props> = () => {
         >
           <img src="/close.svg" alt="close_logo" className="button__icon" />
         </Button>
-        <Button customClassName="header__btn-transparent" onClick={handleClick}>
+        <Button
+          customClassName="header__btn-transparent"
+          onClick={
+            currentProject
+              ? () => handleRemoveCurrentProject(token, currentProject._id)
+              : undefined
+          }
+        >
           <img src="/delete-icon.svg" alt="delete icon" />
         </Button>
       </Header>

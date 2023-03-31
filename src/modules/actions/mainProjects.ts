@@ -2,6 +2,7 @@ import { createAction } from 'redux-act';
 import { Project } from '../reducers/mainProjects';
 import { Dispatch } from 'redux';
 import axios from 'axios';
+import { clearFormInput } from './form';
 
 export const editProjectSuccess = createAction<Project>('EDIT_PROJECT_SUCCESS');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -46,6 +47,25 @@ export const editCurrentProject =
 
       dispatch(editProjectSuccess(res.data.project));
     } catch (e) {
-      dispatch(editProjectFailure((e as any).message));
+      dispatch(editProjectFailure((e as Error).message));
+    }
+  };
+
+export const deleteCurrentProject =
+  (token: string, id: string) => async (dispatch: Dispatch) => {
+    try {
+      const res = await axios({
+        method: 'DELETE',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+        cancelToken: httpSource.token,
+      });
+
+      dispatch(clearCurrentProject());
+      dispatch(clearFormInput());
+    } catch (e) {
+      dispatch(editProjectFailure((e as Error).message));
     }
   };

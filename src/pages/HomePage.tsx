@@ -40,10 +40,6 @@ const HomePage: React.FC = () => {
       dispatch(endLoading());
     };
     fetchProjects();
-
-    return () => {
-      dispatch(clearProjects());
-    };
   }, [sendRequest, userId, dispatch]);
 
   useEffect(() => {
@@ -53,7 +49,7 @@ const HomePage: React.FC = () => {
     }
   }, [currentProject, isPressed, navigate]);
 
-  const handleClick = () => {
+  const handleCreateProject = () => {
     setIsPressed(true);
     dispatch(createNewProject(token) as any);
     dispatch(startLoading());
@@ -67,7 +63,7 @@ const HomePage: React.FC = () => {
             size="small"
             transparent={true}
             icon={true}
-            onClick={handleClick}
+            onClick={handleCreateProject}
           >
             <img
               src="/plus_icon.svg"
