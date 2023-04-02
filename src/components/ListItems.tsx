@@ -3,7 +3,7 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Project } from '../modules/reducers/mainProjects';
 import {
   editCurrentProject,
-  updateProjects,
+  updateOrderProjects,
 } from '../modules/actions/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ interface Props {
 
 // a little function to help with reordering the result
 const reorder = (list: Project[], startIndex: number, endIndex: number) => {
-  const result = Array.from(list);
+  const result = [...list];
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
 
@@ -53,7 +53,7 @@ export const ListItems = ({ projects }: Props) => {
       result.destination.index
     );
 
-    dispatch(updateProjects(newItems));
+    dispatch(updateOrderProjects(newItems) as any);
   };
 
   return (

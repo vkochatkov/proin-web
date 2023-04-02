@@ -1,8 +1,9 @@
 import { createAction } from 'redux-act';
 import { Project } from '../reducers/mainProjects';
 import { Dispatch } from 'redux';
-import axios from 'axios';
 import { clearFormInput } from './form';
+import { RootState } from '../store';
+import axios from 'axios';
 
 export const editProjectSuccess = createAction<Project>('EDIT_PROJECT_SUCCESS');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -67,5 +68,27 @@ export const deleteCurrentProject =
       dispatch(clearFormInput());
     } catch (e) {
       dispatch(editProjectFailure((e as Error).message));
+    }
+  };
+
+export const updateOrderProjects =
+  (projects: Project[]) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    try {
+      const { userId, token } = getState().user;
+
+      dispatch(updateProjects(projects));
+
+      await axios({
+        method: 'PUT',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`,
+        data: { projects },
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+        cancelToken: httpSource.token,
+      });
+    } catch (e) {
+      console.log(e);
     }
   };
