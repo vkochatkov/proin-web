@@ -27,6 +27,7 @@ const getListStyle = (isDraggingOver: boolean) => ({
   background: isDraggingOver ? 'lightblue' : '#fff',
   padding: 8,
   borderRadius: '5px',
+  minHeight: '100vh',
 });
 
 export const ListItems = ({ projects }: Props) => {
