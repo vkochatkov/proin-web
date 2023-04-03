@@ -56,44 +56,60 @@ export const ImageUpload: FC<ImageUploadProps> = ({
   }, [file]);
 
   const request = async (id: string, token: string, file: File) => {
-    const formData = new FormData();
+    const fileReader = new FileReader();
 
-    formData.append('image', file);
+    return new Promise((resolve, reject) => {
+      fileReader.onload = async function () {
+        const dataUrl = fileReader.result;
 
-    try {
-      const res = await sendRequest(
-        `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
-        'PATCH',
-        formData,
-        {
-          Authorization: 'Bearer ' + token,
+        try {
+          const res = await sendRequest(
+            `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
+            'PATCH',
+            JSON.stringify({
+              logoUrl: dataUrl,
+            }),
+            {
+              Authorization: 'Bearer ' + token,
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            }
+          );
+
+          resolve(res);
+        } catch (err) {
+          reject(err);
         }
-      );
+      };
 
-      return res.data;
-    } catch (e) {
-      throw e;
-    }
+      fileReader.readAsDataURL(file);
+    });
   };
 
   const pickedHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let pickedFile;
     let fileIsValid = isValid;
+
     if (event.target.files && event.target.files.length === 1) {
       pickedFile = event.target.files[0];
+
       setFile(pickedFile);
       setIsValid(true);
+
       fileIsValid = true;
     } else {
       setIsValid(false);
+
       fileIsValid = false;
     }
 
     let value;
 
     if (projectId && pickedFile) {
-      const res = await request(projectId, token, pickedFile);
+      const res: any = await request(projectId, token, pickedFile);
+
       value = res.project.logoUrl;
+
       dispatch(editProjectSuccess(res.project));
     }
 

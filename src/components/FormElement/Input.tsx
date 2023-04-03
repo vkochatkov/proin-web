@@ -46,7 +46,7 @@ export const Input = (props: InputProps) => {
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  }, [inputState.value, textareaRef.current]);
+  }, [inputState.value]);
 
   useEffect(() => {
     onInput(id, value, isValid);
@@ -84,7 +84,6 @@ export const Input = (props: InputProps) => {
         url: `${process.env.REACT_APP_BACKEND_URL}/projects/${projectId}`,
         data,
         headers: {
-          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
         cancelToken: request.token,
