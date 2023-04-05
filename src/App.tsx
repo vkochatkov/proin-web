@@ -8,13 +8,13 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { LoadingSpinner } from './components/UIElements/LoadingSpinner';
-import { ForgotPassword } from './pages/ForgotPassword';
-import { ResetPassword } from './pages/ResetPassword';
 import './App.scss';
 
 const Auth = React.lazy(() => import('./pages/Auth'));
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const EditProject = React.lazy(() => import('./pages/EditProject'));
+const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
 
 export const App: React.FC = () => {
   const { token } = useSelector((state: RootState) => state.user);

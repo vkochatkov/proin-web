@@ -10,7 +10,7 @@ import { resetPassword } from '../modules/actions/user';
 import { VALIDATOR_MINLENGTH } from '../utils/validators';
 import './ForgotPassword.scss';
 
-export const ResetPassword = () => {
+const ResetPassword = () => {
   const { token } = useParams();
   const { formState, inputHandler } = useForm(
     {
@@ -67,3 +67,5 @@ export const ResetPassword = () => {
     </div>
   );
 };
+
+export default ResetPassword;

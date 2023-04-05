@@ -11,7 +11,7 @@ import { VALIDATOR_EMAIL } from '../utils/validators';
 import './ForgotPassword.scss';
 import './HomePage.scss';
 
-export const ForgotPassword = () => {
+const ForgotPassword = () => {
   const dispatch = useDispatch();
   const { formState, inputHandler } = useForm(
     {
@@ -63,3 +63,5 @@ export const ForgotPassword = () => {
     </div>
   );
 };
+
+export default ForgotPassword;
