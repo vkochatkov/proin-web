@@ -1,14 +1,16 @@
 @import '../../utils/variables.scss';
 
+.header {
+  height: 60px;
+  background-color: $mainBackgroundColor;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
 @media (max-width: 600px) {
   .header {
-    height: 60px;
-    background-color: $mainBackgroundColor;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-
     &__btn-transparent {
       background: transparent !important;
       color: white;

@@ -16,13 +16,18 @@ export const NavLinks = () => {
   return (
     <nav className="nav-links">
       {token && (
-        <li>
-          <NavLink to="/">PROJECTS</NavLink>
-        </li>
+        <>
+          <li>
+            <NavLink to="/">PROJECTS</NavLink>
+          </li>
+          <li>
+            <button onClick={handleLogout}>LOGOUT</button>
+          </li>
+        </>
       )}
-      {token && (
+      {!token && (
         <li>
-          <button onClick={handleLogout}>LOGOUT</button>
+          <NavLink to="/auth">Реєстрація</NavLink>
         </li>
       )}
     </nav>

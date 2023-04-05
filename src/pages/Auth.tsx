@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '../components/UIElements/Card';
 import { Input } from '../components/FormElement/Input';
 import { Button } from '../components/FormElement/Button';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from '../utils/validators';
 import { useForm } from '../hooks/useForm';
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { getIsLoading } from '../modules/selectors/loading';
 import './Auth.scss';
+import axios from 'axios';
 
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -40,45 +41,51 @@ const Auth = () => {
 
   const authSubmitHandler = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    const httpSource = axios.CancelToken.source();
 
     dispatch(startLoading());
 
     if (isLoginMode) {
       try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_BACKEND_URL}/users/login`,
-          'POST',
-          JSON.stringify({
+        const { data } = await axios({
+          method: 'POST',
+          url: `${process.env.REACT_APP_BACKEND_URL}/users/login`,
+          data: JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
-          {
+          headers: {
             'Content-Type': 'application/json',
-          }
-        );
+          },
+          cancelToken: httpSource.token,
+        });
 
-        login(responseData.userId, responseData.token);
+        login(data.userId, data.token);
         navigate('/');
       } catch (err) {
         dispatch(endLoading());
       }
     } else {
       try {
-        const responseData = await sendRequest(
-          `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
-          'POST',
-          JSON.stringify({
+        const { data } = await axios({
+          method: 'POST',
+          url: `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
+          data: JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
-          {
+          headers: {
             'Content-Type': 'application/json',
-          }
-        );
+          },
+          cancelToken: httpSource.token,
+        });
 
-        login(responseData.userId, responseData.token);
+        login(data.userId, data.token);
         navigate('/');
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+        dispatch(endLoading());
+      }
     }
   };
 
@@ -107,6 +114,7 @@ const Auth = () => {
             errorText="Please enter a valid password, at least 6 characters."
             onInput={inputHandler}
           />
+          {isLoginMode && <NavLink to="/forgot-password">Забув пароль</NavLink>}
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>

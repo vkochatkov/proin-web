@@ -7,8 +7,10 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import './App.scss';
 import { LoadingSpinner } from './components/UIElements/LoadingSpinner';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
+import './App.scss';
 
 const Auth = React.lazy(() => import('./pages/Auth'));
 const HomePage = React.lazy(() => import('./pages/HomePage'));
@@ -31,6 +33,8 @@ export const App: React.FC = () => {
     routes = (
       <Routes>
         <Route path="/auth" element={<Auth />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     );

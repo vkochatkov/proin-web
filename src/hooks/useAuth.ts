@@ -34,16 +34,15 @@ export const useAuth = (): {
           expiration: expirationDate.toISOString(),
         })
       );
-      //@ts-ignore
-      dispatch(signin(uid, token));
+
+      dispatch(signin(uid, token) as any);
     },
     [dispatch, signin]
   );
 
   const logout = useCallback(() => {
     localStorage.removeItem('userData');
-    //@ts-ignore
-    dispatch(signout());
+    dispatch(signout() as any);
   }, [signout]);
 
   useEffect(() => {
