@@ -9,6 +9,7 @@ import { useForm } from '../hooks/useForm';
 import { resetPassword } from '../modules/actions/user';
 import { VALIDATOR_MINLENGTH } from '../utils/validators';
 import './ForgotPassword.scss';
+import './HomePage.scss';
 
 const ResetPassword = () => {
   const { token } = useParams();
