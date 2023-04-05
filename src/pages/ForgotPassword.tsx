@@ -42,7 +42,7 @@ export const ForgotPassword = () => {
       </MainNavigation>
       <div className="forgot-password">
         <Card>
-          <h2>Введіть свій логін/електронну пошту</h2>
+          <h2>Введіть свій email</h2>
           <hr />
           <form onSubmit={submitHandler}>
             <Input

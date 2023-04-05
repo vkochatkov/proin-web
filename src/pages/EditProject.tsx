@@ -112,6 +112,7 @@ const EditProject: React.FC<Props> = () => {
               token={token}
               isUpdateValue={true}
               project={currentProject}
+              labelClassName={'label--white'}
             />
             <Input
               id="description"
@@ -124,6 +125,7 @@ const EditProject: React.FC<Props> = () => {
               token={token}
               isUpdateValue={true}
               project={currentProject}
+              labelClassName={'label--white'}
             />
           </>
         </div>

@@ -114,7 +114,11 @@ const Auth = () => {
             errorText="Please enter a valid password, at least 6 characters."
             onInput={inputHandler}
           />
-          {isLoginMode && <NavLink to="/forgot-password">Забув пароль</NavLink>}
+          {isLoginMode && (
+            <div className="authentication__link-wrapper">
+              <NavLink to="/forgot-password">Відновити пароль</NavLink>
+            </div>
+          )}
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>

@@ -9,14 +9,22 @@
     text-align: center;
   }
 
+  &__link-wrapper {
+    display: flex;
+  }
+
   form {
     margin-bottom: 1rem;
   }
 
   a {
-    display: flex;
-    margin: 1rem 0;
+    margin: 0 0 1rem;
     color: #0e86d4;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.6;
+    }
   }
 }
 

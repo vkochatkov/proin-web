@@ -26,6 +26,7 @@ type InputProps = {
   token?: string;
   isUpdateValue?: boolean;
   project?: any;
+  labelClassName?: string;
 };
 
 export const Input = (props: InputProps) => {
@@ -168,7 +169,12 @@ export const Input = (props: InputProps) => {
         // 'form-control--invalid'
       }
     >
-      <label htmlFor={props.id}>{props.label}</label>
+      <label
+        htmlFor={props.id}
+        className={props.labelClassName ? `${props.labelClassName}` : ''}
+      >
+        {props.label}
+      </label>
       {element}
       {/* {!props.isAnyValue && !inputState.isValid && inputState.isTouched && (
         <p>{props.errorText}</p>
