@@ -5,6 +5,7 @@ import { UserState } from '../reducers/user';
 import { RootState } from '../store';
 import { clearFormInput } from './form';
 import { endLoading } from './loading';
+import { changeSnackbarState, clearSnackbarState } from './snackbar';
 
 export const loginSuccess = createAction<UserState>('LOGIN_SUCCESS');
 export const logoutSuccess = createAction('LOGOUT_SUCCESS');
@@ -31,7 +32,7 @@ export const sendRecaveryEmail =
     try {
       const { inputs } = getState().formData;
 
-      const res = await axios({
+      await axios({
         method: 'POST',
         url: `${process.env.REACT_APP_BACKEND_URL}/users/forgot-password`,
         data: JSON.stringify({
@@ -43,9 +44,19 @@ export const sendRecaveryEmail =
         cancelToken: httpSource.token,
       });
 
-      if (res.data) {
-        dispatch(clearFormInput());
-      }
+      dispatch(
+        changeSnackbarState({
+          id: 'success',
+          open: true,
+          message: 'Лист з інструкціями відправлено на вашу електронну адресу',
+        })
+      );
+
+      setTimeout(() => {
+        dispatch(clearSnackbarState());
+      }, 6000);
+
+      dispatch(clearFormInput());
     } catch (e: any) {
       console.log(e.message);
     }
@@ -56,7 +67,7 @@ export const resetPassword =
     try {
       const { inputs } = getState().formData;
 
-      const res = await axios({
+      await axios({
         method: 'POST',
         url: `${process.env.REACT_APP_BACKEND_URL}/users/reset-password`,
         data: JSON.stringify({
@@ -69,8 +80,18 @@ export const resetPassword =
         cancelToken: httpSource.token,
       });
 
-      console.log('res', res);
-      window.location.href = '/';
+      dispatch(clearFormInput());
+      dispatch(
+        changeSnackbarState({
+          id: 'success',
+          open: true,
+          message: 'Пароль успішно змінено',
+        })
+      );
+
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 6000);
     } catch (e) {
       console.log(e);
     }

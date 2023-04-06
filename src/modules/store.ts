@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-
-// import reduxThunk from 'redux-thunk';
 import { userReducer } from './reducers/user/index';
 import { mainProjects } from './reducers/mainProjects/index';
 import { formReducer } from './reducers/formReducer';
 import { loadingReducer } from './reducers/loading';
+import { snackbar } from './reducers/snackbar';
 
 const rootReducer = combineReducers({
   user: userReducer,
   mainProjects,
   formData: formReducer,
   isLoading: loadingReducer,
+  snackbar,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
