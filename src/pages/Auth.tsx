@@ -12,6 +12,7 @@ import { endLoading, startLoading } from '../modules/actions/loading';
 import { getIsLoading } from '../modules/selectors/loading';
 import axios from 'axios';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
+import { changeSnackbarState } from '../modules/actions/snackbar';
 
 import './Auth.scss';
 
@@ -82,9 +83,15 @@ const Auth = () => {
 
         login(data.userId, data.token);
         navigate('/');
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
         dispatch(endLoading());
+        dispatch(
+          changeSnackbarState({
+            id: 'error',
+            message: err.response.data.message,
+            open: true,
+          })
+        );
       }
     }
   };
