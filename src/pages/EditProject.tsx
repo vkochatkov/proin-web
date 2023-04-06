@@ -73,7 +73,7 @@ const EditProject: React.FC<Props> = () => {
           customClassName="header__btn-close"
           onClick={handleCloseProject}
         >
-          <img src="/close.svg" alt="close_logo" className="button__icon" />
+          <img src="/back.svg" alt="back_logo" className="button__icon" />
         </Button>
         <Button
           customClassName="header__btn-transparent"
