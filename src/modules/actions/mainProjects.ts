@@ -35,18 +35,13 @@ export const createNewProject =
   };
 
 export const editCurrentProject =
-  (token: string, id: string) => async (dispatch: Dispatch) => {
+  (token: string, id: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
     try {
-      const res = await axios({
-        method: 'GET',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cancelToken: httpSource.token,
-      });
+      const { projects } = getState().mainProjects;
+      const currentProject = projects.filter((project) => project.id === id);
 
-      dispatch(editProjectSuccess(res.data.project));
+      dispatch(editProjectSuccess(currentProject[0]));
     } catch (e) {
       dispatch(editProjectFailure((e as Error).message));
     }
