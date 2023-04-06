@@ -18,10 +18,10 @@ export const NavLinks = () => {
       {token && (
         <>
           <li>
-            <NavLink to="/">PROJECTS</NavLink>
+            <NavLink to="/">Проекти</NavLink>
           </li>
           <li>
-            <button onClick={handleLogout}>LOGOUT</button>
+            <button onClick={handleLogout}>Вийти</button>
           </li>
         </>
       )}
