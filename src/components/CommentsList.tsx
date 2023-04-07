@@ -4,7 +4,10 @@ import { CommentInput } from './FormElement/CommentInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
-import { addCommentToCurrentProject } from '../modules/actions/mainProjects';
+import {
+  addCommentToCurrentProject,
+  setCurrentProject,
+} from '../modules/actions/mainProjects';
 
 export const CommentsList = () => {
   const dispatch = useDispatch();
@@ -28,7 +31,21 @@ export const CommentsList = () => {
     );
   };
 
-  const handleDeleteComment = (id: string) => {};
+  const handleDeleteComment = (id: string) => {
+    if (!currentProject) return;
+
+    const { comments } = currentProject;
+
+    if (comments) {
+      const updatedComments = comments.filter((comment) => comment.id !== id);
+      const updatedProject = {
+        ...currentProject,
+        comments: updatedComments,
+      };
+
+      dispatch(setCurrentProject(updatedProject));
+    }
+  };
 
   const handleEditComment = (id: string) => {};
 
