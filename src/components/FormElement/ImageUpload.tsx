@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from './Button';
 import { getAuth } from '../../modules/selectors/user';
-import { editProjectSuccess } from '../../modules/actions/mainProjects';
+import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
 import { useHttpClient } from '../../hooks/useHttpClient';
 import './ImageUpload.scss';
@@ -109,7 +109,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
 
       value = res.project.logoUrl;
 
-      dispatch(editProjectSuccess(res.project));
+      dispatch(setCurrentProject(res.project));
     }
 
     onInput(id, value, fileIsValid);

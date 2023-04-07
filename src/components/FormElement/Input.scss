@@ -19,17 +19,21 @@
     color: #000;
   }
 
+  textarea {
+    resize: none;
+  }
+
   input,
   textarea {
     font: inherit;
     border: 1px solid #ccc;
     background: #f8f8f8;
     padding: 0.15rem 0.25rem;
+    border-radius: 8px;
 
     &:focus {
       outline: none;
-      background: #ebebeb;
-      border-color: #510077;
+      background: #fff;
     }
   }
 

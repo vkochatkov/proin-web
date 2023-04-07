@@ -18,6 +18,8 @@ import {
   deleteCurrentProject,
   updateProjects,
 } from '../modules/actions/mainProjects';
+import { CommentsList } from '../components/CommentsList';
+import { Card } from '@mui/joy';
 
 type Props = {};
 
@@ -91,44 +93,50 @@ const EditProject: React.FC<Props> = () => {
           <LoadingSpinner />
         </div>
       ) : (
-        <div>
-          <>
-            <ImageUpload
-              center
-              id="logoUrl"
-              onInput={inputHandler}
-              projectId={currentProject ? currentProject._id : undefined}
-              isUpdateValue={true}
-            />
-            <Input
-              id="projectName"
-              element="input"
-              type="text"
-              label="Ім'я нового проекту"
-              onInput={inputHandler}
-              isAnyValue={true}
-              isAutosave={true}
-              projectId={currentProject ? currentProject._id : undefined}
-              token={token}
-              isUpdateValue={true}
-              project={currentProject}
-              labelClassName={'label--white'}
-            />
-            <Input
-              id="description"
-              element="textarea"
-              label="Опис"
-              onInput={inputHandler}
-              isAnyValue={true}
-              isAutosave={true}
-              projectId={currentProject ? currentProject._id : undefined}
-              token={token}
-              isUpdateValue={true}
-              project={currentProject}
-              labelClassName={'label--white'}
-            />
-          </>
-        </div>
+        <Card
+          sx={{
+            background: '#f8f8f8',
+          }}
+        >
+          <div>
+            <>
+              <ImageUpload
+                center
+                id="logoUrl"
+                onInput={inputHandler}
+                projectId={currentProject ? currentProject._id : undefined}
+                isUpdateValue={true}
+              />
+              <Input
+                id="projectName"
+                element="input"
+                type="text"
+                label="Ім'я нового проекту"
+                onInput={inputHandler}
+                isAnyValue={true}
+                isAutosave={true}
+                projectId={currentProject ? currentProject._id : undefined}
+                token={token}
+                isUpdateValue={true}
+                project={currentProject}
+              />
+              <Input
+                id="description"
+                element="textarea"
+                label="Опис"
+                onInput={inputHandler}
+                isAnyValue={true}
+                isAutosave={true}
+                projectId={currentProject ? currentProject._id : undefined}
+                token={token}
+                isUpdateValue={true}
+                project={currentProject}
+              />
+              <h3>Коментарі</h3>
+              <CommentsList />
+            </>
+          </div>
+        </Card>
       )}
     </div>
   );

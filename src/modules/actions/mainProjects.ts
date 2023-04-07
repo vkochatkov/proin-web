@@ -3,14 +3,19 @@ import { Project } from '../reducers/mainProjects';
 import { Dispatch } from 'redux';
 import { clearFormInput } from './form';
 import { RootState } from '../store';
+import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 
-export const editProjectSuccess = createAction<Project>('EDIT_PROJECT_SUCCESS');
+export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
 export const editProjectFailure = createAction<string>('EDIT_PROJECT_FAILURE');
 export const createProjectSuccess = createAction<Project>(
   'CREATE_PROJECT_SUCCESS'
 );
+export const addCommentToCurrentProject = createAction<{
+  projectId: string;
+  comment: IComment;
+}>('ADD_COMMENT_TO_CURRENT_PROJECT');
 export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
 export const clearProjects = createAction('CLEAR_PROJECTS');
 
@@ -34,14 +39,14 @@ export const createNewProject =
     }
   };
 
-export const editCurrentProject =
+export const openCurrentProject =
   (token: string, id: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     try {
       const { projects } = getState().mainProjects;
       const currentProject = projects.filter((project) => project.id === id);
 
-      dispatch(editProjectSuccess(currentProject[0]));
+      dispatch(setCurrentProject(currentProject[0]));
     } catch (e) {
       dispatch(editProjectFailure((e as Error).message));
     }
@@ -50,7 +55,7 @@ export const editCurrentProject =
 export const deleteCurrentProject =
   (token: string, id: string) => async (dispatch: Dispatch) => {
     try {
-      const res = await axios({
+      await axios({
         method: 'DELETE',
         url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
         headers: {

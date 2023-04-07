@@ -2,10 +2,11 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { validate } from '../../utils/validators';
 import { debounce } from '../../utils/debounce';
 import axios from 'axios';
-import { editProjectSuccess } from '../../modules/actions/mainProjects';
+import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoading } from '../../modules/selectors/loading';
 import { endLoading } from '../../modules/actions/loading';
+
 import './Input.scss';
 
 type InputProps = {
@@ -90,7 +91,7 @@ export const Input = (props: InputProps) => {
         cancelToken: request.token,
       })
         .then(({ data }) => {
-          dispatch(editProjectSuccess(data.project));
+          dispatch(setCurrentProject(data.project));
         })
         .catch(() => {});
     }, 1000),

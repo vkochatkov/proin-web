@@ -12,15 +12,17 @@ export const logoutSuccess = createAction('LOGOUT_SUCCESS');
 
 const httpSource = axios.CancelToken.source();
 
-export const signin = (uid: string, token: string) => (dispatch: Dispatch) => {
-  dispatch(
-    loginSuccess({
-      userId: uid,
-      token,
-    })
-  );
-  dispatch(endLoading());
-};
+export const signin =
+  (uid: string, token: string, email: string) => (dispatch: Dispatch) => {
+    dispatch(
+      loginSuccess({
+        userId: uid,
+        token,
+        email,
+      })
+    );
+    dispatch(endLoading());
+  };
 
 export const signout = () => (dispatch: Dispatch) => {
   dispatch(logoutSuccess());

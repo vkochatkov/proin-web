@@ -6,12 +6,18 @@ import { getAuth } from '../modules/selectors/user';
 interface UserData {
   userId: string;
   token: string;
+  email: string;
   expiration: string;
 }
 
 export const useAuth = (): {
   token: string;
-  login: (userId: string, token: string, expirationDate?: Date) => void;
+  login: (
+    userId: string,
+    token: string,
+    email: string,
+    expirationDate?: Date
+  ) => void;
   logout: () => void;
   userId: string;
 } => {
@@ -23,6 +29,7 @@ export const useAuth = (): {
     (
       uid: string,
       token: string,
+      email: string,
       expirationDate: Date = new Date(new Date().getTime() + 1000 * 60 * 60)
     ) => {
       setTokenExpirationDate(tokenExpirationDate);
@@ -31,19 +38,20 @@ export const useAuth = (): {
         JSON.stringify({
           userId: uid,
           token,
+          email,
           expiration: expirationDate.toISOString(),
         })
       );
 
-      dispatch(signin(uid, token) as any);
+      dispatch(signin(uid, token, email) as any);
     },
-    [dispatch, signin]
+    [dispatch, tokenExpirationDate]
   );
 
   const logout = useCallback(() => {
     localStorage.removeItem('userData');
     dispatch(signout() as any);
-  }, [signout]);
+  }, [dispatch]);
 
   useEffect(() => {
     let logoutTimer: NodeJS.Timeout;
@@ -67,6 +75,7 @@ export const useAuth = (): {
         login(
           storedData.userId,
           storedData.token,
+          storedData.email,
           new Date(storedData.expiration)
         );
       }

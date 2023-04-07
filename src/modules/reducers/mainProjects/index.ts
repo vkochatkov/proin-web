@@ -2,11 +2,19 @@ import { createReducer } from 'redux-act';
 import {
   clearCurrentProject,
   editProjectFailure,
-  editProjectSuccess,
+  setCurrentProject,
   updateProjects,
   clearProjects,
   createProjectSuccess,
+  addCommentToCurrentProject,
 } from '../../actions/mainProjects';
+
+export interface IComment {
+  id: string;
+  name: string;
+  text: string;
+  timestamp: string;
+}
 
 export interface Project {
   _id: string;
@@ -15,6 +23,7 @@ export interface Project {
   logoUrl?: string;
   creator: string;
   status?: string;
+  comments?: IComment[];
   [key: string]: any;
 }
 
@@ -33,7 +42,7 @@ mainProjects.on(createProjectSuccess, (state, payload) => ({
   currentProject: { ...payload, status: 'success' },
 }));
 
-mainProjects.on(editProjectSuccess, (state: any, payload: any) => {
+mainProjects.on(setCurrentProject, (state: any, payload: any) => {
   return { ...state, currentProject: { ...payload, status: 'success' } };
 });
 
@@ -44,6 +53,30 @@ mainProjects.on(editProjectFailure, (state: any, payload: any) => {
       status: 'failure',
       error: payload,
     },
+  };
+});
+
+mainProjects.on(addCommentToCurrentProject, (state, payload) => {
+  const { comment } = payload;
+  const currentProject = state.currentProject;
+
+  if (!currentProject) return state;
+
+  const updatedCurrentProject = {
+    ...currentProject,
+    comments: currentProject.comments
+      ? [...currentProject.comments, comment]
+      : [comment],
+  };
+
+  const updatedProjectsArray = state.projects.map((project) =>
+    project.id === updatedCurrentProject._id ? updatedCurrentProject : project
+  );
+
+  return {
+    ...state,
+    currentProject: updatedCurrentProject,
+    projects: updatedProjectsArray,
   };
 });
 

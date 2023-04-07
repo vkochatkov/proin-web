@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Project } from '../modules/reducers/mainProjects';
 import {
-  editCurrentProject,
+  openCurrentProject,
   updateOrderProjects,
 } from '../modules/actions/mainProjects';
 import { getAuth } from '../modules/selectors/user';
@@ -24,7 +24,7 @@ const reorder = (list: Project[], startIndex: number, endIndex: number) => {
 };
 
 const getListStyle = (isDraggingOver: boolean) => ({
-  background: isDraggingOver ? 'lightblue' : '#fff',
+  background: '#f8f8f8',
   padding: 8,
   borderRadius: '5px',
   minHeight: '85vh',
@@ -37,7 +37,7 @@ export const ListItems = ({ projects }: Props) => {
 
   const handleClick = (id: string) => {
     dispatch(startLoading());
-    dispatch(editCurrentProject(token, id) as any);
+    dispatch(openCurrentProject(token, id) as any);
     navigate(`/project-edit/${id}`);
   };
 

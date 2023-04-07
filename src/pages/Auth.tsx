@@ -61,7 +61,7 @@ const Auth = () => {
           cancelToken: httpSource.token,
         });
 
-        login(data.userId, data.token);
+        login(data.userId, data.token, data.email);
         navigate('/');
       } catch (err) {
         dispatch(endLoading());
@@ -81,7 +81,7 @@ const Auth = () => {
           cancelToken: httpSource.token,
         });
 
-        login(data.userId, data.token);
+        login(data.userId, data.token, data.email);
         navigate('/');
       } catch (err: any) {
         dispatch(endLoading());
