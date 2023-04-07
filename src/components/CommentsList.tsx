@@ -56,7 +56,7 @@ export const CommentsList = () => {
         currentProject.comments &&
         currentProject.comments.map((comment, index) => (
           <CommentBox
-            key={comment.id}
+            key={`${comment.id}-${index}`}
             text={comment.text}
             name={comment.name}
             timestamp={comment.timestamp}

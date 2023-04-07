@@ -24,6 +24,10 @@ export const CommentBox: FC<Props> = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const linkRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g; // Regular expression to match links
   const parts = text.split(linkRegex);
+  const [contextMenuPosition, setContextMenuPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
 
   function getElapsedTime(timestamp: string): string {
     const now = new Date();
@@ -50,6 +54,7 @@ export const CommentBox: FC<Props> = ({
   const handleOpenContextMenu = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setAnchorEl(event.currentTarget);
+    setContextMenuPosition({ top: event.clientY, left: event.clientX });
   };
 
   const handleClose = () => {
@@ -106,8 +111,10 @@ export const CommentBox: FC<Props> = ({
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleClose}
-            sx={{
-              left: '12rem',
+            anchorReference="anchorPosition"
+            anchorPosition={{
+              top: contextMenuPosition.top,
+              left: contextMenuPosition.left,
             }}
           >
             <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
