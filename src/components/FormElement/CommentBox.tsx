@@ -1,12 +1,15 @@
 import { Avatar } from '@mui/joy';
-import { Paper, Grid } from '@mui/material';
-import { FC } from 'react';
+import { Paper, Grid, Button, Menu, MenuItem } from '@mui/material';
+import { FC, useState } from 'react';
 
 interface Props {
   text: string;
   name: string;
   timestamp: string;
   logoLink?: string;
+  id: string;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
 export const CommentBox: FC<Props> = ({
@@ -14,7 +17,11 @@ export const CommentBox: FC<Props> = ({
   name,
   timestamp,
   logoLink = '',
+  id,
+  onDelete,
+  onEdit,
 }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const linkRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g; // Regular expression to match links
   const parts = text.split(linkRegex);
 
@@ -40,9 +47,21 @@ export const CommentBox: FC<Props> = ({
     }
   }
 
+  const handleOpenContextMenu = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <>
-      <Paper style={{ padding: '20px', marginTop: '1rem' }}>
+      <Paper
+        style={{ padding: '20px', marginTop: '1rem' }}
+        onContextMenu={handleOpenContextMenu}
+      >
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
             <Avatar alt="Remy Sharp" src={logoLink} />
@@ -81,6 +100,21 @@ export const CommentBox: FC<Props> = ({
           </Grid>
         </Grid>
       </Paper>
+      <Grid container alignItems="center" justifyContent="space-between">
+        <div>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            sx={{
+              left: '12rem',
+            }}
+          >
+            <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
+            <MenuItem onClick={() => onEdit(id)}>Редагувати</MenuItem>
+          </Menu>
+        </div>
+      </Grid>
     </>
   );
 };

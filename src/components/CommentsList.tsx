@@ -11,7 +11,7 @@ export const CommentsList = () => {
   const auth = useSelector(getAuth);
   const currentProject = useSelector(getCurrentProject);
 
-  const handleSavingComment = (value: string) => {
+  const handleCreatingComment = (value: string) => {
     if (!currentProject) return;
 
     const id = uuidv4();
@@ -28,9 +28,13 @@ export const CommentsList = () => {
     );
   };
 
+  const handleDeleteComment = (id: string) => {};
+
+  const handleEditComment = (id: string) => {};
+
   return (
     <>
-      <CommentInput onClick={handleSavingComment} />
+      <CommentInput onClick={handleCreatingComment} />
       {currentProject &&
         currentProject.comments &&
         currentProject.comments.map((comment, index) => (
@@ -39,6 +43,9 @@ export const CommentsList = () => {
             text={comment.text}
             name={comment.name}
             timestamp={comment.timestamp}
+            id={comment.id}
+            onDelete={handleDeleteComment}
+            onEdit={handleEditComment}
           />
         ))}
     </>
