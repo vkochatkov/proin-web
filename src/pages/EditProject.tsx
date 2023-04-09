@@ -20,6 +20,7 @@ import {
 } from '../modules/actions/mainProjects';
 import { CommentsList } from '../components/CommentsList';
 import { Card } from '@mui/joy';
+import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 
 type Props = {};
 
@@ -66,79 +67,82 @@ const EditProject: React.FC<Props> = () => {
   };
 
   return (
-    <div className="container">
-      <Header>
-        <Button
-          size="small"
-          transparent={true}
-          icon={true}
-          customClassName="header__btn-close"
-          onClick={handleCloseProject}
-        >
-          <img src="/back.svg" alt="back_logo" className="button__icon" />
-        </Button>
-        <Button
-          customClassName="header__btn-transparent"
-          onClick={
-            currentProject
-              ? () => handleRemoveCurrentProject(token, currentProject._id)
-              : undefined
-          }
-        >
-          <img src="/delete-icon.svg" alt="delete icon" />
-        </Button>
-      </Header>
-      {isLoading && !currentProject ? (
-        <div className="loading">
-          <LoadingSpinner />
-        </div>
-      ) : (
-        <Card
-          sx={{
-            background: '#f8f8f8',
-          }}
-        >
-          <div>
-            <>
-              <ImageUpload
-                center
-                id="logoUrl"
-                onInput={inputHandler}
-                projectId={currentProject ? currentProject._id : undefined}
-                isUpdateValue={true}
-              />
-              <Input
-                id="projectName"
-                element="input"
-                type="text"
-                label="Ім'я нового проекту"
-                onInput={inputHandler}
-                isAnyValue={true}
-                isAutosave={true}
-                projectId={currentProject ? currentProject._id : undefined}
-                token={token}
-                isUpdateValue={true}
-                project={currentProject}
-              />
-              <Input
-                id="description"
-                element="textarea"
-                label="Опис"
-                onInput={inputHandler}
-                isAnyValue={true}
-                isAutosave={true}
-                projectId={currentProject ? currentProject._id : undefined}
-                token={token}
-                isUpdateValue={true}
-                project={currentProject}
-              />
-              <h3>Коментарі</h3>
-              <CommentsList />
-            </>
+    <>
+      <SnackbarUI />
+      <div className="container">
+        <Header>
+          <Button
+            size="small"
+            transparent={true}
+            icon={true}
+            customClassName="header__btn-close"
+            onClick={handleCloseProject}
+          >
+            <img src="/back.svg" alt="back_logo" className="button__icon" />
+          </Button>
+          <Button
+            customClassName="header__btn-transparent"
+            onClick={
+              currentProject
+                ? () => handleRemoveCurrentProject(token, currentProject._id)
+                : undefined
+            }
+          >
+            <img src="/delete-icon.svg" alt="delete icon" />
+          </Button>
+        </Header>
+        {isLoading && !currentProject ? (
+          <div className="loading">
+            <LoadingSpinner />
           </div>
-        </Card>
-      )}
-    </div>
+        ) : (
+          <Card
+            sx={{
+              background: '#f8f8f8',
+            }}
+          >
+            <div>
+              <>
+                <ImageUpload
+                  center
+                  id="logoUrl"
+                  onInput={inputHandler}
+                  projectId={currentProject ? currentProject._id : undefined}
+                  isUpdateValue={true}
+                />
+                <Input
+                  id="projectName"
+                  element="input"
+                  type="text"
+                  label="Ім'я нового проекту"
+                  onInput={inputHandler}
+                  isAnyValue={true}
+                  isAutosave={true}
+                  projectId={currentProject ? currentProject._id : undefined}
+                  token={token}
+                  isUpdateValue={true}
+                  project={currentProject}
+                />
+                <Input
+                  id="description"
+                  element="textarea"
+                  label="Опис"
+                  onInput={inputHandler}
+                  isAnyValue={true}
+                  isAutosave={true}
+                  projectId={currentProject ? currentProject._id : undefined}
+                  token={token}
+                  isUpdateValue={true}
+                  project={currentProject}
+                />
+                <h3>Коментарі</h3>
+                <CommentsList />
+              </>
+            </div>
+          </Card>
+        )}
+      </div>
+    </>
   );
 };
 

@@ -5,8 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import {
-  addCommentToCurrentProject,
+  deleteComment,
   setCurrentProject,
+  updateProjectComments,
 } from '../modules/actions/mainProjects';
 
 export const CommentsList = () => {
@@ -24,10 +25,13 @@ export const CommentsList = () => {
       text: value,
       name: userName,
       timestamp: new Date().toISOString(),
+      status: 'created',
     };
 
     dispatch(
-      addCommentToCurrentProject({ comment, projectId: currentProject._id })
+      updateProjectComments({
+        comment,
+      }) as any
     );
   };
 
@@ -43,6 +47,7 @@ export const CommentsList = () => {
         comments: updatedComments,
       };
 
+      dispatch(deleteComment(id) as any);
       dispatch(setCurrentProject(updatedProject));
     }
   };

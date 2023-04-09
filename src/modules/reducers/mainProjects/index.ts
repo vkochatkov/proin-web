@@ -6,7 +6,7 @@ import {
   updateProjects,
   clearProjects,
   createProjectSuccess,
-  addCommentToCurrentProject,
+  updateProjectCommentsSuccess,
 } from '../../actions/mainProjects';
 
 export interface IComment {
@@ -56,22 +56,8 @@ mainProjects.on(editProjectFailure, (state: any, payload: any) => {
   };
 });
 
-mainProjects.on(addCommentToCurrentProject, (state, payload) => {
-  const { comment } = payload;
-  const currentProject = state.currentProject;
-
-  if (!currentProject) return state;
-
-  const updatedCurrentProject = {
-    ...currentProject,
-    comments: currentProject.comments
-      ? [...currentProject.comments, comment]
-      : [comment],
-  };
-
-  const updatedProjectsArray = state.projects.map((project) =>
-    project.id === updatedCurrentProject._id ? updatedCurrentProject : project
-  );
+mainProjects.on(updateProjectCommentsSuccess, (state, payload) => {
+  const { updatedCurrentProject, updatedProjectsArray } = payload;
 
   return {
     ...state,

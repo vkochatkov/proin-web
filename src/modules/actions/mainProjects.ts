@@ -5,6 +5,7 @@ import { clearFormInput } from './form';
 import { RootState } from '../store';
 import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
+import { changeSnackbarState } from './snackbar';
 
 export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -12,14 +13,108 @@ export const editProjectFailure = createAction<string>('EDIT_PROJECT_FAILURE');
 export const createProjectSuccess = createAction<Project>(
   'CREATE_PROJECT_SUCCESS'
 );
-export const addCommentToCurrentProject = createAction<{
-  projectId: string;
-  comment: IComment;
-}>('ADD_COMMENT_TO_CURRENT_PROJECT');
+export const updateProjectCommentsSuccess = createAction<{
+  updatedCurrentProject: Project;
+  updatedProjectsArray: Project[];
+}>('UPDATE_PROJECT_COMMENTS_SUCCESS');
 export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
 export const clearProjects = createAction('CLEAR_PROJECTS');
 
 const httpSource = axios.CancelToken.source();
+
+export const updateProjectComments =
+  ({ comment }: { comment: IComment }) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    try {
+      const { token } = getState().user;
+      const { currentProject, projects } = getState().mainProjects;
+
+      if (!currentProject)
+        return dispatch(
+          changeSnackbarState({
+            id: 'error',
+            open: true,
+            message: 'Проекту немає, сталася помилка',
+          })
+        );
+
+      const updatedCurrentProject = {
+        ...currentProject,
+        comments: currentProject.comments
+          ? [...currentProject.comments, comment]
+          : [comment],
+      };
+
+      const updatedProjectsArray = projects.map((project) =>
+        project.id === updatedCurrentProject._id
+          ? updatedCurrentProject
+          : project
+      );
+
+      dispatch(
+        updateProjectCommentsSuccess({
+          updatedCurrentProject,
+          updatedProjectsArray,
+        })
+      );
+
+      await axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
+        data: JSON.stringify(comment),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        cancelToken: httpSource.token,
+      });
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: e.data.message,
+        })
+      );
+    }
+  };
+
+export const deleteComment =
+  (id: string) => async (dispatch: Dispatch, getState: () => RootState) => {
+    try {
+      const { currentProject, projects } = getState().mainProjects;
+      const { token } = getState().user;
+
+      if (!currentProject)
+        return dispatch(
+          changeSnackbarState({
+            id: 'error',
+            open: true,
+            message: 'Проекту немає, сталася помилка',
+          })
+        );
+
+      await axios({
+        method: 'DELETE',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
+        data: { id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        cancelToken: httpSource.token,
+      });
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message:
+            'Щось пішло не так. Коментар не видалено. Перезавантажте сторінку!',
+        })
+      );
+    }
+  };
 
 export const createNewProject =
   (token: string) => async (dispatch: Dispatch) => {
