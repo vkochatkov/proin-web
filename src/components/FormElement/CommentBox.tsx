@@ -1,6 +1,6 @@
 import { Avatar } from '@mui/joy';
-import { Paper, Grid, Button, Menu, MenuItem } from '@mui/material';
-import { FC, useState } from 'react';
+import { Paper, Grid, Menu, MenuItem } from '@mui/material';
+import { FC, Fragment, useState } from 'react';
 
 interface Props {
   text: string;
@@ -22,8 +22,9 @@ export const CommentBox: FC<Props> = ({
   onEdit,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const linkRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g; // Regular expression to match links
-  const parts = text.split(linkRegex);
+  const linkRegex = /((?:https?:\/\/|www\.)[^\s\n]+)/g; // Regular expression to match links and new lines
+  const parts = text.split('\n');
+
   const [contextMenuPosition, setContextMenuPosition] = useState<{
     top: number;
     left: number;
@@ -76,22 +77,30 @@ export const CommentBox: FC<Props> = ({
             {parts.map((part, index) => {
               if (!part) return null;
               if (part.match(linkRegex)) {
-                // If the part is a link
-                return (
-                  <a
-                    style={{
-                      color: '#0e86d4',
-                    }}
-                    key={index}
-                    href={part}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {part}
-                  </a>
+                const words = part.split(' ');
+                const linkIndex = words.findIndex(
+                  (word) =>
+                    word.startsWith('http://') || word.startsWith('https://')
                 );
+
+                return words.map((word, index) => (
+                  <Fragment key={index}>
+                    {index === linkIndex ? (
+                      <>
+                        <a
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={word}
+                        >
+                          {word}
+                        </a>{' '}
+                      </>
+                    ) : (
+                      <>{word} </>
+                    )}
+                  </Fragment>
+                ));
               } else {
-                // Otherwise, render regular text
                 return (
                   <p key={index} style={{ textAlign: 'left', margin: '0' }}>
                     {part}

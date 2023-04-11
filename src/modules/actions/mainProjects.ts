@@ -22,7 +22,7 @@ export const clearProjects = createAction('CLEAR_PROJECTS');
 
 const httpSource = axios.CancelToken.source();
 
-export const updateProjectComments =
+export const createProjectComments =
   ({ comment }: { comment: IComment }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     try {
@@ -68,12 +68,87 @@ export const updateProjectComments =
         },
         cancelToken: httpSource.token,
       });
-    } catch (e: any) {
+    } catch (e) {
       dispatch(
         changeSnackbarState({
           id: 'error',
           open: true,
-          message: e.data.message,
+          message:
+            'Щось пішло не так. Коментар не створено. Перезавантажте сторінку!',
+        })
+      );
+    }
+  };
+
+export const updateComment =
+  ({
+    updatedComments,
+    updatedComment,
+  }: {
+    updatedComments: IComment[];
+    updatedComment: IComment;
+  }) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    try {
+      const { token } = getState().user;
+      const { currentProject, projects } = getState().mainProjects;
+
+      if (!currentProject) {
+        return dispatch(
+          changeSnackbarState({
+            id: 'error',
+            open: true,
+            message: 'Проекту немає, сталася помилка',
+          })
+        );
+      }
+
+      if (!currentProject.comments) {
+        return dispatch(
+          changeSnackbarState({
+            id: 'error',
+            open: true,
+            message: 'Коментарів немає, сталася помилка',
+          })
+        );
+      }
+
+      const updatedCurrentProject = {
+        ...currentProject,
+        comments: updatedComments,
+      };
+
+      const updatedProjectsArray = projects.map((project) =>
+        project.id === updatedCurrentProject._id
+          ? updatedCurrentProject
+          : project
+      );
+
+      dispatch(
+        updateProjectCommentsSuccess({
+          updatedCurrentProject,
+          updatedProjectsArray,
+        })
+      );
+
+      console.log('PATCH');
+      await axios({
+        method: 'PATCH',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
+        data: JSON.stringify(updatedComment),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        cancelToken: httpSource.token,
+      });
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message:
+            'Щось пішло не так. Коментар не оновлено. Перезавантажте сторінку!',
         })
       );
     }
@@ -104,7 +179,7 @@ export const deleteComment =
         },
         cancelToken: httpSource.token,
       });
-    } catch (e: any) {
+    } catch (e) {
       dispatch(
         changeSnackbarState({
           id: 'error',

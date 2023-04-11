@@ -103,8 +103,8 @@ const EditProject: React.FC<Props> = () => {
           >
             <div>
               <>
+                <h3>Лого</h3>
                 <ImageUpload
-                  center
                   id="logoUrl"
                   onInput={inputHandler}
                   projectId={currentProject ? currentProject._id : undefined}

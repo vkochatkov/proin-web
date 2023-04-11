@@ -1,17 +1,26 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
+import { Button as CloseButton } from './Button';
 import FormControl from '@mui/joy/FormControl';
 import Textarea from '@mui/joy/Textarea';
 
+import './ComponentInput.scss';
+
 interface Props {
   onClick: (value: string) => void;
+  onCancel?: () => void;
+  isActive?: boolean;
+  text?: string;
 }
 
 export const CommentInput = (props: Props) => {
-  const [commentValue, setCommentValue] = React.useState<string>('');
-  const [isTextareaActive, setIsTextareaActive] =
-    React.useState<boolean>(false);
+  const [commentValue, setCommentValue] = useState<string>(
+    props.isActive && props.text ? props.text : ''
+  );
+  const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
+    props.isActive ? props.isActive : false
+  );
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,13 +53,21 @@ export const CommentInput = (props: Props) => {
                 gap: 'var(--Textarea-paddingBlock)',
                 pt: 'var(--Textarea-paddingBlock)',
                 borderTop: '1px solid',
-                borderColor: 'divider',
                 flex: 'auto',
+                justifyContent: 'flex-end',
               }}
             >
-              <Button sx={{ ml: 'auto' }} onClick={handleClick}>
-                Зберегти
-              </Button>
+              <CloseButton
+                customClassName="comment-input__close-btn"
+                onClick={props.onCancel}
+              >
+                <img
+                  src="/close.svg"
+                  alt="close_logo"
+                  className="comment-input__close-icon"
+                />
+              </CloseButton>
+              <Button onClick={handleClick}>Зберегти</Button>
             </Box>
           ) : null
         }

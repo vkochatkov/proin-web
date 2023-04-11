@@ -1,0 +1,13 @@
+.comment-input {
+  &__close-btn {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+  }
+
+  &__close-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}

@@ -134,7 +134,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
           {previewUrl && <img src={previewUrl} alt="Preview" />}
         </div>
         <Button type="button" onClick={pickImageHandler}>
-          Обери лого
+          Додати лого
         </Button>
       </div>
     </div>
