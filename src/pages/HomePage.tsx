@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHttpClient } from '../hooks/useHttpClient';
 import {
+  acceptInvitation,
   createNewProject,
   updateProjects,
 } from '../modules/actions/mainProjects';
@@ -13,6 +14,8 @@ import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
 import { getIsLoading } from '../modules/selectors/loading';
 import { endLoading, startLoading } from '../modules/actions/loading';
+import { SnackbarUI } from '../components/UIElements/SnackbarUI';
+
 import './HomePage.scss';
 
 const HomePage: React.FC = () => {
@@ -27,7 +30,16 @@ const HomePage: React.FC = () => {
   const isLoading = useSelector(getIsLoading);
 
   useEffect(() => {
+    const storedDataString = localStorage.getItem('accessInfo');
+
     dispatch(startLoading());
+
+    if (storedDataString) {
+      const storedData = JSON.parse(storedDataString);
+
+      dispatch(acceptInvitation(storedData) as any);
+      localStorage.removeItem('accessInfo');
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -56,6 +68,7 @@ const HomePage: React.FC = () => {
 
   return (
     <>
+      <SnackbarUI />
       <div className="container">
         <MainNavigation>
           <Button

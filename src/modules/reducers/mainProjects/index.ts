@@ -14,6 +14,7 @@ export interface IComment {
   name: string;
   text: string;
   timestamp: string;
+  userId: string;
 }
 
 export interface Project {

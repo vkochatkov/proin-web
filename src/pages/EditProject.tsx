@@ -21,13 +21,17 @@ import {
 import { CommentsList } from '../components/CommentsList';
 import { Card } from '@mui/joy';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
+import { findProjectMember } from '../utils/utils';
+import { InvitePopup } from '../components/Popup/InvitePopup';
+import { openPopup } from '../modules/actions/popup';
 
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
-  const { token } = useSelector(getAuth);
+  const { token, userId } = useSelector(getAuth);
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
+  const isMemberAdded = findProjectMember(currentProject, userId);
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -66,8 +70,13 @@ const EditProject: React.FC<Props> = () => {
     dispatch(clearCurrentProject());
   };
 
+  const handleOpenPopup = () => {
+    dispatch(openPopup({ id: 'invite' }));
+  };
+
   return (
     <>
+      <InvitePopup />
       <SnackbarUI />
       <div className="container">
         <Header>
@@ -82,6 +91,7 @@ const EditProject: React.FC<Props> = () => {
           </Button>
           <Button
             customClassName="header__btn-transparent"
+            disabled={isMemberAdded}
             onClick={
               currentProject
                 ? () => handleRemoveCurrentProject(token, currentProject._id)
@@ -103,7 +113,22 @@ const EditProject: React.FC<Props> = () => {
           >
             <div>
               <>
-                <h3>Лого</h3>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <h3
+                    style={{
+                      marginTop: '5px',
+                      marginBottom: '5px',
+                    }}
+                  >
+                    Лого
+                  </h3>
+                  <Button onClick={handleOpenPopup}>Додати користувача</Button>
+                </div>
                 <ImageUpload
                   id="logoUrl"
                   onInput={inputHandler}

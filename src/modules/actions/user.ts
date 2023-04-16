@@ -14,14 +14,16 @@ const httpSource = axios.CancelToken.source();
 
 export const signin =
   (uid: string, token: string, email: string) => (dispatch: Dispatch) => {
-    dispatch(
-      loginSuccess({
-        userId: uid,
-        token,
-        email,
-      })
-    );
-    dispatch(endLoading());
+    try {
+      dispatch(
+        loginSuccess({
+          userId: uid,
+          token,
+          email,
+        })
+      );
+      dispatch(endLoading());
+    } catch (e) {}
   };
 
 export const signout = () => (dispatch: Dispatch) => {
@@ -60,7 +62,13 @@ export const sendRecaveryEmail =
 
       dispatch(clearFormInput());
     } catch (e: any) {
-      console.log(e.message);
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
     }
   };
 
@@ -94,7 +102,13 @@ export const resetPassword =
       setTimeout(() => {
         window.location.href = '/';
       }, 6000);
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
     }
   };

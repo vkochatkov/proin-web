@@ -1,6 +1,9 @@
 import { Avatar } from '@mui/joy';
 import { Paper, Grid, Menu, MenuItem } from '@mui/material';
 import { FC, Fragment, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getAuth } from '../../modules/selectors/user';
+import { red, blue, green, yellow } from '@mui/material/colors';
 
 interface Props {
   text: string;
@@ -8,6 +11,7 @@ interface Props {
   timestamp: string;
   logoLink?: string;
   id: string;
+  userId: string;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
 }
@@ -18,17 +22,32 @@ export const CommentBox: FC<Props> = ({
   timestamp,
   logoLink = '',
   id,
+  userId,
   onDelete,
   onEdit,
 }) => {
+  const auth = useSelector(getAuth);
+  const isUserOwnComment = auth.userId === userId;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const linkRegex = /((?:https?:\/\/|www\.)[^\s\n]+)/g; // Regular expression to match links and new lines
   const parts = text.split('\n');
-
   const [contextMenuPosition, setContextMenuPosition] = useState<{
     top: number;
     left: number;
   }>({ top: 0, left: 0 });
+  const colorShade = 700;
+  const colors = [
+    red[colorShade],
+    blue[colorShade],
+    green[colorShade],
+    yellow[colorShade],
+  ];
+  const firstLetter = name.charAt(0).toUpperCase();
+
+  const getBackgroundColor = (letter: string) => {
+    const index = letter.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
 
   function getElapsedTime(timestamp: string): string {
     const now = new Date();
@@ -54,6 +73,7 @@ export const CommentBox: FC<Props> = ({
 
   const handleOpenContextMenu = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
+    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
   };
@@ -70,7 +90,21 @@ export const CommentBox: FC<Props> = ({
       >
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Avatar alt="Remy Sharp" src={logoLink} />
+            <Avatar
+              alt="Remy Sharp"
+              src={logoLink}
+              sx={{
+                bgcolor: getBackgroundColor(firstLetter),
+              }}
+            >
+              <h3
+                style={{
+                  color: '#fff',
+                }}
+              >
+                {firstLetter}
+              </h3>
+            </Avatar>
           </Grid>
           <Grid justifyContent="left" item xs zeroMinWidth>
             <h4 style={{ margin: 0, textAlign: 'left' }}>{name}</h4>
@@ -116,19 +150,37 @@ export const CommentBox: FC<Props> = ({
       </Paper>
       <Grid container alignItems="center" justifyContent="space-between">
         <div>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            anchorReference="anchorPosition"
-            anchorPosition={{
-              top: contextMenuPosition.top,
-              left: contextMenuPosition.left,
-            }}
-          >
-            <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
-            <MenuItem onClick={() => onEdit(id)}>Редагувати</MenuItem>
-          </Menu>
+          {!isUserOwnComment && (
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={{
+                top: contextMenuPosition.top,
+                left: contextMenuPosition.left,
+              }}
+            >
+              <MenuItem onClick={() => console.log('відповісти')}>
+                Відповісти
+              </MenuItem>
+            </Menu>
+          )}
+          {isUserOwnComment && (
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={{
+                top: contextMenuPosition.top,
+                left: contextMenuPosition.left,
+              }}
+            >
+              <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
+              <MenuItem onClick={() => onEdit(id)}>Редагувати</MenuItem>
+            </Menu>
+          )}
         </div>
       </Grid>
     </>

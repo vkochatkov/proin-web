@@ -5,6 +5,7 @@ import { mainProjects } from './reducers/mainProjects/index';
 import { formReducer } from './reducers/formReducer';
 import { loadingReducer } from './reducers/loading';
 import { snackbar } from './reducers/snackbar';
+import { popup } from './reducers/popup';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   formData: formReducer,
   isLoading: loadingReducer,
   snackbar,
+  popup,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -131,7 +131,6 @@ export const updateComment =
         })
       );
 
-      console.log('PATCH');
       await axios({
         method: 'PATCH',
         url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
@@ -157,7 +156,7 @@ export const updateComment =
 export const deleteComment =
   (id: string) => async (dispatch: Dispatch, getState: () => RootState) => {
     try {
-      const { currentProject, projects } = getState().mainProjects;
+      const { currentProject } = getState().mainProjects;
       const { token } = getState().user;
 
       if (!currentProject)
@@ -258,7 +257,94 @@ export const updateOrderProjects =
         },
         cancelToken: httpSource.token,
       });
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const sendInvitation =
+  (email: string) => async (dispatch: Dispatch, getState: () => RootState) => {
+    const { currentProject } = getState().mainProjects;
+    const { token } = getState().user;
+
+    try {
+      if (!currentProject) {
+        return dispatch(
+          dispatch(
+            changeSnackbarState({
+              id: 'error',
+              open: true,
+              message: `Проект не знайдено. Перезавантажте сторінку`,
+            })
+          )
+        );
+      }
+
+      await axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject.id}/invite`,
+        data: JSON.stringify({ email }),
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+        cancelToken: httpSource.token,
+      });
+
+      dispatch(
+        changeSnackbarState({
+          id: 'success',
+          open: true,
+          message: `Запрошення успішно відправлене. Перевірте пошту"`,
+        })
+      );
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const acceptInvitation =
+  ({ id, invitationId }: { id: string; invitationId: string }) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { token } = getState().user;
+
+    try {
+      await axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}/invitations/${invitationId}`,
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+        cancelToken: httpSource.token,
+      });
+
+      window.location.reload();
+      dispatch(
+        changeSnackbarState({
+          id: 'success',
+          open: true,
+          message: 'Учасник успішно доданий до проекту',
+        })
+      );
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
     }
   };

@@ -58,7 +58,7 @@ const ResetPassword = () => {
                 type="password"
                 label="Введіть новий пароль"
                 validators={[VALIDATOR_MINLENGTH(6)]}
-                errorText="Please enter a valid email address."
+                errorText="Будь-ласка, додайте валідну електронну адресу."
                 onInput={inputHandler}
               />
               <Button type="submit" disabled={!formState.isValid}>

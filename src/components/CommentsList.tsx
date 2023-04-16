@@ -30,6 +30,7 @@ export const CommentsList = () => {
       text: value,
       name: userName,
       timestamp: new Date().toISOString(),
+      userId: auth.userId,
     };
 
     dispatch(
@@ -129,6 +130,7 @@ export const CommentsList = () => {
                 name={comment.name}
                 timestamp={comment.timestamp}
                 id={comment.id}
+                userId={comment.userId}
                 onDelete={handleDeleteComment}
                 onEdit={handleEditComment}
               />

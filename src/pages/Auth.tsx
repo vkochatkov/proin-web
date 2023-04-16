@@ -63,8 +63,15 @@ const Auth = () => {
 
         login(data.userId, data.token, data.email);
         navigate('/');
-      } catch (err) {
+      } catch (e: any) {
         dispatch(endLoading());
+        dispatch(
+          changeSnackbarState({
+            id: 'error',
+            open: true,
+            message: `${e.response.data.message}. Перезавантажте сторінку`,
+          })
+        );
       }
     } else {
       try {

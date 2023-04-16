@@ -8,6 +8,8 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { LoadingSpinner } from './components/UIElements/LoadingSpinner';
+import { InvitePage } from './pages/InvitePage';
+
 import './App.scss';
 
 const Auth = React.lazy(() => import('./pages/Auth'));
@@ -26,6 +28,10 @@ export const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/project-edit/:pid" element={<EditProject />} />
+        <Route
+          path="/projects/:id/invitations/:invitationId"
+          element={<InvitePage />}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
@@ -35,6 +41,10 @@ export const App: React.FC = () => {
         <Route path="/auth" element={<Auth />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route
+          path="/projects/:id/invitations/:invitationId"
+          element={<InvitePage />}
+        />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     );
