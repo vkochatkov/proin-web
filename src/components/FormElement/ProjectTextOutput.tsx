@@ -1,52 +1,82 @@
-import { Fragment } from 'react';
+import { Link } from './ProjectTextLink';
 
 interface Props {
   text?: string;
 }
 
+const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+const phoneRegex =
+  /(\+?\d{1,3}[\s.-]?)?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})/g;
+const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
+
 export const ProjectTextOutput = ({ text }: Props) => {
-  const linkRegex = /((?:https?:\/\/|www\.)[^\s\n]+)/g; // Regular expression to match links and new lines
-  const parts = text ? text.split('\n') : null;
+  const linkify = (word: string, index: number) => {
+    if (word.startsWith('http://') || word.startsWith('https://')) {
+      return (
+        <Link key={`${word}-${index}`} href={word}>
+          {word}
+        </Link>
+      );
+    } else if (word.startsWith('@')) {
+      return (
+        <Link key={`${word}-${index}`} href="#">
+          {word}
+        </Link>
+      );
+    } else if (word.match(emailRegex)) {
+      return (
+        <Link key={`${word}-${index}`} href={`mailto:${word}`}>
+          {word}
+        </Link>
+      );
+    } else if (word.match(phoneRegex)) {
+      return (
+        <Link key={`${word}-${index}`} href={`tel:${word}`}>
+          {word}
+        </Link>
+      );
+    } else if (word.match(cardRegex)) {
+      return (
+        <Link key={`${word}-${index}`} href="#">
+          {word}
+        </Link>
+      );
+    } else {
+      return <span>{word} </span>;
+    }
+  };
 
   return (
     <>
-      {parts &&
-        parts.map((part, index) => {
-          if (!part) return null;
-          if (part.match(linkRegex)) {
-            const words = part.split(' ');
-            const linkIndex = words.findIndex(
-              (word) =>
-                word.startsWith('http://') || word.startsWith('https://')
-            );
+      {text &&
+        text.split('\n').map((part, index) => {
+          const words = part.split(' ');
 
-            return words.map((word, index) => (
-              <Fragment key={index}>
-                {index === linkIndex ? (
-                  <>
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={word}
-                      style={{
-                        wordBreak: 'break-all',
-                      }}
-                    >
+          const newLineAfterLink = part.endsWith(' ');
+          const lastWordIndex = words.length - 1;
+
+          return (
+            <p key={index} style={{ textAlign: 'left', margin: '0' }}>
+              {words.map((word: string, wordIndex: number) => {
+                const linkElement = linkify(
+                  word,
+                  index * words.length + wordIndex
+                );
+
+                if (linkElement) {
+                  return linkElement;
+                } else {
+                  return (
+                    <>
                       {word}
-                    </a>{' '}
-                  </>
-                ) : (
-                  <>{word} </>
-                )}
-              </Fragment>
-            ));
-          } else {
-            return (
-              <p key={index} style={{ textAlign: 'left', margin: '0' }}>
-                {part}
-              </p>
-            );
-          }
+                      {wordIndex === lastWordIndex ? '' : ' '}
+                    </>
+                  );
+                }
+              })}
+              {newLineAfterLink && <br />}
+            </p>
+          );
         })}
     </>
   );
