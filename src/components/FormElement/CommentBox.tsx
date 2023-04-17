@@ -1,9 +1,10 @@
 import { Avatar } from '@mui/joy';
 import { Paper, Grid, Menu, MenuItem } from '@mui/material';
-import { FC, Fragment, useState } from 'react';
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getAuth } from '../../modules/selectors/user';
 import { red, blue, green, yellow } from '@mui/material/colors';
+import { ProjectTextOutput } from './ProjectTextOutput';
 
 interface Props {
   text: string;
@@ -29,8 +30,6 @@ export const CommentBox: FC<Props> = ({
   const auth = useSelector(getAuth);
   const isUserOwnComment = auth.userId === userId;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const linkRegex = /((?:https?:\/\/|www\.)[^\s\n]+)/g; // Regular expression to match links and new lines
-  const parts = text.split('\n');
   const [contextMenuPosition, setContextMenuPosition] = useState<{
     top: number;
     left: number;
@@ -73,7 +72,6 @@ export const CommentBox: FC<Props> = ({
 
   const handleOpenContextMenu = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
     setContextMenuPosition({ top: event.clientY, left: event.clientX });
   };
@@ -108,43 +106,7 @@ export const CommentBox: FC<Props> = ({
           </Grid>
           <Grid justifyContent="left" item xs zeroMinWidth>
             <h4 style={{ margin: 0, textAlign: 'left' }}>{name}</h4>
-            {parts.map((part, index) => {
-              if (!part) return null;
-              if (part.match(linkRegex)) {
-                const words = part.split(' ');
-                const linkIndex = words.findIndex(
-                  (word) =>
-                    word.startsWith('http://') || word.startsWith('https://')
-                );
-
-                return words.map((word, index) => (
-                  <Fragment key={index}>
-                    {index === linkIndex ? (
-                      <>
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={word}
-                          style={{
-                            wordBreak: 'break-all',
-                          }}
-                        >
-                          {word}
-                        </a>{' '}
-                      </>
-                    ) : (
-                      <>{word} </>
-                    )}
-                  </Fragment>
-                ));
-              } else {
-                return (
-                  <p key={index} style={{ textAlign: 'left', margin: '0' }}>
-                    {part}
-                  </p>
-                );
-              }
-            })}
+            <ProjectTextOutput text={text} />
             <p style={{ textAlign: 'left', color: 'gray', marginBottom: '0' }}>
               {getElapsedTime(timestamp)}
             </p>

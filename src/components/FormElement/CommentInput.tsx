@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import { Button as CloseButton } from './Button';
@@ -71,9 +71,6 @@ export const CommentInput = (props: Props) => {
             </Box>
           ) : null
         }
-        sx={{
-          minWidth: 300,
-        }}
       />
     </FormControl>
   );

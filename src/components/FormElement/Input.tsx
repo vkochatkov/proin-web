@@ -13,7 +13,7 @@ type InputProps = {
   id: string;
   element?: 'input' | 'textarea';
   type?: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   initialValue?: string;
   initialValid?: boolean;
@@ -28,6 +28,7 @@ type InputProps = {
   isUpdateValue?: boolean;
   project?: any;
   labelClassName?: string;
+  isActive?: boolean;
 };
 
 export const Input = (props: InputProps) => {
@@ -41,6 +42,12 @@ export const Input = (props: InputProps) => {
   const { value, isValid } = inputState;
   const isLoading = useSelector(getIsLoading);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (props.isActive) {
+      textareaRef.current?.focus();
+    }
+  }, [props.isActive]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -94,6 +101,7 @@ export const Input = (props: InputProps) => {
           dispatch(setCurrentProject(data.project));
         })
         .catch(() => {});
+      // eslint-disable-next-line
     }, 1000),
     []
   );
@@ -170,12 +178,14 @@ export const Input = (props: InputProps) => {
         // 'form-control--invalid'
       }
     >
-      <label
-        htmlFor={props.id}
-        className={props.labelClassName ? `${props.labelClassName}` : ''}
-      >
-        {props.label}
-      </label>
+      {props.label && (
+        <label
+          htmlFor={props.id}
+          className={props.labelClassName ? `${props.labelClassName}` : ''}
+        >
+          {props.label}
+        </label>
+      )}
       {element}
       {/* {!props.isAnyValue && !inputState.isValid && inputState.isTouched && (
         <p>{props.errorText}</p>

@@ -24,6 +24,7 @@ import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { findProjectMember } from '../utils/utils';
 import { InvitePopup } from '../components/Popup/InvitePopup';
 import { openPopup } from '../modules/actions/popup';
+import { ProjectDescription } from '../components/FormElement/ProjectDescription';
 
 type Props = {};
 
@@ -148,16 +149,9 @@ const EditProject: React.FC<Props> = () => {
                   isUpdateValue={true}
                   project={currentProject}
                 />
-                <Input
-                  id="description"
-                  element="textarea"
-                  label="Опис"
-                  onInput={inputHandler}
-                  isAnyValue={true}
-                  isAutosave={true}
-                  projectId={currentProject ? currentProject._id : undefined}
+                <ProjectDescription
+                  inputHandler={inputHandler}
                   token={token}
-                  isUpdateValue={true}
                   project={currentProject}
                 />
                 <h3>Коментарі</h3>
