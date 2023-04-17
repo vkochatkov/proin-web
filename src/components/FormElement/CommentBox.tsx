@@ -125,6 +125,9 @@ export const CommentBox: FC<Props> = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           href={word}
+                          style={{
+                            wordBreak: 'break-all',
+                          }}
                         >
                           {word}
                         </a>{' '}
