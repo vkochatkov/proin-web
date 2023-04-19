@@ -6,6 +6,7 @@ import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoading } from '../../modules/selectors/loading';
 import { endLoading } from '../../modules/actions/loading';
+import { changeSnackbarState } from '../../modules/actions/snackbar';
 
 import './Input.scss';
 
@@ -97,10 +98,16 @@ export const Input = (props: InputProps) => {
         },
         cancelToken: request.token,
       })
-        .then(({ data }) => {
-          dispatch(setCurrentProject(data.project));
-        })
-        .catch(() => {});
+        .then(() => {})
+        .catch(() => {
+          dispatch(
+            changeSnackbarState({
+              id: 'error',
+              message: 'Не вдалося скопіювати, щось пішло не так',
+              open: true,
+            })
+          );
+        });
       // eslint-disable-next-line
     }, 1000),
     []
@@ -118,7 +125,15 @@ export const Input = (props: InputProps) => {
         ? props.isAnyValue
         : validate(newValue, props.validators),
     }));
+
     if (props.isAutosave && props.token) {
+      const updatedProject = {
+        ...props.project,
+        [id]: newValue,
+      };
+
+      dispatch(setCurrentProject(updatedProject));
+
       saveChanges({ [id]: newValue }, props.token, props.projectId);
     }
   };

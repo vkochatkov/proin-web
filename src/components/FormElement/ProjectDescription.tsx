@@ -12,11 +12,15 @@ interface Props {
 export const ProjectDescription = ({ inputHandler, project, token }: Props) => {
   const [isActive, setIsActive] = useState(false);
 
+  const handleHideInput = () => {
+    setIsActive(false);
+  };
+
   return (
     <>
       <h3>Опис</h3>
       {isActive && (
-        <div onBlur={() => setIsActive(false)}>
+        <div onBlur={handleHideInput}>
           <Input
             id="description"
             element="textarea"
@@ -33,11 +37,12 @@ export const ProjectDescription = ({ inputHandler, project, token }: Props) => {
       )}
       {!isActive && (
         <div
+          style={{ minHeight: '10px' }}
           onClick={() => {
             setIsActive(true);
           }}
         >
-          <ProjectTextOutput text={project ? project.description : ' '} />
+          <ProjectTextOutput text={project ? project.description : undefined} />
         </div>
       )}
     </>

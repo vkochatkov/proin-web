@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux';
+import { changeSnackbarState } from '../../modules/actions/snackbar';
 import { Link } from './ProjectTextLink';
 
 interface Props {
@@ -10,6 +12,27 @@ const phoneRegex =
 const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
 
 export const ProjectTextOutput = ({ text }: Props) => {
+  const dispatch = useDispatch();
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const content = event.currentTarget.textContent;
+
+    if (content) {
+      navigator.clipboard
+        .writeText(content)
+        .then(() =>
+          dispatch(
+            changeSnackbarState({
+              id: 'success',
+              message: 'Скопійовано в буфер',
+              open: true,
+            })
+          )
+        )
+        .catch((error) => console.error('Failed to copy to clipboard:', error));
+    }
+  };
   const linkify = (word: string, index: number) => {
     if (word.startsWith('http://') || word.startsWith('https://')) {
       return (
@@ -19,25 +42,33 @@ export const ProjectTextOutput = ({ text }: Props) => {
       );
     } else if (word.startsWith('@')) {
       return (
-        <Link key={`${word}-${index}`} href="#">
+        <Link onClick={handleClick} key={`${word}-${index}`} href="#">
           {word}
         </Link>
       );
     } else if (word.match(emailRegex)) {
       return (
-        <Link key={`${word}-${index}`} href={`mailto:${word}`}>
+        <Link
+          onClick={handleClick}
+          key={`${word}-${index}`}
+          href={`mailto:${word}`}
+        >
           {word}
         </Link>
       );
     } else if (word.match(phoneRegex)) {
       return (
-        <Link key={`${word}-${index}`} href={`tel:${word}`}>
+        <Link
+          onClick={handleClick}
+          key={`${word}-${index}`}
+          href={`tel:${word}`}
+        >
           {word}
         </Link>
       );
     } else if (word.match(cardRegex)) {
       return (
-        <Link key={`${word}-${index}`} href="#">
+        <Link onClick={handleClick} key={`${word}-${index}`} href="#">
           {word}
         </Link>
       );
