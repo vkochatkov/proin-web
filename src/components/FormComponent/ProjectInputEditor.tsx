@@ -24,13 +24,13 @@ export const ProjectDescription = ({
   const text = project ? project[id] : undefined;
 
   useEffect(() => {
-    if (id === 'projectName' && text === '') {
+    if ((id === 'projectName' && !text) || !text) {
       setIsActive(true);
     }
-  }, []);
+  }, [id, text]);
 
   const handleHideInput = () => {
-    if (id === 'projectName' && text === '') {
+    if (id === 'projectName' && !text) {
       return;
     }
 
@@ -62,8 +62,8 @@ export const ProjectDescription = ({
             setIsActive(true);
           }}
         >
-          {text === '' && id === 'description' && (
-            <div className="project-input-editor__btn">Додайте опис</div>
+          {!text && id === 'description' && (
+            <div className="project-input-editor__btn">Додати опис</div>
           )}
           <ProjectTextOutput text={text} />
         </div>
