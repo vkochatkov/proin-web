@@ -172,6 +172,7 @@ export const Input = (props: InputProps) => {
         onBlur={touchHandler}
         value={inputState.value}
         ref={textareaRef}
+        autoComplete="off"
         // style={{ minHeight: '100px' }}
 
         // onClick={openFullscreen}
