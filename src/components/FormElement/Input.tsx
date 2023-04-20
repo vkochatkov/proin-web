@@ -43,10 +43,12 @@ export const Input = (props: InputProps) => {
   const { value, isValid } = inputState;
   const isLoading = useSelector(getIsLoading);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (props.isActive) {
       textareaRef.current?.focus();
+      inputRef.current?.focus();
     }
   }, [props.isActive]);
 
@@ -132,6 +134,8 @@ export const Input = (props: InputProps) => {
         [id]: newValue,
       };
 
+      if (updatedProject.projectName === '') return;
+
       dispatch(setCurrentProject(updatedProject));
 
       saveChanges({ [id]: newValue }, props.token, props.projectId);
@@ -163,6 +167,7 @@ export const Input = (props: InputProps) => {
         onChange={changeHandler}
         onBlur={touchHandler}
         value={inputState.value}
+        ref={inputRef}
       />
     ) : (
       <textarea

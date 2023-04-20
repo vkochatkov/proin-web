@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CommentBox } from './FormElement/CommentBox';
-import { CommentInput } from './FormElement/CommentInput';
+import { CommentBox } from './FormComponent/CommentBox';
+import { CommentInput } from './FormComponent/CommentInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
 import { getCurrentProject } from '../modules/selectors/mainProjects';

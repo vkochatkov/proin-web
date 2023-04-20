@@ -1,0 +1,13 @@
+.project-input-editor {
+  &__btn {
+    height: 40px;
+    background: #d9dddc;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}

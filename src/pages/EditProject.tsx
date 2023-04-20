@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
-import { Input } from '../components/FormElement/Input';
 import { useForm } from '../hooks/useForm';
 import { ImageUpload } from '../components/FormElement/ImageUpload';
 import {
@@ -24,7 +23,7 @@ import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { findProjectMember } from '../utils/utils';
 import { InvitePopup } from '../components/Popup/InvitePopup';
 import { openPopup } from '../modules/actions/popup';
-import { ProjectDescription } from '../components/FormElement/ProjectDescription';
+import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
 
 type Props = {};
 
@@ -136,23 +135,19 @@ const EditProject: React.FC<Props> = () => {
                   projectId={currentProject ? currentProject._id : undefined}
                   isUpdateValue={true}
                 />
-                <Input
-                  id="projectName"
-                  element="input"
-                  type="text"
-                  label="Ім'я нового проекту"
-                  onInput={inputHandler}
-                  isAnyValue={true}
-                  isAutosave={true}
-                  projectId={currentProject ? currentProject._id : undefined}
-                  token={token}
-                  isUpdateValue={true}
-                  project={currentProject}
-                />
                 <ProjectDescription
+                  id="projectName"
                   inputHandler={inputHandler}
                   token={token}
                   project={currentProject}
+                  label="Назва проекту"
+                />
+                <ProjectDescription
+                  id="description"
+                  inputHandler={inputHandler}
+                  token={token}
+                  project={currentProject}
+                  label="Опис"
                 />
                 <h3>Коментарі</h3>
                 <CommentsList />

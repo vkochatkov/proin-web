@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import { Button as CloseButton } from './Button';
+import { Button as CloseButton } from '../FormElement/Button';
 import FormControl from '@mui/joy/FormControl';
 import Textarea from '@mui/joy/Textarea';
 

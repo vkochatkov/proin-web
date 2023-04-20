@@ -1,29 +1,50 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Project } from '../../modules/reducers/mainProjects';
-import { Input } from './Input';
+import { Input } from '../FormElement/Input';
 import { ProjectTextOutput } from './ProjectTextOutput';
+
+import './ProjectInputEditor.scss';
 
 interface Props {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
   project: Project | null;
   token: string;
+  id: string;
+  label: string;
 }
 
-export const ProjectDescription = ({ inputHandler, project, token }: Props) => {
+export const ProjectDescription = ({
+  inputHandler,
+  project,
+  token,
+  id,
+  label,
+}: Props) => {
   const [isActive, setIsActive] = useState(false);
+  const text = project ? project[id] : undefined;
+
+  useEffect(() => {
+    if (id === 'projectName' && text === '') {
+      setIsActive(true);
+    }
+  }, []);
 
   const handleHideInput = () => {
+    if (id === 'projectName' && text === '') {
+      return;
+    }
+
     setIsActive(false);
   };
 
   return (
     <>
-      <h3>Опис</h3>
+      <h3>{label}</h3>
       {isActive && (
         <div onBlur={handleHideInput}>
           <Input
-            id="description"
-            element="textarea"
+            id={id}
+            element={id === 'description' ? 'textarea' : 'input'}
             onInput={inputHandler}
             isAnyValue={true}
             isAutosave={true}
@@ -37,12 +58,14 @@ export const ProjectDescription = ({ inputHandler, project, token }: Props) => {
       )}
       {!isActive && (
         <div
-          style={{ minHeight: '10px' }}
-          onClick={() => {
+          onClick={(e) => {
             setIsActive(true);
           }}
         >
-          <ProjectTextOutput text={project ? project.description : undefined} />
+          {text === '' && id === 'description' && (
+            <div className="project-input-editor__btn">Додайте опис</div>
+          )}
+          <ProjectTextOutput text={text} />
         </div>
       )}
     </>
