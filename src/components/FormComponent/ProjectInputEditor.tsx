@@ -24,7 +24,7 @@ export const ProjectDescription = ({
   const text = project ? project[id] : undefined;
 
   useEffect(() => {
-    if ((id === 'projectName' && !text) || !text) {
+    if (id === 'projectName' && !text) {
       setIsActive(true);
     }
   }, [id, text]);
