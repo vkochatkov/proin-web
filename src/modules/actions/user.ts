@@ -13,13 +13,15 @@ export const logoutSuccess = createAction('LOGOUT_SUCCESS');
 const httpSource = axios.CancelToken.source();
 
 export const signin =
-  (uid: string, token: string, email: string) => (dispatch: Dispatch) => {
+  (uid: string, token: string, email: string, name: string) =>
+  (dispatch: Dispatch) => {
     try {
       dispatch(
         loginSuccess({
           userId: uid,
           token,
           email,
+          name,
         })
       );
       dispatch(endLoading());

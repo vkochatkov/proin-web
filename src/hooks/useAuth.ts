@@ -7,6 +7,7 @@ interface UserData {
   userId: string;
   token: string;
   email: string;
+  name: string;
   expiration: string;
 }
 
@@ -16,6 +17,7 @@ export const useAuth = (): {
     userId: string,
     token: string,
     email: string,
+    name: string,
     expirationDate?: Date
   ) => void;
   logout: () => void;
@@ -30,6 +32,7 @@ export const useAuth = (): {
       uid: string,
       token: string,
       email: string,
+      name: string,
       expirationDate: Date = new Date(new Date().getTime() + 1000 * 60 * 60)
     ) => {
       setTokenExpirationDate(tokenExpirationDate);
@@ -39,11 +42,12 @@ export const useAuth = (): {
           userId: uid,
           token,
           email,
+          name,
           expiration: expirationDate.toISOString(),
         })
       );
 
-      dispatch(signin(uid, token, email) as any);
+      dispatch(signin(uid, token, email, name) as any);
     },
     [dispatch, tokenExpirationDate]
   );
@@ -76,6 +80,7 @@ export const useAuth = (): {
           storedData.userId,
           storedData.token,
           storedData.email,
+          storedData.name,
           new Date(storedData.expiration)
         );
       }

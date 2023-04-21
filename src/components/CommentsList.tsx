@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentBox } from './FormComponent/CommentBox';
 import { CommentInput } from './FormComponent/CommentInput';
@@ -11,6 +11,7 @@ import {
   createProjectComments,
   updateComment,
 } from '../modules/actions/mainProjects';
+import { IComment } from '../modules/reducers/mainProjects';
 
 export const CommentsList = () => {
   const dispatch = useDispatch();
@@ -19,18 +20,28 @@ export const CommentsList = () => {
   const [selectedCommentIds, setSelectedCommentIds] = React.useState<string[]>([
     '',
   ]);
+  const [defaultInputValue, setDefaultInputValue] = useState('');
+  const [isInputActive, setIsInputActive] = useState(false);
 
   const handleCreatingComment = (value: string) => {
     if (!currentProject) return;
 
     const id = uuidv4();
-    const userName = auth.email.split('@')[0];
-    const comment = {
+
+    const mentionRegex = /@[a-zA-Z0-9_]+/;
+    const mentions = value.match(mentionRegex);
+    const taggedUsers =
+      mentions && mentions.input ? mentions.input.split(' ') : [];
+
+    const sendTo = taggedUsers.map((name) => name.replace('@', ''));
+
+    const comment: IComment = {
       id,
       text: value,
-      name: userName,
+      name: auth.name,
       timestamp: new Date().toISOString(),
       userId: auth.userId,
+      mentions: sendTo,
     };
 
     dispatch(
@@ -38,6 +49,8 @@ export const CommentsList = () => {
         comment,
       }) as any
     );
+
+    setIsInputActive(false);
   };
 
   const handleDeleteComment = (id: string) => {
@@ -59,6 +72,13 @@ export const CommentsList = () => {
 
   const handleEditComment = (id: string) => {
     setSelectedCommentIds([...selectedCommentIds, id]);
+  };
+
+  const handleReplyComment = (name: string) => {
+    const userName = `@${name}`;
+
+    setIsInputActive(true);
+    setDefaultInputValue(userName);
   };
 
   const handleUpdateComment = (id: string, value: string) => {
@@ -94,7 +114,15 @@ export const CommentsList = () => {
 
   return (
     <>
-      <CommentInput onClick={handleCreatingComment} />
+      <CommentInput
+        onClick={handleCreatingComment}
+        isActive={isInputActive}
+        text={defaultInputValue}
+        onCancel={() => {
+          setIsInputActive(false);
+          setDefaultInputValue('');
+        }}
+      />
       {currentProject &&
         currentProject.comments &&
         currentProject.comments.map((comment, index) => {
@@ -133,6 +161,7 @@ export const CommentsList = () => {
                 userId={comment.userId}
                 onDelete={handleDeleteComment}
                 onEdit={handleEditComment}
+                onReply={handleReplyComment}
               />
             );
           }

@@ -4,7 +4,11 @@ import { Input } from '../components/FormElement/Input';
 import { Button } from '../components/FormElement/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
-import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from '../utils/validators';
+import {
+  VALIDATOR_EMAIL,
+  VALIDATOR_MINLENGTH,
+  VALIDATOR_REQUIRE,
+} from '../utils/validators';
 import { useForm } from '../hooks/useForm';
 import { useAuth } from '../hooks/useAuth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,23 +24,46 @@ const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { formState, inputHandler } = useForm(
-    {
-      email: {
-        value: '',
-        isValid: false,
-      },
-      password: {
-        value: '',
-        isValid: false,
-      },
+  const defaultFormValue = {
+    email: {
+      value: '',
+      isValid: false,
     },
+    password: {
+      value: '',
+      isValid: false,
+    },
+  };
+
+  const { formState, inputHandler, setFormData } = useForm(
+    defaultFormValue,
     false
   );
   const dispatch = useDispatch();
   const isLoading = useSelector(getIsLoading);
 
   const switchModeHandler = () => {
+    if (!isLoginMode) {
+      setFormData(
+        {
+          ...formState.inputs,
+          //@ts-ignore
+          name: undefined,
+        },
+        formState.inputs.email.isValid && formState.inputs.password.isValid
+      );
+    } else {
+      setFormData(
+        {
+          ...formState.inputs,
+          name: {
+            value: '',
+            isValid: false,
+          },
+        },
+        false
+      );
+    }
     setIsLoginMode((prevMode) => !prevMode);
   };
 
@@ -61,7 +88,7 @@ const Auth = () => {
           cancelToken: httpSource.token,
         });
 
-        login(data.userId, data.token, data.email);
+        login(data.userId, data.token, data.email, data.name);
         navigate('/');
       } catch (e: any) {
         dispatch(endLoading());
@@ -81,6 +108,7 @@ const Auth = () => {
           data: JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
+            name: formState.inputs.name.value,
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -88,7 +116,7 @@ const Auth = () => {
           cancelToken: httpSource.token,
         });
 
-        login(data.userId, data.token, data.email);
+        login(data.userId, data.token, data.email, data.name);
         navigate('/');
       } catch (err: any) {
         dispatch(endLoading());
@@ -111,6 +139,17 @@ const Auth = () => {
         <p>ПРОІН - сервіс адміністрування проектів</p>
         <hr />
         <form onSubmit={authSubmitHandler}>
+          {!isLoginMode && (
+            <Input
+              element="input"
+              id="name"
+              type="text"
+              label="Ваше ім'я"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a name."
+              onInput={inputHandler}
+            />
+          )}
           <Input
             element="input"
             id="email"

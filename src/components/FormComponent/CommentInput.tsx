@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import { Button as CloseButton } from '../FormElement/Button';
@@ -21,6 +21,16 @@ export const CommentInput = (props: Props) => {
   const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
     props.isActive ? props.isActive : false
   );
+
+  useEffect(() => {
+    if (props.isActive && props.text) {
+      setIsTextareaActive(true);
+      setCommentValue(props.text);
+    } else {
+      setIsTextareaActive(false);
+      setCommentValue('');
+    }
+  }, [props.isActive, props.text]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

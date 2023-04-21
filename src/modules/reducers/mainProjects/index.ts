@@ -15,6 +15,7 @@ export interface IComment {
   text: string;
   timestamp: string;
   userId: string;
+  mentions: string[];
 }
 
 export interface Project {

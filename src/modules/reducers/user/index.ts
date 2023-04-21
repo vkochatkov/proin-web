@@ -5,12 +5,14 @@ export interface UserState {
   userId: string;
   token: string;
   email: string;
+  name: string;
 }
 
 const initialState: UserState = {
   userId: '',
   token: '',
   email: '',
+  name: '',
 };
 
 export const userReducer = createReducer({}, initialState);

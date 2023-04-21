@@ -15,6 +15,7 @@ interface Props {
   userId: string;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  onReply: (name: string) => void;
 }
 
 export const CommentBox: FC<Props> = ({
@@ -26,6 +27,7 @@ export const CommentBox: FC<Props> = ({
   userId,
   onDelete,
   onEdit,
+  onReply,
 }) => {
   const auth = useSelector(getAuth);
   const isUserOwnComment = auth.userId === userId;
@@ -126,7 +128,12 @@ export const CommentBox: FC<Props> = ({
                 left: contextMenuPosition.left,
               }}
             >
-              <MenuItem onClick={() => console.log('відповісти')}>
+              <MenuItem
+                onClick={() => {
+                  onReply(name);
+                  handleClose();
+                }}
+              >
                 Відповісти
               </MenuItem>
             </Menu>
