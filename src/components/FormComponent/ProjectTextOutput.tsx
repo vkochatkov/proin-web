@@ -48,21 +48,13 @@ export const ProjectTextOutput = ({ text }: Props) => {
       );
     } else if (word.match(emailRegex)) {
       return (
-        <Link
-          onClick={handleClick}
-          key={`${word}-${index}`}
-          href={`mailto:${word}`}
-        >
+        <Link key={`${word}-${index}`} href={`mailto:${word}`}>
           {word}
         </Link>
       );
     } else if (word.match(phoneRegex)) {
       return (
-        <Link
-          onClick={handleClick}
-          key={`${word}-${index}`}
-          href={`tel:${word}`}
-        >
+        <Link key={`${word}-${index}`} href={`tel:${word}`}>
           {word}
         </Link>
       );
