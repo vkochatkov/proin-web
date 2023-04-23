@@ -41,7 +41,7 @@ export const createProjectComments =
       const updatedCurrentProject = {
         ...currentProject,
         comments: currentProject.comments
-          ? [...currentProject.comments, comment]
+          ? [comment, ...currentProject.comments]
           : [comment],
       };
 
