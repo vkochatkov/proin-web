@@ -1,6 +1,6 @@
 import { Avatar } from '@mui/joy';
 import { Paper, Grid, Menu, MenuItem } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getAuth } from '../../modules/selectors/user';
 import { red, blue, green, yellow } from '@mui/material/colors';
@@ -37,20 +37,23 @@ export const CommentBox: FC<Props> = ({
     left: number;
   }>({ top: 0, left: 0 });
   const colorShade = 700;
-  const colors = [
-    red[colorShade],
-    blue[colorShade],
-    green[colorShade],
-    yellow[colorShade],
-  ];
+  const colors = useMemo(
+    () => [
+      red[colorShade],
+      blue[colorShade],
+      green[colorShade],
+      yellow[colorShade],
+    ],
+    [colorShade]
+  );
   const firstLetter = name.charAt(0).toUpperCase();
 
-  const getBackgroundColor = (letter: string) => {
-    const index = letter.charCodeAt(0) % colors.length;
+  const backgroundColor = useMemo(() => {
+    const index = firstLetter.charCodeAt(0) % colors.length;
     return colors[index];
-  };
+  }, [colors, firstLetter]);
 
-  function getElapsedTime(timestamp: string): string {
+  const elapsedTime = useMemo(() => {
     const now = new Date();
     const posted = new Date(timestamp);
     const diffMs = now.getTime() - posted.getTime();
@@ -70,12 +73,15 @@ export const CommentBox: FC<Props> = ({
         return `posted ${diffDays} days ago`;
       }
     }
-  }
+  }, [timestamp]);
 
-  const handleOpenContextMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenContextMenu = (event: any) => {
     event.preventDefault();
     setAnchorEl(event.currentTarget);
-    setContextMenuPosition({ top: event.clientY, left: event.clientX });
+    setContextMenuPosition({
+      top: event.clientY || event.touches[0].clientY,
+      left: event.clientX || event.touches[0].clientX,
+    });
   };
 
   const handleClose = () => {
@@ -87,6 +93,7 @@ export const CommentBox: FC<Props> = ({
       <Paper
         style={{ padding: '20px', marginTop: '1rem' }}
         onContextMenu={handleOpenContextMenu}
+        onTouchStart={handleOpenContextMenu}
       >
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
@@ -94,7 +101,7 @@ export const CommentBox: FC<Props> = ({
               alt="Remy Sharp"
               src={logoLink}
               sx={{
-                bgcolor: getBackgroundColor(firstLetter),
+                bgcolor: backgroundColor,
               }}
             >
               <h3
@@ -110,7 +117,7 @@ export const CommentBox: FC<Props> = ({
             <h4 style={{ margin: 0, textAlign: 'left' }}>{name}</h4>
             <ProjectTextOutput text={text} />
             <p style={{ textAlign: 'left', color: 'gray', marginBottom: '0' }}>
-              {getElapsedTime(timestamp)}
+              {elapsedTime}
             </p>
           </Grid>
         </Grid>
