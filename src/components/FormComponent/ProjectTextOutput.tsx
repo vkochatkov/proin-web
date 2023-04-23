@@ -10,6 +10,7 @@ const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
 const phoneRegex =
   /(\+?\d{1,3}[\s.-]?)?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})/g;
 const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
+const hashtagRegex = /#\w+/g;
 
 export const ProjectTextOutput = ({ text }: Props) => {
   const dispatch = useDispatch();
@@ -36,31 +37,37 @@ export const ProjectTextOutput = ({ text }: Props) => {
   const linkify = (word: string, index: number) => {
     if (word.startsWith('http://') || word.startsWith('https://')) {
       return (
-        <Link key={`${word}-${index}`} href={word}>
+        <Link key={`${word}-${Math.random()}`} href={word}>
           {word}
         </Link>
       );
     } else if (word.startsWith('@')) {
       return (
-        <Link onClick={handleClick} key={`${word}-${index}`} href="#">
+        <Link onClick={handleClick} key={`${word}-${Math.random()}`} href="#">
           {word}
         </Link>
       );
     } else if (word.match(emailRegex)) {
       return (
-        <Link key={`${word}-${index}`} href={`mailto:${word}`}>
+        <Link key={`${word}-${Math.random()}`} href={`mailto:${word}`}>
           {word}
         </Link>
       );
     } else if (word.match(phoneRegex)) {
       return (
-        <Link key={`${word}-${index}`} href={`tel:${word}`}>
+        <Link key={`${word}-${Math.random()}`} href={`tel:${word}`}>
           {word}
         </Link>
       );
     } else if (word.match(cardRegex)) {
       return (
-        <Link onClick={handleClick} key={`${word}-${index}`} href="#">
+        <Link onClick={handleClick} key={`${word}-${Math.random()}`} href="#">
+          {word}
+        </Link>
+      );
+    } else if (word.match(hashtagRegex)) {
+      return (
+        <Link onClick={handleClick} key={`${word}-${Math.random()}`} href="#">
           {word}
         </Link>
       );
