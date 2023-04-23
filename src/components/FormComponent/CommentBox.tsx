@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 import { getAuth } from '../../modules/selectors/user';
 import { red, blue, green, yellow } from '@mui/material/colors';
 import { ProjectTextOutput } from './ProjectTextOutput';
+import { useLongPress } from 'react-use';
+
+import './CommentBox.scss';
 
 interface Props {
   text: string;
@@ -75,14 +78,26 @@ export const CommentBox: FC<Props> = ({
     }
   }, [timestamp]);
 
-  const handleOpenContextMenu = (event: any) => {
+  const handleContextMenu = (event: any) => {
     event.preventDefault();
-    setAnchorEl(event.currentTarget);
+
+    const target = event.currentTarget || event.target;
+
+    setAnchorEl(target);
     setContextMenuPosition({
       top: event.clientY || event.touches[0].clientY,
       left: event.clientX || event.touches[0].clientX,
     });
   };
+
+  const defaultOptions = {
+    isPreventDefault: false,
+    delay: 300,
+  };
+
+  const longPressProps = useLongPress(handleContextMenu, {
+    ...defaultOptions,
+  });
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -91,9 +106,9 @@ export const CommentBox: FC<Props> = ({
   return (
     <>
       <Paper
+        className="disable-text-selection"
         style={{ padding: '20px', marginTop: '1rem' }}
-        onContextMenu={handleOpenContextMenu}
-        onTouchStart={handleOpenContextMenu}
+        {...longPressProps}
       >
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
@@ -129,7 +144,6 @@ export const CommentBox: FC<Props> = ({
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
-              anchorReference="anchorPosition"
               anchorPosition={{
                 top: contextMenuPosition.top,
                 left: contextMenuPosition.left,
@@ -150,7 +164,6 @@ export const CommentBox: FC<Props> = ({
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
-              anchorReference="anchorPosition"
               anchorPosition={{
                 top: contextMenuPosition.top,
                 left: contextMenuPosition.left,
