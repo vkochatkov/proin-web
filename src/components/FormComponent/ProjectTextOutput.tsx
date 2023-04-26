@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { changeSnackbarState } from '../../modules/actions/snackbar';
 import { Link } from './ProjectTextLink';
@@ -8,7 +9,7 @@ interface Props {
 
 const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
 const phoneRegex =
-  /(\+?\d{1,3}[\s.-]?)?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})/g;
+  /(\+?\d{1,3}[\s.,-]*)?\(?(\d{3})\)?[\s.,-]*?(\d{3})[\s.,-]*?(\d{4})/g;
 const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
 const hashtagRegex = /#\w+/g;
 
@@ -34,43 +35,115 @@ export const ProjectTextOutput = ({ text }: Props) => {
         .catch((error) => console.error('Failed to copy to clipboard:', error));
     }
   };
+
   const linkify = (word: string, index: number) => {
+    const match = word.match(/^(.*?)([.,]?)(\s*)$/);
+    let linkText;
+    let punctuation;
+    let whitespace;
+
     if (word.startsWith('http://') || word.startsWith('https://')) {
-      return (
-        <Link key={`${word}-${Math.random()}`} href={word}>
-          {word}
-        </Link>
-      );
+      if (match) {
+        linkText = match[1];
+        punctuation = match[2];
+        whitespace = match[3];
+        return (
+          <>
+            <Link key={`${word}-${Math.random()}`} href={linkText}>
+              {linkText}
+            </Link>
+            {punctuation}
+            {whitespace}
+          </>
+        );
+      }
     } else if (word.startsWith('@')) {
-      return (
-        <Link onClick={handleClick} key={`${word}-${Math.random()}`} href="#">
-          {word}
-        </Link>
-      );
+      if (match) {
+        linkText = match[1];
+        punctuation = match[2];
+        whitespace = match[3];
+        return (
+          <>
+            <Link
+              onClick={handleClick}
+              key={`${word}-${Math.random()}`}
+              href="#"
+            >
+              {linkText}
+            </Link>
+            {punctuation}
+            {whitespace}
+          </>
+        );
+      }
     } else if (word.match(emailRegex)) {
-      return (
-        <Link key={`${word}-${Math.random()}`} href={`mailto:${word}`}>
-          {word}
-        </Link>
-      );
+      if (match) {
+        linkText = match[1];
+        punctuation = match[2];
+        whitespace = match[3];
+        return (
+          <>
+            <Link key={`${word}-${Math.random()}`} href={`mailto:${linkText}`}>
+              {linkText}
+            </Link>
+            {punctuation}
+            {whitespace}
+          </>
+        );
+      }
     } else if (word.match(phoneRegex)) {
-      return (
-        <Link key={`${word}-${Math.random()}`} href={`tel:${word}`}>
-          {word}
-        </Link>
-      );
+      if (match) {
+        linkText = match[1];
+        punctuation = match[2];
+        whitespace = match[3];
+        return (
+          <>
+            <Link key={`${word}-${Math.random()}`} href={`tel:${linkText}`}>
+              {linkText}
+            </Link>
+            {punctuation}
+            {whitespace}
+          </>
+        );
+      }
     } else if (word.match(cardRegex)) {
-      return (
-        <Link onClick={handleClick} key={`${word}-${Math.random()}`} href="#">
-          {word}
-        </Link>
-      );
+      if (match) {
+        linkText = match[1];
+        punctuation = match[2];
+        whitespace = match[3];
+        return (
+          <>
+            <Link
+              onClick={handleClick}
+              key={`${word}-${Math.random()}`}
+              href="#"
+            >
+              {linkText}
+            </Link>
+            {punctuation}
+            {whitespace}
+          </>
+        );
+      }
     } else if (word.match(hashtagRegex)) {
-      return (
-        <Link onClick={handleClick} key={`${word}-${Math.random()}`} href="#">
-          {word}
-        </Link>
-      );
+      if (match) {
+        linkText = match[1];
+        punctuation = match[2];
+        whitespace = match[3];
+        return (
+          <>
+            <Link
+              onClick={handleClick}
+              key={`${word}-${Math.random()}`}
+              href="#"
+            >
+              {linkText}
+            </Link>
+            {punctuation}
+            {whitespace}
+          </>
+        );
+      }
     } else {
       return <span>{word} </span>;
     }
