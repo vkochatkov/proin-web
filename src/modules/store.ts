@@ -6,6 +6,7 @@ import { formReducer } from './reducers/formReducer';
 import { loadingReducer } from './reducers/loading';
 import { snackbar } from './reducers/snackbar';
 import { popup } from './reducers/popup';
+import { dragging } from './reducers/dragging';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   isLoading: loadingReducer,
   snackbar,
   popup,
+  dragging,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

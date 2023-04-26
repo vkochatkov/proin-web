@@ -24,6 +24,8 @@ import { findProjectMember } from '../utils/utils';
 import { InvitePopup } from '../components/Popup/InvitePopup';
 import { openPopup } from '../modules/actions/popup';
 import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
+import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
+import { SubProjects } from '../components/SubProjects';
 
 type Props = {};
 
@@ -70,13 +72,14 @@ const EditProject: React.FC<Props> = () => {
     dispatch(clearCurrentProject());
   };
 
-  const handleOpenPopup = () => {
+  const handleOpenInvitationPopup = () => {
     dispatch(openPopup({ id: 'invite' }));
   };
 
   return (
     <>
       <InvitePopup />
+      <MoveProjectPopup />
       <SnackbarUI />
       <div className="container">
         <Header>
@@ -127,7 +130,11 @@ const EditProject: React.FC<Props> = () => {
                   >
                     Лого
                   </h3>
-                  <Button onClick={handleOpenPopup}>Додати користувача</Button>
+                  <div>
+                    <Button onClick={handleOpenInvitationPopup}>
+                      Додати користувача
+                    </Button>
+                  </div>
                 </div>
                 <ImageUpload
                   id="logoUrl"
@@ -149,6 +156,7 @@ const EditProject: React.FC<Props> = () => {
                   project={currentProject}
                   label="Опис"
                 />
+                <SubProjects />
                 <h3>Коментарі</h3>
                 <CommentsList />
               </>

@@ -4,6 +4,10 @@ import { useHttpClient } from '../hooks/useHttpClient';
 import {
   acceptInvitation,
   createNewProject,
+  fetchAllUserProjects,
+  openCurrentProject,
+  selectProject,
+  updateOrderProjects,
   updateProjects,
 } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
@@ -15,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { getIsLoading } from '../modules/selectors/loading';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
+import { Project } from '../modules/reducers/mainProjects';
+import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
 
 import './HomePage.scss';
 
@@ -47,7 +53,9 @@ const HomePage: React.FC = () => {
       const res = await sendRequest(
         `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`
       );
+
       dispatch(updateProjects(res.projects));
+      dispatch(fetchAllUserProjects() as any);
       dispatch(endLoading());
     };
     fetchProjects();
@@ -66,8 +74,20 @@ const HomePage: React.FC = () => {
     dispatch(startLoading());
   };
 
+  const handleClickItem = (id: string) => {
+    dispatch(startLoading());
+    dispatch(openCurrentProject(token, id) as any);
+    dispatch(selectProject(id));
+    navigate(`/project-edit/${id}`);
+  };
+
+  const handleUpdateProjectOrder = (items: Project[]) => {
+    dispatch(updateOrderProjects(items) as any);
+  };
+
   return (
     <>
+      <MoveProjectPopup />
       <SnackbarUI />
       <div className="container">
         <MainNavigation>
@@ -89,7 +109,14 @@ const HomePage: React.FC = () => {
             <LoadingSpinner />
           </div>
         )}
-        {!isLoading && <ListItems projects={projects} />}
+        {!isLoading && (
+          <ListItems
+            projects={projects}
+            onClick={handleClickItem}
+            updateOrder={handleUpdateProjectOrder}
+            isWrapped
+          />
+        )}
       </div>
     </>
   );

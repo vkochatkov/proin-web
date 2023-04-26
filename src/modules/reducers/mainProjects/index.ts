@@ -7,7 +7,10 @@ import {
   clearProjects,
   createProjectSuccess,
   updateProjectCommentsSuccess,
+  setAllUserProjects,
+  selectProject,
 } from '../../actions/mainProjects';
+import { IProject } from '../../types/mainProjects';
 
 export interface IComment {
   id: string;
@@ -32,9 +35,13 @@ export interface Project {
 const initialState: {
   projects: Project[];
   currentProject: Project | null;
+  allUserProjects: IProject[] | [];
+  selectedProject: string;
 } = {
   projects: [],
   currentProject: null,
+  allUserProjects: [],
+  selectedProject: '',
 };
 
 export const mainProjects = createReducer({}, initialState);
@@ -75,12 +82,22 @@ mainProjects.on(clearCurrentProject, (state) => {
   };
 });
 
-mainProjects.on(updateProjects, (state: any, payload: Project[]) => {
+mainProjects.on(updateProjects, (state, payload: Project[]) => {
   return {
     ...state,
     projects: payload,
   };
 });
+
+mainProjects.on(setAllUserProjects, (state, payload) => ({
+  ...state,
+  allUserProjects: payload,
+}));
+
+mainProjects.on(selectProject, (state, payload) => ({
+  ...state,
+  selectedProject: payload,
+}));
 
 mainProjects.on(clearProjects, (state) => {
   return {

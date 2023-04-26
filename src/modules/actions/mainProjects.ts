@@ -6,6 +6,7 @@ import { RootState } from '../store';
 import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
+import { IProject } from '../types/mainProjects';
 
 export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -19,6 +20,10 @@ export const updateProjectCommentsSuccess = createAction<{
 }>('UPDATE_PROJECT_COMMENTS_SUCCESS');
 export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
 export const clearProjects = createAction('CLEAR_PROJECTS');
+export const setAllUserProjects = createAction<IProject[]>(
+  'SET_ALL_USER_PROJECTS'
+);
+export const selectProject = createAction<string>('SELECT_PROJECT');
 
 const httpSource = axios.CancelToken.source();
 
@@ -338,6 +343,70 @@ export const acceptInvitation =
           message: 'Учасник успішно доданий до проекту',
         })
       );
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const fetchAllUserProjects =
+  () => async (dispatch: Dispatch, getState: () => RootState) => {
+    const { userId, token } = getState().user;
+
+    const response = await axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_BACKEND_URL}/projects/all/${userId}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+      cancelToken: httpSource.token,
+    });
+
+    const allUserProjects = response.data.projects.map((project: Project) => ({
+      projectName: project.projectName,
+      _id: project._id,
+      subProjects: project.subProjects,
+    }));
+
+    dispatch(setAllUserProjects(allUserProjects));
+    try {
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const moveToProject =
+  (toProjectId: string, currentProjectId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { token } = getState().user;
+
+    try {
+      await axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProjectId}/moving`,
+        data: JSON.stringify({
+          projectId: currentProjectId,
+          toProjectId,
+        }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        cancelToken: httpSource.token,
+      });
+
+      window.location.reload();
     } catch (e: any) {
       dispatch(
         changeSnackbarState({

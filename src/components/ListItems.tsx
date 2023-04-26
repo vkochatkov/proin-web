@@ -1,17 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+import { useDispatch } from 'react-redux';
+import { setIsDragging } from '../modules/actions/dragging';
 import { Project } from '../modules/reducers/mainProjects';
-import {
-  openCurrentProject,
-  updateOrderProjects,
-} from '../modules/actions/mainProjects';
-import { getAuth } from '../modules/selectors/user';
-import { useNavigate } from 'react-router-dom';
-import { startLoading } from '../modules/actions/loading';
 import { Item } from './Item';
 
 interface Props {
   projects: Project[];
+  onClick: (id: string) => void;
+  updateOrder: (newItem: Project[]) => void;
+  isWrapped?: boolean;
 }
 
 // a little function to help with reordering the result
@@ -23,24 +20,19 @@ const reorder = (list: Project[], startIndex: number, endIndex: number) => {
   return result;
 };
 
-const getListStyle = (isDraggingOver: boolean) => ({
+const getListStyle = (isDraggingOver: boolean, isWrapped: boolean) => ({
   background: '#f8f8f8',
-  padding: 8,
+  padding: isWrapped ? 8 : 0,
   borderRadius: '5px',
-  minHeight: '85vh',
 });
 
-export const ListItems = ({ projects }: Props) => {
+export const ListItems = ({
+  projects,
+  onClick,
+  updateOrder,
+  isWrapped = false,
+}: Props) => {
   const dispatch = useDispatch();
-  const { token } = useSelector(getAuth);
-  const navigate = useNavigate();
-
-  const handleClick = (id: string) => {
-    dispatch(startLoading());
-    dispatch(openCurrentProject(token, id) as any);
-    navigate(`/project-edit/${id}`);
-  };
-
   const onDragEnd = (result: any) => {
     // dropped outside the list
     if (!result.destination) {
@@ -53,39 +45,45 @@ export const ListItems = ({ projects }: Props) => {
       result.destination.index
     );
 
-    dispatch(updateOrderProjects(newItems) as any);
+    updateOrder(newItems);
+    dispatch(setIsDragging(false));
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(provided, snapshot) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            style={
-              projects.length > 0
-                ? getListStyle(snapshot.isDraggingOver)
-                : undefined
-            }
-          >
-            {projects.map((item: any, index: number) => {
-              return (
-                <Item
-                  key={item._id}
-                  projectId={item._id}
-                  name={item.projectName}
-                  logo={item.logoUrl}
-                  description={item.description}
-                  index={index}
-                  onClick={handleClick}
-                />
-              );
-            })}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <DragDropContext
+        onDragEnd={onDragEnd}
+        onDragStart={() => dispatch(setIsDragging(true))}
+      >
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={
+                projects.length > 0
+                  ? getListStyle(snapshot.isDraggingOver, isWrapped)
+                  : undefined
+              }
+            >
+              {projects.map((item: Project, index: number) => {
+                return (
+                  <Item
+                    key={item._id}
+                    projectId={item._id}
+                    name={item.projectName}
+                    logo={item.logoUrl}
+                    description={item.description}
+                    index={index}
+                    onClick={onClick}
+                  />
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </>
   );
 };

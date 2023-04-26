@@ -1,11 +1,11 @@
+import { FC, useMemo } from 'react';
 import { Avatar } from '@mui/joy';
 import { Paper, Grid, Menu, MenuItem } from '@mui/material';
-import { FC, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getAuth } from '../../modules/selectors/user';
 import { red, blue, green, yellow } from '@mui/material/colors';
 import { ProjectTextOutput } from './ProjectTextOutput';
-import { useLongPress } from 'react-use';
+import { useContextMenu } from '../../hooks/useContextMenu';
 
 import './CommentBox.scss';
 
@@ -34,11 +34,8 @@ export const CommentBox: FC<Props> = ({
 }) => {
   const auth = useSelector(getAuth);
   const isUserOwnComment = auth.userId === userId;
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [contextMenuPosition, setContextMenuPosition] = useState<{
-    top: number;
-    left: number;
-  }>({ top: 0, left: 0 });
+  const { longPressProps, handleClose, contextMenuPosition, anchorEl } =
+    useContextMenu();
   const colorShade = 700;
   const colors = useMemo(
     () => [
@@ -77,31 +74,6 @@ export const CommentBox: FC<Props> = ({
       }
     }
   }, [timestamp]);
-
-  const handleContextMenu = (event: any) => {
-    event.preventDefault();
-
-    const target = event.currentTarget || event.target;
-
-    setAnchorEl(target);
-    setContextMenuPosition({
-      top: event.clientY || event.touches[0].clientY,
-      left: event.clientX || event.touches[0].clientX,
-    });
-  };
-
-  const defaultOptions = {
-    isPreventDefault: false,
-    delay: 300,
-  };
-
-  const longPressProps = useLongPress(handleContextMenu, {
-    ...defaultOptions,
-  });
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <>

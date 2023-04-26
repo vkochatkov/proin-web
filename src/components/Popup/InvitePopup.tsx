@@ -4,11 +4,12 @@ import { VALIDATOR_EMAIL } from '../../utils/validators';
 import { Input } from '../FormElement/Input';
 import { useForm } from '../../hooks/useForm';
 import { useSelector } from 'react-redux';
-import { getPopupState } from '../../modules/selectors/popup';
+import { getPopupStateById } from '../../modules/selectors/popup';
 import { useDispatch } from 'react-redux';
 import { closePopup } from '../../modules/actions/popup';
 import { sendInvitation } from '../../modules/actions/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
+import { RootState } from '../../modules/store';
 
 export const InvitePopup = () => {
   const { email } = useSelector(getAuth);
@@ -21,7 +22,9 @@ export const InvitePopup = () => {
     },
     false
   );
-  const { open } = useSelector(getPopupState);
+  const open = useSelector((state: RootState) =>
+    getPopupStateById(state)('invite')
+  );
   const dispatch = useDispatch();
 
   const handleClose = () => {

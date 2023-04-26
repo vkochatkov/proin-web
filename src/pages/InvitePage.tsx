@@ -15,7 +15,7 @@ export const InvitePage = () => {
     );
 
     navigate('/');
-  }, []);
+  }, [id, invitationId, navigate]);
 
   return null;
 };

@@ -6,3 +6,9 @@ export const getCurrentProject = (state: RootState) => {
 
 export const getCurrentProjects = (state: RootState) =>
   state.mainProjects.projects;
+
+export const getAllUserProjects = (state: RootState) =>
+  state.mainProjects.allUserProjects;
+
+export const getSelectedProjectId = (state: RootState) =>
+  state.mainProjects.selectedProject;

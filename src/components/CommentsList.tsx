@@ -134,13 +134,15 @@ export const CommentsList = () => {
             (id) => id === comment.id
           );
 
-          if (comment.id === selectedCommentId) {
+          if (!comment.id) return null;
+
+          if (comment.id && comment.id === selectedCommentId) {
             return (
               <div
                 style={{
                   marginTop: '1rem',
                 }}
-                key={`${comment.id}-${index}`}
+                key={`${comment.id}-${Math.random()}`}
               >
                 <CommentInput
                   onClick={(value) => handleUpdateComment(comment.id, value)}
