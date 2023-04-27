@@ -7,6 +7,7 @@ import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
 import { IProject } from '../types/mainProjects';
+import { endLoading, startLoading } from './loading';
 
 export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -214,13 +215,30 @@ export const createNewProject =
   };
 
 export const openCurrentProject =
-  (token: string, id: string) =>
+  (token: string, id: string, sendRequest: boolean = false) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
+    let currentProject;
     try {
-      const { projects } = getState().mainProjects;
-      const currentProject = projects.filter((project) => project.id === id);
+      if (!sendRequest) {
+        const { projects } = getState().mainProjects;
+        currentProject = projects.filter((project) => project.id === id);
 
-      dispatch(setCurrentProject(currentProject[0]));
+        dispatch(setCurrentProject(currentProject[0]));
+        dispatch(endLoading());
+      } else {
+        dispatch(startLoading());
+        const response = await axios({
+          method: 'GET',
+          url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          cancelToken: httpSource.token,
+        });
+
+        dispatch(setCurrentProject(response.data.project));
+        dispatch(endLoading());
+      }
     } catch (e) {
       dispatch(editProjectFailure((e as Error).message));
     }

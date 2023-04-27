@@ -1,9 +1,20 @@
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { openCurrentProject } from '../modules/actions/mainProjects';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
+import { getAuth } from '../modules/selectors/user';
 import { ListItems } from './ListItems';
 
 export const SubProjects = () => {
   const currentProject = useSelector(getCurrentProject);
+  const { token } = useSelector(getAuth);
+  const dispatch = useDispatch();
+
+  const handleOpenProject = async (projectId: string) => {
+    const sendRequest = true;
+
+    await dispatch(openCurrentProject(token, projectId, sendRequest) as any);
+  };
 
   return (
     <>
@@ -15,7 +26,7 @@ export const SubProjects = () => {
             <ListItems
               projects={currentProject.subProjects}
               updateOrder={() => console.log('updateOrder')}
-              onClick={(projectId) => console.log(`click: ${projectId}`)}
+              onClick={handleOpenProject}
             />
           </>
         )}

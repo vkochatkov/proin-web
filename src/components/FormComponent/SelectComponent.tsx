@@ -6,6 +6,7 @@ import { IProject } from '../../modules/types/mainProjects';
 import { useSelector } from 'react-redux';
 import {
   getAllUserProjects,
+  getCurrentProject,
   getSelectedProjectId,
 } from '../../modules/selectors/mainProjects';
 import { useLocation } from 'react-router-dom';
@@ -16,10 +17,10 @@ interface IProps {
 }
 
 export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
-  const currentProjectId = useSelector(getSelectedProjectId);
+  const selectedProjectId = useSelector(getSelectedProjectId);
   const location = useLocation();
   const isRoot = location.pathname === '/';
-
+  const openedProject = useSelector(getCurrentProject);
   const projects = useSelector(getAllUserProjects);
   const filtered = projects
     .filter((project) => {
@@ -27,8 +28,10 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
         return !p.subProjects.includes(project._id);
       });
     })
+    .filter((project) => project._id !== selectedProjectId)
     .filter((project) => {
-      return project._id !== currentProjectId;
+      if (!openedProject) return true;
+      else return project._id !== openedProject.id;
     });
 
   return (

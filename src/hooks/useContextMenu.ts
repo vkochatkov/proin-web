@@ -17,6 +17,7 @@ export const useContextMenu = () => {
 
   const handleContextMenu = (event: any) => {
     event.preventDefault();
+    event.stopPropagation();
 
     if (dragging) return;
 
@@ -53,5 +54,6 @@ export const useContextMenu = () => {
     contextMenuPosition,
     anchorEl,
     handleSelectProject,
+    handleContextMenu,
   };
 };

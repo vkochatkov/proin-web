@@ -104,7 +104,7 @@ const EditProject: React.FC<Props> = () => {
             <img src="/delete-icon.svg" alt="delete icon" />
           </Button>
         </Header>
-        {isLoading && !currentProject ? (
+        {isLoading ? (
           <div className="loading">
             <LoadingSpinner />
           </div>

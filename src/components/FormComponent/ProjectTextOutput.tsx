@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { changeSnackbarState } from '../../modules/actions/snackbar';
 import { Link } from './ProjectTextLink';
@@ -145,7 +145,7 @@ export const ProjectTextOutput = ({ text }: Props) => {
         );
       }
     } else {
-      return <span>{word} </span>;
+      return <span key={`${word}-${index}`}>{word} </span>;
     }
   };
 
@@ -167,12 +167,18 @@ export const ProjectTextOutput = ({ text }: Props) => {
                 );
 
                 if (linkElement) {
-                  return linkElement;
+                  return (
+                    <Fragment key={`${word}-${wordIndex}`}>
+                      {linkElement}
+                    </Fragment>
+                  );
                 } else {
                   return (
                     <>
-                      {word}
-                      {wordIndex === lastWordIndex ? '' : ' '}
+                      <Fragment key={`${word}-${wordIndex}`}>
+                        {word}
+                        {wordIndex === lastWordIndex ? '' : ' '}
+                      </Fragment>
                     </>
                   );
                 }

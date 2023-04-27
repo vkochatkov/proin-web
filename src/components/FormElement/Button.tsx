@@ -11,7 +11,7 @@ interface Props {
   size?: 'default' | 'small' | 'large';
   inverse?: boolean;
   danger?: boolean;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   disabled?: boolean;
   transparent?: boolean;
   icon?: boolean;
