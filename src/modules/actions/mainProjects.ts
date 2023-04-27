@@ -6,7 +6,7 @@ import { RootState } from '../store';
 import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
-import { IProject } from '../types/mainProjects';
+import { IProject, ISubProjectAction } from '../types/mainProjects';
 import { endLoading, startLoading } from './loading';
 
 export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
@@ -277,6 +277,61 @@ export const updateOrderProjects =
         data: { projects },
         headers: {
           Authorization: 'Bearer ' + token,
+        },
+        cancelToken: httpSource.token,
+      });
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const updatedSubProjectsOrder =
+  ({ projectId, newOrder, subProjectIndex }: ISubProjectAction) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { token } = getState().user;
+    const { projects } = getState().mainProjects;
+
+    const projectIndex = projects.findIndex(
+      (project) => project._id === projectId
+    );
+
+    if (projectIndex === -1) return;
+
+    const project = projects[projectIndex];
+    const updatedProject = {
+      ...project,
+      subProjects: [...newOrder],
+    };
+
+    const updatedProjects = [
+      ...projects.slice(0, projectIndex),
+      updatedProject,
+      ...projects.slice(projectIndex + 1),
+    ];
+
+    dispatch(
+      updateProjectCommentsSuccess({
+        updatedCurrentProject: updatedProject,
+        updatedProjectsArray: updatedProjects,
+      })
+    );
+
+    try {
+      await axios({
+        method: 'PATCH',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${updatedProject._id}`,
+        data: JSON.stringify({
+          subProjects: updatedProject.subProjects,
+        }),
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
         },
         cancelToken: httpSource.token,
       });

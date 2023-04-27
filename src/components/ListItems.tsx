@@ -7,7 +7,7 @@ import { Item } from './Item';
 interface Props {
   projects: Project[];
   onClick: (id: string) => void;
-  updateOrder: (newItem: Project[]) => void;
+  updateOrder: (newItem: Project[], index?: string) => void;
   isWrapped?: boolean;
 }
 
@@ -45,7 +45,7 @@ export const ListItems = ({
       result.destination.index
     );
 
-    updateOrder(newItems);
+    updateOrder(newItems, result.destination.index);
     dispatch(setIsDragging(false));
   };
 

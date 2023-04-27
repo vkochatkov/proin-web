@@ -1,6 +1,10 @@
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { openCurrentProject } from '../modules/actions/mainProjects';
+import {
+  openCurrentProject,
+  updatedSubProjectsOrder,
+} from '../modules/actions/mainProjects';
+import { Project } from '../modules/reducers/mainProjects';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { ListItems } from './ListItems';
@@ -16,6 +20,23 @@ export const SubProjects = () => {
     await dispatch(openCurrentProject(token, projectId, sendRequest) as any);
   };
 
+  const handleUpdateSubProjectsOrder = (
+    orderedProjects: Project[],
+    index?: string
+  ) => {
+    if (!currentProject) return;
+
+    const projectId = currentProject._id;
+
+    dispatch(
+      updatedSubProjectsOrder({
+        projectId,
+        newOrder: orderedProjects,
+        subProjectIndex: index ? index : '0',
+      }) as any
+    );
+  };
+
   return (
     <>
       {currentProject &&
@@ -25,7 +46,7 @@ export const SubProjects = () => {
             <h3>Вкладені проекти</h3>
             <ListItems
               projects={currentProject.subProjects}
-              updateOrder={() => console.log('updateOrder')}
+              updateOrder={handleUpdateSubProjectsOrder}
               onClick={handleOpenProject}
             />
           </>
