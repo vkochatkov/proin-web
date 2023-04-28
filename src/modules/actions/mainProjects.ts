@@ -479,8 +479,6 @@ export const moveToProject =
         },
         cancelToken: httpSource.token,
       });
-
-      window.location.reload();
     } catch (e: any) {
       dispatch(
         changeSnackbarState({

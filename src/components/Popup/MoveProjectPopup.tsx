@@ -19,6 +19,8 @@ import {
   moveToProject,
   selectProject,
 } from '../../modules/actions/mainProjects';
+import { useNavigate } from 'react-router-dom';
+import { startLoading } from '../../modules/actions/loading';
 
 export const MoveProjectPopup = () => {
   const [selectedProject, setSelectedProject] = React.useState('');
@@ -28,6 +30,7 @@ export const MoveProjectPopup = () => {
   );
   const currentProjectId = useSelector(getSelectedProjectId);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedProject(event.target.value);
@@ -47,8 +50,10 @@ export const MoveProjectPopup = () => {
       return;
     }
 
-    dispatch(moveToProject(selectedProject, currentProjectId) as any);
+    await dispatch(moveToProject(selectedProject, currentProjectId) as any);
     dispatch(closePopup({ id: popupId }));
+    navigate(0);
+    dispatch(startLoading());
   };
 
   return (
