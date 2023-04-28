@@ -1,17 +1,19 @@
 import React, { Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { changeSnackbarState } from '../../modules/actions/snackbar';
-import { Link } from './ProjectTextLink';
+import { LinkIt, LinkItEmail, LinkItUrl } from 'react-linkify-it';
 
 interface Props {
   text?: string;
 }
 
-const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+const emailRegex =
+  /(?:^|\s|[.,<>()[\]\\])([a-zA-Z0-9]+[\w\.-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+[\w\.-]*[a-zA-Z0-9]+\.[a-zA-Z]{2,})/g;
+
 const phoneRegex =
   /(\+?\d{1,3}[\s.,-]*)?\(?(\d{3})\)?[\s.,-]*?(\d{3})[\s.,-]*?(\d{4})/g;
 const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
-const hashtagRegex = /#\w+/g;
+const hashtagRegex = /(^|\b)#[\w-]+(\b|$)/g;
 
 export const ProjectTextOutput = ({ text }: Props) => {
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ export const ProjectTextOutput = ({ text }: Props) => {
 
     if (content) {
       navigator.clipboard
-        .writeText(content)
+        .writeText(content.trim())
         .then(() =>
           dispatch(
             changeSnackbarState({
@@ -37,115 +39,68 @@ export const ProjectTextOutput = ({ text }: Props) => {
   };
 
   const linkify = (word: string, index: number) => {
-    const match = word.match(/^(.*?)([.,]?)(\s*)$/);
-    let linkText;
-    let punctuation;
-    let whitespace;
-
-    if (word.startsWith('http://') || word.startsWith('https://')) {
-      if (match) {
-        linkText = match[1];
-        punctuation = match[2];
-        whitespace = match[3];
-        return (
-          <>
-            <Link key={`${word}-${Math.random()}`} href={linkText}>
-              {linkText}
-            </Link>
-            {punctuation}
-            {whitespace}
-          </>
-        );
-      }
-    } else if (word.startsWith('@')) {
-      if (match) {
-        linkText = match[1];
-        punctuation = match[2];
-        whitespace = match[3];
-        return (
-          <>
-            <Link
-              onClick={handleClick}
-              key={`${word}-${Math.random()}`}
-              href="#"
-            >
-              {linkText}
-            </Link>
-            {punctuation}
-            {whitespace}
-          </>
-        );
-      }
+    if (word.includes('http://') || word.includes('https://')) {
+      return <LinkItUrl key={`${word}-${Math.random()}`}>{word}</LinkItUrl>;
+    } else if (word.includes('@') && !emailRegex.test(word)) {
+      return (
+        <LinkIt
+          component={(match, key) => (
+            <a onClick={handleClick} key={`${key}-${Math.random()}`} href="#">
+              {match}
+            </a>
+          )}
+          regex={/@\w+/}
+        >
+          {word}
+        </LinkIt>
+      );
     } else if (word.match(emailRegex)) {
-      if (match) {
-        linkText = match[1];
-        punctuation = match[2];
-        whitespace = match[3];
-        return (
-          <>
-            <Link key={`${word}-${Math.random()}`} href={`mailto:${linkText}`}>
-              {linkText}
-            </Link>
-            {punctuation}
-            {whitespace}
-          </>
-        );
-      }
+      return <LinkItEmail key={word}>{word}</LinkItEmail>;
     } else if (word.match(phoneRegex)) {
-      if (match) {
-        linkText = match[1];
-        punctuation = match[2];
-        whitespace = match[3];
-        return (
-          <>
-            <Link key={`${word}-${Math.random()}`} href={`tel:${linkText}`}>
-              {linkText}
-            </Link>
-            {punctuation}
-            {whitespace}
-          </>
-        );
-      }
+      return (
+        <LinkIt
+          component={(match, key) => (
+            <>
+              <a key={`${key}-${Math.random()}`} href={`tel:${match}`}>
+                {match}
+              </a>
+            </>
+          )}
+          regex={phoneRegex}
+        >
+          {word}
+        </LinkIt>
+      );
     } else if (word.match(cardRegex)) {
-      if (match) {
-        linkText = match[1];
-        punctuation = match[2];
-        whitespace = match[3];
-        return (
-          <>
-            <Link
-              onClick={handleClick}
-              key={`${word}-${Math.random()}`}
-              href="#"
-            >
-              {linkText}
-            </Link>
-            {punctuation}
-            {whitespace}
-          </>
-        );
-      }
+      return (
+        <LinkIt
+          component={(match, key) => (
+            <>
+              <a onClick={handleClick} key={`${key}-${Math.random()}`} href="#">
+                {match}
+              </a>
+            </>
+          )}
+          regex={cardRegex}
+        >
+          {word}
+        </LinkIt>
+      );
     } else if (word.match(hashtagRegex)) {
-      if (match) {
-        linkText = match[1];
-        punctuation = match[2];
-        whitespace = match[3];
-        return (
-          <>
-            <Link
-              onClick={handleClick}
-              key={`${word}-${Math.random()}`}
-              href="#"
-            >
-              {linkText}
-            </Link>
-            {punctuation}
-            {whitespace}
-          </>
-        );
-      }
+      return (
+        <LinkIt
+          component={(match, key) => (
+            <a onClick={handleClick} key={`${key}-${Math.random()}`} href="#">
+              {match}
+            </a>
+          )}
+          regex={hashtagRegex}
+        >
+          {word}
+        </LinkIt>
+      );
     } else {
-      return <span key={`${word}-${index}`}>{word} </span>;
+      return <span key={`${word}-${index}`}>{word}</span>;
     }
   };
 
@@ -162,7 +117,7 @@ export const ProjectTextOutput = ({ text }: Props) => {
             <p key={index} style={{ textAlign: 'left', margin: '0' }}>
               {words.map((word: string, wordIndex: number) => {
                 const linkElement = linkify(
-                  word,
+                  word + ' ',
                   index * words.length + wordIndex
                 );
 
