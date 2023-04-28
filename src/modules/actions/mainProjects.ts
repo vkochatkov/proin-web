@@ -209,6 +209,7 @@ export const createNewProject =
       });
 
       dispatch(createProjectSuccess(response.data.project));
+      dispatch(endLoading());
     } catch (e) {
       dispatch(editProjectFailure((e as any).message));
     }
