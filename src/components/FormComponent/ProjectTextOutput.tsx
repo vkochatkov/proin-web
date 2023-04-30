@@ -11,9 +11,9 @@ interface Props {
 const emailRegex =
   /(?:^|\s|[.,<>()[\]\\])([a-zA-Z0-9]+[\w-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+[\w-]*[a-zA-Z0-9]+\.[a-zA-Z]{2,})/g;
 
+const cardRegex = /(\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b)/g;
 const phoneRegex =
-  /(\+?\d{1,3}[\s.,-]*)?\(?(\d{3})\)?[\s.,-]*?(\d{3})[\s.,-]*?(\d{4})/g;
-const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
+  /(?!\d{16})\+?\d{1,3}[\s.,-]*\(?(\d{3})\)?[\s.,-]*?(\d{3})[\s.,-]*?(\d{4})/g;
 const hashtagRegex = /(^|\b)#[\w-]+(\b|$)/g;
 const urlRegex =
   /https?:\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
@@ -81,26 +81,6 @@ export const ProjectTextOutput = ({ text }: Props) => {
       );
     } else if (word.match(emailRegex)) {
       return <LinkItEmail key={uuidv4()}>{word}</LinkItEmail>;
-    } else if (word.match(phoneRegex)) {
-      return (
-        <LinkIt
-          key={`${word}-${uuidv4()}`}
-          component={(match, key) => (
-            <>
-              <a
-                style={{ wordBreak: 'break-all' }}
-                key={`${key}-${uuidv4()}`}
-                href={`tel:${match}`}
-              >
-                {match}
-              </a>
-            </>
-          )}
-          regex={phoneRegex}
-        >
-          {word}
-        </LinkIt>
-      );
     } else if (word.match(cardRegex)) {
       return (
         <LinkIt
@@ -118,6 +98,26 @@ export const ProjectTextOutput = ({ text }: Props) => {
             </>
           )}
           regex={cardRegex}
+        >
+          {word}
+        </LinkIt>
+      );
+    } else if (word.match(phoneRegex)) {
+      return (
+        <LinkIt
+          key={`${word}-${uuidv4()}`}
+          component={(match, key) => (
+            <>
+              <a
+                style={{ wordBreak: 'break-all' }}
+                key={`${key}-${uuidv4()}`}
+                href={`tel:${match}`}
+              >
+                {match}
+              </a>
+            </>
+          )}
+          regex={phoneRegex}
         >
           {word}
         </LinkIt>
