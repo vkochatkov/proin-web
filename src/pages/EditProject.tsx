@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { useForm } from '../hooks/useForm';
@@ -9,12 +9,13 @@ import {
 } from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { Button } from '../components/FormElement/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/Navigation/Header';
 import { getIsLoading } from '../modules/selectors/loading';
 import {
   clearCurrentProject,
   deleteCurrentProject,
+  openCurrentProject,
   updateProjects,
 } from '../modules/actions/mainProjects';
 import { CommentsList } from '../components/CommentsList';
@@ -27,10 +28,13 @@ import { ProjectDescription } from '../components/FormComponent/ProjectInputEdit
 import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
 import { SubProjects } from '../components/SubProjects';
 
+import './HomePage.scss';
+
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
   const { token, userId } = useSelector(getAuth);
+  const { pid } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
   const isMemberAdded = findProjectMember(currentProject, userId);
@@ -75,6 +79,12 @@ const EditProject: React.FC<Props> = () => {
   const handleOpenInvitationPopup = () => {
     dispatch(openPopup({ id: 'invite' }));
   };
+
+  useEffect(() => {
+    if (!currentProject && pid) {
+      dispatch(openCurrentProject(token, pid, true) as any);
+    }
+  }, [currentProject]);
 
   return (
     <>

@@ -1,6 +1,4 @@
 import React, { Suspense } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from './modules/store';
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,6 +7,7 @@ import {
 } from 'react-router-dom';
 import { LoadingSpinner } from './components/UIElements/LoadingSpinner';
 import { InvitePage } from './pages/InvitePage';
+import { AuthWrapper } from './components/AuthWrapper';
 
 import './App.scss';
 
@@ -19,37 +18,6 @@ const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
 
 export const App: React.FC = () => {
-  const { token } = useSelector((state: RootState) => state.user);
-
-  let routes;
-
-  if (token) {
-    routes = (
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/project-edit/:pid" element={<EditProject />} />
-        <Route
-          path="/projects/:id/invitations/:invitationId"
-          element={<InvitePage />}
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    );
-  } else {
-    routes = (
-      <Routes>
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route
-          path="/projects/:id/invitations/:invitationId"
-          element={<InvitePage />}
-        />
-        <Route path="*" element={<Navigate to="/auth" replace />} />
-      </Routes>
-    );
-  }
-
   return (
     <Router>
       <main>
@@ -60,7 +28,34 @@ export const App: React.FC = () => {
             </div>
           }
         >
-          {routes}
+          <Routes>
+            <Route element={<AuthWrapper />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+            <Route element={<AuthWrapper />}>
+              <Route path="/project-edit/:pid" element={<EditProject />} />
+            </Route>
+            <Route element={<AuthWrapper />}>
+              <Route
+                path="/projects/:id/invitations/:invitationId"
+                element={<InvitePage />}
+              />
+            </Route>
+            <Route element={<AuthWrapper />}>
+              <Route path="/dashboard" element={<div>dashboard</div>} />
+            </Route>
+            <Route element={<AuthWrapper />}>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route
+              path="/projects/:id/invitations/:invitationId"
+              element={<InvitePage />}
+            />
+            <Route path="*" element={<Navigate to="/auth" replace />} />
+          </Routes>
         </Suspense>
       </main>
     </Router>

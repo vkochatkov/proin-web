@@ -1,19 +1,22 @@
 import React, { Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { changeSnackbarState } from '../../modules/actions/snackbar';
-import { LinkIt, LinkItEmail, LinkItUrl } from 'react-linkify-it';
+import { LinkIt, LinkItEmail } from 'react-linkify-it';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   text?: string;
 }
 
 const emailRegex =
-  /(?:^|\s|[.,<>()[\]\\])([a-zA-Z0-9]+[\w\.-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+[\w\.-]*[a-zA-Z0-9]+\.[a-zA-Z]{2,})/g;
+  /(?:^|\s|[.,<>()[\]\\])([a-zA-Z0-9]+[\w-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+[\w-]*[a-zA-Z0-9]+\.[a-zA-Z]{2,})/g;
 
 const phoneRegex =
   /(\+?\d{1,3}[\s.,-]*)?\(?(\d{3})\)?[\s.,-]*?(\d{3})[\s.,-]*?(\d{4})/g;
 const cardRegex = /\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g;
 const hashtagRegex = /(^|\b)#[\w-]+(\b|$)/g;
+const urlRegex =
+  /https?:\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
 
 export const ProjectTextOutput = ({ text }: Props) => {
   const dispatch = useDispatch();
@@ -40,12 +43,34 @@ export const ProjectTextOutput = ({ text }: Props) => {
 
   const linkify = (word: string, index: number) => {
     if (word.includes('http://') || word.includes('https://')) {
-      return <LinkItUrl key={`${word}-${Math.random()}`}>{word}</LinkItUrl>;
+      return (
+        <LinkIt
+          key={`${word}-${uuidv4()}`}
+          component={(match, key) => (
+            <a
+              style={{ wordBreak: 'break-all' }}
+              key={`${key}-${uuidv4()}`}
+              href={match}
+            >
+              {match}
+            </a>
+          )}
+          regex={urlRegex}
+        >
+          {word}
+        </LinkIt>
+      );
     } else if (word.includes('@') && !emailRegex.test(word)) {
       return (
         <LinkIt
+          key={`${word}-${uuidv4()}`}
           component={(match, key) => (
-            <a onClick={handleClick} key={`${key}-${Math.random()}`} href="#">
+            <a
+              style={{ wordBreak: 'break-all' }}
+              onClick={handleClick}
+              key={`${key}-${uuidv4()}`}
+              href={'#'}
+            >
               {match}
             </a>
           )}
@@ -55,13 +80,18 @@ export const ProjectTextOutput = ({ text }: Props) => {
         </LinkIt>
       );
     } else if (word.match(emailRegex)) {
-      return <LinkItEmail key={word}>{word}</LinkItEmail>;
+      return <LinkItEmail key={uuidv4()}>{word}</LinkItEmail>;
     } else if (word.match(phoneRegex)) {
       return (
         <LinkIt
+          key={`${word}-${uuidv4()}`}
           component={(match, key) => (
             <>
-              <a key={`${key}-${Math.random()}`} href={`tel:${match}`}>
+              <a
+                style={{ wordBreak: 'break-all' }}
+                key={`${key}-${uuidv4()}`}
+                href={`tel:${match}`}
+              >
                 {match}
               </a>
             </>
@@ -74,9 +104,15 @@ export const ProjectTextOutput = ({ text }: Props) => {
     } else if (word.match(cardRegex)) {
       return (
         <LinkIt
+          key={`${word}-${uuidv4()}`}
           component={(match, key) => (
             <>
-              <a onClick={handleClick} key={`${key}-${Math.random()}`} href="#">
+              <a
+                style={{ wordBreak: 'break-all' }}
+                onClick={handleClick}
+                key={`${key}-${uuidv4()}`}
+                href="#"
+              >
                 {match}
               </a>
             </>
@@ -89,8 +125,14 @@ export const ProjectTextOutput = ({ text }: Props) => {
     } else if (word.match(hashtagRegex)) {
       return (
         <LinkIt
+          key={`${word}-${uuidv4()}`}
           component={(match, key) => (
-            <a onClick={handleClick} key={`${key}-${Math.random()}`} href="#">
+            <a
+              style={{ wordBreak: 'break-all' }}
+              onClick={handleClick}
+              key={`${key}-${uuidv4()}`}
+              href="#"
+            >
               {match}
             </a>
           )}
@@ -100,7 +142,7 @@ export const ProjectTextOutput = ({ text }: Props) => {
         </LinkIt>
       );
     } else {
-      return <span key={`${word}-${index}`}>{word}</span>;
+      return <span key={`${uuidv4()}-${index}`}>{word}</span>;
     }
   };
 
@@ -123,14 +165,14 @@ export const ProjectTextOutput = ({ text }: Props) => {
 
                 if (linkElement) {
                   return (
-                    <Fragment key={`${word}-${wordIndex}`}>
+                    <Fragment key={`${uuidv4()}-${wordIndex}`}>
                       {linkElement}
                     </Fragment>
                   );
                 } else {
                   return (
                     <>
-                      <Fragment key={`${word}-${wordIndex}`}>
+                      <Fragment key={`${uuidv4()}-${wordIndex}`}>
                         {word}
                         {wordIndex === lastWordIndex ? '' : ' '}
                       </Fragment>
