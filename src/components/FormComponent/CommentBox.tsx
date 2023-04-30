@@ -141,8 +141,8 @@ export const CommentBox: FC<Props> = ({
                 left: contextMenuPosition.left,
               }}
             >
-              <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
               <MenuItem onClick={() => onEdit(id)}>Редагувати</MenuItem>
+              <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
             </Menu>
           )}
         </div>

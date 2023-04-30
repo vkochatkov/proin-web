@@ -32,7 +32,7 @@ export const useContextMenu = () => {
 
   const defaultOptions = {
     isPreventDefault: false,
-    delay: 200,
+    delay: 500,
   };
 
   const longPressProps = useLongPress(handleContextMenu, {
