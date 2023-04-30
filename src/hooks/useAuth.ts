@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { signin, signout } from '../modules/actions/user';
 import { getAuth } from '../modules/selectors/user';
 
@@ -26,6 +27,7 @@ export const useAuth = (): {
   const { token, userId } = useSelector(getAuth);
   const [tokenExpirationDate, setTokenExpirationDate] = useState<Date | null>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const login = useCallback(
     (
@@ -55,6 +57,7 @@ export const useAuth = (): {
   const logout = useCallback(() => {
     localStorage.removeItem('userData');
     dispatch(signout() as any);
+    navigate('/auth');
   }, [dispatch]);
 
   useEffect(() => {

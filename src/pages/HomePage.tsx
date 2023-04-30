@@ -21,6 +21,7 @@ import { endLoading, startLoading } from '../modules/actions/loading';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { Project } from '../modules/reducers/mainProjects';
 import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
+import { useAuth } from '../hooks/useAuth';
 
 import './HomePage.scss';
 
@@ -29,7 +30,7 @@ const HomePage: React.FC = () => {
   const { projects, currentProject } = useSelector(
     (state: RootState) => state.mainProjects
   );
-  const { userId, token } = useSelector((state: RootState) => state.user);
+  const { userId, token } = useAuth();
   const navigate = useNavigate();
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -49,6 +50,8 @@ const HomePage: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    if (!userId) return;
+
     const fetchProjects = async () => {
       const res = await sendRequest(
         `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`

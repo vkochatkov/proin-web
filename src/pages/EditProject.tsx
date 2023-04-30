@@ -27,13 +27,14 @@ import { openPopup } from '../modules/actions/popup';
 import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
 import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
 import { SubProjects } from '../components/SubProjects';
+import { useAuth } from '../hooks/useAuth';
 
 import './HomePage.scss';
 
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
-  const { token, userId } = useSelector(getAuth);
+  const { token, userId } = useAuth();
   const { pid } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
