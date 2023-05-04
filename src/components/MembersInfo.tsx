@@ -8,8 +8,6 @@ import { useSelector } from 'react-redux';
 import { getMembers } from '../modules/selectors/projectMembers';
 import { Member } from './Member';
 
-import './MembersInfo.scss';
-
 export const MembersInfo = () => {
   const dispatch = useDispatch();
   const members = useSelector(getMembers);
