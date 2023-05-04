@@ -31,7 +31,11 @@ export const MembersInfo = () => {
       <hr />
       <Grid>
         {members.map((member) => (
-          <Member key={member.userId} member={member} />
+          <Member
+            key={member.userId}
+            member={member}
+            disabled={members.length <= 1}
+          />
         ))}
       </Grid>
     </Paper>

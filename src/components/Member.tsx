@@ -10,7 +10,13 @@ import { useParams } from 'react-router-dom';
 
 import './Member.scss';
 
-export const Member = ({ member }: { member: IMember }) => {
+export const Member = ({
+  member,
+  disabled,
+}: {
+  member: IMember;
+  disabled: boolean;
+}) => {
   const dispatch = useDispatch();
   const id = member.userId;
   const firstLetter = member.name.charAt(0).toUpperCase();
@@ -67,6 +73,7 @@ export const Member = ({ member }: { member: IMember }) => {
       </Grid>
       <Grid item xs={2} sx={{ py: 1, display: 'grid' }}>
         <Button
+          disabled={disabled}
           customClassName="member__btn"
           icon
           transparent

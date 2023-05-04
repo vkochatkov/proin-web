@@ -72,6 +72,12 @@ $buttonBackground: #d9dddc;
     cursor: not-allowed;
   }
 
+  &--transparent:disabled,
+  &--transparent:hover:disabled,
+  &--transparent:active:disabled {
+    background-color: transparent;
+  }
+
   &--small {
     font-size: 0.8rem;
   }
