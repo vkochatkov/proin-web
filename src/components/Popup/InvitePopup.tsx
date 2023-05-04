@@ -26,12 +26,15 @@ import {
 } from '../../modules/actions/foundUsers';
 import { getFoundUsers } from '../../modules/selectors/foundUsers';
 import { IFoundUser } from '../../modules/types/users';
+import { fetchMembers } from '../../modules/actions/projectMembers';
+import { useParams } from 'react-router-dom';
 
 export const InvitePopup = () => {
   const { email } = useSelector(getAuth);
   const [open, setOpen] = React.useState(false);
   const [selectedUsers, setSelectedUsers] = useState<IFoundUser[] | []>([]);
   const options = useSelector(getFoundUsers);
+  const { pid } = useParams();
   const loading = open && options.length === 0;
   const { formState, inputHandler } = useForm(
     {
@@ -52,9 +55,10 @@ export const InvitePopup = () => {
     dispatch(closePopup({ id: 'invite' }));
   };
 
-  const submitHandler = (event: { preventDefault: () => void }) => {
+  const submitHandler = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    dispatch(sendInvitation(selectedUsers) as any);
+    await dispatch(sendInvitation(selectedUsers) as any);
+    if (pid) dispatch(fetchMembers(pid) as any);
     dispatch(closePopup({ id: 'invite' }));
   };
 
