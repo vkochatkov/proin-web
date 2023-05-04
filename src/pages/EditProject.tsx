@@ -7,7 +7,6 @@ import {
   getCurrentProject,
   getCurrentProjects,
 } from '../modules/selectors/mainProjects';
-import { getAuth } from '../modules/selectors/user';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/Navigation/Header';
@@ -18,16 +17,15 @@ import {
   openCurrentProject,
   updateProjects,
 } from '../modules/actions/mainProjects';
-import { CommentsList } from '../components/CommentsList';
 import { Card } from '@mui/joy';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { findProjectMember } from '../utils/utils';
 import { InvitePopup } from '../components/Popup/InvitePopup';
-import { openPopup } from '../modules/actions/popup';
 import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
 import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
 import { SubProjects } from '../components/SubProjects';
 import { useAuth } from '../hooks/useAuth';
+import TabsMenu from '../components/TabsMenu';
 
 import './HomePage.scss';
 
@@ -77,15 +75,11 @@ const EditProject: React.FC<Props> = () => {
     dispatch(clearCurrentProject());
   };
 
-  const handleOpenInvitationPopup = () => {
-    dispatch(openPopup({ id: 'invite' }));
-  };
-
   useEffect(() => {
     if (!currentProject && pid) {
       dispatch(openCurrentProject(token, pid, true) as any);
     }
-  }, [currentProject]);
+  }, [currentProject, pid, token, dispatch]);
 
   return (
     <>
@@ -141,11 +135,6 @@ const EditProject: React.FC<Props> = () => {
                   >
                     Лого
                   </h3>
-                  <div>
-                    <Button onClick={handleOpenInvitationPopup}>
-                      Додати користувача
-                    </Button>
-                  </div>
                 </div>
                 <ImageUpload
                   id="logoUrl"
@@ -168,8 +157,7 @@ const EditProject: React.FC<Props> = () => {
                   label="Опис"
                 />
                 <SubProjects />
-                <h3>Коментарі</h3>
-                <CommentsList />
+                <TabsMenu />
               </>
             </div>
           </Card>

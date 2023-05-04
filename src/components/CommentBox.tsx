@@ -1,11 +1,10 @@
 import { FC, useMemo } from 'react';
-import { Avatar } from '@mui/joy';
-import { Paper, Grid, Menu, MenuItem } from '@mui/material';
+import { Paper, Grid, Menu, MenuItem, Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { getAuth } from '../../modules/selectors/user';
-import { red, blue, green, yellow } from '@mui/material/colors';
-import { ProjectTextOutput } from './ProjectTextOutput';
-import { useContextMenu } from '../../hooks/useContextMenu';
+import { getAuth } from '../modules/selectors/user';
+import { ProjectTextOutput } from './FormComponent/ProjectTextOutput';
+import { useContextMenu } from '../hooks/useContextMenu';
+import { backgroundColor } from '../utils/avatar-view';
 
 import './CommentBox.scss';
 
@@ -36,22 +35,8 @@ export const CommentBox: FC<Props> = ({
   const isUserOwnComment = auth.userId === userId;
   const { longPressProps, handleClose, contextMenuPosition, anchorEl } =
     useContextMenu();
-  const colorShade = 700;
-  const colors = useMemo(
-    () => [
-      red[colorShade],
-      blue[colorShade],
-      green[colorShade],
-      yellow[colorShade],
-    ],
-    [colorShade]
-  );
-  const firstLetter = name.charAt(0).toUpperCase();
 
-  const backgroundColor = useMemo(() => {
-    const index = firstLetter.charCodeAt(0) % colors.length;
-    return colors[index];
-  }, [colors, firstLetter]);
+  const firstLetter = name.charAt(0).toUpperCase();
 
   const elapsedTime = useMemo(() => {
     const now = new Date();
@@ -88,16 +73,20 @@ export const CommentBox: FC<Props> = ({
               alt="Remy Sharp"
               src={logoLink}
               sx={{
-                bgcolor: backgroundColor,
+                bgcolor: () => backgroundColor(firstLetter),
+                width: 40,
+                height: 40,
               }}
             >
-              <h3
+              {/* <h3
                 style={{
                   color: '#fff',
+                  fontSize: '20px',
+                  display: 'flex',
                 }}
-              >
-                {firstLetter}
-              </h3>
+              > */}
+              {firstLetter}
+              {/* </h3> */}
             </Avatar>
           </Grid>
           <Grid justifyContent="left" item xs zeroMinWidth>

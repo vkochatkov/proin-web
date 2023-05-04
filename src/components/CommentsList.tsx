@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CommentBox } from './FormComponent/CommentBox';
+import { CommentBox } from './CommentBox';
 import { CommentInput } from './FormComponent/CommentInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';

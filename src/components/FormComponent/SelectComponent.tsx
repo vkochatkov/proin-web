@@ -41,10 +41,15 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
       </InputLabel>
       <Select
         labelId="demo-simple-select-standard-label"
-        id="demo-simple-select-standard"
+        id="component-simple"
         value={selectedProject}
         label="Оберіть проект"
         onChange={onChange}
+        sx={{
+          '& .MuiInputBase-input:focus': {
+            background: 'transparent',
+          },
+        }}
       >
         {!isRoot && <MenuItem value="В корінь">В корінь</MenuItem>}
         {filtered.map((project: IProject) => (

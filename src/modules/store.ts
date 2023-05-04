@@ -7,6 +7,8 @@ import { loadingReducer } from './reducers/loading';
 import { snackbar } from './reducers/snackbar';
 import { popup } from './reducers/popup';
 import { dragging } from './reducers/dragging';
+import { projectMembers } from './reducers/projectMembers/intex';
+import { foundUsers } from './reducers/foundUsers';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -16,6 +18,8 @@ const rootReducer = combineReducers({
   snackbar,
   popup,
   dragging,
+  projectMembers,
+  foundUsers,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

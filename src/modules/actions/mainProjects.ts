@@ -8,6 +8,8 @@ import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
 import { IProject, ISubProjectAction } from '../types/mainProjects';
 import { endLoading, startLoading } from './loading';
+import { fetchMembers } from './projectMembers';
+import { IFoundUser } from '../types/users';
 
 export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -220,6 +222,8 @@ export const openCurrentProject =
   async (dispatch: Dispatch, getState: () => RootState) => {
     let currentProject;
     try {
+      dispatch(fetchMembers(id) as any);
+
       if (!sendRequest) {
         const { projects } = getState().mainProjects;
         currentProject = projects.filter((project) => project.id === id);
@@ -348,7 +352,8 @@ export const updatedSubProjectsOrder =
   };
 
 export const sendInvitation =
-  (email: string) => async (dispatch: Dispatch, getState: () => RootState) => {
+  (users: IFoundUser[]) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
     const { currentProject } = getState().mainProjects;
     const { token } = getState().user;
 
@@ -368,7 +373,7 @@ export const sendInvitation =
       await axios({
         method: 'POST',
         url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject.id}/invite`,
-        data: JSON.stringify({ email }),
+        data: JSON.stringify({ users }),
         headers: {
           Authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
