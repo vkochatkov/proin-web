@@ -7,5 +7,5 @@ export interface IMember {
 }
 
 export interface IMembers {
-  projectMembers: IMember[];
+  [key: string]: IMember[];
 }

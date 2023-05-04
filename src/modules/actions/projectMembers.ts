@@ -7,6 +7,9 @@ import { changeSnackbarState } from './snackbar';
 export const fetchMembersSuccess = createAction<IMembers>(
   'FETCH_MEMBERS_SUCCESS'
 );
+export const removeProjectMemberSuccess = createAction<IMembers>(
+  'REMOVE_PROJECT_MEMBER_SUCCESS'
+);
 
 const httpSource = axios.CancelToken.source();
 
@@ -42,6 +45,38 @@ export const fetchMembers =
           id: 'error',
           open: true,
           message: 'Щось пішло не так. Перезавантажте сторінку!',
+        })
+      );
+    }
+  };
+
+export const removeProjectMember =
+  (userId: string, projectId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { token } = getState().user;
+    const members = getState().projectMembers.filter(
+      (member) => member.userId !== userId
+    );
+
+    dispatch(removeProjectMemberSuccess({ members }));
+
+    try {
+      await axios({
+        method: 'DELETE',
+        url: `${process.env.REACT_APP_BACKEND_URL}/project-members/${projectId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        data: JSON.stringify({ userId }),
+        cancelToken: httpSource.token,
+      });
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку!`,
         })
       );
     }

@@ -2,9 +2,8 @@ import React from 'react';
 import { Grid, Paper } from '@mui/material';
 import { Button } from './FormElement/Button';
 import AddIcon from '@mui/icons-material/Add';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openPopup } from '../modules/actions/popup';
-import { useSelector } from 'react-redux';
 import { getMembers } from '../modules/selectors/projectMembers';
 import { Member } from './Member';
 
