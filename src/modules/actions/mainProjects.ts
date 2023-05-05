@@ -226,9 +226,13 @@ export const openCurrentProject =
 
       if (!sendRequest) {
         const { projects } = getState().mainProjects;
-        currentProject = projects.filter((project) => project.id === id);
+        currentProject = projects.filter((project) => project.id === id)[0];
 
-        dispatch(setCurrentProject(currentProject[0]));
+        dispatch(setCurrentProject(currentProject));
+        sessionStorage.setItem(
+          'currentProject',
+          JSON.stringify(currentProject)
+        );
         dispatch(endLoading());
       } else {
         dispatch(startLoading());
@@ -242,6 +246,10 @@ export const openCurrentProject =
         });
 
         dispatch(setCurrentProject(response.data.project));
+        sessionStorage.setItem(
+          'currentProject',
+          JSON.stringify(response.data.project)
+        );
         dispatch(endLoading());
       }
     } catch (e) {

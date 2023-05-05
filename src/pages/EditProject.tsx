@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSessionStorage } from 'react-use';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { useForm } from '../hooks/useForm';
 import { ImageUpload } from '../components/FormElement/ImageUpload';
@@ -40,6 +41,7 @@ const EditProject: React.FC<Props> = () => {
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [value] = useSessionStorage('currentProject');
   const { inputHandler } = useForm(
     {
       projectName: {
@@ -76,8 +78,14 @@ const EditProject: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (!currentProject && pid) {
+    const storagedCurrentProject: any = value;
+
+    if (!currentProject && pid && pid === storagedCurrentProject.id) {
       dispatch(openCurrentProject(token, pid, true) as any);
+    }
+
+    if (pid !== storagedCurrentProject.id) {
+      navigate('/');
     }
   }, [currentProject, pid, token, dispatch]);
 
