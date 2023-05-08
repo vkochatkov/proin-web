@@ -27,9 +27,6 @@ export const setAllUserProjects = createAction<IProject[]>(
   'SET_ALL_USER_PROJECTS'
 );
 export const selectProject = createAction<string>('SELECT_PROJECT');
-export const moveToProjectSuccess = createAction<Project>(
-  'MOVE_TO_PROJECT_SUCCESS'
-);
 
 const httpSource = axios.CancelToken.source();
 
@@ -246,7 +243,6 @@ export const openCurrentProject =
         });
 
         dispatch(setCurrentProject(response.data.project));
-
         dispatch(endLoading());
       }
     } catch (e) {
@@ -495,7 +491,6 @@ export const moveToProject =
           ? [...projectToMove.parentProject, targetProject._id]
           : [targetProject._id];
 
-        console.log('targetProject', targetProject);
         targetProject.subProjects.push(projectToMove);
 
         dispatch(updateProjects(updatedProjects));
@@ -537,7 +532,6 @@ export const moveToProject =
         cancelToken: httpSource.token,
       });
     } catch (e: any) {
-      console.log(e);
       dispatch(
         changeSnackbarState({
           id: 'error',

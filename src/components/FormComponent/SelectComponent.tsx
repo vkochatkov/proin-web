@@ -2,10 +2,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { IProject } from '../../modules/types/mainProjects';
 import { useSelector } from 'react-redux';
 import {
-  getAllUserProjects,
   getCurrentProject,
   getCurrentProjects,
   getSelectedProjectId,
@@ -24,7 +22,6 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
   const isRoot = location.pathname === '/';
   const openedProject = useSelector(getCurrentProject);
   const projects = useSelector(getCurrentProjects);
-
   const filtered = projects
     .filter((project) => {
       return projects.every((p) => {
@@ -36,9 +33,6 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
       if (!openedProject) return true;
       else return project._id !== openedProject.id;
     });
-
-  console.log('filtered', filtered);
-  console.log('projects', projects);
 
   return (
     <FormControl variant="standard" sx={{ m: 1, width: '90%' }}>

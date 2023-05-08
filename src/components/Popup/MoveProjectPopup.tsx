@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogActions,
@@ -19,7 +19,6 @@ import {
   moveToProject,
   selectProject,
 } from '../../modules/actions/mainProjects';
-import { startLoading } from '../../modules/actions/loading';
 
 export const MoveProjectPopup = () => {
   const [selectedProject, setSelectedProject] = React.useState('');
