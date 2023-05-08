@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux';
 import { closePopup } from '../../modules/actions/popup';
 import { sendInvitation } from '../../modules/actions/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
-import { RootState } from '../../modules/store';
+import { RootState } from '../../modules/store/store';
 import CloseIcon from '@mui/icons-material/Close';
 import Autocomplete from '@mui/material/Autocomplete';
 import { debounce } from '../../utils/debounce';

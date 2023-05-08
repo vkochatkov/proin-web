@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { UserState } from '../reducers/user';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 import { clearFormInput } from './form';
 import { endLoading } from './loading';
 import { changeSnackbarState, clearSnackbarState } from './snackbar';

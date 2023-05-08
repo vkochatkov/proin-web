@@ -1,5 +1,5 @@
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   openCurrentProject,
   updatedSubProjectsOrder,
@@ -13,10 +13,13 @@ export const SubProjects = () => {
   const currentProject = useSelector(getCurrentProject);
   const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleOpenProject = async (projectId: string) => {
     const sendRequest = true;
 
+    if (!currentProject) return;
+    navigate(`/project-edit/${currentProject._id}/${projectId}`);
     await dispatch(openCurrentProject(token, projectId, sendRequest) as any);
   };
 

@@ -7,9 +7,11 @@ import { useSelector } from 'react-redux';
 import {
   getAllUserProjects,
   getCurrentProject,
+  getCurrentProjects,
   getSelectedProjectId,
 } from '../../modules/selectors/mainProjects';
 import { useLocation } from 'react-router-dom';
+import { Project } from '../../modules/reducers/mainProjects';
 
 interface IProps {
   onChange: (e: SelectChangeEvent) => void;
@@ -21,7 +23,8 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
   const location = useLocation();
   const isRoot = location.pathname === '/';
   const openedProject = useSelector(getCurrentProject);
-  const projects = useSelector(getAllUserProjects);
+  const projects = useSelector(getCurrentProjects);
+
   const filtered = projects
     .filter((project) => {
       return projects.every((p) => {
@@ -33,6 +36,9 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
       if (!openedProject) return true;
       else return project._id !== openedProject.id;
     });
+
+  console.log('filtered', filtered);
+  console.log('projects', projects);
 
   return (
     <FormControl variant="standard" sx={{ m: 1, width: '90%' }}>
@@ -52,7 +58,7 @@ export const SelectComponent = ({ onChange, selectedProject }: IProps) => {
         }}
       >
         {!isRoot && <MenuItem value="В корінь">В корінь</MenuItem>}
-        {filtered.map((project: IProject) => (
+        {filtered.map((project: Project) => (
           <MenuItem key={project._id} value={project._id}>
             {project.projectName}
           </MenuItem>

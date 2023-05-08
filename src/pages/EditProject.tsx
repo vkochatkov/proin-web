@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSessionStorage } from 'react-use';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { useForm } from '../hooks/useForm';
 import { ImageUpload } from '../components/FormElement/ImageUpload';
-import {
-  getCurrentProject,
-  getCurrentProjects,
-} from '../modules/selectors/mainProjects';
+import { getCurrentProjects } from '../modules/selectors/mainProjects';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/Navigation/Header';
@@ -27,6 +23,7 @@ import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
 import { SubProjects } from '../components/SubProjects';
 import { useAuth } from '../hooks/useAuth';
 import TabsMenu from '../components/TabsMenu';
+import { Project } from '../modules/reducers/mainProjects';
 
 import './HomePage.scss';
 
@@ -34,14 +31,14 @@ type Props = {};
 
 const EditProject: React.FC<Props> = () => {
   const { token, userId } = useAuth();
-  const { pid } = useParams();
+  const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
-  const currentProject = useSelector(getCurrentProject);
+  const state = JSON.parse(sessionStorage.getItem('state') || '');
+  const currentProject = state?.mainProjects?.currentProject;
   const isMemberAdded = findProjectMember(currentProject, userId);
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [value] = useSessionStorage('currentProject');
   const { inputHandler } = useForm(
     {
       projectName: {
@@ -78,16 +75,52 @@ const EditProject: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    const storagedCurrentProject: any = value;
+    if (!currentProject.id) return;
 
-    if (!currentProject && pid && pid === storagedCurrentProject.id) {
-      dispatch(openCurrentProject(token, pid, true) as any);
-    }
+    const foundProjects = projects.find((project) =>
+      project.subProjects.some((p: Project) => p.id === subprojectId)
+    );
 
-    if (pid !== storagedCurrentProject.id) {
+    const subProject = foundProjects ? foundProjects.subProjects[0] : null;
+
+    if (
+      pid &&
+      !subprojectId &&
+      currentProject &&
+      currentProject.id.length !== pid.length
+    ) {
       navigate('/');
+      return;
     }
-  }, [currentProject, pid, token, dispatch]);
+
+    if (pid && currentProject && currentProject.id !== pid && !subprojectId) {
+      dispatch(openCurrentProject(token, pid) as any);
+      return;
+    }
+
+    if (pid && !currentProject && !subprojectId) {
+      dispatch(openCurrentProject(token, pid) as any);
+      return;
+    }
+
+    if (
+      subprojectId &&
+      currentProject &&
+      currentProject.id.length !== subprojectId.length
+    ) {
+      navigate(`/project-edit/${pid}`);
+      return;
+    }
+
+    if (subprojectId && subProject && !currentProject) {
+      dispatch(openCurrentProject(token, subprojectId, true) as any);
+      return;
+    }
+
+    if (subprojectId && currentProject && currentProject.id !== subprojectId) {
+      dispatch(openCurrentProject(token, subprojectId, true) as any);
+    }
+  }, [pid, token, subprojectId]);
 
   return (
     <>

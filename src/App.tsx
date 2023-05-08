@@ -31,7 +31,10 @@ export const App: React.FC = () => {
           <Routes>
             <Route element={<AuthWrapper />}>
               <Route path="/" element={<HomePage />} />
-              <Route path="/project-edit/:pid" element={<EditProject />} />
+              <Route
+                path="/project-edit/:pid/:subprojectId?"
+                element={<EditProject />}
+              />
               <Route
                 path="/projects/:id/invitations/:invitationId"
                 element={<InvitePage />}

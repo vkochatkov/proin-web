@@ -11,7 +11,7 @@ import {
   updateProjects,
 } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
-import { RootState } from '../modules/store';
+import { RootState } from '../modules/store/store';
 import { ListItems } from '../components/ListItems';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Button } from '../components/FormElement/Button';

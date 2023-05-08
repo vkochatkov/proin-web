@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useLongPress } from 'react-use';
 import { selectProject } from '../modules/actions/mainProjects';
 import { openPopup } from '../modules/actions/popup';
-import { RootState } from '../modules/store';
+import { RootState } from '../modules/store/store';
 
 export const useContextMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

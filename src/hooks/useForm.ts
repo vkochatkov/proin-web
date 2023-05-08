@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeFormInput, setFormDataAction } from '../modules/actions/form';
 import { FormState, SetFormDataType } from '../modules/reducers/formReducer';
-import { RootState } from '../modules/store';
+import { RootState } from '../modules/store/store';
 
 type InputHandler = (id: string, value: string, isValid: boolean) => void;
 

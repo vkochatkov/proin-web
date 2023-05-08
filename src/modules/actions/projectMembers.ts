@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createAction, Dispatch } from 'redux-act';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 import { IMembers } from '../types/projectMembers';
 import { changeSnackbarState } from './snackbar';
 

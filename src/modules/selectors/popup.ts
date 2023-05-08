@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 
 export const getPopupState = (state: RootState) => state.popup;
 export const getPopupStateById = createSelector(

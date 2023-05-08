@@ -51,7 +51,7 @@ mainProjects.on(createProjectSuccess, (state, payload) => ({
   currentProject: { ...payload, status: 'success' },
 }));
 
-mainProjects.on(setCurrentProject, (state: any, payload: any) => {
+mainProjects.on(setCurrentProject, (state, payload) => {
   return { ...state, currentProject: { ...payload, status: 'success' } };
 });
 

@@ -2,7 +2,7 @@ import { createAction } from 'redux-act';
 import { Project } from '../reducers/mainProjects';
 import { Dispatch } from 'redux';
 import { clearFormInput } from './form';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
@@ -27,6 +27,9 @@ export const setAllUserProjects = createAction<IProject[]>(
   'SET_ALL_USER_PROJECTS'
 );
 export const selectProject = createAction<string>('SELECT_PROJECT');
+export const moveToProjectSuccess = createAction<Project>(
+  'MOVE_TO_PROJECT_SUCCESS'
+);
 
 const httpSource = axios.CancelToken.source();
 
@@ -229,13 +232,10 @@ export const openCurrentProject =
         currentProject = projects.filter((project) => project.id === id)[0];
 
         dispatch(setCurrentProject(currentProject));
-        sessionStorage.setItem(
-          'currentProject',
-          JSON.stringify(currentProject)
-        );
         dispatch(endLoading());
       } else {
         dispatch(startLoading());
+
         const response = await axios({
           method: 'GET',
           url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
@@ -246,10 +246,7 @@ export const openCurrentProject =
         });
 
         dispatch(setCurrentProject(response.data.project));
-        sessionStorage.setItem(
-          'currentProject',
-          JSON.stringify(response.data.project)
-        );
+
         dispatch(endLoading());
       }
     } catch (e) {
@@ -477,8 +474,55 @@ export const moveToProject =
   (toProjectId: string, currentProjectId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const { token } = getState().user;
+    const { currentProject, projects } = getState().mainProjects;
 
     try {
+      if (!currentProject) {
+        const updatedProjects = JSON.parse(JSON.stringify(projects));
+
+        const projectToMoveIndex = updatedProjects.findIndex(
+          (project: Project) => project.id === currentProjectId
+        );
+
+        const targetProjectIndex = updatedProjects.findIndex(
+          (project: Project) => project.id === toProjectId
+        );
+
+        const targetProject = updatedProjects[targetProjectIndex];
+
+        const projectToMove = updatedProjects.splice(projectToMoveIndex, 1)[0];
+        projectToMove.parentProject = projectToMove.parentProject
+          ? [...projectToMove.parentProject, targetProject._id]
+          : [targetProject._id];
+
+        console.log('targetProject', targetProject);
+        targetProject.subProjects.push(projectToMove);
+
+        dispatch(updateProjects(updatedProjects));
+      } else {
+        const projectToMove = JSON.parse(
+          JSON.stringify(currentProject)
+        ).subProjects.find((p: Project) => p.id === currentProjectId);
+        const subProjects = [...currentProject.subProjects].filter(
+          (sp: Project) => sp.id !== currentProjectId
+        );
+
+        const updatedCurrentProject = {
+          ...currentProject,
+          subProjects,
+        };
+
+        delete projectToMove.parentProject;
+
+        const updatedProjects = [
+          ...JSON.parse(JSON.stringify(projects)),
+          projectToMove,
+        ];
+
+        dispatch(setCurrentProject(updatedCurrentProject));
+        dispatch(updateProjects(updatedProjects));
+      }
+
       await axios({
         method: 'POST',
         url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProjectId}/moving`,
@@ -493,6 +537,7 @@ export const moveToProject =
         cancelToken: httpSource.token,
       });
     } catch (e: any) {
+      console.log(e);
       dispatch(
         changeSnackbarState({
           id: 'error',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { closePopup } from '../../modules/actions/popup';
 import { getPopupStateById } from '../../modules/selectors/popup';
-import { RootState } from '../../modules/store';
+import { RootState } from '../../modules/store/store';
 import { Button } from '../FormElement/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import { SelectComponent } from '../FormComponent/SelectComponent';
@@ -19,7 +19,6 @@ import {
   moveToProject,
   selectProject,
 } from '../../modules/actions/mainProjects';
-import { useNavigate } from 'react-router-dom';
 import { startLoading } from '../../modules/actions/loading';
 
 export const MoveProjectPopup = () => {
@@ -30,7 +29,6 @@ export const MoveProjectPopup = () => {
   );
   const currentProjectId = useSelector(getSelectedProjectId);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedProject(event.target.value);
@@ -52,8 +50,7 @@ export const MoveProjectPopup = () => {
 
     await dispatch(moveToProject(selectedProject, currentProjectId) as any);
     dispatch(closePopup({ id: popupId }));
-    navigate(0);
-    dispatch(startLoading());
+    setSelectedProject('');
   };
 
   return (
