@@ -487,9 +487,7 @@ export const moveToProject =
         const targetProject = updatedProjects[targetProjectIndex];
 
         const projectToMove = updatedProjects.splice(projectToMoveIndex, 1)[0];
-        projectToMove.parentProject = projectToMove.parentProject
-          ? [...projectToMove.parentProject, targetProject._id]
-          : [targetProject._id];
+        projectToMove.parentProject = targetProject._id;
 
         targetProject.subProjects.push(projectToMove);
 
@@ -536,7 +534,7 @@ export const moveToProject =
         changeSnackbarState({
           id: 'error',
           open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
+          message: `${e.response.data.message}. Результат не збережено. Перезавантажте сторінку`,
         })
       );
     }

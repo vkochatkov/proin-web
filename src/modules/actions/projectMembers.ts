@@ -39,12 +39,12 @@ export const fetchMembers =
       );
 
       dispatch(fetchMembersSuccess({ projectMembers }));
-    } catch (e) {
+    } catch (e: any) {
       dispatch(
         changeSnackbarState({
           id: 'error',
           open: true,
-          message: 'Щось пішло не так. Перезавантажте сторінку!',
+          message: `${e.response.data.message}. Перезавантажте сторінку!`,
         })
       );
     }

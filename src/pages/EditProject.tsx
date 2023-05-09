@@ -197,7 +197,7 @@ const EditProject: React.FC<Props> = () => {
                   project={currentProject}
                   label="Опис"
                 />
-                <SubProjects />
+                {subprojectId ? null : <SubProjects />}
                 <TabsMenu />
               </>
             </div>
