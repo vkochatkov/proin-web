@@ -114,7 +114,7 @@ export const InvitePopup = () => {
           <DialogContent>
             <Autocomplete
               id="asynchronous-demo"
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', maxHeight: '200px', overflowY: 'auto' }}
               multiple
               open={open}
               onOpen={() => {
@@ -139,7 +139,7 @@ export const InvitePopup = () => {
               isOptionEqualToValue={(option, value) =>
                 option.name === value.name
               }
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => `${option.name} (${option.email})`}
               options={options}
               loading={loading}
               noOptionsText="Користувачів не знайдено"
