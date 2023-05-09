@@ -114,7 +114,7 @@ export const InvitePopup = () => {
           <DialogContent>
             <Autocomplete
               id="asynchronous-demo"
-              sx={{ width: '100%', maxHeight: '200px', overflowY: 'auto' }}
+              sx={{ width: '100%' }}
               multiple
               open={open}
               onOpen={() => {
