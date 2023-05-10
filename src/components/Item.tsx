@@ -1,10 +1,12 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Card } from './UIElements/Card';
 import { Draggable } from '@hello-pangea/dnd';
 import { Menu, MenuItem } from '@mui/material';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { Button } from './FormElement/Button';
+import { getAuth } from '../modules/selectors/user';
 
 import './Item.scss';
 
@@ -15,6 +17,7 @@ interface Props {
   projectId: string;
   index: number;
   onClick: (projectId: string) => void;
+  sharedWith: string[];
 }
 
 export const Item: React.FC<Props> = ({
@@ -24,8 +27,10 @@ export const Item: React.FC<Props> = ({
   projectId,
   index,
   onClick,
+  sharedWith,
 }) => {
   const img = <img src={logo ? `${logo}` : ''} alt="logo" />;
+  const { userId } = useSelector(getAuth);
   const {
     handleClose,
     contextMenuPosition,
@@ -33,6 +38,7 @@ export const Item: React.FC<Props> = ({
     handleSelectProject,
     handleContextMenu,
   } = useContextMenu();
+  const isMemberAdded = sharedWith.find((id) => id === userId);
 
   const handleClickMenuItem = (e: any, modal: string) => {
     e.stopPropagation();
@@ -73,6 +79,7 @@ export const Item: React.FC<Props> = ({
                   <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
+                    onClick={(e) => e.stopPropagation()}
                     onClose={(e: any) => {
                       e.stopPropagation();
                       handleClose();
@@ -88,6 +95,7 @@ export const Item: React.FC<Props> = ({
                       Перемістити
                     </MenuItem>
                     <MenuItem
+                      disabled={Boolean(isMemberAdded)}
                       onClick={(e) => handleClickMenuItem(e, 'remove-project')}
                     >
                       Видалити

@@ -76,6 +76,7 @@ export const ListItems = ({
                     description={item.description}
                     index={index}
                     onClick={onClick}
+                    sharedWith={item.sharedWith}
                   />
                 );
               })}

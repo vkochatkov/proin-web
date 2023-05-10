@@ -17,7 +17,6 @@ import {
 } from '../modules/actions/mainProjects';
 import { Card } from '@mui/joy';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
-import { findProjectMember } from '../utils/utils';
 import { InviteModal } from '../components/Modals/InviteModal';
 import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
@@ -37,7 +36,6 @@ const EditProject: React.FC<Props> = () => {
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
-  const isMemberAdded = findProjectMember(currentProject, userId);
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -66,7 +64,7 @@ const EditProject: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (!currentProject) return;
+    if (!currentProject || (currentProject && !currentProject._id)) return;
 
     const foundProjects = projects.find((project) =>
       project.subProjects.some((p: Project) => p.id === subprojectId)
@@ -78,13 +76,18 @@ const EditProject: React.FC<Props> = () => {
       pid &&
       !subprojectId &&
       currentProject &&
-      currentProject.id.length !== pid.length
+      currentProject._id.length !== pid.length
     ) {
       navigate('/');
       return;
     }
 
-    if (pid && currentProject && currentProject.id !== pid && !subprojectId) {
+    if (
+      pid &&
+      currentProject._id &&
+      currentProject._id !== pid &&
+      !subprojectId
+    ) {
       dispatch(openCurrentProject(token, pid) as any);
       return;
     }
