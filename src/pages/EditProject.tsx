@@ -10,20 +10,20 @@ import { Header } from '../components/Navigation/Header';
 import { getIsLoading } from '../modules/selectors/loading';
 import {
   clearCurrentProject,
-  deleteCurrentProject,
   openCurrentProject,
-  updateProjects,
 } from '../modules/actions/mainProjects';
 import { Card } from '@mui/joy';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { findProjectMember } from '../utils/utils';
-import { InvitePopup } from '../components/Popup/InvitePopup';
+import { InviteModal } from '../components/Modals/InviteModal';
 import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
-import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
+import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { SubProjects } from '../components/SubProjects';
 import { useAuth } from '../hooks/useAuth';
 import TabsMenu from '../components/TabsMenu';
 import { Project } from '../modules/reducers/mainProjects';
+import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
+import { clearFormInput } from '../modules/actions/form';
 
 import './HomePage.scss';
 
@@ -53,28 +53,13 @@ const EditProject: React.FC<Props> = () => {
     true
   );
 
-  const handleRemoveCurrentProject = async (
-    token: string,
-    projectId: string
-  ) => {
-    try {
-      await dispatch(deleteCurrentProject(token, projectId) as any);
-
-      const updatedProjectsList = projects.filter(
-        (project) => project._id !== projectId
-      );
-
-      dispatch(updateProjects(updatedProjectsList));
-      navigate('/');
-    } catch (error) {}
-  };
-
   const handleCloseProject = () => {
     if (subprojectId) {
       navigate(`/project-edit/${pid}`);
     } else {
       navigate('/');
       dispatch(clearCurrentProject());
+      dispatch(clearFormInput());
     }
   };
 
@@ -128,9 +113,6 @@ const EditProject: React.FC<Props> = () => {
 
   return (
     <>
-      <InvitePopup />
-      <MoveProjectPopup />
-      <SnackbarUI />
       <div className="container">
         <Header>
           <Button
@@ -141,17 +123,6 @@ const EditProject: React.FC<Props> = () => {
             onClick={handleCloseProject}
           >
             <img src="/back.svg" alt="back_logo" className="button__icon" />
-          </Button>
-          <Button
-            customClassName="header__btn-transparent"
-            disabled={isMemberAdded}
-            onClick={
-              currentProject
-                ? () => handleRemoveCurrentProject(token, currentProject._id)
-                : undefined
-            }
-          >
-            <img src="/delete-icon.svg" alt="delete icon" />
           </Button>
         </Header>
         {isLoading ? (
@@ -208,6 +179,10 @@ const EditProject: React.FC<Props> = () => {
           </Card>
         )}
       </div>
+      <InviteModal />
+      <MoveProjectModal />
+      <SnackbarUI />
+      <RemoveProjectModal />
     </>
   );
 };

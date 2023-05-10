@@ -1,18 +1,10 @@
 import React from 'react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  SelectChangeEvent,
-} from '@mui/material';
+import { DialogActions, DialogContent, SelectChangeEvent } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { closePopup } from '../../modules/actions/popup';
-import { getPopupStateById } from '../../modules/selectors/popup';
+import { closeModal } from '../../modules/actions/modal';
+import { getModalStateById } from '../../modules/selectors/modal';
 import { RootState } from '../../modules/store/store';
 import { Button } from '../FormElement/Button';
-import CloseIcon from '@mui/icons-material/Close';
 import { SelectComponent } from '../FormComponent/SelectComponent';
 import { getSelectedProjectId } from '../../modules/selectors/mainProjects';
 import {
@@ -20,12 +12,13 @@ import {
   selectProject,
 } from '../../modules/actions/mainProjects';
 import { useParams } from 'react-router-dom';
+import { Modal } from './Modal';
 
-export const MoveProjectPopup = () => {
+export const MoveProjectModal = () => {
   const [selectedProject, setSelectedProject] = React.useState('');
   const popupId = 'move-project';
   const open = useSelector((state: RootState) =>
-    getPopupStateById(state)(popupId)
+    getModalStateById(state)(popupId)
   );
   const currentProjectId = useSelector(getSelectedProjectId);
   const dispatch = useDispatch();
@@ -36,7 +29,7 @@ export const MoveProjectPopup = () => {
   };
 
   const handleClose = () => {
-    dispatch(closePopup({ id: popupId }));
+    dispatch(closeModal({ id: popupId }));
     dispatch(selectProject(''));
     setSelectedProject('');
   };
@@ -45,51 +38,20 @@ export const MoveProjectPopup = () => {
     event.preventDefault();
 
     if (!currentProjectId) {
-      dispatch(closePopup({ id: popupId }));
+      dispatch(closeModal({ id: popupId }));
       return;
     }
 
     await dispatch(
       moveToProject(selectedProject, currentProjectId, !pid) as any
     );
-    dispatch(closePopup({ id: popupId }));
+    dispatch(closeModal({ id: popupId }));
     setSelectedProject('');
   };
 
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        sx={{
-          '& .MuiPaper-root': {
-            width: '100%',
-            maxWidth: '400px',
-            padding: '10px 0',
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            borderBottom: '1px solid #ccc',
-            margin: '0 1rem',
-            padding: '5px 0',
-            display: 'flex',
-            justifyContent: 'space-between',
-            minWidth: '230px',
-          }}
-        >
-          <span>Перемістити проект</span>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              padding: '0',
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+      <Modal open={open} handleClose={handleClose} label={'Перемістити проект'}>
         <form onSubmit={submitHandler}>
           <DialogContent>
             <SelectComponent
@@ -101,7 +63,7 @@ export const MoveProjectPopup = () => {
             <Button type="submit">Перемістити</Button>
           </DialogActions>
         </form>
-      </Dialog>
+      </Modal>
     </>
   );
 };

@@ -20,8 +20,9 @@ import { getIsLoading } from '../modules/selectors/loading';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { Project } from '../modules/reducers/mainProjects';
-import { MoveProjectPopup } from '../components/Popup/MoveProjectPopup';
+import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { useAuth } from '../hooks/useAuth';
+import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 
 import './HomePage.scss';
 
@@ -90,7 +91,8 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <MoveProjectPopup />
+      <MoveProjectModal />
+      <RemoveProjectModal />
       <SnackbarUI />
       <div className="container">
         <MainNavigation>

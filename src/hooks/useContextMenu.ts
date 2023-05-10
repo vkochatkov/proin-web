@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useLongPress } from 'react-use';
 import { selectProject } from '../modules/actions/mainProjects';
-import { openPopup } from '../modules/actions/popup';
+import { openModal } from '../modules/actions/modal';
 import { RootState } from '../modules/store/store';
 
 export const useContextMenu = () => {
@@ -39,9 +39,9 @@ export const useContextMenu = () => {
     ...defaultOptions,
   });
 
-  const handleSelectProject = (id: string) => {
+  const handleSelectProject = (id: string, popupId: string) => {
     dispatch(selectProject(id));
-    dispatch(openPopup({ id: 'move-project' }));
+    dispatch(openModal({ id: popupId }));
   };
 
   const handleClose = () => {

@@ -1,23 +1,19 @@
 import React, { useCallback, useState } from 'react';
 import {
   CircularProgress,
-  Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  IconButton,
   TextField,
 } from '@mui/material';
 import { Button } from '../FormElement/Button';
 import { useForm } from '../../hooks/useForm';
 import { useSelector } from 'react-redux';
-import { getPopupStateById } from '../../modules/selectors/popup';
+import { getModalStateById } from '../../modules/selectors/modal';
 import { useDispatch } from 'react-redux';
-import { closePopup } from '../../modules/actions/popup';
+import { closeModal } from '../../modules/actions/modal';
 import { sendInvitation } from '../../modules/actions/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
 import { RootState } from '../../modules/store/store';
-import CloseIcon from '@mui/icons-material/Close';
 import Autocomplete from '@mui/material/Autocomplete';
 import { debounce } from '../../utils/debounce';
 import {
@@ -28,8 +24,9 @@ import { getFoundUsers } from '../../modules/selectors/foundUsers';
 import { IFoundUser } from '../../modules/types/users';
 import { fetchMembers } from '../../modules/actions/projectMembers';
 import { useParams } from 'react-router-dom';
+import { Modal } from './Modal';
 
-export const InvitePopup = () => {
+export const InviteModal = () => {
   const { email } = useSelector(getAuth);
   const [open, setOpen] = React.useState(false);
   const [selectedUsers, setSelectedUsers] = useState<IFoundUser[] | []>([]);
@@ -46,20 +43,20 @@ export const InvitePopup = () => {
     false
   );
 
-  const openPopup = useSelector((state: RootState) =>
-    getPopupStateById(state)('invite')
+  const openModal = useSelector((state: RootState) =>
+    getModalStateById(state)('invite')
   );
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(closePopup({ id: 'invite' }));
+    dispatch(closeModal({ id: 'invite' }));
   };
 
   const submitHandler = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     await dispatch(sendInvitation(selectedUsers) as any);
     if (pid) dispatch(fetchMembers(pid) as any);
-    dispatch(closePopup({ id: 'invite' }));
+    dispatch(closeModal({ id: 'invite' }));
   };
 
   const handleChange = useCallback(
@@ -72,44 +69,12 @@ export const InvitePopup = () => {
   );
 
   return (
-    <div>
-      <Dialog
-        open={openPopup}
-        onClose={handleClose}
-        sx={{
-          '& .MuiPaper-root': {
-            width: '100%',
-            maxWidth: '400px',
-            padding: '10px 0',
-          },
-        }}
+    <>
+      <Modal
+        open={openModal}
+        handleClose={handleClose}
+        label={'Запросити користувача'}
       >
-        <DialogTitle
-          sx={{
-            borderBottom: '1px solid #ccc',
-            margin: '0 1rem',
-            padding: '5px 0',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span
-            style={{
-              fontSize: 'medium',
-            }}
-          >
-            Запросити користувача
-          </span>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              padding: '0',
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
         <form onSubmit={submitHandler}>
           <DialogContent>
             <Autocomplete
@@ -183,7 +148,7 @@ export const InvitePopup = () => {
             </Button>
           </DialogActions>
         </form>
-      </Dialog>
-    </div>
+      </Modal>
+    </>
   );
 };

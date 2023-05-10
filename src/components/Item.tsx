@@ -34,6 +34,12 @@ export const Item: React.FC<Props> = ({
     handleContextMenu,
   } = useContextMenu();
 
+  const handleClickMenuItem = (e: any, modal: string) => {
+    e.stopPropagation();
+    handleSelectProject(projectId, modal);
+    handleClose();
+  };
+
   return (
     <Draggable draggableId={projectId} index={index} key={projectId}>
       {(provided, snapshot) => (
@@ -77,13 +83,14 @@ export const Item: React.FC<Props> = ({
                     }}
                   >
                     <MenuItem
-                      onClick={(e) => {
-                        handleSelectProject(projectId);
-                        e.stopPropagation();
-                        handleClose();
-                      }}
+                      onClick={(e) => handleClickMenuItem(e, 'move-project')}
                     >
                       Перемістити
+                    </MenuItem>
+                    <MenuItem
+                      onClick={(e) => handleClickMenuItem(e, 'remove-project')}
+                    >
+                      Видалити
                     </MenuItem>
                   </Menu>
                 </div>

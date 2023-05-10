@@ -3,7 +3,7 @@ import { Grid, Paper } from '@mui/material';
 import { Button } from './FormElement/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { openPopup } from '../modules/actions/popup';
+import { openModal } from '../modules/actions/modal';
 import { getMembers } from '../modules/selectors/projectMembers';
 import { Member } from './Member';
 
@@ -12,7 +12,7 @@ export const MembersInfo = () => {
   const members = useSelector(getMembers);
 
   const handleOpenInvitationPopup = () => {
-    dispatch(openPopup({ id: 'invite' }));
+    dispatch(openModal({ id: 'invite' }));
   };
 
   return (

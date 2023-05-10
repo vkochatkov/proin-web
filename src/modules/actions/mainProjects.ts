@@ -261,9 +261,6 @@ export const deleteCurrentProject =
         },
         cancelToken: httpSource.token,
       });
-
-      dispatch(clearCurrentProject());
-      dispatch(clearFormInput());
     } catch (e) {
       dispatch(editProjectFailure((e as Error).message));
     }

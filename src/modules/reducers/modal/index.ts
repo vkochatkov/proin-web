@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { closePopup, openPopup } from '../../actions/popup';
+import { closeModal, openModal } from '../../actions/modal';
 
 interface IPopup {
   [id: string]: boolean;
@@ -7,16 +7,16 @@ interface IPopup {
 
 const initialState: IPopup = {};
 
-export const popup = createReducer({}, initialState);
+export const modal = createReducer({}, initialState);
 
-popup.on(openPopup, (state, payload) => {
+modal.on(openModal, (state, payload) => {
   return {
     ...state,
     [payload.id]: true,
   };
 });
 
-popup.on(closePopup, (state, payload) => {
+modal.on(closeModal, (state, payload) => {
   return {
     ...state,
     [payload.id]: false,

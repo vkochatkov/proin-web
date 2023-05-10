@@ -5,7 +5,7 @@ import { mainProjects } from '../reducers/mainProjects/index';
 import { formReducer } from '../reducers/formReducer';
 import { loadingReducer } from '../reducers/loading';
 import { snackbar } from '../reducers/snackbar';
-import { popup } from '../reducers/popup';
+import { modal } from '../reducers/modal';
 import { dragging } from '../reducers/dragging';
 import { projectMembers } from '../reducers/projectMembers/intex';
 import { foundUsers } from '../reducers/foundUsers';
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   formData: formReducer,
   isLoading: loadingReducer,
   snackbar,
-  popup,
+  modal,
   dragging,
   projectMembers,
   foundUsers,
@@ -25,7 +25,6 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-const persistedState = loadState();
 export const store = configureStore({
   reducer: rootReducer,
   preloadedState: loadState(), // Load the state from sessionStorag
