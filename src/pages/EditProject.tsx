@@ -70,8 +70,12 @@ const EditProject: React.FC<Props> = () => {
   };
 
   const handleCloseProject = () => {
-    navigate('/');
-    dispatch(clearCurrentProject());
+    if (subprojectId) {
+      navigate(`/project-edit/${pid}`);
+    } else {
+      navigate('/');
+      dispatch(clearCurrentProject());
+    }
   };
 
   useEffect(() => {
