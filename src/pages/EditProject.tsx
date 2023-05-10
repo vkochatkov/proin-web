@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { useForm } from '../hooks/useForm';
 import { ImageUpload } from '../components/FormElement/ImageUpload';
-import { getCurrentProjects } from '../modules/selectors/mainProjects';
+import {
+  getCurrentProject,
+  getCurrentProjects,
+} from '../modules/selectors/mainProjects';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/Navigation/Header';
@@ -33,8 +36,7 @@ const EditProject: React.FC<Props> = () => {
   const { token, userId } = useAuth();
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
-  const state = JSON.parse(sessionStorage.getItem('state') || '');
-  const currentProject = state?.mainProjects?.currentProject;
+  const currentProject = useSelector(getCurrentProject);
   const isMemberAdded = findProjectMember(currentProject, userId);
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
@@ -64,7 +66,7 @@ const EditProject: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (!currentProject.id) return;
+    if (!currentProject) return;
 
     const foundProjects = projects.find((project) =>
       project.subProjects.some((p: Project) => p.id === subprojectId)
@@ -109,7 +111,7 @@ const EditProject: React.FC<Props> = () => {
     if (subprojectId && currentProject && currentProject.id !== subprojectId) {
       dispatch(openCurrentProject(token, subprojectId, true) as any);
     }
-  }, [pid, token, subprojectId]);
+  }, [pid, token, subprojectId, currentProject]);
 
   return (
     <>
