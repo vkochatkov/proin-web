@@ -34,7 +34,7 @@ export const MoveProjectModal = () => {
     setSelectedProject('');
   };
 
-  const submitHandler = async (event: { preventDefault: () => void }) => {
+  const submitHandler = (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     if (!currentProjectId) {
@@ -42,10 +42,8 @@ export const MoveProjectModal = () => {
       return;
     }
 
-    await dispatch(
-      moveToProject(selectedProject, currentProjectId, !pid) as any
-    );
     dispatch(closeModal({ id: popupId }));
+    dispatch(moveToProject(selectedProject, currentProjectId, !pid) as any);
     setSelectedProject('');
   };
 
