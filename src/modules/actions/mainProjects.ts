@@ -467,13 +467,17 @@ export const fetchAllUserProjects =
   };
 
 export const moveToProject =
-  (toProjectId: string, currentProjectId: string) =>
+  (
+    toProjectId: string,
+    currentProjectId: string,
+    isHomePage: boolean = false
+  ) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const { token } = getState().user;
     const { currentProject, projects } = getState().mainProjects;
 
     try {
-      if (!currentProject) {
+      if (isHomePage) {
         const updatedProjects = JSON.parse(JSON.stringify(projects));
 
         const projectToMoveIndex = updatedProjects.findIndex(
@@ -493,6 +497,8 @@ export const moveToProject =
 
         dispatch(updateProjects(updatedProjects));
       } else {
+        if (!currentProject) return;
+
         const projectToMove = JSON.parse(
           JSON.stringify(currentProject)
         ).subProjects.find((p: Project) => p.id === currentProjectId);
@@ -505,7 +511,9 @@ export const moveToProject =
           subProjects,
         };
 
-        delete projectToMove.parentProject;
+        if (projectToMove.parentProject) {
+          delete projectToMove.parentProject;
+        }
 
         const updatedProjects = [
           ...JSON.parse(JSON.stringify(projects)),
@@ -534,7 +542,11 @@ export const moveToProject =
         changeSnackbarState({
           id: 'error',
           open: true,
-          message: `${e.response.data.message}. Результат не збережено. Перезавантажте сторінку`,
+          message: `${
+            e.response.data
+              ? e.response.data.message
+              : 'Переміщення проекту не вдалося'
+          }. Результат не збережено. Перезавантажте сторінку`,
         })
       );
     }

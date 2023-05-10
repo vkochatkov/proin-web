@@ -19,6 +19,7 @@ import {
   moveToProject,
   selectProject,
 } from '../../modules/actions/mainProjects';
+import { useParams } from 'react-router-dom';
 
 export const MoveProjectPopup = () => {
   const [selectedProject, setSelectedProject] = React.useState('');
@@ -28,6 +29,7 @@ export const MoveProjectPopup = () => {
   );
   const currentProjectId = useSelector(getSelectedProjectId);
   const dispatch = useDispatch();
+  const { pid } = useParams();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedProject(event.target.value);
@@ -47,7 +49,9 @@ export const MoveProjectPopup = () => {
       return;
     }
 
-    await dispatch(moveToProject(selectedProject, currentProjectId) as any);
+    await dispatch(
+      moveToProject(selectedProject, currentProjectId, !pid) as any
+    );
     dispatch(closePopup({ id: popupId }));
     setSelectedProject('');
   };
