@@ -35,10 +35,6 @@ export const App: React.FC = () => {
                 path="/project-edit/:pid/:subprojectId?"
                 element={<EditProject />}
               />
-              <Route
-                path="/projects/:id/invitations/:invitationId"
-                element={<InvitePage />}
-              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
