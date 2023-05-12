@@ -496,7 +496,7 @@ export const moveToProject =
       } else {
         if (!currentProject) return;
 
-        const projectToMove = JSON.parse(
+        const projectToMove: Project = JSON.parse(
           JSON.stringify(currentProject)
         ).subProjects.find((p: Project) => p.id === currentProjectId);
         const subProjects = [...currentProject.subProjects].filter(

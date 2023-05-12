@@ -6,7 +6,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from './FormElement/Button';
 import { backgroundColor } from '../utils/avatar-view';
 import { removeProjectMember } from '../modules/actions/projectMembers';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getAuth } from '../modules/selectors/user';
+import { useSelector } from 'react-redux';
 
 import './Member.scss';
 
@@ -18,13 +20,19 @@ export const Member = ({
   disabled: boolean;
 }) => {
   const dispatch = useDispatch();
+  const { userId } = useSelector(getAuth);
   const id = member.userId;
   const firstLetter = member.name.charAt(0).toUpperCase();
   const { pid } = useParams();
+  const navigate = useNavigate();
 
-  const handleRemoveUsersAccess = () => {
+  const handleRemoveUsersAccess = async () => {
     if (id && pid) {
-      dispatch(removeProjectMember(id, pid) as any);
+      await dispatch(removeProjectMember(id, pid) as any);
+
+      if (userId === id) {
+        navigate('/');
+      }
     }
   };
 
