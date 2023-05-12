@@ -5,6 +5,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getAuth } from '../modules/selectors/user';
 import Auth from './Auth';
 
+import './InvitePage.scss';
+
 export const InvitePage = () => {
   const { id, invitationId } = useParams();
   const { token } = useSelector(getAuth);
@@ -48,7 +50,9 @@ export const InvitePage = () => {
               згоду приєднатися
             </p>
           </Card>
-          <Auth />
+          <div className="invite-page__auth">
+            <Auth />
+          </div>
         </>
       ) : null}
     </>
