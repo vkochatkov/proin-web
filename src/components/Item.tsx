@@ -38,7 +38,9 @@ export const Item: React.FC<Props> = ({
     handleSelectProject,
     handleContextMenu,
   } = useContextMenu();
-  const isMemberAdded = sharedWith.find((id) => id === userId);
+  const isMemberAdded = sharedWith
+    ? Boolean(sharedWith.find((id) => id === userId))
+    : false;
 
   const handleClickMenuItem = (e: any, modal: string) => {
     e.stopPropagation();
@@ -95,7 +97,7 @@ export const Item: React.FC<Props> = ({
                       Перемістити
                     </MenuItem>
                     <MenuItem
-                      disabled={Boolean(isMemberAdded)}
+                      disabled={isMemberAdded}
                       onClick={(e) => handleClickMenuItem(e, 'remove-project')}
                     >
                       Видалити
