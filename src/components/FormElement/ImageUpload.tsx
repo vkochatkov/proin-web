@@ -120,7 +120,7 @@ export const ImageUpload: FC<ImageUploadProps> = ({
   };
 
   return (
-    <div className="form-control">
+    <div className="form-control logo">
       <input
         id={id}
         ref={filePickerRef}
@@ -130,9 +130,11 @@ export const ImageUpload: FC<ImageUploadProps> = ({
         onChange={pickedHandler}
       />
       <div className={`image-upload ${center ? 'center' : ''}`}>
-        <div className="image-upload__preview">
-          {previewUrl && <img src={previewUrl} alt="Preview" />}
-        </div>
+        {previewUrl && (
+          <div className="image-upload__preview">
+            <img src={previewUrl} alt="Preview" />
+          </div>
+        )}
         <Button type="button" onClick={pickImageHandler}>
           Додати лого
         </Button>

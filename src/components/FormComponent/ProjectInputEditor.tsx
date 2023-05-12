@@ -10,7 +10,7 @@ interface Props {
   project: Project | null;
   token: string;
   id: string;
-  label: string;
+  label?: string;
 }
 
 export const ProjectDescription = ({
@@ -39,7 +39,7 @@ export const ProjectDescription = ({
 
   return (
     <>
-      <h3>{label}</h3>
+      {label ? <h3>{label}</h3> : null}
       {isActive && (
         <div onBlur={handleHideInput}>
           <Input
@@ -65,7 +65,7 @@ export const ProjectDescription = ({
           {!text && id === 'description' && (
             <div className="project-input-editor__btn">Додати опис</div>
           )}
-          <ProjectTextOutput text={text} />
+          <ProjectTextOutput text={text} fieldId={id} />
         </div>
       )}
     </>

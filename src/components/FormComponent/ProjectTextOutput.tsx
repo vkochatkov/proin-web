@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   text?: string;
+  fieldId?: string;
 }
 
 const emailRegex =
@@ -18,7 +19,7 @@ const hashtagRegex = /(^|\b)#[\w-]+(\b|$)/g;
 const urlRegex =
   /https?:\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
 
-export const ProjectTextOutput = ({ text }: Props) => {
+export const ProjectTextOutput = ({ text, fieldId }: Props) => {
   const dispatch = useDispatch();
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -156,7 +157,14 @@ export const ProjectTextOutput = ({ text }: Props) => {
           const lastWordIndex = words.length - 1;
 
           return (
-            <p key={index} style={{ textAlign: 'left', margin: '0' }}>
+            <p
+              key={index}
+              style={{
+                textAlign: 'left',
+                margin: '0',
+                fontWeight: `${fieldId === 'projectName' ? 700 : 300}`,
+              }}
+            >
               {words.map((word: string, wordIndex: number) => {
                 const linkElement = linkify(
                   word + ' ',

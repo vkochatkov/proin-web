@@ -147,16 +147,7 @@ const EditProject: React.FC<Props> = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                   }}
-                >
-                  <h3
-                    style={{
-                      marginTop: '5px',
-                      marginBottom: '5px',
-                    }}
-                  >
-                    Лого
-                  </h3>
-                </div>
+                ></div>
                 <ImageUpload
                   id="logoUrl"
                   onInput={inputHandler}
@@ -168,7 +159,6 @@ const EditProject: React.FC<Props> = () => {
                   inputHandler={inputHandler}
                   token={token}
                   project={currentProject}
-                  label="Назва проекту"
                 />
                 <ProjectDescription
                   id="description"
