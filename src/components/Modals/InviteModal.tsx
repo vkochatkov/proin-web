@@ -32,7 +32,6 @@ export const InviteModal = () => {
   const [selectedUsers, setSelectedUsers] = useState<IFoundUser[] | []>([]);
   const options = useSelector(getFoundUsers);
   const { pid } = useParams();
-  const loading = open && options.length === 0;
   const { formState, inputHandler } = useForm(
     {
       email: {
@@ -42,7 +41,7 @@ export const InviteModal = () => {
     },
     false
   );
-
+  const [isLoading, setIsLoading] = useState(false);
   const openModal = useSelector((state: RootState) =>
     getModalStateById(state)('invite')
   );
@@ -60,11 +59,16 @@ export const InviteModal = () => {
   };
 
   const handleChange = useCallback(
-    debounce((event: React.SyntheticEvent<Element, Event>, value: string) => {
-      if (value && value.length > 0) {
-        dispatch(searchUsers(value) as any);
-      }
-    }, 500),
+    debounce(
+      async (event: React.SyntheticEvent<Element, Event>, value: string) => {
+        if (value && value.length > 0) {
+          await dispatch(searchUsers(value) as any);
+        }
+
+        setIsLoading(false);
+      },
+      500
+    ),
     []
   );
 
@@ -98,21 +102,41 @@ export const InviteModal = () => {
                 dispatch(foundUsersSuccess({ foundUsers: [] }));
               }}
               onInputChange={(event, value) => {
+                setIsLoading(true);
                 handleChange(event, value);
                 inputHandler('email', value, true);
               }}
               isOptionEqualToValue={(option, value) =>
                 option.name === value.name
               }
-              getOptionLabel={(option) => `${option.name} (${option.email})`}
-              options={options}
-              loading={loading}
-              noOptionsText="Користувачів не знайдено"
+              getOptionLabel={(option) =>
+                option.name !== 'Запросити'
+                  ? `${option.name} (${option.email})`
+                  : `Запросити ${option.email}`
+              }
+              //@ts-ignore
+              options={
+                options.length === 0 &&
+                formState.inputs.email &&
+                formState.inputs.email.value.includes('@')
+                  ? [
+                      {
+                        email: formState.inputs.email.value,
+                        name: 'Запросити',
+                      },
+                    ]
+                  : options
+              }
+              loading={isLoading}
+              clearOnBlur={
+                formState.inputs.email && formState.inputs.email.value === ''
+              }
+              noOptionsText="Користувач не знайдений"
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="standard"
-                  label="Запросити користувача"
+                  label="Введіть ім'я або електронну адресу"
                   sx={{
                     '& .MuiChip-root': {
                       margin: 0,
@@ -125,7 +149,7 @@ export const InviteModal = () => {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {loading ? (
+                        {isLoading ? (
                           <CircularProgress color="inherit" size={20} />
                         ) : null}
                         {params.InputProps.endAdornment}
