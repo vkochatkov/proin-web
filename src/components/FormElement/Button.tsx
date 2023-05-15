@@ -32,11 +32,13 @@ export const Button: React.FC<Props> = ({
   icon = false,
   customClassName,
 }) => {
-  const buttonClassList = `button ${customClassName && `${customClassName}`} ${
-    icon && 'button__icon'
-  } button--${size} ${inverse ? 'button--inverse' : ''} ${
-    danger ? 'button--danger' : ''
-  } ${transparent ? 'button--transparent' : ''}`;
+  const buttonClassList = `button ${
+    customClassName ? `${customClassName}` : ''
+  } ${icon && 'button__icon'} button--${size} ${
+    inverse ? 'button--inverse' : ''
+  } ${danger ? 'button--danger' : ''} ${
+    transparent ? 'button--transparent' : ''
+  }`;
 
   if (href) {
     return (

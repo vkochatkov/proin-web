@@ -1,12 +1,11 @@
 import { createAction } from 'redux-act';
 import { Project } from '../reducers/mainProjects';
 import { Dispatch } from 'redux';
-import { clearFormInput } from './form';
 import { RootState } from '../store/store';
 import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
-import { IProject, ISubProjectAction } from '../types/mainProjects';
+import { IFile, IProject, ISubProjectAction } from '../types/mainProjects';
 import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
@@ -27,6 +26,10 @@ export const setAllUserProjects = createAction<IProject[]>(
   'SET_ALL_USER_PROJECTS'
 );
 export const selectProject = createAction<string>('SELECT_PROJECT');
+export const updateProjectFiles = createAction<{
+  projectId: string;
+  files: IFile[];
+}>('UPDATE_PROJECT_FILES');
 
 const httpSource = axios.CancelToken.source();
 
@@ -543,6 +546,46 @@ export const moveToProject =
             e.response.data
               ? e.response.data.message
               : 'Переміщення проекту не вдалося'
+          }. Результат не збережено. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const removeFile =
+  (fileId: string) => async (dispatch: Dispatch, getState: () => RootState) => {
+    const { token } = getState().user;
+    const currentProject = JSON.parse(
+      JSON.stringify(getState().mainProjects.currentProject)
+    );
+
+    try {
+      if (!currentProject) return;
+
+      currentProject.files = currentProject.files.filter(
+        (file: IFile) => file.id !== fileId
+      );
+
+      dispatch(setCurrentProject(currentProject));
+
+      await axios({
+        method: 'DELETE',
+        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/files/${fileId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        cancelToken: httpSource.token,
+      });
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${
+            e.response.data
+              ? e.response.data.message
+              : 'Видалити файл не вдалося'
           }. Результат не збережено. Перезавантажте сторінку`,
         })
       );

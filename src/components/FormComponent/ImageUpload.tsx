@@ -1,36 +1,35 @@
-import React, { useRef, useState, useEffect, FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button } from './Button';
-import { getAuth } from '../../modules/selectors/user';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useHttpClient } from '../../hooks/useHttpClient';
 import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
-import { useHttpClient } from '../../hooks/useHttpClient';
-import './ImageUpload.scss';
+import { getAuth } from '../../modules/selectors/user';
+import { FileUploader } from '../FormElement/FileUploader';
 
-type ImageUploadProps = {
-  id: string;
-  center?: boolean;
-  projectId?: string;
+interface IImageUpload {
+  inputHandler: (id: string, value: string, isValid: boolean) => void;
+  isUpdateValue: boolean;
   onInput: (id: string, value: string, isValid: boolean) => void;
-  isUpdateValue?: boolean;
-};
+  projectId?: string;
+  center?: boolean;
+  id: string;
+}
 
-export const ImageUpload: FC<ImageUploadProps> = ({
-  id,
-  center,
-  onInput,
-  projectId,
+export const ImageUpload = ({
   isUpdateValue,
-}) => {
+  onInput,
+  id,
+  projectId,
+  center,
+}: IImageUpload) => {
+  const currentProject = useSelector(getCurrentProject);
   const [file, setFile] = useState<File | undefined>();
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>('');
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>('');
   const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
-  const currentProject = useSelector(getCurrentProject);
   const { sendRequest } = useHttpClient();
-
-  const filePickerRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isUpdateValue && currentProject) {
@@ -115,30 +114,22 @@ export const ImageUpload: FC<ImageUploadProps> = ({
     onInput(id, value, fileIsValid);
   };
 
-  const pickImageHandler = () => {
-    filePickerRef.current?.click();
-  };
-
   return (
-    <div className="form-control logo">
-      <input
-        id={id}
-        ref={filePickerRef}
-        style={{ display: 'none' }}
-        type="file"
-        accept=".jpg,.png,.jpeg"
-        onChange={pickedHandler}
-      />
-      <div className={`image-upload ${center ? 'center' : ''}`}>
+    <>
+      <div className={`file-uploader ${center ? 'center' : ''}`}>
         {previewUrl && (
-          <div className="image-upload__preview">
+          <div className="file-uploader__preview">
             <img src={previewUrl} alt="Preview" />
           </div>
         )}
-        <Button type="button" onClick={pickImageHandler}>
-          Додати лого
-        </Button>
       </div>
-    </div>
+      <FileUploader
+        id={id}
+        pickedHandler={pickedHandler}
+        allowedTypes=".jpg,.png,.jpeg"
+        buttonLabel={'Додати лого'}
+        className="logo"
+      />
+    </>
   );
 };

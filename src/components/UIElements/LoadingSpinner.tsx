@@ -12,7 +12,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   blue,
 }) => {
   return (
-    <div className={`${asOverlay && 'loading-spinner__overlay'}`}>
+    <div className={`${asOverlay ? 'loading-spinner__overlay' : ''}`}>
       <div className={`lds-dual-ring ${blue ? 'blue' : ''}`}></div>
     </div>
   );

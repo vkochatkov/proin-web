@@ -11,3 +11,9 @@ export interface ISubProjectAction {
   newOrder: Project[];
   subProjectIndex: string;
 }
+
+export interface IFile {
+  id: string;
+  name: string;
+  url: string;
+}

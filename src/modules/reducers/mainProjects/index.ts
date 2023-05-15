@@ -9,6 +9,7 @@ import {
   updateProjectCommentsSuccess,
   setAllUserProjects,
   selectProject,
+  updateProjectFiles,
 } from '../../actions/mainProjects';
 import { IProject } from '../../types/mainProjects';
 
@@ -53,6 +54,17 @@ mainProjects.on(createProjectSuccess, (state, payload) => ({
 
 mainProjects.on(setCurrentProject, (state, payload) => {
   return { ...state, currentProject: { ...payload, status: 'success' } };
+});
+
+mainProjects.on(updateProjectFiles, (state, payload) => {
+  if (state.currentProject && state.currentProject._id === payload.projectId) {
+    const updatedProject = {
+      ...state.currentProject,
+      files: payload.files,
+    };
+    return { ...state, currentProject: updatedProject };
+  }
+  return state;
 });
 
 mainProjects.on(editProjectFailure, (state: any, payload: any) => {

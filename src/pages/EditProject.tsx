@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { useForm } from '../hooks/useForm';
-import { ImageUpload } from '../components/FormElement/ImageUpload';
 import {
   getCurrentProject,
   getCurrentProjects,
@@ -26,13 +25,16 @@ import TabsMenu from '../components/TabsMenu';
 import { Project } from '../modules/reducers/mainProjects';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../modules/actions/form';
+import { FilesList } from '../components/FilesList';
+import { ImageUpload } from '../components/FormComponent/ImageUpload';
+import { FilesUpload } from '../components/FormComponent/FilesUpload';
 
 import './HomePage.scss';
 
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
-  const { token, userId } = useAuth();
+  const { token } = useAuth();
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
@@ -149,9 +151,10 @@ const EditProject: React.FC<Props> = () => {
                   }}
                 ></div>
                 <ImageUpload
-                  id="logoUrl"
                   onInput={inputHandler}
                   projectId={currentProject ? currentProject._id : undefined}
+                  id="logoUrl"
+                  inputHandler={inputHandler}
                   isUpdateValue={true}
                 />
                 <ProjectDescription
@@ -166,6 +169,12 @@ const EditProject: React.FC<Props> = () => {
                   token={token}
                   project={currentProject}
                   label="Опис"
+                />
+                <h3>Вкладення</h3>
+                <FilesList />
+                <FilesUpload
+                  id={'files'}
+                  projectId={currentProject ? currentProject._id : undefined}
                 />
                 {subprojectId ? null : <SubProjects />}
                 <TabsMenu />
