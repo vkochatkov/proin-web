@@ -58,7 +58,7 @@ export const useAuth = (): {
     localStorage.removeItem('userData');
     dispatch(signout() as any);
     navigate('/auth');
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     let logoutTimer: NodeJS.Timeout;

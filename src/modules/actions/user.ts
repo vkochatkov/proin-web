@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
+import { APIClient } from '../../utils/API';
 import { UserState } from '../reducers/user';
 import { RootState } from '../store/store';
 import { clearFormInput } from './form';
@@ -16,6 +17,7 @@ export const signin =
   (uid: string, token: string, email: string, name: string) =>
   (dispatch: Dispatch) => {
     try {
+      APIClient.setToken(token);
       dispatch(
         loginSuccess({
           userId: uid,
@@ -31,6 +33,7 @@ export const signin =
 export const signout = () => (dispatch: Dispatch) => {
   dispatch(logoutSuccess());
   dispatch(endLoading());
+  APIClient.setToken(null);
 };
 
 export const sendRecaveryEmail =

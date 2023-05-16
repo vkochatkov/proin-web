@@ -23,7 +23,9 @@ export const FilesList = () => {
 
   const filesToShow = showAllFiles
     ? currentProject?.files
-    : currentProject?.files.slice(0, 4);
+    : currentProject?.files
+    ? currentProject?.files.slice(0, 4)
+    : [];
 
   const toggleShowAllFiles = () => {
     setShowAllFiles(!showAllFiles);
@@ -41,7 +43,7 @@ export const FilesList = () => {
             onDelete={handleDeleteFile}
           />
         ))}
-      {currentProject?.files.length > 4 && (
+      {currentProject?.files && currentProject?.files.length > 4 && (
         <Button onClick={toggleShowAllFiles} customClassName="files-list__btn">
           {showAllFiles ? 'Показати менше' : 'Показати більше'}
         </Button>

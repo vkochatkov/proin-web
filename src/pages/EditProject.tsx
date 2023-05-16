@@ -12,6 +12,7 @@ import { Header } from '../components/Navigation/Header';
 import { getIsLoading } from '../modules/selectors/loading';
 import {
   clearCurrentProject,
+  createNewSubproject,
   openCurrentProject,
 } from '../modules/actions/mainProjects';
 import { Card } from '@mui/joy';
@@ -54,16 +55,6 @@ const EditProject: React.FC<Props> = () => {
     },
     true
   );
-
-  const handleCloseProject = () => {
-    if (subprojectId) {
-      navigate(`/project-edit/${pid}`);
-    } else {
-      navigate('/');
-      dispatch(clearCurrentProject());
-      dispatch(clearFormInput());
-    }
-  };
 
   useEffect(() => {
     if (!currentProject || (currentProject && !currentProject._id)) return;
@@ -116,7 +107,23 @@ const EditProject: React.FC<Props> = () => {
     if (subprojectId && currentProject && currentProject.id !== subprojectId) {
       dispatch(openCurrentProject(token, subprojectId, true) as any);
     }
-  }, [pid, token, subprojectId, currentProject]);
+  }, [pid, token, subprojectId, currentProject, navigate, dispatch]);
+
+  const handleCloseProject = () => {
+    if (subprojectId) {
+      navigate(`/project-edit/${pid}`);
+    } else {
+      navigate('/');
+      dispatch(clearCurrentProject());
+      dispatch(clearFormInput());
+    }
+  };
+
+  const handleCreateProject = () => {
+    if (!pid) return;
+
+    dispatch(createNewSubproject(pid) as any);
+  };
 
   return (
     <>
@@ -130,6 +137,18 @@ const EditProject: React.FC<Props> = () => {
             onClick={handleCloseProject}
           >
             <img src="/back.svg" alt="back_logo" className="button__icon" />
+          </Button>
+          <Button
+            size="small"
+            transparent={true}
+            icon={true}
+            onClick={handleCreateProject}
+          >
+            <img
+              src="/plus_icon.svg"
+              className="button__icon"
+              alt="button icon"
+            />
           </Button>
         </Header>
         {isLoading ? (

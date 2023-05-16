@@ -9,6 +9,7 @@ import { IFile, IProject, ISubProjectAction } from '../types/mainProjects';
 import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
+import { Api } from '../../utils/API';
 
 export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
 export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
@@ -30,6 +31,9 @@ export const updateProjectFiles = createAction<{
   projectId: string;
   files: IFile[];
 }>('UPDATE_PROJECT_FILES');
+export const updateProjectFilesSuccess = createAction<Project>(
+  'UPDATE_PROJECT_FILES_SUCCESS'
+);
 
 const httpSource = axios.CancelToken.source();
 
@@ -577,6 +581,26 @@ export const removeFile =
         },
         cancelToken: httpSource.token,
       });
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${
+            e.response.data
+              ? e.response.data.message
+              : 'Видалити файл не вдалося'
+          }. Результат не збережено. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const createNewSubproject =
+  (parentId: string) => async (dispatch: Dispatch) => {
+    try {
+      const response = await Api.Subprojects.create(parentId);
+      dispatch(setCurrentProject(response.project));
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
