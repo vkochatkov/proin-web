@@ -3,6 +3,7 @@ import { createAction, Dispatch } from 'redux-act';
 import { RootState } from '../store/store';
 import { IMembers } from '../types/projectMembers';
 import { changeSnackbarState } from './snackbar';
+import { Api } from '../../utils/API';
 
 export const fetchMembersSuccess = createAction<IMembers>(
   'FETCH_MEMBERS_SUCCESS'
@@ -14,19 +15,9 @@ export const removeProjectMemberSuccess = createAction<IMembers>(
 const httpSource = axios.CancelToken.source();
 
 export const fetchMembers =
-  (projectId: string) =>
-  async (dispatch: Dispatch, getState: () => RootState) => {
-    const { token } = getState().user;
-
+  (projectId: string) => async (dispatch: Dispatch) => {
     try {
-      const response = await axios({
-        method: 'GET',
-        url: `${process.env.REACT_APP_BACKEND_URL}/project-members/${projectId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cancelToken: httpSource.token,
-      });
+      const response = await Api.ProjectMembers.get(projectId);
 
       const projectMembers = response.data.projectMembers.map(
         (member: any) => ({

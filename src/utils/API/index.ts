@@ -42,4 +42,10 @@ export const Api = {
     create: (parentId: string) =>
       APIClient.post(`/projects/${parentId}/subprojects`),
   },
+  CurrentProject: {
+    get: (id: string) => APIClient.get(`/projects/${id}`),
+  },
+  ProjectMembers: {
+    get: (projectId: string) => APIClient.get(`/project-members/${projectId}`),
+  },
 };

@@ -240,14 +240,7 @@ export const openCurrentProject =
       } else {
         dispatch(startLoading());
 
-        const response = await axios({
-          method: 'GET',
-          url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cancelToken: httpSource.token,
-        });
+        const response = await Api.CurrentProject.get(id);
 
         dispatch(setCurrentProject(response.data.project));
         dispatch(endLoading());
