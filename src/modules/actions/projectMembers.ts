@@ -19,15 +19,13 @@ export const fetchMembers =
     try {
       const response = await Api.ProjectMembers.get(projectId);
 
-      const projectMembers = response.data.projectMembers.map(
-        (member: any) => ({
-          role: member.role,
-          status: member.status,
-          userId: member.userId._id,
-          name: member.userId.name,
-          email: member.userId.email,
-        })
-      );
+      const projectMembers = response.projectMembers.map((member: any) => ({
+        role: member.role,
+        status: member.status,
+        userId: member.userId._id,
+        name: member.userId.name,
+        email: member.userId.email,
+      }));
 
       dispatch(fetchMembersSuccess({ projectMembers }));
     } catch (e: any) {

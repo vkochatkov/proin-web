@@ -242,7 +242,7 @@ export const openCurrentProject =
 
         const response = await Api.CurrentProject.get(id);
 
-        dispatch(setCurrentProject(response.data.project));
+        dispatch(setCurrentProject(response.project));
         dispatch(endLoading());
       }
     } catch (e) {
