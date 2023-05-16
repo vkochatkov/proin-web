@@ -600,7 +600,9 @@ export const createNewSubproject =
   (parentId: string) => async (dispatch: Dispatch) => {
     try {
       const response = await Api.Subprojects.create(parentId);
-      dispatch(setCurrentProject(response.project));
+      dispatch(setCurrentProject(response.subproject));
+
+      return response.subproject;
     } catch (e: any) {
       dispatch(
         changeSnackbarState({

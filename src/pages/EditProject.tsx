@@ -93,6 +93,7 @@ const EditProject: React.FC<Props> = () => {
     if (
       subprojectId &&
       currentProject &&
+      currentProject.id &&
       currentProject.id.length !== subprojectId.length
     ) {
       navigate(`/project-edit/${pid}`);
@@ -119,10 +120,16 @@ const EditProject: React.FC<Props> = () => {
     }
   };
 
-  const handleCreateProject = () => {
+  const handleCreateSubproject = async () => {
     if (!pid) return;
 
-    dispatch(createNewSubproject(pid) as any);
+    try {
+      const { _id } = await dispatch(createNewSubproject(pid) as any);
+
+      navigate(`/project-edit/${pid}/${_id}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -142,7 +149,7 @@ const EditProject: React.FC<Props> = () => {
             size="small"
             transparent={true}
             icon={true}
-            onClick={handleCreateProject}
+            onClick={handleCreateSubproject}
           >
             <img
               src="/plus_icon.svg"
