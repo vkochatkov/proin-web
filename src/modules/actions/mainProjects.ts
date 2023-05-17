@@ -431,18 +431,29 @@ export const acceptInvitation =
     }
   };
 
+export const fetchProjects =
+  () => async (dispatch: Dispatch, getState: () => RootState) => {
+    const { userId } = getState().user;
+
+    try {
+      const res = await Api.Projects.get(userId);
+      dispatch(updateProjects(res.projects));
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Завантажити проекти не вдалося. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
 export const fetchAllUserProjects =
   () => async (dispatch: Dispatch, getState: () => RootState) => {
-    const { userId, token } = getState().user;
+    const { userId } = getState().user;
 
-    const response = await axios({
-      method: 'GET',
-      url: `${process.env.REACT_APP_BACKEND_URL}/projects/all/${userId}`,
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-      cancelToken: httpSource.token,
-    });
+    const response = await Api.Projects.getAll(userId);
 
     const allUserProjects = response.data.projects.map((project: Project) => ({
       projectName: project.projectName,
@@ -594,6 +605,7 @@ export const createNewSubproject =
     try {
       const response = await Api.Subprojects.create(parentId);
       dispatch(setCurrentProject(response.subproject));
+      // dispatch()
 
       return response.subproject;
     } catch (e: any) {

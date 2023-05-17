@@ -13,6 +13,7 @@ import { getIsLoading } from '../modules/selectors/loading';
 import {
   clearCurrentProject,
   createNewSubproject,
+  fetchProjects,
   openCurrentProject,
 } from '../modules/actions/mainProjects';
 import { Card } from '@mui/joy';
@@ -31,11 +32,12 @@ import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { FilesUpload } from '../components/FormComponent/FilesUpload';
 
 import './HomePage.scss';
+import { endLoading, startLoading } from '../modules/actions/loading';
 
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
-  const { token } = useAuth();
+  const { token, userId } = useAuth();
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
@@ -110,9 +112,12 @@ const EditProject: React.FC<Props> = () => {
     }
   }, [pid, token, subprojectId, currentProject, navigate, dispatch]);
 
-  const handleCloseProject = () => {
+  const handleCloseProject = async () => {
     if (subprojectId) {
+      dispatch(startLoading());
+      await dispatch(fetchProjects() as any);
       navigate(`/project-edit/${pid}`);
+      dispatch(endLoading());
     } else {
       navigate('/');
       dispatch(clearCurrentProject());
@@ -127,6 +132,7 @@ const EditProject: React.FC<Props> = () => {
       const { _id } = await dispatch(createNewSubproject(pid) as any);
 
       navigate(`/project-edit/${pid}/${_id}`);
+      await dispatch(fetchProjects() as any);
     } catch (error) {
       console.log(error);
     }

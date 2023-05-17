@@ -48,4 +48,8 @@ export const Api = {
   ProjectMembers: {
     get: (projectId: string) => APIClient.get(`/project-members/${projectId}`),
   },
+  Projects: {
+    getAll: (userId: string) => APIClient.get(`/projects/all/${userId}`),
+    get: (id: string) => APIClient.get(`/projects/user/${id}`),
+  },
 };
