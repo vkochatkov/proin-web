@@ -151,18 +151,20 @@ const EditProject: React.FC<Props> = () => {
           >
             <img src="/back.svg" alt="back_logo" className="button__icon" />
           </Button>
-          <Button
-            size="small"
-            transparent={true}
-            icon={true}
-            onClick={handleCreateSubproject}
-          >
-            <img
-              src="/plus_icon.svg"
-              className="button__icon"
-              alt="button icon"
-            />
-          </Button>
+          {!subprojectId && (
+            <Button
+              size="small"
+              transparent={true}
+              icon={true}
+              onClick={handleCreateSubproject}
+            >
+              <img
+                src="/plus_icon.svg"
+                className="button__icon"
+                alt="button icon"
+              />
+            </Button>
+          )}
         </Header>
         {isLoading ? (
           <div className="loading">
