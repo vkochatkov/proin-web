@@ -1,5 +1,6 @@
 import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
+import { Project } from '../../modules/reducers/mainProjects';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -51,5 +52,13 @@ export const Api = {
   Projects: {
     getAll: (userId: string) => APIClient.get(`/projects/all/${userId}`),
     get: (id: string) => APIClient.get(`/projects/user/${id}`),
+    put: (projects: Project[], id: string) =>
+      APIClient.put(`projects/user/${id}`, { projects }),
+    patch: (props: Partial<Project>, pid: string) =>
+      APIClient.patch(`projects/${pid}`, props),
+  },
+  Files: {
+    post: (props: Partial<Project>, pid: string) =>
+      APIClient.post(`/projects/${pid}/files`, props),
   },
 };

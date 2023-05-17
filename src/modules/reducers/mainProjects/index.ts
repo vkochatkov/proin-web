@@ -6,7 +6,7 @@ import {
   updateProjects,
   clearProjects,
   createProjectSuccess,
-  updateProjectCommentsSuccess,
+  updateMainProjectsSuccess,
   setAllUserProjects,
   selectProject,
   updateProjectFiles,
@@ -77,7 +77,7 @@ mainProjects.on(editProjectFailure, (state: any, payload: any) => {
   };
 });
 
-mainProjects.on(updateProjectCommentsSuccess, (state, payload) => {
+mainProjects.on(updateMainProjectsSuccess, (state, payload) => {
   const { updatedCurrentProject, updatedProjectsArray } = payload;
 
   return {

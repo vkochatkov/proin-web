@@ -17,10 +17,10 @@ export const editProjectFailure = createAction<string>('EDIT_PROJECT_FAILURE');
 export const createProjectSuccess = createAction<Project>(
   'CREATE_PROJECT_SUCCESS'
 );
-export const updateProjectCommentsSuccess = createAction<{
+export const updateMainProjectsSuccess = createAction<{
   updatedCurrentProject: Project;
   updatedProjectsArray: Project[];
-}>('UPDATE_PROJECT_COMMENTS_SUCCESS');
+}>('UPDATE_MAIN_PROJECTS_SUCCESS');
 export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
 export const clearProjects = createAction('CLEAR_PROJECTS');
 export const setAllUserProjects = createAction<IProject[]>(
@@ -67,7 +67,7 @@ export const createProjectComments =
       );
 
       dispatch(
-        updateProjectCommentsSuccess({
+        updateMainProjectsSuccess({
           updatedCurrentProject,
           updatedProjectsArray,
         })
@@ -140,7 +140,7 @@ export const updateComment =
       );
 
       dispatch(
-        updateProjectCommentsSuccess({
+        updateMainProjectsSuccess({
           updatedCurrentProject,
           updatedProjectsArray,
         })
@@ -270,25 +270,17 @@ export const updateOrderProjects =
   (projects: Project[]) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     try {
-      const { userId, token } = getState().user;
+      const { userId } = getState().user;
 
       dispatch(updateProjects(projects));
 
-      await axios({
-        method: 'PUT',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`,
-        data: { projects },
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-        cancelToken: httpSource.token,
-      });
+      await Api.Projects.put(projects, userId);
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
           id: 'error',
           open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
+          message: `Порядок проектів не збережено. Перезавантажте сторінку`,
         })
       );
     }
@@ -297,7 +289,6 @@ export const updateOrderProjects =
 export const updatedSubProjectsOrder =
   ({ projectId, newOrder, subProjectIndex }: ISubProjectAction) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const { token } = getState().user;
     const { projects } = getState().mainProjects;
 
     const projectIndex = projects.findIndex(
@@ -319,25 +310,17 @@ export const updatedSubProjectsOrder =
     ];
 
     dispatch(
-      updateProjectCommentsSuccess({
+      updateMainProjectsSuccess({
         updatedCurrentProject: updatedProject,
         updatedProjectsArray: updatedProjects,
       })
     );
 
     try {
-      await axios({
-        method: 'PATCH',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${updatedProject._id}`,
-        data: JSON.stringify({
-          subProjects: updatedProject.subProjects,
-        }),
-        headers: {
-          Authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
-        },
-        cancelToken: httpSource.token,
-      });
+      await Api.Projects.patch(
+        { subProjects: updatedProject.subProjects },
+        updatedProject._id
+      );
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
@@ -620,5 +603,53 @@ export const createNewSubproject =
           }. Результат не збережено. Перезавантажте сторінку`,
         })
       );
+    }
+  };
+
+export const updateFilesOrder =
+  (projectId: string, files: File[]) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projects: Project[] = JSON.parse(
+      JSON.stringify(getState().mainProjects.projects)
+    );
+
+    const projectIndex = projects.findIndex(
+      (project) => project._id === projectId
+    );
+
+    if (projectIndex === -1) {
+      return;
+    }
+
+    const updatedProject = {
+      ...projects[projectIndex],
+      files,
+    };
+
+    const updatedProjects = [
+      ...projects.slice(0, projectIndex),
+      updatedProject,
+      ...projects.slice(projectIndex + 1),
+    ];
+
+    dispatch(
+      updateMainProjectsSuccess({
+        updatedCurrentProject: updatedProject,
+        updatedProjectsArray: updatedProjects,
+      })
+    );
+
+    try {
+      await Api.Files.post({ files }, updatedProject._id);
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
+            ? e.response.data.message
+            : 'Зберегти нову послідовність файлів не вдалося'
+        }. Перезавантажте сторінку`,
+      });
     }
   };

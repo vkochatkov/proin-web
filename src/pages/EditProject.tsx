@@ -30,14 +30,14 @@ import { clearFormInput } from '../modules/actions/form';
 import { FilesList } from '../components/FilesList';
 import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { FilesUpload } from '../components/FormComponent/FilesUpload';
+import { endLoading, startLoading } from '../modules/actions/loading';
 
 import './HomePage.scss';
-import { endLoading, startLoading } from '../modules/actions/loading';
 
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
-  const { token, userId } = useAuth();
+  const { token } = useAuth();
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);

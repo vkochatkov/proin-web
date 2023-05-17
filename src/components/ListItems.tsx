@@ -33,6 +33,7 @@ export const ListItems = ({
   isWrapped = false,
 }: Props) => {
   const dispatch = useDispatch();
+
   const onDragEnd = (result: any) => {
     // dropped outside the list
     if (!result.destination) {
