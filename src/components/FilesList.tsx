@@ -59,6 +59,7 @@ export const FilesList = () => {
     );
 
     dispatch(updateFilesOrder(pid, newOrder) as any);
+    dispatch(setIsDragging(false));
   };
 
   return (

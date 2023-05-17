@@ -36,6 +36,7 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
+          {...longPressProps}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
@@ -47,7 +48,6 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
                 boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
               },
             }}
-            {...longPressProps}
           >
             <Menu
               anchorEl={anchorEl}

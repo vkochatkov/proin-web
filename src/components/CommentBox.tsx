@@ -78,15 +78,7 @@ export const CommentBox: FC<Props> = ({
                 height: 40,
               }}
             >
-              {/* <h3
-                style={{
-                  color: '#fff',
-                  fontSize: '20px',
-                  display: 'flex',
-                }}
-              > */}
               {firstLetter}
-              {/* </h3> */}
             </Avatar>
           </Grid>
           <Grid justifyContent="left" item xs zeroMinWidth>
