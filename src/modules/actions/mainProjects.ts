@@ -65,7 +65,6 @@ export const createProjectComments =
           ? updatedCurrentProject
           : project
       );
-
       dispatch(
         updateMainProjectsSuccess({
           updatedCurrentProject,
@@ -641,6 +640,73 @@ export const updateFilesOrder =
 
     try {
       await Api.Files.post({ files }, updatedProject._id);
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
+            ? e.response.data.message
+            : 'Зберегти нову послідовність файлів не вдалося'
+        }. Перезавантажте сторінку`,
+      });
+    }
+  };
+
+export const updateSubprojectFilesOrder =
+  (projectId: string, subprojectId: string, files: File[]) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projects: Project[] = JSON.parse(
+      JSON.stringify(getState().mainProjects.projects)
+    );
+
+    const projectIndex = projects.findIndex(
+      (project) => project._id === projectId
+    );
+
+    if (projectIndex === -1) {
+      return;
+    }
+
+    const subprojectIndex = projects[projectIndex].subProjects.findIndex(
+      (subproject: Project) => subproject._id === subprojectId
+    );
+
+    if (subprojectIndex === -1) {
+      return;
+    }
+
+    const updatedSubproject = {
+      ...projects[projectIndex].subProjects[subprojectIndex],
+      files,
+    };
+
+    const updatedSubprojects = [
+      ...projects[projectIndex].subProjects.slice(0, subprojectIndex),
+      updatedSubproject,
+      ...projects[projectIndex].subProjects.slice(subprojectIndex + 1),
+    ];
+
+    const updatedProject = {
+      ...projects[projectIndex],
+      subProjects: updatedSubprojects,
+    };
+
+    const updatedProjects = [
+      ...projects.slice(0, projectIndex),
+      updatedProject,
+      ...projects.slice(projectIndex + 1),
+    ];
+
+    dispatch(
+      updateMainProjectsSuccess({
+        updatedCurrentProject: updatedSubproject,
+        updatedProjectsArray: updatedProjects,
+      })
+    );
+
+    try {
+      await Api.Files.post({ files }, updatedSubproject._id);
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',

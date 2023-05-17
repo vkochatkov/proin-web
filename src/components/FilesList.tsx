@@ -7,7 +7,11 @@ import { LoadingSpinner } from './UIElements/LoadingSpinner';
 import { getIsFilesLoading } from '../modules/selectors/loading';
 import { Button } from './FormElement/Button';
 import { useDispatch } from 'react-redux';
-import { removeFile, updateFilesOrder } from '../modules/actions/mainProjects';
+import {
+  removeFile,
+  updateFilesOrder,
+  updateSubprojectFilesOrder,
+} from '../modules/actions/mainProjects';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { setIsDragging } from '../modules/actions/dragging';
 import { useParams } from 'react-router-dom';
@@ -27,7 +31,7 @@ export const FilesList = () => {
   const isLoading = useSelector(getIsFilesLoading);
   const [showAllFiles, setShowAllFiles] = useState(false);
   const dispatch = useDispatch();
-  const { pid } = useParams();
+  const { pid, subprojectId } = useParams();
 
   const handleDeleteFile = (id: string) => {
     dispatch(removeFile(id) as any);
@@ -58,7 +62,12 @@ export const FilesList = () => {
       result.destination.index
     );
 
-    dispatch(updateFilesOrder(pid, newOrder) as any);
+    if (!subprojectId) {
+      dispatch(updateFilesOrder(pid, newOrder) as any);
+    } else {
+      dispatch(updateSubprojectFilesOrder(pid, subprojectId, newOrder) as any);
+    }
+
     dispatch(setIsDragging(false));
   };
 

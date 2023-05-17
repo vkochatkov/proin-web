@@ -104,6 +104,7 @@ const EditProject: React.FC<Props> = () => {
 
     if (subprojectId && subProject && !currentProject) {
       dispatch(openCurrentProject(token, subprojectId, true) as any);
+
       return;
     }
 
