@@ -2,7 +2,10 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
-import { updateProjects } from '../../modules/actions/mainProjects';
+import {
+  setCurrentProject,
+  updateProjects,
+} from '../../modules/actions/mainProjects';
 import { Project } from '../../modules/reducers/mainProjects';
 import { getCurrentProjects } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
@@ -39,14 +42,41 @@ export const ProjectItemTextEditor = ({
 
   const handleUpdateInputValue = useCallback(
     (inputKey: string, value: string, isValid: boolean) => {
-      const updatedProject = {
-        ...project,
-        [inputKey]: value,
-      };
+      let updatedProjects;
 
-      const updatedProjects = projects.map((p) =>
-        p._id === id ? updatedProject : p
-      );
+      if (pid) {
+        // Update subproject
+        updatedProjects = projects.map((p) => {
+          if (p._id === pid) {
+            const updatedSubProjects = p.subProjects.map(
+              (subProject: Project) =>
+                subProject._id === id
+                  ? { ...subProject, [inputKey]: value }
+                  : subProject
+            );
+            return { ...p, subProjects: updatedSubProjects };
+          }
+          return p;
+        });
+
+        const updatedProject = updatedProjects.find(
+          (project) => project._id === pid
+        );
+
+        if (!updatedProject) return;
+
+        dispatch(setCurrentProject(updatedProject));
+      } else {
+        // Update main project
+        const updatedProject = {
+          ...project,
+          [inputKey]: value,
+        };
+
+        updatedProjects = projects.map((p) =>
+          p._id === id ? updatedProject : p
+        );
+      }
 
       dispatch(updateProjects(updatedProjects));
       inputHandler(inputKey, value, isValid);

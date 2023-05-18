@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoading } from '../../modules/selectors/loading';
 import { endLoading } from '../../modules/actions/loading';
 import { changeSnackbarState } from '../../modules/actions/snackbar';
+import { useParams } from 'react-router-dom';
 
 import './Input.scss';
 
@@ -33,6 +34,7 @@ type InputProps = {
 };
 
 export const Input = (props: InputProps) => {
+  const { pid, subprojectId } = useParams();
   const [inputState, setInputState] = useState({
     value: props.initialValue || '',
     isTouched: false,
@@ -126,7 +128,12 @@ export const Input = (props: InputProps) => {
 
       if (updatedProject.projectName === '') return;
 
-      dispatch(setCurrentProject(updatedProject));
+      if (
+        (pid && pid === updatedProject.id) ||
+        (subprojectId && subprojectId === updatedProject.id)
+      ) {
+        dispatch(setCurrentProject(updatedProject));
+      }
 
       saveChanges({ [id]: newValue }, props.projectId);
     }
