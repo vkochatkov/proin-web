@@ -37,7 +37,7 @@ export const Item: React.FC<Props> = ({
   id,
 }) => {
   const img = <img src={logo ? `${logo}` : ''} alt="logo" />;
-  const { userId, token } = useSelector(getAuth);
+  const { userId } = useSelector(getAuth);
   const {
     handleClose,
     contextMenuPosition,
