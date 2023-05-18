@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { validate } from '../../utils/validators';
 import { debounce } from '../../utils/debounce';
-import axios from 'axios';
+import { Api } from '../../utils/API';
 import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoading } from '../../modules/selectors/loading';
@@ -88,18 +88,8 @@ export const Input = (props: InputProps) => {
   }, [dispatch, props.isUpdateValue, inputState, isLoading]);
 
   const saveChanges = useCallback(
-    debounce((data: any, token: string, projectId: string) => {
-      const request = axios.CancelToken.source();
-
-      axios({
-        method: 'PATCH',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${projectId}`,
-        data,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cancelToken: request.token,
-      })
+    debounce((data: any, projectId: string) => {
+      Api.Projects.patch(data, projectId)
         .then(() => {})
         .catch(() => {
           dispatch(
@@ -138,7 +128,7 @@ export const Input = (props: InputProps) => {
 
       dispatch(setCurrentProject(updatedProject));
 
-      saveChanges({ [id]: newValue }, props.token, props.projectId);
+      saveChanges({ [id]: newValue }, props.projectId);
     }
   };
 

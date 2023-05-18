@@ -7,17 +7,22 @@ import { useContextMenu } from '../hooks/useContextMenu';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { Button } from './FormElement/Button';
 import { getAuth } from '../modules/selectors/user';
+import { useActiveInput } from '../hooks/useActiveInput';
+import { Project } from '../modules/reducers/mainProjects';
+import { ProjectItemTextEditor } from './FormComponent/ProjectItemTextEditor';
 
 import './Item.scss';
 
 interface Props {
-  name?: string;
+  name: string;
   logo?: string;
   description?: string;
   projectId: string;
   index: number;
   onClick: (projectId: string) => void;
   sharedWith: string[];
+  id: string;
+  project: Project;
 }
 
 export const Item: React.FC<Props> = ({
@@ -28,9 +33,11 @@ export const Item: React.FC<Props> = ({
   index,
   onClick,
   sharedWith,
+  project,
+  id,
 }) => {
   const img = <img src={logo ? `${logo}` : ''} alt="logo" />;
-  const { userId } = useSelector(getAuth);
+  const { userId, token } = useSelector(getAuth);
   const {
     handleClose,
     contextMenuPosition,
@@ -41,10 +48,15 @@ export const Item: React.FC<Props> = ({
   const isMemberAdded = sharedWith
     ? Boolean(sharedWith.find((id) => id === userId))
     : false;
+  const { isActive, setIsActive, handleHideInput } = useActiveInput();
 
-  const handleClickMenuItem = (e: any, modal: string) => {
+  const handleClickMenuItem = (e: any, modal?: string) => {
     e.stopPropagation();
-    handleSelectProject(projectId, modal);
+
+    if (modal) {
+      handleSelectProject(projectId, modal);
+    }
+
     handleClose();
   };
 
@@ -53,7 +65,7 @@ export const Item: React.FC<Props> = ({
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
-          onClick={() => onClick(projectId)}
+          onClick={(e) => (!isActive ? onClick(projectId) : null)}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
@@ -62,7 +74,13 @@ export const Item: React.FC<Props> = ({
               {!logo && <div className="item__image-empty" />}
               {logo && img}
               <div className="item__text-container">
-                <p className="item__name">{name}</p>
+                <ProjectItemTextEditor
+                  onBlur={handleHideInput}
+                  isActive={isActive}
+                  project={project}
+                  id={id}
+                  name={name}
+                />
                 <p className="item__description">{description}</p>
               </div>
             </div>
@@ -91,6 +109,14 @@ export const Item: React.FC<Props> = ({
                       left: contextMenuPosition.left,
                     }}
                   >
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClickMenuItem(e);
+                        setIsActive(true);
+                      }}
+                    >
+                      Редагувати
+                    </MenuItem>
                     <MenuItem
                       onClick={(e) => handleClickMenuItem(e, 'move-project')}
                     >

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Project } from '../../modules/reducers/mainProjects';
 import { Input } from '../FormElement/Input';
 import { ProjectTextOutput } from './ProjectTextOutput';
+import { useActiveInput } from '../../hooks/useActiveInput';
 
 import './ProjectInputEditor.scss';
 
@@ -20,7 +21,7 @@ export const ProjectDescription = ({
   id,
   label,
 }: Props) => {
-  const [isActive, setIsActive] = useState(false);
+  const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = project ? project[id] : undefined;
 
   useEffect(() => {
@@ -29,19 +30,11 @@ export const ProjectDescription = ({
     }
   }, [id, text]);
 
-  const handleHideInput = () => {
-    if (id === 'projectName' && !text) {
-      return;
-    }
-
-    setIsActive(false);
-  };
-
   return (
     <>
       {label ? <h3>{label}</h3> : null}
       {isActive && (
-        <div onBlur={handleHideInput}>
+        <div onBlur={() => handleHideInput(id, text)}>
           <Input
             id={id}
             element={id === 'description' ? 'textarea' : 'input'}

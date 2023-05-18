@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeFormInput, setFormDataAction } from '../modules/actions/form';
 import { FormState, SetFormDataType } from '../modules/reducers/formReducer';
 import { RootState } from '../modules/store/store';
-
-type InputHandler = (id: string, value: string, isValid: boolean) => void;
+import { InputHandler } from '../modules/types/input';
 
 export const useForm = (
   initialInputs: FormState['inputs'],

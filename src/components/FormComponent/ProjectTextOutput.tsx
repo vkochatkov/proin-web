@@ -21,6 +21,7 @@ const urlRegex =
 
 export const ProjectTextOutput = ({ text, fieldId }: Props) => {
   const dispatch = useDispatch();
+
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     event.stopPropagation();

@@ -35,7 +35,6 @@ export const ListItems = ({
   const dispatch = useDispatch();
 
   const onDragEnd = (result: any) => {
-    // dropped outside the list
     if (!result.destination) {
       return;
     }
@@ -72,12 +71,14 @@ export const ListItems = ({
                   <Item
                     key={item._id}
                     projectId={item._id}
-                    name={item.projectName}
+                    name={item.projectName ? item.projectName : ''}
                     logo={item.logoUrl}
                     description={item.description}
                     index={index}
                     onClick={onClick}
                     sharedWith={item.sharedWith}
+                    id={item._id}
+                    project={item}
                   />
                 );
               })}
