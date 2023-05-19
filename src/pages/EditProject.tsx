@@ -192,12 +192,12 @@ const EditProject: React.FC<Props> = () => {
                   inputHandler={inputHandler}
                   isUpdateValue={true}
                 />
-                <ProjectDescription
+                {/* <ProjectDescription
                   id="projectName"
                   inputHandler={inputHandler}
                   token={token}
                   project={currentProject}
-                />
+                /> */}
                 <ProjectDescription
                   id="description"
                   inputHandler={inputHandler}

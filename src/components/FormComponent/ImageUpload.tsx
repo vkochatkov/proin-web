@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { useForm } from '../../hooks/useForm';
 import { useHttpClient } from '../../hooks/useHttpClient';
 import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
 import { FileUploader } from '../FormElement/FileUploader';
+import { ProjectDescription } from './ProjectInputEditor';
 
 interface IImageUpload {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -30,6 +32,15 @@ export const ImageUpload = ({
   const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
   const { sendRequest } = useHttpClient();
+  const { inputHandler } = useForm(
+    {
+      projectName: {
+        value: '',
+        isValid: true,
+      },
+    },
+    true
+  );
 
   useEffect(() => {
     if (isUpdateValue && currentProject) {
@@ -122,6 +133,18 @@ export const ImageUpload = ({
             <img src={previewUrl} alt="Preview" />
           </div>
         )}
+        <div
+          style={{
+            marginLeft: '1rem',
+          }}
+        >
+          <ProjectDescription
+            id="projectName"
+            inputHandler={inputHandler}
+            token={token}
+            project={currentProject}
+          />
+        </div>
       </div>
       <FileUploader
         id={id}
