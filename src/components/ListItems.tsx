@@ -2,7 +2,8 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { useDispatch } from 'react-redux';
 import { setIsDragging } from '../modules/actions/dragging';
 import { Project } from '../modules/reducers/mainProjects';
-import { Item } from './Item';
+import { reorder } from '../utils/utils';
+import { Item } from './Item/Item';
 
 interface Props {
   projects: Project[];
@@ -10,15 +11,6 @@ interface Props {
   updateOrder: (newItem: Project[], index?: string) => void;
   isWrapped?: boolean;
 }
-
-// a little function to help with reordering the result
-const reorder = (list: Project[], startIndex: number, endIndex: number) => {
-  const result = [...list];
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
 
 const getListStyle = (isDraggingOver: boolean, isWrapped: boolean) => ({
   background: '#f8f8f8',
@@ -39,7 +31,7 @@ export const ListItems = ({
       return;
     }
 
-    const newItems: Project[] = reorder(
+    const newItems = reorder(
       projects,
       result.source.index,
       result.destination.index

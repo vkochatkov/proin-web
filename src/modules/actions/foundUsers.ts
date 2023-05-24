@@ -6,9 +6,7 @@ import { changeSnackbarState } from './snackbar';
 
 const httpSource = axios.CancelToken.source();
 
-export const foundUsersSuccess = createAction<IFoundUsers>(
-  'FOUND_USERS_SUCCESS'
-);
+export const foundUsersSuccess = createAction<IFoundUsers>('foundUsersSuccess');
 
 export const searchUsers =
   (search: string) => async (dispatch: Dispatch, getState: () => RootState) => {

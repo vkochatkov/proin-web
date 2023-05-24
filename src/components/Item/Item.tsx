@@ -1,15 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Card } from './UIElements/Card';
 import { Draggable } from '@hello-pangea/dnd';
 import { Menu, MenuItem } from '@mui/material';
-import { useContextMenu } from '../hooks/useContextMenu';
+import { Project } from '../../modules/reducers/mainProjects';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
-import { Button } from './FormElement/Button';
-import { getAuth } from '../modules/selectors/user';
-import { useActiveInput } from '../hooks/useActiveInput';
-import { Project } from '../modules/reducers/mainProjects';
-import { ProjectItemTextEditor } from './FormComponent/ProjectItemTextEditor';
+import { Card } from '../UIElements/Card';
+import { getAuth } from '../../modules/selectors/user';
+import { useActiveInput } from '../../hooks/useActiveInput';
+import { useContextMenu } from '../../hooks/useContextMenu';
+import { ProjectItemTextEditor } from '../FormComponent/ProjectItemTextEditor';
+import { Button } from '../FormElement/Button';
 
 import './Item.scss';
 

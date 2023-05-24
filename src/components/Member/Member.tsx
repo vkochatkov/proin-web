@@ -1,14 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, Grid } from '@mui/material';
-import { IMember } from '../modules/types/projectMembers';
+import { IMember } from '../../modules/types/projectMembers';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from './FormElement/Button';
-import { backgroundColor } from '../utils/avatar-view';
-import { removeProjectMember } from '../modules/actions/projectMembers';
+import { Button } from '../FormElement/Button';
+import { backgroundColor } from '../../utils/avatar-view';
+import { removeProjectMember } from '../../modules/actions/projectMembers';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAuth } from '../modules/selectors/user';
-import { useSelector } from 'react-redux';
+import { getAuth } from '../../modules/selectors/user';
 
 import './Member.scss';
 

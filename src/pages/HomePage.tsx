@@ -5,10 +5,10 @@ import {
   acceptInvitation,
   createNewProject,
   fetchAllUserProjects,
+  fetchProjects,
   openCurrentProject,
   selectProject,
   updateOrderProjects,
-  updateProjects,
 } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store/store';
@@ -53,16 +53,9 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     if (!userId) return;
 
-    const fetchProjects = async () => {
-      const res = await sendRequest(
-        `${process.env.REACT_APP_BACKEND_URL}/projects/user/${userId}`
-      );
-
-      dispatch(updateProjects(res.projects));
-      dispatch(fetchAllUserProjects() as any);
-      dispatch(endLoading());
-    };
-    fetchProjects();
+    dispatch(fetchProjects() as any);
+    dispatch(fetchAllUserProjects() as any);
+    dispatch(endLoading());
   }, [sendRequest, userId, dispatch]);
 
   useEffect(() => {

@@ -12,10 +12,13 @@ interface Props {
   onCancel?: () => void;
   isActive?: boolean;
   text?: string;
+  placeholder: string;
+  isActiveWithoutText?: boolean;
+  buttonLabel: string;
 }
 
-export const CommentInput = (props: Props) => {
-  const [commentValue, setCommentValue] = useState<string>(
+export const DynamicInput = (props: Props) => {
+  const [value, setValue] = useState<string | undefined>(
     props.isActive && props.text ? props.text : ''
   );
   const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
@@ -23,37 +26,43 @@ export const CommentInput = (props: Props) => {
   );
 
   useEffect(() => {
-    if (props.isActive && props.text) {
+    if ((props.isActive && props.text) || props.isActiveWithoutText) {
       setIsTextareaActive(true);
-      setCommentValue(props.text);
+      setValue(props.text);
     } else {
       setIsTextareaActive(false);
-      setCommentValue('');
+      setValue('');
     }
   }, [props.isActive, props.text]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setCommentValue(event.target.value);
+    setValue(event.target.value);
   };
 
   const handleClick = () => {
-    props.onClick(commentValue);
+    if (!value) return;
+
+    props.onClick(value);
     setIsTextareaActive(false);
-    setCommentValue('');
+    setValue('');
   };
 
   return (
     <FormControl>
       <Textarea
-        placeholder="Напишіть коментар"
-        minRows={!isTextareaActive ? 1 : 3}
-        value={commentValue}
+        placeholder={props.placeholder}
+        minRows={props.isActiveWithoutText ? 1 : !isTextareaActive ? 1 : 3}
+        value={value}
         onFocus={() => {
           setIsTextareaActive(true);
         }}
-        onBlur={!commentValue ? () => setIsTextareaActive(false) : undefined}
+        onBlur={
+          !value && !props.isActiveWithoutText
+            ? () => setIsTextareaActive(false)
+            : undefined
+        }
         onChange={handleChange}
         endDecorator={
           isTextareaActive ? (
@@ -62,7 +71,7 @@ export const CommentInput = (props: Props) => {
                 display: 'flex',
                 gap: 'var(--Textarea-paddingBlock)',
                 pt: 'var(--Textarea-paddingBlock)',
-                borderTop: '1px solid',
+                borderTop: props.isActiveWithoutText ? '' : '1px solid',
                 flex: 'auto',
                 justifyContent: 'flex-end',
               }}
@@ -77,7 +86,7 @@ export const CommentInput = (props: Props) => {
                   className="comment-input__close-icon"
                 />
               </CloseButton>
-              <Button onClick={handleClick}>Зберегти</Button>
+              <Button onClick={handleClick}>{props.buttonLabel}</Button>
             </Box>
           ) : null
         }

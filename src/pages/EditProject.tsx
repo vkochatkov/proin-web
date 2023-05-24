@@ -27,10 +27,11 @@ import TabsMenu from '../components/TabsMenu';
 import { Project } from '../modules/reducers/mainProjects';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../modules/actions/form';
-import { FilesList } from '../components/FilesList';
+import { FilesList } from '../components/FilesList/FilesList';
 import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { FilesUpload } from '../components/FormComponent/FilesUpload';
 import { endLoading, startLoading } from '../modules/actions/loading';
+import { clearTasks } from '../modules/actions/currentProjectTasks';
 
 import './HomePage.scss';
 
@@ -57,6 +58,12 @@ const EditProject: React.FC<Props> = () => {
     },
     true
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearTasks());
+    };
+  }, []);
 
   useEffect(() => {
     if (!currentProject || (currentProject && !currentProject._id)) return;
@@ -192,12 +199,6 @@ const EditProject: React.FC<Props> = () => {
                   inputHandler={inputHandler}
                   isUpdateValue={true}
                 />
-                {/* <ProjectDescription
-                  id="projectName"
-                  inputHandler={inputHandler}
-                  token={token}
-                  project={currentProject}
-                /> */}
                 <ProjectDescription
                   id="description"
                   inputHandler={inputHandler}

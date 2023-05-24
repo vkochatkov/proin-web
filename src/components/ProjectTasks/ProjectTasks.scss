@@ -1,0 +1,11 @@
+.project-tasks {
+  display: flex;
+  flex-direction: column;
+  &__wrapper {
+    margin-top: 10px;
+  }
+
+  &__btn {
+    width: 100%;
+  }
+}

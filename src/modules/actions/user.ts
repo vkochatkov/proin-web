@@ -8,8 +8,8 @@ import { clearFormInput } from './form';
 import { endLoading } from './loading';
 import { changeSnackbarState, clearSnackbarState } from './snackbar';
 
-export const loginSuccess = createAction<UserState>('LOGIN_SUCCESS');
-export const logoutSuccess = createAction('LOGOUT_SUCCESS');
+export const loginSuccess = createAction<UserState>('loginSuccess');
+export const logoutSuccess = createAction('logoutSuccess');
 
 const httpSource = axios.CancelToken.source();
 

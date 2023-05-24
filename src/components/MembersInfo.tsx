@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { openModal } from '../modules/actions/modal';
 import { getMembers } from '../modules/selectors/projectMembers';
-import { Member } from './Member';
+import { Member } from './Member/Member';
 
 export const MembersInfo = () => {
   const dispatch = useDispatch();

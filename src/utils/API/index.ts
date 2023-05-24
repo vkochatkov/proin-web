@@ -1,6 +1,7 @@
 import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
-import { Project } from '../../modules/reducers/mainProjects';
+import { IComment, Project } from '../../modules/reducers/mainProjects';
+import { ITask } from '../../modules/types/currentProjectTasks';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -39,16 +40,6 @@ const baseURL =
 export const APIClient = new HTTPClient(baseURL);
 
 export const Api = {
-  Subprojects: {
-    create: (parentId: string) =>
-      APIClient.post(`/projects/${parentId}/subprojects`),
-  },
-  CurrentProject: {
-    get: (id: string) => APIClient.get(`/projects/${id}`),
-  },
-  ProjectMembers: {
-    get: (projectId: string) => APIClient.get(`/project-members/${projectId}`),
-  },
   Projects: {
     getAll: (userId: string) => APIClient.get(`/projects/all/${userId}`),
     get: (id: string) => APIClient.get(`/projects/user/${id}`),
@@ -57,8 +48,29 @@ export const Api = {
     patch: (props: Partial<Project>, pid: string) =>
       APIClient.patch(`projects/${pid}`, props),
   },
+  Subprojects: {
+    create: (parentId: string) =>
+      APIClient.post(`/projects/${parentId}/subprojects`),
+  },
+  Comments: {
+    create: (props: Partial<IComment>, id: string) =>
+      APIClient.post(`/projects/${id}/comment`, props),
+  },
+  CurrentProject: {
+    get: (id: string) => APIClient.get(`/projects/${id}`),
+  },
+  ProjectMembers: {
+    get: (projectId: string) => APIClient.get(`/project-members/${projectId}`),
+  },
   Files: {
     post: (props: Partial<Project>, pid: string) =>
       APIClient.post(`/projects/${pid}/files`, props),
+    delete: (pid: string, fileId: string) =>
+      APIClient.delete(`projects/${pid}/files/${fileId}`),
+  },
+  ProjectTasks: {
+    create: (props: Partial<ITask>, id: string) =>
+      APIClient.post(`/project-tasks/${id}/create`, props),
+    get: (pid: string) => APIClient.get(`/project-tasks/${pid}/tasks`),
   },
 };

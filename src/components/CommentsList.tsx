@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentBox } from './CommentBox';
-import { CommentInput } from './FormComponent/CommentInput';
+import { DynamicInput } from './FormComponent/DynamicInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import {
   deleteComment,
   setCurrentProject,
-  createProjectComments,
+  createProjectComment,
   updateComment,
 } from '../modules/actions/mainProjects';
 import { IComment } from '../modules/reducers/mainProjects';
@@ -45,7 +45,7 @@ export const CommentsList = () => {
     };
 
     dispatch(
-      createProjectComments({
+      createProjectComment({
         comment,
       }) as any
     );
@@ -114,10 +114,12 @@ export const CommentsList = () => {
 
   return (
     <>
-      <CommentInput
+      <DynamicInput
         onClick={handleCreatingComment}
         isActive={isInputActive}
         text={defaultInputValue}
+        buttonLabel={'Зберегти'}
+        placeholder="Напишіть коментар"
         onCancel={() => {
           setIsInputActive(false);
           setDefaultInputValue('');
@@ -144,11 +146,13 @@ export const CommentsList = () => {
                 }}
                 key={`${comment.id}-${Math.random()}`}
               >
-                <CommentInput
+                <DynamicInput
+                  placeholder="Напишіть коментар"
                   onClick={(value) => handleUpdateComment(comment.id, value)}
                   onCancel={() => setSelectedCommentIds(updatedSelectedIds)}
                   isActive={true}
                   text={comment.text}
+                  buttonLabel={'Зберегти'}
                 />
               </div>
             );

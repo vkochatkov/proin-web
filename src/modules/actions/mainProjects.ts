@@ -10,34 +10,38 @@ import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
 import { Api } from '../../utils/API';
+import { fetchTasks } from './currentProjectTasks';
 
-export const setCurrentProject = createAction<Project>('SET_CURRENT_PROJECT');
-export const updateProjects = createAction<Project[]>('UPDATE_PROJECTS');
-export const editProjectFailure = createAction<string>('EDIT_PROJECT_FAILURE');
+export const setCurrentProject = createAction<Project>('setCurrentProject');
+export const updateProjects = createAction<Project[]>('updateProjects');
+export const editProjectFailure = createAction<string>('editProjectFailure');
 export const createProjectSuccess = createAction<Project>(
-  'CREATE_PROJECT_SUCCESS'
+  'createProjectSuccess'
 );
 export const updateMainProjectsSuccess = createAction<{
   updatedCurrentProject: Project;
   updatedProjectsArray: Project[];
-}>('UPDATE_MAIN_PROJECTS_SUCCESS');
-export const clearCurrentProject = createAction('CLEAR_CURRENT_PROJECT');
-export const clearProjects = createAction('CLEAR_PROJECTS');
-export const setAllUserProjects = createAction<IProject[]>(
-  'SET_ALL_USER_PROJECTS'
-);
-export const selectProject = createAction<string>('SELECT_PROJECT');
+}>('updateMainProjectsSuccess');
+export const clearCurrentProject = createAction('clearCurrentProject');
+export const clearProjects = createAction('clearProjects');
+export const setAllUserProjects =
+  createAction<IProject[]>('setAllUserProjects');
+export const selectProject = createAction<string>('selectProject');
 export const updateProjectFiles = createAction<{
   projectId: string;
   files: IFile[];
-}>('UPDATE_PROJECT_FILES');
+}>('updateProjectFiles');
 export const updateProjectFilesSuccess = createAction<Project>(
-  'UPDATE_PROJECT_FILES_SUCCESS'
+  'updateProjectFilesSuccess'
 );
+export const removeProjectFileSuccess = createAction(
+  'removeProjectFileSuccess'
+);
+export const createCommentSuccess = createAction('createCommentSuccess');
 
 const httpSource = axios.CancelToken.source();
 
-export const createProjectComments =
+export const createProjectComment =
   ({ comment }: { comment: IComment }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     try {
@@ -72,16 +76,8 @@ export const createProjectComments =
         })
       );
 
-      await axios({
-        method: 'POST',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
-        data: JSON.stringify(comment),
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        cancelToken: httpSource.token,
-      });
+      await Api.Comments.create(comment, currentProject._id);
+      dispatch(createCommentSuccess());
     } catch (e) {
       dispatch(
         changeSnackbarState({
@@ -229,6 +225,7 @@ export const openCurrentProject =
     let currentProject;
     try {
       dispatch(fetchMembers(id) as any);
+      dispatch(fetchTasks(id) as any);
 
       if (!sendRequest) {
         const { projects } = getState().mainProjects;
@@ -544,7 +541,6 @@ export const moveToProject =
 
 export const removeFile =
   (fileId: string) => async (dispatch: Dispatch, getState: () => RootState) => {
-    const { token } = getState().user;
     const currentProject = JSON.parse(
       JSON.stringify(getState().mainProjects.currentProject)
     );
@@ -558,15 +554,9 @@ export const removeFile =
 
       dispatch(setCurrentProject(currentProject));
 
-      await axios({
-        method: 'DELETE',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/files/${fileId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        cancelToken: httpSource.token,
-      });
+      await Api.Files.delete(currentProject._id, fileId);
+
+      dispatch(removeProjectFileSuccess());
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
@@ -587,7 +577,6 @@ export const createNewSubproject =
     try {
       const response = await Api.Subprojects.create(parentId);
       dispatch(setCurrentProject(response.subproject));
-      // dispatch()
 
       return response.subproject;
     } catch (e: any) {

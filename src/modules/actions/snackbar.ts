@@ -5,6 +5,6 @@ export const changeSnackbarState = createAction<{
   message: string;
   open: boolean;
   id: AlertColor;
-}>('CHANGE_SNACKBAR_STATE');
+}>('changeSnackbarState');
 
-export const clearSnackbarState = createAction('CLEAR_SNACKBAR_STATE');
+export const clearSnackbarState = createAction('clearSnackbarState');

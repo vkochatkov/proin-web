@@ -6,10 +6,10 @@ import { changeSnackbarState } from './snackbar';
 import { Api } from '../../utils/API';
 
 export const fetchMembersSuccess = createAction<IMembers>(
-  'FETCH_MEMBERS_SUCCESS'
+  'fetchMembersSuccess'
 );
 export const removeProjectMemberSuccess = createAction<IMembers>(
-  'REMOVE_PROJECT_MEMBER_SUCCESS'
+  'removeProjectMemberSuccess'
 );
 
 const httpSource = axios.CancelToken.source();
