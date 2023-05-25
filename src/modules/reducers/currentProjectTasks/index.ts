@@ -2,7 +2,8 @@ import { createReducer } from 'redux-act';
 import {
   clearTasks,
   fetchTasksSuccess,
-  updateTasksOrderSuccess,
+  updateTaskId,
+  updateTasksSuccess,
 } from '../../actions/currentProjectTasks';
 import { ITask } from '../../types/currentProjectTasks';
 
@@ -14,8 +15,22 @@ tasks.on(fetchTasksSuccess, (_, payload) => {
   return payload.tasks;
 });
 
-tasks.on(updateTasksOrderSuccess, (_, payload) => {
+tasks.on(updateTasksSuccess, (_, payload) => {
   return payload.tasks;
+});
+
+tasks.on(updateTaskId, (state, payload) => {
+  const { taskId, _id } = payload;
+
+  const updatedTasks = JSON.parse(JSON.stringify(state)).map((task: ITask) => {
+    if (task.taskId === taskId) {
+      task._id = _id;
+    }
+
+    return task;
+  });
+
+  return updatedTasks;
 });
 
 tasks.on(clearTasks, () => initialState);

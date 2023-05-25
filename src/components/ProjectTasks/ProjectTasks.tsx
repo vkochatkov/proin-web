@@ -82,7 +82,7 @@ export const ProjectTasks = () => {
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, index) => (
-                  <ProjectTask task={task} index={index} key={task._id} />
+                  <ProjectTask task={task} index={index} key={task.taskId} />
                 ))}
                 {provided.placeholder}
               </div>

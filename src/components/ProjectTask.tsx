@@ -27,7 +27,7 @@ export const ProjectTask = ({
   });
 
   return (
-    <Draggable draggableId={task._id} index={index}>
+    <Draggable draggableId={task.taskId} index={index}>
       {(provided) => (
         <div
           ref={provided.innerRef}

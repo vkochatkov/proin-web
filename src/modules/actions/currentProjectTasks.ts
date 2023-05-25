@@ -8,8 +8,9 @@ import { RootState } from '../store/store';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
-export const updateTasksOrderSuccess = createAction<ITasks>(
-  'updateTasksOrderSuccess'
+export const updateTasksSuccess = createAction<ITasks>('updateTasksSuccess');
+export const updateTaskId = createAction<{ taskId: string; _id: string }>(
+  'updateTaskId'
 );
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
@@ -32,14 +33,28 @@ export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
 export const createTask =
   ({ projectId, name }: { projectId: string; name: string }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
+    const { userId } = getState().user;
+    const tasks = JSON.parse(JSON.stringify(getState().currentProjectTasks));
     const timestamp = new Date().toISOString();
     const id = uuidv4();
 
     try {
-      const newTask = { timestamp, name, taskId: id, projectId };
+      const newTask = {
+        timestamp,
+        name,
+        taskId: id,
+        projectId,
+        description: '',
+        files: [],
+        status: 'new',
+        userId,
+        _id: '',
+      };
 
+      tasks.unshift(newTask);
+      dispatch(updateTasksSuccess({ tasks }));
       const res = await Api.ProjectTasks.create(newTask, projectId);
-      console.log(res.task);
+      dispatch(updateTaskId({ taskId: id, _id: res.task._id }));
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',
@@ -56,7 +71,7 @@ export const createTask =
 export const changeTasksOrder =
   (pid: string, newOrder: ITask[]) => async (dispatch: Dispatch) => {
     try {
-      dispatch(updateTasksOrderSuccess({ tasks: newOrder }));
+      dispatch(updateTasksSuccess({ tasks: newOrder }));
       await Api.ProjectTasks.updateTasksByProjectId({ tasks: newOrder }, pid);
     } catch (e: any) {
       changeSnackbarState({
