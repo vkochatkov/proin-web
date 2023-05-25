@@ -31,7 +31,7 @@ import { FilesList } from '../components/FilesList/FilesList';
 import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { FilesUpload } from '../components/FormComponent/FilesUpload';
 import { endLoading, startLoading } from '../modules/actions/loading';
-import { clearTasks } from '../modules/actions/currentProjectTasks';
+import { clearTasks, fetchTasks } from '../modules/actions/currentProjectTasks';
 
 import './HomePage.scss';
 
@@ -60,6 +60,10 @@ const EditProject: React.FC<Props> = () => {
   );
 
   useEffect(() => {
+    if (pid) {
+      dispatch(fetchTasks(pid) as any);
+    }
+
     return () => {
       dispatch(clearTasks());
     };

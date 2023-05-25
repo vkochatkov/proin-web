@@ -1,5 +1,6 @@
 import { Paper, Typography } from '@mui/material';
 import { ITask } from '../modules/types/currentProjectTasks';
+import { Draggable } from '@hello-pangea/dnd';
 
 export const ProjectTask = ({
   task,
@@ -26,14 +27,23 @@ export const ProjectTask = ({
   });
 
   return (
-    <Paper style={taskWrapperStyle}>
-      <Typography
-        variant="inherit"
-        sx={{ color: '#979797' }}
-      >{`${formattedDate} ${formattedTime}`}</Typography>
-      <Typography variant="inherit">{name}</Typography>
-      <Typography variant="inherit">{description}</Typography>
-      {/* Display other task details */}
-    </Paper>
+    <Draggable draggableId={task._id} index={index}>
+      {(provided) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <Paper style={taskWrapperStyle}>
+            <Typography
+              variant="inherit"
+              sx={{ color: '#979797' }}
+            >{`${formattedDate} ${formattedTime}`}</Typography>
+            <Typography variant="inherit">{name}</Typography>
+            <Typography variant="inherit">{description}</Typography>
+          </Paper>
+        </div>
+      )}
+    </Draggable>
   );
 };

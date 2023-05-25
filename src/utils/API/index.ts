@@ -1,7 +1,7 @@
 import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
 import { IComment, Project } from '../../modules/reducers/mainProjects';
-import { ITask } from '../../modules/types/currentProjectTasks';
+import { ITask, ITasks } from '../../modules/types/currentProjectTasks';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -47,6 +47,17 @@ export const Api = {
       APIClient.put(`projects/user/${id}`, { projects }),
     patch: (props: Partial<Project>, pid: string) =>
       APIClient.patch(`projects/${pid}`, props),
+    moveProject: ({
+      projectId,
+      toProjectId,
+    }: {
+      projectId: string;
+      toProjectId: string;
+    }) =>
+      APIClient.post(`/projects/${projectId}/moving`, {
+        projectId,
+        toProjectId,
+      }),
   },
   Subprojects: {
     create: (parentId: string) =>
@@ -72,5 +83,7 @@ export const Api = {
     create: (props: Partial<ITask>, id: string) =>
       APIClient.post(`/project-tasks/${id}/create`, props),
     get: (pid: string) => APIClient.get(`/project-tasks/${pid}/tasks`),
+    updateTasksByProjectId: (props: ITasks, pid: string) =>
+      APIClient.post(`/project-tasks/${pid}`, props),
   },
 };

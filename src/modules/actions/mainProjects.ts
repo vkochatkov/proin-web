@@ -511,18 +511,9 @@ export const moveToProject =
         dispatch(updateProjects(updatedProjects));
       }
 
-      await axios({
-        method: 'POST',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProjectId}/moving`,
-        data: JSON.stringify({
-          projectId: currentProjectId,
-          toProjectId,
-        }),
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        cancelToken: httpSource.token,
+      await Api.Projects.moveProject({
+        projectId: currentProjectId,
+        toProjectId,
       });
     } catch (e: any) {
       dispatch(

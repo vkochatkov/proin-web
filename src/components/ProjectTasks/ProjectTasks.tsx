@@ -2,11 +2,17 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { createTask } from '../../modules/actions/currentProjectTasks';
+import {
+  changeTasksOrder,
+  createTask,
+} from '../../modules/actions/currentProjectTasks';
 import { getTasks } from '../../modules/selectors/currentProjectTasks';
 import { DynamicInput } from '../FormComponent/DynamicInput';
 import { Button } from '../FormElement/Button';
 import { ProjectTask } from '../ProjectTask';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { reorder } from '../../utils/utils';
+import { setIsDragging } from '../../modules/actions/dragging';
 
 import './ProjectTasks.scss';
 
@@ -30,6 +36,22 @@ export const ProjectTasks = () => {
     dispatch(createTask({ projectId: pid, name: value }) as any);
   };
 
+  const onDragEnd = (result: any) => {
+    if (!result.destination) {
+      return;
+    }
+
+    if (!pid) return;
+
+    const newOrder = reorder(
+      tasks,
+      result.source.index,
+      result.destination.index
+    );
+
+    dispatch(changeTasksOrder(pid, newOrder) as any);
+  };
+
   return (
     <div className="project-tasks">
       <Button
@@ -51,9 +73,23 @@ export const ProjectTasks = () => {
         </div>
       )}
 
-      {tasks.map((task, index) => (
-        <ProjectTask key={task._id} task={task} index={index} />
-      ))}
+      <div>
+        <DragDropContext
+          onDragEnd={onDragEnd}
+          onDragStart={() => dispatch(setIsDragging(true))}
+        >
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {tasks.map((task, index) => (
+                  <ProjectTask task={task} index={index} key={task._id} />
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </div>
   );
 };
