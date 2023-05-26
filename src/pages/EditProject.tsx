@@ -185,7 +185,8 @@ const EditProject: React.FC<Props> = () => {
         ) : (
           <Card
             sx={{
-              background: '#f8f8f8',
+              background: 'rgba(248, 248, 248, .8)',
+              margin: '0 1rem',
             }}
           >
             <div>

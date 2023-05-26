@@ -13,7 +13,7 @@ interface Props {
 }
 
 const getListStyle = (isDraggingOver: boolean, isWrapped: boolean) => ({
-  background: '#f8f8f8',
+  backgroundColor: 'rgba(248, 248, 248, .8)',
   padding: isWrapped ? 8 : 0,
   borderRadius: '5px',
 });

@@ -1,2 +1,6 @@
-$mainBackgroundColor: #2a4858;
+$mainBackgroundColor: linear-gradient(
+  90deg,
+  rgba(83, 138, 214, 1) 0%,
+  rgba(134, 231, 214, 1) 100%
+);
 $linkColor: #0e86d4;
