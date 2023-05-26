@@ -7,15 +7,23 @@ import TabPanel from '@mui/lab/TabPanel';
 import { CommentsList } from './CommentsList';
 import { MembersInfo } from './MembersInfo';
 import { ProjectTasks } from './ProjectTasks/ProjectTasks';
-import { Typography } from '@mui/material';
+import { createTheme, Typography } from '@mui/material';
 
 export default function TabsMenu() {
   const [value, setValue] = React.useState('1');
   const tabTextStyle = {
     textTransform: 'none',
   };
-  const tabStyle = { padding: '2px' };
+  const tabStyle = {
+    padding: '2px',
+    '&.Mui-selected': { color: 'black' },
+  };
   const tabPanelStyle = { padding: '20px 5px 5px' };
+  const tabListStyle = {
+    borderBottom: 1,
+    borderColor: 'divider',
+    '& .MuiTabs-indicator': { backgroundColor: 'black' },
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -24,7 +32,7 @@ export default function TabsMenu() {
   return (
     <Box sx={{ width: '100%', typography: 'body1', marginTop: '1rem' }}>
       <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={tabListStyle}>
           <TabList onChange={handleChange}>
             <Tab
               value="1"
