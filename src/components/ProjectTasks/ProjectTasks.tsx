@@ -54,18 +54,23 @@ export const ProjectTasks = () => {
 
   return (
     <div className="project-tasks">
-      <Button
-        type="button"
-        customClassName="project-tasks__btn"
-        onClick={handleClick}
-      >
-        Додати задачу
-      </Button>
+      <div>
+        <Button
+          type="button"
+          customClassName="project-tasks__btn"
+          onClick={handleClick}
+        >
+          Додати задачу
+        </Button>
+      </div>
       {isActiveInput && (
         <div className="project-tasks__wrapper">
           <DynamicInput
             placeholder="Напишіть назву задачі"
-            onClick={(value) => handleCreateNewTask(value)}
+            onClick={(value) => {
+              handleCreateNewTask(value);
+              setIsActiveInput(false);
+            }}
             onCancel={handleCloseInput}
             isActiveWithoutText={true}
             buttonLabel={'Створити'}

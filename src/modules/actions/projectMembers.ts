@@ -50,16 +50,7 @@ export const removeProjectMember =
     dispatch(removeProjectMemberSuccess({ members }));
 
     try {
-      await axios({
-        method: 'DELETE',
-        url: `${process.env.REACT_APP_BACKEND_URL}/project-members/${projectId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        data: JSON.stringify({ userId }),
-        cancelToken: httpSource.token,
-      });
+      await Api.ProjectMembers.delete(userId, projectId);
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
