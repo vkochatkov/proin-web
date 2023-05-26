@@ -7,7 +7,7 @@ import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
 import { FileUploader } from '../FormElement/FileUploader';
-import { ProjectDescription } from './ProjectInputEditor';
+import { InteractiveInput } from './InteractiveInput';
 
 interface IImageUpload {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -138,7 +138,7 @@ export const ImageUpload = ({
             marginLeft: '1rem',
           }}
         >
-          <ProjectDescription
+          <InteractiveInput
             id="projectName"
             inputHandler={inputHandler}
             token={token}

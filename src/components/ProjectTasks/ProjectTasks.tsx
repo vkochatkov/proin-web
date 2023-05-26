@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   changeTasksOrder,
@@ -8,11 +7,12 @@ import {
 } from '../../modules/actions/currentProjectTasks';
 import { getTasks } from '../../modules/selectors/currentProjectTasks';
 import { DynamicInput } from '../FormComponent/DynamicInput';
-import { Button } from '../FormElement/Button';
 import { ProjectTask } from '../ProjectTask';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
+import { clearInputState, setIsActiveInput } from '../../modules/actions/input';
+import { getIsActiveInputStatus } from '../../modules/selectors/input';
 
 import './ProjectTasks.scss';
 
@@ -20,14 +20,16 @@ export const ProjectTasks = () => {
   const tasks = useSelector(getTasks);
   const { pid } = useParams();
   const dispatch = useDispatch();
-  const [isActiveInput, setIsActiveInput] = useState(false);
+  const isActiveInput = useSelector(getIsActiveInputStatus);
 
-  const handleClick = () => {
-    setIsActiveInput(true);
-  };
+  useEffect(() => {
+    return () => {
+      dispatch(clearInputState());
+    };
+  }, []);
 
   const handleCloseInput = () => {
-    setIsActiveInput(false);
+    dispatch(setIsActiveInput(false));
   };
 
   const handleCreateNewTask = (value: string) => {
@@ -54,22 +56,13 @@ export const ProjectTasks = () => {
 
   return (
     <div className="project-tasks">
-      <div>
-        <Button
-          type="button"
-          customClassName="project-tasks__btn"
-          onClick={handleClick}
-        >
-          Додати задачу
-        </Button>
-      </div>
       {isActiveInput && (
         <div className="project-tasks__wrapper">
           <DynamicInput
             placeholder="Напишіть назву задачі"
             onClick={(value) => {
               handleCreateNewTask(value);
-              setIsActiveInput(false);
+              dispatch(setIsActiveInput(false));
             }}
             onCancel={handleCloseInput}
             isActiveWithoutText={true}

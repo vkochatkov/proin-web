@@ -14,7 +14,7 @@ interface Props {
   label?: string;
 }
 
-export const ProjectDescription = ({
+export const InteractiveInput = ({
   inputHandler,
   project,
   token,

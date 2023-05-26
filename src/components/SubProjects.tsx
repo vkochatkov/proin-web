@@ -46,7 +46,7 @@ export const SubProjects = () => {
         currentProject.subProjects &&
         currentProject.subProjects.length > 0 && (
           <>
-            <h3>Вкладені проекти</h3>
+            <h4>Вкладені проекти</h4>
             <ListItems
               projects={currentProject.subProjects}
               updateOrder={handleUpdateSubProjectsOrder}

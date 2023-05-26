@@ -19,19 +19,15 @@ import {
 import { Card } from '@mui/joy';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { InviteModal } from '../components/Modals/InviteModal';
-import { ProjectDescription } from '../components/FormComponent/ProjectInputEditor';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
-import { SubProjects } from '../components/SubProjects';
 import { useAuth } from '../hooks/useAuth';
-import TabsMenu from '../components/TabsMenu';
 import { Project } from '../modules/reducers/mainProjects';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../modules/actions/form';
-import { FilesList } from '../components/FilesList/FilesList';
 import { ImageUpload } from '../components/FormComponent/ImageUpload';
-import { FilesUpload } from '../components/FormComponent/FilesUpload';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { clearTasks, fetchTasks } from '../modules/actions/currentProjectTasks';
+import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 
 import './HomePage.scss';
 
@@ -204,21 +200,10 @@ const EditProject: React.FC<Props> = () => {
                   inputHandler={inputHandler}
                   isUpdateValue={true}
                 />
-                <ProjectDescription
-                  id="description"
+                <ProjectTabsMenu
+                  subprojectId={subprojectId}
                   inputHandler={inputHandler}
-                  token={token}
-                  project={currentProject}
-                  label="Опис"
                 />
-                <h3>Вкладення</h3>
-                <FilesList />
-                <FilesUpload
-                  id={'files'}
-                  projectId={currentProject ? currentProject._id : undefined}
-                />
-                {subprojectId ? null : <SubProjects />}
-                <TabsMenu />
               </>
             </div>
           </Card>

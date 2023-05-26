@@ -11,6 +11,7 @@ import { projectMembers } from '../reducers/projectMembers/intex';
 import { foundUsers } from '../reducers/foundUsers';
 import { loadState, saveState } from './sessionStorage';
 import { tasks } from '../reducers/currentProjectTasks';
+import { input } from '../reducers/input';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   projectMembers,
   foundUsers,
   currentProjectTasks: tasks,
+  input,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

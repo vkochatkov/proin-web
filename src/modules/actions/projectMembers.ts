@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { createAction, Dispatch } from 'redux-act';
 import { RootState } from '../store/store';
 import { IMembers } from '../types/projectMembers';
@@ -11,8 +10,6 @@ export const fetchMembersSuccess = createAction<IMembers>(
 export const removeProjectMemberSuccess = createAction<IMembers>(
   'removeProjectMemberSuccess'
 );
-
-const httpSource = axios.CancelToken.source();
 
 export const fetchMembers =
   (projectId: string) => async (dispatch: Dispatch) => {
@@ -42,7 +39,6 @@ export const fetchMembers =
 export const removeProjectMember =
   (userId: string, projectId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const { token } = getState().user;
     const members = getState().projectMembers.filter(
       (member) => member.userId !== userId
     );
