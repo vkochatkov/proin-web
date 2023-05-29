@@ -19,8 +19,7 @@
 }
 
 .blue.lds-dual-ring:after {
-  border-color: $mainBackgroundColor transparent $mainBackgroundColor
-    transparent;
+  border-color: $colorSpinner transparent $colorSpinner transparent;
 }
 
 .loading-spinner__overlay {
@@ -29,7 +28,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
