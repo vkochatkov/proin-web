@@ -1,3 +1,5 @@
+@import '../../index.scss';
+
 .user-action {
   margin: 10px 0;
   background-color: rgba(248, 248, 248, 0.5);
@@ -5,14 +7,20 @@
 
   &__old-value,
   &__new-value {
-    padding: 6px;
-    border-radius: 20px;
-    background-color: #f5f5f5;
-    color: #555;
+    @include value-border;
   }
 
   &__old-value {
     margin-right: 5px;
+  }
+
+  &__time {
+    color: gray;
+    margin-left: 5px;
+  }
+
+  &__info {
+    display: flex;
   }
 
   &__top {

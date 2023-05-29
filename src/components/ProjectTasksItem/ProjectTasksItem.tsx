@@ -7,14 +7,14 @@ import {
 } from '../../modules/actions/currentProjectTasks';
 import { getTasks } from '../../modules/selectors/currentProjectTasks';
 import { DynamicInput } from '../FormComponent/DynamicInput';
-import { ProjectTaskItem } from '../ProjectTaskItem';
+import { ProjectTaskItem } from '../ProjectTaskItem/ProjectTaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
 import { clearInputState, setIsActiveInput } from '../../modules/actions/input';
 import { getIsActiveInputStatus } from '../../modules/selectors/input';
 
-import './ProjectTasks.scss';
+import '../ProjectTasksItem/ProjectTasksItem.scss';
 
 export const ProjectTasks = () => {
   const tasks = useSelector(getTasks);

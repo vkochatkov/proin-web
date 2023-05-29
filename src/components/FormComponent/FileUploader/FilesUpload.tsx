@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { useHttpClient } from '../../hooks/useHttpClient';
+import { useHttpClient } from '../../../hooks/useHttpClient';
 import {
   endFilesLoading,
   startFilesLoading,
-} from '../../modules/actions/loading';
-import { updateProjectFiles } from '../../modules/actions/mainProjects';
-import { getAuth } from '../../modules/selectors/user';
-import { FileUploader } from '../FormElement/FileUploader';
+} from '../../../modules/actions/loading';
+import { updateProjectFiles } from '../../../modules/actions/mainProjects';
+import { getAuth } from '../../../modules/selectors/user';
+import { FileUploader } from '../../FormElement/FileUploader';
+
+import './FileUploader.scss';
 
 interface IFileUpload {
   id: string;
@@ -91,6 +93,7 @@ export const FilesUpload = ({ id, projectId }: IFileUpload) => {
       pickedHandler={pickedHandler}
       buttonLabel={'Додати вкладення'}
       multiple
+      className="file-uploader__btn"
     />
   );
 };

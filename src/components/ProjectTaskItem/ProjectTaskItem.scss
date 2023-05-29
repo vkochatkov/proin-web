@@ -1,0 +1,13 @@
+@import '../../index.scss';
+
+.task-item {
+  &__value-text {
+    @include value-border;
+
+    margin-left: 5px;
+  }
+
+  &__text {
+    margin-left: 5px;
+  }
+}

@@ -13,16 +13,37 @@ interface IProps {
 const avatarStyle = {
   width: 20,
   height: 20,
-  fontSize: '1rem',
+  fontSize: '.7rem',
 };
 
 export const UserAction = ({ action }: IProps) => {
   const firstLetter = getFirstLetter(action.name);
 
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const currentDate = new Date();
+
+    if (Math.abs(currentDate.getTime() - date.getTime()) >= 86400000) {
+      // If the difference is more than a day (86400000 milliseconds), format as date
+      return date.toLocaleDateString();
+    } else {
+      // If the difference is less than a day, format as time
+      return date.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  };
+
   return (
     <Card className="user-action">
       <div className="user-action__top">
-        <div>{action.description}</div>
+        <div className="user-action__info">
+          <div>{action.description}</div>
+          <div className="user-action__time">
+            {formatTimestamp(action.timestamp)}
+          </div>
+        </div>
         <Avatar
           alt="Remy Sharp"
           src={action.userLogo}
