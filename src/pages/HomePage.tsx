@@ -12,7 +12,7 @@ import {
 } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store/store';
-import { ListItems } from '../components/ListItems';
+import { ListProjectItem } from '../components/ListProjectItem';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
           </div>
         )}
         {!isLoading && (
-          <ListItems
+          <ListProjectItem
             projects={projects}
             onClick={handleClickItem}
             updateOrder={handleUpdateProjectOrder}

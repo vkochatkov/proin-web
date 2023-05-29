@@ -1,5 +1,9 @@
 import { IFile } from './mainProjects';
 
+export interface IAction {
+  [key: string]: string;
+}
+
 export interface ITask {
   description: string;
   files: IFile[];
@@ -10,6 +14,7 @@ export interface ITask {
   timestamp: string;
   name: string;
   taskId: string;
+  actions?: IAction[];
   // [key: string]: string
 }
 

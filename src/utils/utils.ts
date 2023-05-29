@@ -6,3 +6,5 @@ export const reorder = <T>(list: T[], startIndex: number, endIndex: number) => {
 
   return result;
 };
+
+export const getFirstLetter = (name: string) => name.charAt(0).toUpperCase();

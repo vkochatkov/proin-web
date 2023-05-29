@@ -142,7 +142,7 @@ export const ImageUpload = ({
             id="projectName"
             inputHandler={inputHandler}
             token={token}
-            project={currentProject}
+            entity={currentProject}
           />
         </div>
       </div>

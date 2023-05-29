@@ -88,4 +88,8 @@ export const Api = {
     updateTasksByProjectId: (props: ITasks, pid: string) =>
       APIClient.post(`/project-tasks/${pid}`, props),
   },
+  CurrentTask: {
+    updateTask: (props: Partial<ITask>, pid: string, tid: string) =>
+      APIClient.post(`/project-tasks/${pid}/tasks/${tid}`, props),
+  },
 };

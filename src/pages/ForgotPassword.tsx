@@ -57,6 +57,11 @@ const ForgotPassword = () => {
                 errorText="Please enter a valid email address."
                 onInput={inputHandler}
               />
+              <div
+                style={{
+                  marginTop: '10px',
+                }}
+              ></div>
               <Button type="submit" disabled={!formState.isValid}>
                 ВІДПРАВИТИ
               </Button>

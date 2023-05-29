@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { setIsDragging } from '../modules/actions/dragging';
 import { Project } from '../modules/reducers/mainProjects';
 import { reorder } from '../utils/utils';
-import { Item } from './Item/Item';
+import { ProjectItem } from './ProjectItem/ProjectItem';
 
 interface Props {
   projects: Project[];
@@ -18,7 +18,7 @@ const getListStyle = (isDraggingOver: boolean, isWrapped: boolean) => ({
   borderRadius: '5px',
 });
 
-export const ListItems = ({
+export const ListProjectItem = ({
   projects,
   onClick,
   updateOrder,
@@ -60,7 +60,7 @@ export const ListItems = ({
             >
               {projects.map((item: Project, index: number) => {
                 return (
-                  <Item
+                  <ProjectItem
                     key={item._id}
                     projectId={item._id}
                     name={item.projectName ? item.projectName : ''}

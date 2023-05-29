@@ -8,6 +8,7 @@ import {
 import { LoadingSpinner } from './components/UIElements/LoadingSpinner';
 import { InvitePage } from './pages/InvitePage';
 import { AuthWrapper } from './components/AuthWrapper';
+import { TaskPage } from './pages/TaskPage/TaskPage';
 
 import './App.scss';
 
@@ -34,6 +35,10 @@ export const App: React.FC = () => {
               <Route
                 path="/project-edit/:pid/:subprojectId?"
                 element={<EditProject />}
+              />
+              <Route
+                path="/project-edit/:pid/task/:taskId"
+                element={<TaskPage />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>

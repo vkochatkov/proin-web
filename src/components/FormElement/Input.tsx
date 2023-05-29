@@ -1,13 +1,8 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { validate } from '../../utils/validators';
-import { debounce } from '../../utils/debounce';
-import { Api } from '../../utils/API';
-import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoading } from '../../modules/selectors/loading';
 import { endLoading } from '../../modules/actions/loading';
-import { changeSnackbarState } from '../../modules/actions/snackbar';
-import { useParams } from 'react-router-dom';
 
 import './Input.scss';
 
@@ -31,10 +26,12 @@ type InputProps = {
   project?: any;
   labelClassName?: string;
   isActive?: boolean;
+  changeHandler?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 };
 
 export const Input = (props: InputProps) => {
-  const { pid, subprojectId } = useParams();
   const [inputState, setInputState] = useState({
     value: props.initialValue || '',
     isTouched: false,
@@ -60,7 +57,7 @@ export const Input = (props: InputProps) => {
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  }, [inputState.value]);
+  }, [value]);
 
   useEffect(() => {
     onInput(id, value, isValid);
@@ -89,28 +86,10 @@ export const Input = (props: InputProps) => {
     }
   }, [dispatch, props.isUpdateValue, inputState, isLoading]);
 
-  const saveChanges = useCallback(
-    debounce((data: any, projectId: string) => {
-      Api.Projects.patch(data, projectId)
-        .then(() => {})
-        .catch(() => {
-          dispatch(
-            changeSnackbarState({
-              id: 'error',
-              message: 'Не вдалося скопіювати, щось пішло не так',
-              open: true,
-            })
-          );
-        });
-      // eslint-disable-next-line
-    }, 1000),
-    []
-  );
-
-  const changeHandler = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const newValue = event.target.value;
+    const newValue = e.target.value;
 
     setInputState((prevState) => ({
       ...prevState,
@@ -120,22 +99,8 @@ export const Input = (props: InputProps) => {
         : validate(newValue, props.validators),
     }));
 
-    if (props.isAutosave && props.token) {
-      const updatedProject = {
-        ...props.project,
-        [id]: newValue,
-      };
-
-      if (updatedProject.projectName === '') return;
-
-      if (
-        (pid && pid === updatedProject.id) ||
-        (subprojectId && subprojectId === updatedProject.id)
-      ) {
-        dispatch(setCurrentProject(updatedProject));
-      }
-
-      saveChanges({ [id]: newValue }, props.projectId);
+    if (props.changeHandler) {
+      props.changeHandler(e);
     }
   };
 
@@ -161,7 +126,7 @@ export const Input = (props: InputProps) => {
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}
-        onChange={changeHandler}
+        onChange={handleChangeInput}
         onBlur={touchHandler}
         value={inputState.value}
         ref={inputRef}
@@ -170,7 +135,7 @@ export const Input = (props: InputProps) => {
       <textarea
         id={props.id}
         rows={props.rows || 3}
-        onChange={changeHandler}
+        onChange={handleChangeInput}
         onBlur={touchHandler}
         value={inputState.value}
         ref={textareaRef}

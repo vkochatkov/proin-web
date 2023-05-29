@@ -7,7 +7,7 @@ import {
 } from '../../modules/actions/currentProjectTasks';
 import { getTasks } from '../../modules/selectors/currentProjectTasks';
 import { DynamicInput } from '../FormComponent/DynamicInput';
-import { ProjectTask } from '../ProjectTask';
+import { ProjectTaskItem } from '../ProjectTaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
@@ -80,7 +80,11 @@ export const ProjectTasks = () => {
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, index) => (
-                  <ProjectTask task={task} index={index} key={task.taskId} />
+                  <ProjectTaskItem
+                    task={task}
+                    index={index}
+                    key={task.taskId}
+                  />
                 ))}
                 {provided.placeholder}
               </div>

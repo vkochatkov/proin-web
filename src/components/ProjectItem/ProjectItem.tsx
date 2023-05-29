@@ -11,7 +11,7 @@ import { useContextMenu } from '../../hooks/useContextMenu';
 import { ProjectItemTextEditor } from '../FormComponent/ProjectItemTextEditor';
 import { Button } from '../FormElement/Button';
 
-import './Item.scss';
+import './ProjectItem.scss';
 
 interface Props {
   name: string;
@@ -25,7 +25,7 @@ interface Props {
   project: Project;
 }
 
-export const Item: React.FC<Props> = ({
+export const ProjectItem: React.FC<Props> = ({
   name,
   logo,
   description,

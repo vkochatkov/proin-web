@@ -5,6 +5,7 @@ import { getAuth } from '../modules/selectors/user';
 import { ProjectTextOutput } from './FormComponent/ProjectTextOutput';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { backgroundColor } from '../utils/avatar-view';
+import { getFirstLetter } from '../utils/utils';
 
 import './CommentBox.scss';
 
@@ -36,7 +37,7 @@ export const CommentBox: FC<Props> = ({
   const { longPressProps, handleClose, contextMenuPosition, anchorEl } =
     useContextMenu();
 
-  const firstLetter = name.charAt(0).toUpperCase();
+  const firstLetter = getFirstLetter(name);
 
   const elapsedTime = useMemo(() => {
     const now = new Date();

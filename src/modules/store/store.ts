@@ -12,6 +12,7 @@ import { foundUsers } from '../reducers/foundUsers';
 import { loadState, saveState } from './sessionStorage';
 import { tasks } from '../reducers/currentProjectTasks';
 import { input } from '../reducers/input';
+import { currentTask } from '../reducers/currentTask';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   foundUsers,
   currentProjectTasks: tasks,
   input,
+  currentTask,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

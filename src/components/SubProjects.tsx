@@ -7,7 +7,7 @@ import {
 import { Project } from '../modules/reducers/mainProjects';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
-import { ListItems } from './ListItems';
+import { ListProjectItem } from './ListProjectItem';
 
 export const SubProjects = () => {
   const currentProject = useSelector(getCurrentProject);
@@ -47,7 +47,7 @@ export const SubProjects = () => {
         currentProject.subProjects.length > 0 && (
           <>
             <h4>Вкладені проекти</h4>
-            <ListItems
+            <ListProjectItem
               projects={currentProject.subProjects}
               updateOrder={handleUpdateSubProjectsOrder}
               onClick={handleOpenProject}

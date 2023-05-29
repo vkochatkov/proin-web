@@ -32,7 +32,7 @@ export const ProjectTabsMenu = ({
             id="description"
             inputHandler={inputHandler}
             token={token}
-            project={currentProject}
+            entity={currentProject}
           />
           {subprojectId ? null : <SubProjects />}
           <UsersTabsMenu />
