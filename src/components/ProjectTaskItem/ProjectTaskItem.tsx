@@ -19,7 +19,7 @@ export const ProjectTaskItem = ({
   task: ITask;
   index: number;
 }) => {
-  const { timestamp, actions } = task;
+  const { timestamp, actions, _id } = task;
   const taskWrapperStyle = { padding: '10px', marginTop: '5px' };
   const tasks = useSelector(getTasks);
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ export const ProjectTaskItem = ({
                 variant="inherit"
                 sx={{ color: '#979797' }}
               >{`${formattedDate} ${formattedTime}`}</Typography>
-              <TaskStatusSelect />
+              <TaskStatusSelect id={_id} />
             </div>
             {lastAction && firstLetter && (
               <div className="task-item__align-center">
