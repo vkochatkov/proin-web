@@ -23,6 +23,7 @@ import { Project } from '../modules/reducers/mainProjects';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
+import { clearDraggingStatus } from '../modules/actions/dragging';
 
 import './HomePage.scss';
 
@@ -36,6 +37,12 @@ const HomePage: React.FC = () => {
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(getIsLoading);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearDraggingStatus());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     const storedDataString = localStorage.getItem('accessInfo');
