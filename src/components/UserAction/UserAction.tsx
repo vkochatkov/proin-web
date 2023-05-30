@@ -25,10 +25,14 @@ export const UserAction = ({ action }: IProps) => {
 
     if (Math.abs(currentDate.getTime() - date.getTime()) >= 86400000) {
       // If the difference is more than a day (86400000 milliseconds), format as date
-      return date.toLocaleDateString();
+      return date.toLocaleDateString('uk-UA', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+      });
     } else {
       // If the difference is less than a day, format as time
-      return date.toLocaleTimeString([], {
+      return date.toLocaleTimeString('uk-UA', {
         hour: '2-digit',
         minute: '2-digit',
       });

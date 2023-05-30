@@ -15,7 +15,7 @@ export const updateTaskId = createAction<{ taskId: string; _id: string }>(
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
   try {
-    const res = await Api.ProjectTasks.get(projectId);
+    const res = await Api.Tasks.get(projectId);
     dispatch(fetchTasksSuccess({ tasks: res.tasks }));
   } catch (e: any) {
     changeSnackbarState({
@@ -53,7 +53,7 @@ export const createTask =
 
       tasks.unshift(newTask);
       dispatch(updateTasksSuccess({ tasks }));
-      const res = await Api.ProjectTasks.create(newTask, projectId);
+      const res = await Api.Tasks.create(newTask, projectId);
       dispatch(updateTaskId({ taskId: id, _id: res.task._id }));
     } catch (e: any) {
       changeSnackbarState({
@@ -72,7 +72,7 @@ export const changeTasksOrder =
   (pid: string, newOrder: ITask[]) => async (dispatch: Dispatch) => {
     try {
       dispatch(updateTasksSuccess({ tasks: newOrder }));
-      await Api.ProjectTasks.updateTasksByProjectId({ tasks: newOrder }, pid);
+      await Api.Tasks.updateTasksByProjectId({ tasks: newOrder }, pid);
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',

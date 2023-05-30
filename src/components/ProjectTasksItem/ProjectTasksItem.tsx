@@ -16,7 +16,7 @@ import { getIsActiveInputStatus } from '../../modules/selectors/input';
 
 import '../ProjectTasksItem/ProjectTasksItem.scss';
 
-export const ProjectTasks = () => {
+export const ProjectTasksItem = () => {
   const tasks = useSelector(getTasks);
   const { pid } = useParams();
   const dispatch = useDispatch();

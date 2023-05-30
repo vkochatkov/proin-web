@@ -10,4 +10,14 @@
   &__text {
     margin-left: 5px !important;
   }
+
+  &__align-center {
+    @include align-center;
+  }
+
+  &__select-wrapper {
+    @include align-center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
 }

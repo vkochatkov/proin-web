@@ -4,7 +4,7 @@ import { getAuth } from '../modules/selectors/user';
 import { FilesList } from './FilesList/FilesList';
 import { FilesUpload } from './FormComponent/FileUploader/FilesUpload';
 import { InteractiveInput } from './FormComponent/InteractiveInput';
-import { ProjectTasks } from './ProjectTasksItem/ProjectTasksItem';
+import { ProjectTasksItem } from './ProjectTasksItem/ProjectTasksItem';
 import { SubProjects } from './SubProjects';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { UsersTabsMenu } from './UsersTabsMenu';
@@ -54,7 +54,7 @@ export const ProjectTabsMenu = ({
     { label: 'Фінанси', panel: <div>фінанси</div> },
     {
       label: 'Задачі',
-      panel: <ProjectTasks />,
+      panel: <ProjectTasksItem />,
     },
   ];
 

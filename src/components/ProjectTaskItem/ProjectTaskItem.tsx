@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
 import { getFirstLetter } from '../../utils/utils';
 import { backgroundColor } from '../../utils/avatar-view';
+import { TaskStatusSelect } from '../FormComponent/TaskStatusSelect';
 
 import './ProjectTaskItem.scss';
 
@@ -18,7 +19,7 @@ export const ProjectTaskItem = ({
   task: ITask;
   index: number;
 }) => {
-  const { description, timestamp, name, actions } = task;
+  const { timestamp, actions } = task;
   const taskWrapperStyle = { padding: '10px', marginTop: '5px' };
   const tasks = useSelector(getTasks);
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export const ProjectTaskItem = ({
   // Format the date and time
   const formattedDate = taskDate.toLocaleDateString('uk-UA', {
     day: 'numeric',
-    month: 'long',
+    month: 'numeric',
     year: 'numeric',
   });
   const formattedTime = taskDate.toLocaleTimeString('uk-UA', {
@@ -69,17 +70,15 @@ export const ProjectTaskItem = ({
         >
           <Paper style={taskWrapperStyle}>
             <Typography variant="h6">{task.name}</Typography>
-            <Typography
-              variant="inherit"
-              sx={{ color: '#979797' }}
-            >{`${formattedDate} ${formattedTime}`}</Typography>
+            <div className="task-item__select-wrapper">
+              <Typography
+                variant="inherit"
+                sx={{ color: '#979797' }}
+              >{`${formattedDate} ${formattedTime}`}</Typography>
+              <TaskStatusSelect />
+            </div>
             {lastAction && firstLetter && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
+              <div className="task-item__align-center">
                 <Avatar
                   alt="Remy Sharp"
                   // src={logoLink}
