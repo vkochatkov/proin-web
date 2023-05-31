@@ -1,7 +1,7 @@
 import { Avatar } from '@mui/material';
 import { IAction } from '../../modules/types/currentProjectTasks';
 import { backgroundColor } from '../../utils/avatar-view';
-import { getFirstLetter } from '../../utils/utils';
+import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { Card } from '../UIElements/Card';
 
 import './UserAction.scss';
@@ -18,6 +18,7 @@ const avatarStyle = {
 
 export const UserAction = ({ action }: IProps) => {
   const firstLetter = getFirstLetter(action.name);
+  const isStatusInfo = action.description.includes('Статус');
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -61,10 +62,14 @@ export const UserAction = ({ action }: IProps) => {
       </div>
       <div className="user-action__wrapper">
         {action.oldValue && (
-          <div className="user-action__old-value">{action.oldValue}</div>
+          <div className="user-action__old-value">
+            {isStatusInfo ? getStatusLabel(action.oldValue) : action.oldValue}
+          </div>
         )}
         <div className="arrow-icon">&#8594;</div>
-        <div className="user-action__new-value">{action.newValue}</div>
+        <div className="user-action__new-value">
+          {isStatusInfo ? getStatusLabel(action.newValue) : action.newValue}
+        </div>
       </div>
     </Card>
   );

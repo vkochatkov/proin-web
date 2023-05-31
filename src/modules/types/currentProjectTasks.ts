@@ -21,3 +21,7 @@ export interface ITask {
 export interface ITasks {
   tasks: ITask[];
 }
+
+export interface IStatusLabels {
+  [key: string]: string;
+}

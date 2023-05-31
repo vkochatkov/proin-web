@@ -6,7 +6,7 @@ import { getTasks } from '../../modules/selectors/currentProjectTasks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
-import { getFirstLetter } from '../../utils/utils';
+import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { backgroundColor } from '../../utils/avatar-view';
 import { TaskStatusSelect } from '../FormComponent/TaskStatusSelect';
 
@@ -27,6 +27,9 @@ export const ProjectTaskItem = ({
   const dispatch = useDispatch();
   const lastAction = actions ? actions[actions.length - 1] : null;
   const firstLetter = lastAction ? getFirstLetter(lastAction.name) : null;
+  const isStatusInfo = lastAction
+    ? lastAction.description.includes('Статус')
+    : false;
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -42,7 +45,6 @@ export const ProjectTaskItem = ({
     hour: 'numeric',
     minute: 'numeric',
   });
-
   const formattedShortDate =
     actionDate &&
     actionDate.toLocaleDateString('uk-UA', {
@@ -99,7 +101,9 @@ export const ProjectTaskItem = ({
                 </Typography>
                 <div style={{ marginLeft: '5px' }}>&#8594;</div>
                 <Typography variant="inherit" className="task-item__value-text">
-                  {lastAction.newValue}
+                  {isStatusInfo
+                    ? getStatusLabel(lastAction.newValue)
+                    : lastAction.newValue}
                 </Typography>
               </div>
             )}

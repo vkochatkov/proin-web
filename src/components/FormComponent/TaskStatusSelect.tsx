@@ -4,6 +4,7 @@ import { CustomSelect } from './CustomSelect';
 import { useSelector } from 'react-redux';
 import { getTask } from '../../modules/selectors/currentProjectTasks';
 import { RootState } from '../../modules/store/store';
+import { getStatusLabel } from '../../utils/utils';
 
 interface IProps {
   id: string;
@@ -44,7 +45,7 @@ export const TaskStatusSelect = ({ id }: IProps) => {
           onClick={(e) => e.stopPropagation()}
           value={status}
         >
-          {statusLabels[status]}
+          {getStatusLabel(status)}
         </MenuItem>
       ))}
     </CustomSelect>
