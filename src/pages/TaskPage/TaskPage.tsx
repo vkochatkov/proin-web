@@ -1,5 +1,6 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FilesList } from '../../components/FilesList/FilesList';
 import { InteractiveInput } from '../../components/FormComponent/InteractiveInput';
 import { TaskFilesUpload } from '../../components/FormComponent/TaskFilesUpload/TaskFilesUpload';
 import { Button } from '../../components/FormElement/Button';
@@ -7,8 +8,10 @@ import { Header } from '../../components/Navigation/Header';
 import { Card } from '../../components/UIElements/Card';
 import { UserActivityDiary } from '../../components/UserActivityDiary';
 import { useForm } from '../../hooks/useForm';
+import { updateTaskFilesOrder } from '../../modules/actions/currentProjectTasks';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { getAuth } from '../../modules/selectors/user';
+import { IFile } from '../../modules/types/mainProjects';
 
 import '../HomePage.scss';
 import './TaskPage.scss';
@@ -27,9 +30,14 @@ export const TaskPage = () => {
   const task = useSelector(getCurrentTask);
   const { pid } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleCloseTaskPage = () => {
     navigate(`/project-edit/${pid}`);
+  };
+
+  const saveFilesOrder = (order: IFile[]) => {
+    dispatch(updateTaskFilesOrder({ files: order, taskId: task._id }) as any);
   };
 
   return (
@@ -60,6 +68,7 @@ export const TaskPage = () => {
             token={token}
             entity={task}
           />
+          <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
           <TaskFilesUpload id={'files'} />
         </Card>
         <UserActivityDiary />

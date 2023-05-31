@@ -59,10 +59,6 @@ const EditProject: React.FC<Props> = () => {
     if (pid) {
       dispatch(fetchTasks(pid) as any);
     }
-
-    return () => {
-      dispatch(clearTasks());
-    };
   }, []);
 
   useEffect(() => {
@@ -90,12 +86,12 @@ const EditProject: React.FC<Props> = () => {
       currentProject._id !== pid &&
       !subprojectId
     ) {
-      dispatch(openCurrentProject(token, pid) as any);
+      dispatch(openCurrentProject(pid) as any);
       return;
     }
 
     if (pid && !currentProject && !subprojectId) {
-      dispatch(openCurrentProject(token, pid) as any);
+      dispatch(openCurrentProject(pid) as any);
       return;
     }
 
@@ -110,13 +106,13 @@ const EditProject: React.FC<Props> = () => {
     }
 
     if (subprojectId && subProject && !currentProject) {
-      dispatch(openCurrentProject(token, subprojectId, true) as any);
+      dispatch(openCurrentProject(subprojectId, true) as any);
 
       return;
     }
 
     if (subprojectId && currentProject && currentProject.id !== subprojectId) {
-      dispatch(openCurrentProject(token, subprojectId, true) as any);
+      dispatch(openCurrentProject(subprojectId, true) as any);
     }
   }, [pid, token, subprojectId, currentProject, navigate, dispatch]);
 

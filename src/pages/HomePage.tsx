@@ -80,7 +80,7 @@ const HomePage: React.FC = () => {
 
   const handleClickItem = (id: string) => {
     dispatch(startLoading());
-    dispatch(openCurrentProject(token, id) as any);
+    dispatch(openCurrentProject(id) as any);
     dispatch(selectProject(id));
     navigate(`/project-edit/${id}`);
   };

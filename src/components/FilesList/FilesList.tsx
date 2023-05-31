@@ -1,39 +1,34 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrentProject } from '../../modules/selectors/mainProjects';
 import { IFile } from '../../modules/types/mainProjects';
 import { File } from '../File';
 import { useState } from 'react';
 import { LoadingSpinner } from '../UIElements/LoadingSpinner';
 import { getIsFilesLoading } from '../../modules/selectors/loading';
 import { Button } from '../FormElement/Button';
-import {
-  removeFile,
-  updateFilesOrder,
-  updateSubprojectFilesOrder,
-} from '../../modules/actions/mainProjects';
+import { removeFile } from '../../modules/actions/mainProjects';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { setIsDragging } from '../../modules/actions/dragging';
-import { useParams } from 'react-router-dom';
 import { reorder } from '../../utils/utils';
 
 import './FilesList.scss';
 
-export const FilesList = () => {
-  const currentProject = useSelector(getCurrentProject);
+interface IProps {
+  files: IFile[];
+  saveFilesOrder: (order: IFile[]) => void;
+}
+
+export const FilesList = ({ files, saveFilesOrder }: IProps) => {
+  // const currentProject = useSelector(getCurrentProject);
   const isLoading = useSelector(getIsFilesLoading);
   const [showAllFiles, setShowAllFiles] = useState(false);
   const dispatch = useDispatch();
-  const { pid, subprojectId } = useParams();
+  // const { pid, subprojectId } = useParams();
 
   const handleDeleteFile = (id: string) => {
     dispatch(removeFile(id) as any);
   };
 
-  const filesToShow = showAllFiles
-    ? currentProject?.files
-    : currentProject?.files
-    ? currentProject?.files.slice(0, 4)
-    : [];
+  const filesToShow = showAllFiles ? files : files ? files.slice(0, 4) : [];
 
   const toggleShowAllFiles = () => {
     setShowAllFiles(!showAllFiles);
@@ -44,22 +39,15 @@ export const FilesList = () => {
       return;
     }
 
-    if (!pid) return;
-
-    const files = [...currentProject?.files];
+    const copiedFiles = [...files];
 
     const newOrder = reorder(
-      files,
+      copiedFiles,
       result.source.index,
       result.destination.index
     );
 
-    if (!subprojectId) {
-      dispatch(updateFilesOrder(pid, newOrder) as any);
-    } else {
-      dispatch(updateSubprojectFilesOrder(pid, subprojectId, newOrder) as any);
-    }
-
+    saveFilesOrder(newOrder);
     dispatch(setIsDragging(false));
   };
 
@@ -88,7 +76,7 @@ export const FilesList = () => {
           )}
         </Droppable>
       </DragDropContext>
-      {currentProject?.files && currentProject?.files.length > 4 && (
+      {files.length > 4 && (
         <Button onClick={toggleShowAllFiles} customClassName="files-list__btn">
           {showAllFiles ? 'Показати менше' : 'Показати більше'}
         </Button>

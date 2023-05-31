@@ -1,4 +1,5 @@
 import { IStatusLabels } from '../modules/types/currentProjectTasks';
+import { IFile } from '../modules/types/mainProjects';
 
 // drag and drop reorder
 export const reorder = <T>(list: T[], startIndex: number, endIndex: number) => {
@@ -20,4 +21,25 @@ export const getStatusLabel = (status: string) => {
   };
 
   return statusLabels[status];
+};
+
+export const updateEnitites = (entities: any[], id: string, files: IFile[]) => {
+  const projectIndex = entities.findIndex((entity) => entity._id === id);
+
+  if (projectIndex === -1) {
+    return;
+  }
+
+  const updatedEntity = {
+    ...entities[projectIndex],
+    files,
+  };
+
+  const updatedEnities = [
+    ...entities.slice(0, projectIndex),
+    updatedEntity,
+    ...entities.slice(projectIndex + 1),
+  ];
+
+  return { updatedEntity, updatedEnities };
 };

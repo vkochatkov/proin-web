@@ -11,6 +11,7 @@ import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
 import { Api } from '../../utils/API';
 import { fetchTasks } from './currentProjectTasks';
+import { updateEnitites } from '../../utils/utils';
 
 export const setCurrentProject = createAction<Project>('setCurrentProject');
 export const updateProjects = createAction<Project[]>('updateProjects');
@@ -45,7 +46,6 @@ export const createProjectComment =
   ({ comment }: { comment: IComment }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     try {
-      const { token } = getState().user;
       const { currentProject, projects } = getState().mainProjects;
 
       if (!currentProject)
@@ -220,7 +220,7 @@ export const createNewProject =
   };
 
 export const openCurrentProject =
-  (token: string, id: string, sendRequest: boolean = false) =>
+  (id: string, sendRequest: boolean = false) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     let currentProject;
     try {
@@ -460,7 +460,6 @@ export const moveToProject =
     isHomePage: boolean = false
   ) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const { token } = getState().user;
     const { currentProject, projects } = getState().mainProjects;
 
     try {
@@ -586,40 +585,25 @@ export const createNewSubproject =
   };
 
 export const updateFilesOrder =
-  (projectId: string, files: File[]) =>
+  (projectId: string, files: IFile[]) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const projects: Project[] = JSON.parse(
       JSON.stringify(getState().mainProjects.projects)
     );
 
-    const projectIndex = projects.findIndex(
-      (project) => project._id === projectId
-    );
+    const result = updateEnitites(projects, projectId, files);
 
-    if (projectIndex === -1) {
-      return;
-    }
-
-    const updatedProject = {
-      ...projects[projectIndex],
-      files,
-    };
-
-    const updatedProjects = [
-      ...projects.slice(0, projectIndex),
-      updatedProject,
-      ...projects.slice(projectIndex + 1),
-    ];
+    if (!result) return;
 
     dispatch(
       updateMainProjectsSuccess({
-        updatedCurrentProject: updatedProject,
-        updatedProjectsArray: updatedProjects,
+        updatedCurrentProject: result.updatedEntity,
+        updatedProjectsArray: result.updatedEnities,
       })
     );
 
     try {
-      await Api.Files.post({ files }, updatedProject._id);
+      await Api.Files.post({ files }, result.updatedEntity._id);
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',
@@ -634,7 +618,7 @@ export const updateFilesOrder =
   };
 
 export const updateSubprojectFilesOrder =
-  (projectId: string, subprojectId: string, files: File[]) =>
+  (projectId: string, subprojectId: string, files: IFile[]) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const projects: Project[] = JSON.parse(
       JSON.stringify(getState().mainProjects.projects)

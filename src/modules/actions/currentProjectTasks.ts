@@ -5,6 +5,9 @@ import { ITask, ITasks } from '../types/currentProjectTasks';
 import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
+import { IFile } from '../types/mainProjects';
+import { updateEnitites } from '../../utils/utils';
+import { updateCurrentTaskSuccess } from './currentTask';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
@@ -102,6 +105,35 @@ export const updateTaskById =
       });
 
       dispatch(updateTasksSuccess({ tasks: updatedTasks }));
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
+            ? e.response.data.message
+            : 'Оновити задачу не вдалося'
+        }. Перезавантажте сторінку`,
+      });
+    }
+  };
+
+export const updateTaskFilesOrder =
+  ({ files, taskId }: { files: IFile[]; taskId: string }) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks = getState().currentProjectTasks;
+    try {
+      const result = updateEnitites(tasks, taskId, files);
+
+      if (!result) return;
+
+      dispatch(updateTasksSuccess({ tasks: result.updatedEnities }));
+      dispatch(updateCurrentTaskSuccess({ task: result.updatedEntity }));
+
+      await Api.Tasks.updateTaskFilesOrder(
+        { files: result.updatedEntity.files },
+        taskId
+      );
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',

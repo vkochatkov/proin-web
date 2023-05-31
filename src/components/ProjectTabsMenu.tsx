@@ -1,4 +1,5 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { FilesList } from './FilesList/FilesList';
@@ -8,8 +9,12 @@ import { ProjectTasksItem } from './ProjectTasksItem/ProjectTasksItem';
 import { SubProjects } from './SubProjects';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { UsersTabsMenu } from './UsersTabsMenu';
-import { useDispatch } from 'react-redux';
 import { setIsActiveInput } from '../modules/actions/input';
+import { IFile } from '../modules/types/mainProjects';
+import {
+  updateFilesOrder,
+  updateSubprojectFilesOrder,
+} from '../modules/actions/mainProjects';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -23,6 +28,17 @@ export const ProjectTabsMenu = ({
   const { token } = useSelector(getAuth);
   const currentProject = useSelector(getCurrentProject);
   const dispatch = useDispatch();
+  const { pid } = useParams();
+
+  const saveFilesOrder = (order: IFile[]) => {
+    if (!pid) return;
+    if (!subprojectId) {
+      dispatch(updateFilesOrder(pid, order) as any);
+    } else {
+      dispatch(updateSubprojectFilesOrder(pid, subprojectId, order) as any);
+    }
+  };
+
   const tabs = [
     {
       label: 'Опис',
@@ -43,7 +59,12 @@ export const ProjectTabsMenu = ({
       label: 'Вкладення',
       panel: (
         <>
-          <FilesList />
+          <FilesList
+            files={
+              currentProject && currentProject.files ? currentProject.files : []
+            }
+            saveFilesOrder={saveFilesOrder}
+          />
           <ProjectFilesUpload
             id={'files'}
             projectId={currentProject ? currentProject._id : undefined}

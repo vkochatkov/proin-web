@@ -6,12 +6,10 @@ import {
 } from '../modules/actions/mainProjects';
 import { Project } from '../modules/reducers/mainProjects';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
-import { getAuth } from '../modules/selectors/user';
 import { ListProjectItem } from './ListProjectItem';
 
 export const SubProjects = () => {
   const currentProject = useSelector(getCurrentProject);
-  const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,7 +18,7 @@ export const SubProjects = () => {
 
     if (!currentProject) return;
     navigate(`/project-edit/${currentProject._id}/${projectId}`);
-    await dispatch(openCurrentProject(token, projectId, sendRequest) as any);
+    await dispatch(openCurrentProject(projectId, sendRequest) as any);
   };
 
   const handleUpdateSubProjectsOrder = (
