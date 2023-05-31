@@ -1,25 +1,16 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
 import { CustomSelect } from './CustomSelect';
-import { useSelector } from 'react-redux';
 import { getTask } from '../../modules/selectors/currentProjectTasks';
 import { RootState } from '../../modules/store/store';
+import { updateTaskById } from '../../modules/actions/currentProjectTasks';
+import { useParams } from 'react-router-dom';
 import { getStatusLabel } from '../../utils/utils';
 
 interface IProps {
   id: string;
 }
-
-interface IStatusLabels {
-  [key: string]: string;
-}
-
-const statusLabels: IStatusLabels = {
-  new: 'Новий',
-  'in progress': 'У процесі',
-  done: 'Зроблено',
-  canceled: 'Відмінено',
-};
 
 export const TaskStatusSelect = ({ id }: IProps) => {
   const currentTask = useSelector((state: RootState) => getTask(state)(id));
@@ -27,9 +18,17 @@ export const TaskStatusSelect = ({ id }: IProps) => {
   const [selectedValue, setSelectedValue] = useState(
     currentTask ? currentTask.status : statusValues[0]
   );
+  const dispatch = useDispatch();
+  const { pid } = useParams();
 
   const handleChange = (e: SelectChangeEvent) => {
-    setSelectedValue(e.target.value);
+    const newValue = e.target.value;
+
+    setSelectedValue(newValue);
+
+    if (!pid) return;
+
+    dispatch(updateTaskById(newValue, pid, id) as any);
   };
 
   return (

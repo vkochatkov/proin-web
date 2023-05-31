@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { FilesList } from './FilesList/FilesList';
-import { FilesUpload } from './FormComponent/FileUploader/FilesUpload';
+import { ProjectFilesUpload } from './FormComponent/ProjectFilesUpload/ProjectFilesUpload';
 import { InteractiveInput } from './FormComponent/InteractiveInput';
 import { ProjectTasksItem } from './ProjectTasksItem/ProjectTasksItem';
 import { SubProjects } from './SubProjects';
@@ -44,7 +44,7 @@ export const ProjectTabsMenu = ({
       panel: (
         <>
           <FilesList />
-          <FilesUpload
+          <ProjectFilesUpload
             id={'files'}
             projectId={currentProject ? currentProject._id : undefined}
           />

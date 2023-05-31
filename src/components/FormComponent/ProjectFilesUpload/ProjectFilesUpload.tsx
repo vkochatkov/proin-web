@@ -1,26 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { useHttpClient } from '../../../hooks/useHttpClient';
+import { useFiles } from '../../../hooks/useFiles';
 import {
   endFilesLoading,
   startFilesLoading,
 } from '../../../modules/actions/loading';
 import { updateProjectFiles } from '../../../modules/actions/mainProjects';
-import { getAuth } from '../../../modules/selectors/user';
+import { Api } from '../../../utils/API';
 import { FileUploader } from '../../FormElement/FileUploader';
 
-import './FileUploader.scss';
+import './ProjectFilesUpload.scss';
 
 interface IFileUpload {
   id: string;
   projectId?: string;
 }
 
-export const FilesUpload = ({ id, projectId }: IFileUpload) => {
-  const { sendRequest } = useHttpClient();
-  const [files, setFiles] = useState<File[]>([]);
-  const { token } = useSelector(getAuth);
+export const ProjectFilesUpload = ({ id, projectId }: IFileUpload) => {
+  const { files, setFiles, generateDataUrl } = useFiles();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,33 +33,10 @@ export const FilesUpload = ({ id, projectId }: IFileUpload) => {
   }, [files]);
 
   const sendFilesToServer = async (id: string, files: File[]) => {
-    const fileDataArray = await Promise.all(
-      files.map(async (file) => {
-        const dataUrl = await new Promise((resolve) => {
-          const fileReader = new FileReader();
-          fileReader.onload = () => resolve(fileReader.result as string);
-          fileReader.readAsDataURL(file);
-        });
-
-        return {
-          dataUrl: dataUrl,
-          name: file.name,
-        };
-      })
-    );
+    const fileDataArray = await generateDataUrl(files);
 
     try {
-      return await sendRequest(
-        `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
-        'PATCH',
-        JSON.stringify({
-          files: fileDataArray,
-        }),
-        {
-          Authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
-        }
-      );
+      return await Api.Projects.patch({ files: fileDataArray }, id);
     } catch (err) {
       // handle error
     }

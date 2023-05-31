@@ -54,7 +54,7 @@ export const createTask =
       tasks.unshift(newTask);
       dispatch(updateTasksSuccess({ tasks }));
       const res = await Api.Tasks.create(newTask, projectId);
-      dispatch(updateTaskId({ taskId: id, _id: res.task._id }));
+      dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task.id }));
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',
@@ -81,6 +81,35 @@ export const changeTasksOrder =
           e.response.data
             ? e.response.data.message
             : 'Зберегти послідовність задач не вдалося'
+        }. Перезавантажте сторінку`,
+      });
+    }
+  };
+
+export const updateTaskById =
+  (status: string, pid: string, taskId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks = JSON.parse(JSON.stringify(getState().currentProjectTasks));
+    try {
+      const res = await Api.Tasks.updateCurrentTask({ status }, pid, taskId);
+      const updatedTask = res.task;
+      const updatedTasks = tasks.map((task: ITask) => {
+        if (task._id === taskId) {
+          task = updatedTask;
+        }
+
+        return task;
+      });
+
+      dispatch(updateTasksSuccess({ tasks: updatedTasks }));
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
+            ? e.response.data.message
+            : 'Оновити задачу не вдалося'
         }. Перезавантажте сторінку`,
       });
     }

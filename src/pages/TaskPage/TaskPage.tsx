@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { InteractiveInput } from '../../components/FormComponent/InteractiveInput';
+import { TaskFilesUpload } from '../../components/FormComponent/TaskFilesUpload/TaskFilesUpload';
 import { Button } from '../../components/FormElement/Button';
 import { Header } from '../../components/Navigation/Header';
 import { Card } from '../../components/UIElements/Card';
@@ -59,6 +60,7 @@ export const TaskPage = () => {
             token={token}
             entity={task}
           />
+          <TaskFilesUpload id={'files'} />
         </Card>
         <UserActivityDiary />
       </Card>
