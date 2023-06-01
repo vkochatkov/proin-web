@@ -16,16 +16,16 @@ import { ProjectSelect } from '../FormComponent/ProjectSelect';
 
 export const MoveProjectModal = () => {
   const [selectedProject, setSelectedProject] = React.useState('');
-  const popupId = 'move-project';
+  const modalId = 'move-project';
   const open = useSelector((state: RootState) =>
-    getModalStateById(state)(popupId)
+    getModalStateById(state)(modalId)
   );
   const currentProjectId = useSelector(getSelectedProjectId);
   const dispatch = useDispatch();
   const { pid } = useParams();
 
   const handleClose = () => {
-    dispatch(closeModal({ id: popupId }));
+    dispatch(closeModal({ id: modalId }));
     dispatch(selectProject(''));
     setSelectedProject('');
   };
@@ -34,11 +34,11 @@ export const MoveProjectModal = () => {
     event.preventDefault();
 
     if (!currentProjectId) {
-      dispatch(closeModal({ id: popupId }));
+      dispatch(closeModal({ id: modalId }));
       return;
     }
 
-    dispatch(closeModal({ id: popupId }));
+    dispatch(closeModal({ id: modalId }));
     dispatch(moveToProject(selectedProject, currentProjectId, !pid) as any);
     setSelectedProject('');
   };

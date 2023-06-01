@@ -52,6 +52,7 @@ export const ProjectTaskItemList = () => {
     );
 
     dispatch(changeTasksOrder(pid, newOrder) as any);
+    dispatch(setIsDragging(false));
   };
 
   return (

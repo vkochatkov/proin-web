@@ -69,7 +69,9 @@ export const TaskPage = () => {
             entity={task}
           />
           <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
-          <TaskFilesUpload id={'files'} />
+          <div className="task-page__uploader">
+            <TaskFilesUpload id={'files'} />
+          </div>
         </Card>
         <UserActivityDiary />
       </Card>

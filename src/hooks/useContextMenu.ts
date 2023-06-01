@@ -39,9 +39,9 @@ export const useContextMenu = () => {
     ...defaultOptions,
   });
 
-  const handleSelectProject = (id: string, popupId: string) => {
+  const handleSelectProject = (id: string, modalId: string) => {
     dispatch(selectProject(id));
-    dispatch(openModal({ id: popupId }));
+    dispatch(openModal({ id: modalId }));
   };
 
   const handleClose = () => {

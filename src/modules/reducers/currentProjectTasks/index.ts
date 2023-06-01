@@ -21,7 +21,6 @@ tasks.on(updateTasksSuccess, (_, payload) => {
 
 tasks.on(updateTaskId, (state, payload) => {
   const { taskId, _id } = payload;
-
   const updatedTasks = JSON.parse(JSON.stringify(state)).map((task: ITask) => {
     if (task.taskId === taskId) {
       task._id = _id;

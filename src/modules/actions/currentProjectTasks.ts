@@ -57,7 +57,8 @@ export const createTask =
       tasks.unshift(newTask);
       dispatch(updateTasksSuccess({ tasks }));
       const res = await Api.Tasks.create(newTask, projectId);
-      dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task.id }));
+      console.log(res.task._id);
+      dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',
@@ -143,6 +144,23 @@ export const updateTaskFilesOrder =
             ? e.response.data.message
             : 'Оновити задачу не вдалося'
         }. Перезавантажте сторінку`,
+      });
+    }
+  };
+
+export const deleteTask =
+  (taskId: string) => async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks = JSON.parse(JSON.stringify(getState().currentProjectTasks));
+    const updatedTasks = tasks.filter((task: ITask) => task._id !== taskId);
+    try {
+      dispatch(updateTasksSuccess({ tasks: updatedTasks }));
+
+      await Api.Tasks.deleteTask(taskId);
+    } catch (e) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `Виникла проблема.Перезавантажте сторінку`,
       });
     }
   };

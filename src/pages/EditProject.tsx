@@ -20,7 +20,6 @@ import { Card } from '@mui/joy';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { InviteModal } from '../components/Modals/InviteModal';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
-import { useAuth } from '../hooks/useAuth';
 import { Project } from '../modules/reducers/mainProjects';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../modules/actions/form';
@@ -28,6 +27,7 @@ import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { clearTasks, fetchTasks } from '../modules/actions/currentProjectTasks';
 import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
+import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 
 import './HomePage.scss';
 
@@ -208,6 +208,7 @@ const EditProject: React.FC<Props> = () => {
       <MoveProjectModal />
       <SnackbarUI />
       <RemoveProjectModal />
+      <RemoveTaskModal />
     </>
   );
 };

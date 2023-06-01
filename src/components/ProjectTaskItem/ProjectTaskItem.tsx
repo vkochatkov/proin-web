@@ -1,4 +1,4 @@
-import { Avatar, Paper, Typography } from '@mui/material';
+import { Avatar, Menu, MenuItem, Paper, Typography } from '@mui/material';
 import { ITask } from '../../modules/types/currentProjectTasks';
 import { Draggable } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,11 @@ import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
 import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { backgroundColor } from '../../utils/avatar-view';
 import { TaskStatusSelect } from '../FormComponent/TaskStatusSelect';
+import { MoreVert as MoreVertIcon } from '@mui/icons-material';
+import { useContextMenu } from '../../hooks/useContextMenu';
+import { Button } from '../FormElement/Button';
+import { openModal } from '../../modules/actions/modal';
+import { selectTask } from '../../modules/actions/selectedTask';
 
 import './ProjectTaskItem.scss';
 
@@ -33,6 +38,8 @@ export const ProjectTaskItem = ({
   const isFilesInfo = lastAction
     ? lastAction.description.includes('файл')
     : false;
+  const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
+    useContextMenu();
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -60,8 +67,18 @@ export const ProjectTaskItem = ({
 
     if (currentTask) {
       dispatch(chooseCurrentTaskSuccess({ task: currentTask }));
-      navigate(`/project-edit/${pid}/task/${currentTask._id}`);
+
+      if (anchorEl) {
+        handleClose();
+      } else {
+        navigate(`/project-edit/${pid}/task/${currentTask._id}`);
+      }
     }
+  };
+
+  const handleOpenModal = (modalId: string) => {
+    dispatch(openModal({ id: modalId }));
+    dispatch(selectTask(task._id));
   };
 
   return (
@@ -70,11 +87,33 @@ export const ProjectTaskItem = ({
         <div
           onClick={() => handleOpenTaskPage(task._id)}
           ref={provided.innerRef}
+          className="task-item"
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
           <Paper style={taskWrapperStyle}>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorPosition={{
+                top: contextMenuPosition.top,
+                left: contextMenuPosition.left,
+              }}
+            >
+              <MenuItem onClick={() => handleOpenModal('remove-task')}>
+                Видалити
+              </MenuItem>
+            </Menu>
             <Typography variant="h6">{task.name}</Typography>
+            <Button
+              icon
+              transparent
+              customClassName="task-item__btn"
+              onClick={handleContextMenu}
+            >
+              <MoreVertIcon className="item__icon" />
+            </Button>
             <div className="task-item__select-wrapper">
               <Typography
                 variant="inherit"

@@ -1,6 +1,7 @@
 @import '../../index.scss';
 
 .task-item {
+  position: relative;
   &__value-text {
     @include value-border;
 
@@ -19,5 +20,11 @@
     @include align-center;
     justify-content: space-between;
     margin-bottom: 10px;
+  }
+
+  &__btn {
+    position: absolute;
+    top: 15px;
+    right: 5px;
   }
 }
