@@ -8,6 +8,7 @@ import { Typography, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Button } from '../FormElement/Button';
 import AddIcon from '@mui/icons-material/Add';
+import { useParams } from 'react-router-dom';
 
 import './TabsMenu.scss';
 
@@ -18,13 +19,19 @@ interface TabData {
 
 interface TabsMenuProps {
   tabs: TabData[];
-  onClick?: () => void;
+  handleTasksClick?: () => void;
+  handleCreateSubproject?: () => void;
 }
 
-export const TabsMenu = ({ tabs, onClick }: TabsMenuProps) => {
+export const TabsMenu = ({
+  tabs,
+  handleTasksClick,
+  handleCreateSubproject,
+}: TabsMenuProps) => {
   const [value, setValue] = useState(tabs[0].label);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { subprojectId } = useParams();
   const tabTextStyle = {
     textTransform: 'none',
     fontSize: isMobile ? '12px' : '1rem',
@@ -42,9 +49,24 @@ export const TabsMenu = ({ tabs, onClick }: TabsMenuProps) => {
     borderColor: 'divider',
     '& .MuiTabs-indicator': { backgroundColor: 'black' },
   };
+  const isTaskTab = value === 'Задачі';
+  const isDescriptionTab = value === 'Опис' && !subprojectId;
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  const addButtonConfig = {
+    onClick: () => {
+      if (isTaskTab && handleTasksClick) {
+        handleTasksClick();
+      } else if (isDescriptionTab && handleCreateSubproject) {
+        handleCreateSubproject();
+      }
+    },
+    icon: true,
+    transparent: true,
+    customClassName: 'tabs-menu__btn',
   };
 
   return (
@@ -63,13 +85,8 @@ export const TabsMenu = ({ tabs, onClick }: TabsMenuProps) => {
               position: 'relative',
             }}
           >
-            {value === 'Задачі' && onClick && (
-              <Button
-                onClick={onClick}
-                icon
-                transparent
-                customClassName="tabs-menu__btn"
-              >
+            {(isTaskTab || isDescriptionTab) && (
+              <Button {...addButtonConfig}>
                 <AddIcon />
               </Button>
             )}

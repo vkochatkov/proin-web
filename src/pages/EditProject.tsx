@@ -128,19 +128,6 @@ const EditProject: React.FC<Props> = () => {
     }
   };
 
-  const handleCreateSubproject = async () => {
-    if (!pid) return;
-
-    try {
-      const { _id } = await dispatch(createNewSubproject(pid) as any);
-
-      navigate(`/project-edit/${pid}/${_id}`);
-      await dispatch(fetchProjects() as any);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <>
       <div className="container">
@@ -154,20 +141,6 @@ const EditProject: React.FC<Props> = () => {
           >
             <img src="/back.svg" alt="back_logo" className="button__icon" />
           </Button>
-          {!subprojectId && (
-            <Button
-              size="small"
-              transparent={true}
-              icon={true}
-              onClick={handleCreateSubproject}
-            >
-              <img
-                src="/plus_icon.svg"
-                className="button__icon"
-                alt="button icon"
-              />
-            </Button>
-          )}
         </Header>
         {isLoading ? (
           <div className="loading">

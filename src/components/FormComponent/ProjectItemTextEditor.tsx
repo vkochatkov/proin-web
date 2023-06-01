@@ -69,8 +69,6 @@ export const ProjectItemTextEditor = ({
         );
 
         if (!updatedProject) return;
-        console.log('handleUpdateInputValue');
-
         dispatch(setCurrentProject(updatedProject));
       } else {
         // Update main project

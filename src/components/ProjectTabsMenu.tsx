@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { getAuth } from '../modules/selectors/user';
 import { FilesList } from './FilesList/FilesList';
@@ -12,6 +12,8 @@ import { UsersTabsMenu } from './UsersTabsMenu';
 import { setIsActiveInput } from '../modules/actions/input';
 import { IFile } from '../modules/types/mainProjects';
 import {
+  createNewSubproject,
+  fetchProjects,
   updateFilesOrder,
   updateSubprojectFilesOrder,
 } from '../modules/actions/mainProjects';
@@ -29,6 +31,7 @@ export const ProjectTabsMenu = ({
   const currentProject = useSelector(getCurrentProject);
   const dispatch = useDispatch();
   const { pid } = useParams();
+  const navigate = useNavigate();
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -83,5 +86,24 @@ export const ProjectTabsMenu = ({
     dispatch(setIsActiveInput(true));
   };
 
-  return <TabsMenu tabs={tabs} onClick={handleOpenTaskNameInput} />;
+  const handleCreateSubproject = async () => {
+    if (!pid) return;
+
+    try {
+      const { _id } = await dispatch(createNewSubproject(pid) as any);
+
+      navigate(`/project-edit/${pid}/${_id}`);
+      await dispatch(fetchProjects() as any);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <TabsMenu
+      tabs={tabs}
+      handleTasksClick={handleOpenTaskNameInput}
+      handleCreateSubproject={handleCreateSubproject}
+    />
+  );
 };
