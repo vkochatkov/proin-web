@@ -24,21 +24,21 @@ export const getStatusLabel = (status: string) => {
 };
 
 export const updateEnitites = (entities: any[], id: string, files: IFile[]) => {
-  const projectIndex = entities.findIndex((entity) => entity._id === id);
+  const entityIndex = entities.findIndex((entity) => entity._id === id);
 
-  if (projectIndex === -1) {
+  if (entityIndex === -1) {
     return;
   }
 
   const updatedEntity = {
-    ...entities[projectIndex],
+    ...entities[entityIndex],
     files,
   };
 
   const updatedEnities = [
-    ...entities.slice(0, projectIndex),
+    ...entities.slice(0, entityIndex),
     updatedEntity,
-    ...entities.slice(projectIndex + 1),
+    ...entities.slice(entityIndex + 1),
   ];
 
   return { updatedEntity, updatedEnities };

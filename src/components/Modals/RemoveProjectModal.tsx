@@ -10,7 +10,7 @@ import {
   deleteCurrentProject,
   selectProject,
   setCurrentProject,
-  updateProjects,
+  updateProjectsSuccess,
 } from '../../modules/actions/mainProjects';
 import {
   getCurrentProject,
@@ -69,7 +69,7 @@ export const RemoveProjectModal = () => {
       );
     }
 
-    dispatch(updateProjects(updatedProjectsList));
+    dispatch(updateProjectsSuccess(updatedProjectsList));
     dispatch(closeModal({ id: modalId }));
   };
 

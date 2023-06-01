@@ -26,6 +26,7 @@ type InputProps = {
   project?: any;
   labelClassName?: string;
   isActive?: boolean;
+  className?: string;
   changeHandler?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
@@ -130,6 +131,7 @@ export const Input = (props: InputProps) => {
         onBlur={touchHandler}
         value={inputState.value}
         ref={inputRef}
+        className={props.className ? props.className : ''}
       />
     ) : (
       <textarea
@@ -140,8 +142,7 @@ export const Input = (props: InputProps) => {
         value={inputState.value}
         ref={textareaRef}
         autoComplete="off"
-        // style={{ minHeight: '100px' }}
-
+        className={props.className ? props.className : ''}
         // onClick={openFullscreen}
         // onKeyDown={(event) => {
         //   if (event.key === 'Escape') {

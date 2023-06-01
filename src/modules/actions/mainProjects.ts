@@ -14,7 +14,9 @@ import { fetchTasks } from './currentProjectTasks';
 import { updateEnitites } from '../../utils/utils';
 
 export const setCurrentProject = createAction<Project>('setCurrentProject');
-export const updateProjects = createAction<Project[]>('updateProjects');
+export const updateProjectsSuccess = createAction<Project[]>(
+  'updateProjectsSuccess'
+);
 export const editProjectFailure = createAction<string>('editProjectFailure');
 export const createProjectSuccess = createAction<Project>(
   'createProjectSuccess'
@@ -268,7 +270,7 @@ export const updateOrderProjects =
     try {
       const { userId } = getState().user;
 
-      dispatch(updateProjects(projects));
+      dispatch(updateProjectsSuccess(projects));
 
       await Api.Projects.put(projects, userId);
     } catch (e: any) {
@@ -277,6 +279,22 @@ export const updateOrderProjects =
           id: 'error',
           open: true,
           message: `Порядок проектів не збережено. Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const updateProject =
+  (props: Partial<IProject>, parentId: string) =>
+  async (dispatch: Dispatch) => {
+    try {
+      await Api.Projects.patch(props, parentId);
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Проекти не оновлено. Перезавантажте сторінку`,
         })
       );
     }
@@ -416,7 +434,7 @@ export const fetchProjects =
 
     try {
       const res = await Api.Projects.get(userId);
-      dispatch(updateProjects(res.projects));
+      dispatch(updateProjectsSuccess(res.projects));
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
@@ -481,7 +499,7 @@ export const moveToProject =
 
         targetProject.subProjects.push(projectToMove);
 
-        dispatch(updateProjects(updatedProjects));
+        dispatch(updateProjectsSuccess(updatedProjects));
       } else {
         if (!currentProject) return;
 
@@ -507,7 +525,7 @@ export const moveToProject =
         ];
 
         dispatch(setCurrentProject(updatedCurrentProject));
-        dispatch(updateProjects(updatedProjects));
+        dispatch(updateProjectsSuccess(updatedProjects));
       }
 
       await Api.Projects.moveProject({

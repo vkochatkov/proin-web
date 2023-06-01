@@ -34,7 +34,6 @@ import './HomePage.scss';
 type Props = {};
 
 const EditProject: React.FC<Props> = () => {
-  const { token } = useAuth();
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
@@ -114,7 +113,7 @@ const EditProject: React.FC<Props> = () => {
     if (subprojectId && currentProject && currentProject.id !== subprojectId) {
       dispatch(openCurrentProject(subprojectId, true) as any);
     }
-  }, [pid, token, subprojectId, currentProject, navigate, dispatch]);
+  }, [pid, subprojectId, currentProject, navigate, dispatch]);
 
   const handleCloseProject = async () => {
     if (subprojectId) {

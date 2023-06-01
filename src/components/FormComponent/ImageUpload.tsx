@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux';
 import { useForm } from '../../hooks/useForm';
 import { useHttpClient } from '../../hooks/useHttpClient';
 import { setCurrentProject } from '../../modules/actions/mainProjects';
-import { getCurrentProject } from '../../modules/selectors/mainProjects';
+import {
+  getCurrentProject,
+  getCurrentProjects,
+} from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
 import { FileUploader } from '../FormElement/FileUploader';
 import { InteractiveInput } from './InteractiveInput';
@@ -25,6 +28,7 @@ export const ImageUpload = ({
   projectId,
   center,
 }: IImageUpload) => {
+  const projects = useSelector(getCurrentProjects);
   const currentProject = useSelector(getCurrentProject);
   const [file, setFile] = useState<File | undefined>();
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -143,6 +147,7 @@ export const ImageUpload = ({
             inputHandler={inputHandler}
             token={token}
             entity={currentProject}
+            entities={projects}
           />
         </div>
       </div>

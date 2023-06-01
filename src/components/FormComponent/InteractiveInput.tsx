@@ -1,19 +1,22 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Input } from '../FormElement/Input';
 import { ProjectTextOutput } from './ProjectTextOutput';
 import { useActiveInput } from '../../hooks/useActiveInput';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setCurrentProject } from '../../modules/actions/mainProjects';
-import { debounce } from '../../utils/debounce';
+import {
+  setCurrentProject,
+  updateProjectsSuccess,
+} from '../../modules/actions/mainProjects';
 import { Api } from '../../utils/API';
 import { changeSnackbarState } from '../../modules/actions/snackbar';
 import {
   updateCurrentTask,
   updateTaskState,
 } from '../../modules/actions/currentTask';
+import { useDebounce } from '../../hooks/useDebounce';
 
-import './ProjectInputEditor.scss';
+import './InteractiveInput.scss';
 
 interface Props {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -21,6 +24,7 @@ interface Props {
   token: string;
   id: string;
   label?: string;
+  entities?: any[];
 }
 
 export const InteractiveInput = ({
@@ -29,25 +33,19 @@ export const InteractiveInput = ({
   token,
   id,
   label,
+  entities = [],
 }: Props) => {
   const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = entity ? entity[id] : undefined;
   const { pid, subprojectId, taskId } = useParams();
   const dispatch = useDispatch();
+  const { saveChanges } = useDebounce();
 
   useEffect(() => {
     if ((id === 'projectName' || id === 'name') && !text) {
       setIsActive(true);
     }
   }, [id, text]);
-
-  const saveChanges = useCallback(
-    debounce((callback: () => void) => {
-      callback();
-      // eslint-disable-next-line
-    }, 1000),
-    []
-  );
 
   const handleChangeKeyValue = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -61,25 +59,40 @@ export const InteractiveInput = ({
 
     if (updatedEntity.projectName === '') return;
 
-    if (
-      (pid && pid === updatedEntity.id) ||
-      (subprojectId && subprojectId === updatedEntity.id)
-    ) {
+    const callback = () =>
+      Api.Projects.patch({ [id]: newValue }, entity._id)
+        .then(() => {})
+        .catch(() => {
+          dispatch(
+            changeSnackbarState({
+              id: 'error',
+              message: 'Не вдалося зберегти, щось пішло не так',
+              open: true,
+            })
+          );
+        });
+
+    if (pid && pid === updatedEntity.id) {
       dispatch(setCurrentProject(updatedEntity));
+      saveChanges(callback);
 
-      const callback = () =>
-        Api.Projects.patch({ [id]: newValue }, entity._id)
-          .then(() => {})
-          .catch(() => {
-            dispatch(
-              changeSnackbarState({
-                id: 'error',
-                message: 'Не вдалося зберегти, щось пішло не так',
-                open: true,
-              })
-            );
-          });
+      const entityIndex = entities.findIndex((entity) => entity._id === pid);
 
+      if (entityIndex === -1) {
+        return;
+      }
+
+      const updatedEnities = [
+        ...entities.slice(0, entityIndex),
+        updatedEntity,
+        ...entities.slice(entityIndex + 1),
+      ];
+
+      dispatch(updateProjectsSuccess(updatedEnities));
+    }
+
+    if (subprojectId && subprojectId === updatedEntity.id) {
+      dispatch(setCurrentProject(updatedEntity));
       saveChanges(callback);
     }
 

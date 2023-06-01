@@ -1,15 +1,19 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useDebounce } from '../../hooks/useDebounce';
 import { useForm } from '../../hooks/useForm';
 import {
   setCurrentProject,
-  updateProjects,
+  updateProject,
+  updateProjectsSuccess,
 } from '../../modules/actions/mainProjects';
 import { Project } from '../../modules/reducers/mainProjects';
 import { getCurrentProjects } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
 import { Input } from '../FormElement/Input';
+
+import './ProjectItemTextEditor.scss';
 
 interface IProps {
   id: string;
@@ -39,6 +43,7 @@ export const ProjectItemTextEditor = ({
     },
     true
   );
+  const { saveChanges } = useDebounce();
 
   const handleUpdateInputValue = useCallback(
     (inputKey: string, value: string, isValid: boolean) => {
@@ -64,6 +69,7 @@ export const ProjectItemTextEditor = ({
         );
 
         if (!updatedProject) return;
+        console.log('handleUpdateInputValue');
 
         dispatch(setCurrentProject(updatedProject));
       } else {
@@ -78,7 +84,11 @@ export const ProjectItemTextEditor = ({
         );
       }
 
-      dispatch(updateProjects(updatedProjects));
+      saveChanges(() =>
+        dispatch(updateProject({ [inputKey]: value }, id) as any)
+      );
+
+      dispatch(updateProjectsSuccess(updatedProjects));
       inputHandler(inputKey, value, isValid);
     },
 
@@ -100,6 +110,7 @@ export const ProjectItemTextEditor = ({
             isUpdateValue={true}
             project={project}
             isActive={isActive}
+            className="project-item-text-editor__input"
           />
         </div>
       ) : (

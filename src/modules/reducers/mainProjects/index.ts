@@ -3,7 +3,7 @@ import {
   clearCurrentProject,
   editProjectFailure,
   setCurrentProject,
-  updateProjects,
+  updateProjectsSuccess,
   clearProjects,
   createProjectSuccess,
   updateMainProjectsSuccess,
@@ -94,7 +94,7 @@ mainProjects.on(clearCurrentProject, (state) => {
   };
 });
 
-mainProjects.on(updateProjects, (state, payload: Project[]) => {
+mainProjects.on(updateProjectsSuccess, (state, payload: Project[]) => {
   return {
     ...state,
     projects: payload,
