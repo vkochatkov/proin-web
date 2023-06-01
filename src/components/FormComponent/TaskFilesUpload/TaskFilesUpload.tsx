@@ -38,8 +38,7 @@ export const TaskFilesUpload = ({ id }: IProps) => {
     setFiles([...files, ...newFiles]);
 
     try {
-      const res = await sendFilesToServer(newFiles);
-      console.log(res);
+      await sendFilesToServer(newFiles);
     } catch (e) {
       console.log(e);
     }

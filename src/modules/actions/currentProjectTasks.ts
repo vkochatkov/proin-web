@@ -57,7 +57,7 @@ export const createTask =
       tasks.unshift(newTask);
       dispatch(updateTasksSuccess({ tasks }));
       const res = await Api.Tasks.create(newTask, projectId);
-      console.log(res.task._id);
+
       dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
     } catch (e: any) {
       changeSnackbarState({
