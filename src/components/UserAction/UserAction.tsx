@@ -19,6 +19,7 @@ const avatarStyle = {
 export const UserAction = ({ action }: IProps) => {
   const firstLetter = getFirstLetter(action.name);
   const isStatusInfo = action.description.includes('Статус');
+  const isFilesInfo = action.description.includes('файл');
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -66,10 +67,14 @@ export const UserAction = ({ action }: IProps) => {
             {isStatusInfo ? getStatusLabel(action.oldValue) : action.oldValue}
           </div>
         )}
-        <div className="arrow-icon">&#8594;</div>
-        <div className="user-action__new-value">
-          {isStatusInfo ? getStatusLabel(action.newValue) : action.newValue}
-        </div>
+        {!isFilesInfo && (
+          <>
+            <div className="arrow-icon">&#8594;</div>
+            <div className="user-action__new-value">
+              {isStatusInfo ? getStatusLabel(action.newValue) : action.newValue}
+            </div>
+          </>
+        )}
       </div>
     </Card>
   );

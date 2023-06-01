@@ -14,9 +14,9 @@ import { setIsDragging } from '../../modules/actions/dragging';
 import { clearInputState, setIsActiveInput } from '../../modules/actions/input';
 import { getIsActiveInputStatus } from '../../modules/selectors/input';
 
-import '../ProjectTasksItem/ProjectTasksItem.scss';
+import './ProjectTaskItemList.scss';
 
-export const ProjectTasksItem = () => {
+export const ProjectTaskItemList = () => {
   const tasks = useSelector(getTasks);
   const { pid } = useParams();
   const dispatch = useDispatch();

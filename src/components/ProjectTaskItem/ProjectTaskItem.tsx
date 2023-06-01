@@ -30,6 +30,9 @@ export const ProjectTaskItem = ({
   const isStatusInfo = lastAction
     ? lastAction.description.includes('Статус')
     : false;
+  const isFilesInfo = lastAction
+    ? lastAction.description.includes('файл')
+    : false;
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -99,12 +102,19 @@ export const ProjectTaskItem = ({
                 <Typography variant="inherit" className="task-item__text">
                   {lastAction.description}
                 </Typography>
-                <div style={{ marginLeft: '5px' }}>&#8594;</div>
-                <Typography variant="inherit" className="task-item__value-text">
-                  {isStatusInfo
-                    ? getStatusLabel(lastAction.newValue)
-                    : lastAction.newValue}
-                </Typography>
+                {!isFilesInfo && (
+                  <>
+                    <div style={{ marginLeft: '5px' }}>&#8594;</div>
+                    <Typography
+                      variant="inherit"
+                      className="task-item__value-text"
+                    >
+                      {isStatusInfo
+                        ? getStatusLabel(lastAction.newValue)
+                        : lastAction.newValue}
+                    </Typography>
+                  </>
+                )}
               </div>
             )}
           </Paper>
