@@ -28,7 +28,7 @@ export const FilesList = ({ files, saveFilesOrder }: IProps) => {
     dispatch(removeFile(id) as any);
   };
 
-  const filesToShow = showAllFiles ? files : files ? files.slice(0, 4) : [];
+  const filesToShow = showAllFiles ? files : files ? files.slice(0, 20) : [];
 
   const toggleShowAllFiles = () => {
     setShowAllFiles(!showAllFiles);
@@ -76,7 +76,7 @@ export const FilesList = ({ files, saveFilesOrder }: IProps) => {
           )}
         </Droppable>
       </DragDropContext>
-      {files.length > 4 && (
+      {files.length > 20 && (
         <Button onClick={toggleShowAllFiles} customClassName="files-list__btn">
           {showAllFiles ? 'Показати менше' : 'Показати більше'}
         </Button>
