@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { IFile } from '../../modules/types/mainProjects';
-import { File } from '../File';
+import { File } from '../File/File';
 import { useState } from 'react';
 import { LoadingSpinner } from '../UIElements/LoadingSpinner';
 import { getIsFilesLoading } from '../../modules/selectors/loading';

@@ -43,7 +43,7 @@ export const TabsMenu = ({
     },
     '&.Mui-selected': { color: 'black' },
   };
-  const tabPanelStyle = { padding: '20px 5px 5px' };
+  const tabPanelStyle = { padding: '15px 5px 5px' };
   const tabListStyle = {
     borderBottom: 1,
     borderColor: 'divider',
