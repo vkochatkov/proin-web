@@ -4,6 +4,7 @@
   position: relative;
   &__value-text {
     @include value-border;
+    @include nowrap;
 
     margin-left: 5px !important;
   }

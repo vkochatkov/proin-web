@@ -8,6 +8,7 @@
   &__old-value,
   &__new-value {
     @include value-border;
+    @include nowrap;
   }
 
   &__old-value {
