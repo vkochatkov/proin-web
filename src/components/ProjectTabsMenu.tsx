@@ -32,6 +32,7 @@ export const ProjectTabsMenu = ({
   const dispatch = useDispatch();
   const { pid } = useParams();
   const navigate = useNavigate();
+  const tabsId = 'main-tab';
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -104,6 +105,7 @@ export const ProjectTabsMenu = ({
       tabs={tabs}
       handleTasksClick={handleOpenTaskNameInput}
       handleCreateSubproject={handleCreateSubproject}
+      tabsId={tabsId}
     />
   );
 };

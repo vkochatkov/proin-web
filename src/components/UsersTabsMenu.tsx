@@ -3,6 +3,7 @@ import { MembersInfo } from './MembersInfo';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 
 export const UsersTabsMenu = () => {
+  const tabsId = 'comment-tab';
   const tabs = [
     {
       label: 'Коментарі',
@@ -14,5 +15,5 @@ export const UsersTabsMenu = () => {
     },
   ];
 
-  return <TabsMenu tabs={tabs} />;
+  return <TabsMenu tabs={tabs} tabsId={tabsId} />;
 };

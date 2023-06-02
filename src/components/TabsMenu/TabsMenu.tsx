@@ -9,6 +9,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Button } from '../FormElement/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getValueByTabId } from '../../modules/selectors/tabs';
+import { RootState } from '../../modules/store/store';
+import { setTabValue } from '../../modules/actions/tabs';
 
 import './TabsMenu.scss';
 
@@ -21,14 +25,19 @@ interface TabsMenuProps {
   tabs: TabData[];
   handleTasksClick?: () => void;
   handleCreateSubproject?: () => void;
+  tabsId: string;
 }
 
 export const TabsMenu = ({
   tabs,
   handleTasksClick,
   handleCreateSubproject,
+  tabsId,
 }: TabsMenuProps) => {
-  const [value, setValue] = useState(tabs[0].label);
+  const tabValue = useSelector((state: RootState) =>
+    getValueByTabId(state)(tabsId)
+  );
+  const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { subprojectId } = useParams();
@@ -49,11 +58,11 @@ export const TabsMenu = ({
     borderColor: 'divider',
     '& .MuiTabs-indicator': { backgroundColor: 'black' },
   };
-  const isTaskTab = value === 'Задачі';
-  const isDescriptionTab = value === 'Опис' && !subprojectId;
+  const isTaskTab = tabValue === 'Задачі';
+  const isDescriptionTab = tabValue === 'Опис' && !subprojectId;
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+    dispatch(setTabValue({ [tabsId]: newValue }));
   };
 
   const addButtonConfig = {
@@ -77,7 +86,7 @@ export const TabsMenu = ({
         marginTop: '1rem',
       }}
     >
-      <TabContext value={value}>
+      <TabContext value={tabValue}>
         <Box sx={tabListStyle}>
           <TabList
             onChange={handleChange}

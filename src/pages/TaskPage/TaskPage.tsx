@@ -9,6 +9,7 @@ import { Card } from '../../components/UIElements/Card';
 import { UserActivityDiary } from '../../components/UserActivityDiary';
 import { useForm } from '../../hooks/useForm';
 import { updateTaskFilesOrder } from '../../modules/actions/currentProjectTasks';
+import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { getAuth } from '../../modules/selectors/user';
 import { IFile } from '../../modules/types/mainProjects';
@@ -33,6 +34,7 @@ export const TaskPage = () => {
   const dispatch = useDispatch();
 
   const handleCloseTaskPage = () => {
+    dispatch(setTabValue({ ['main-tab']: 'Задачі' }));
     navigate(`/project-edit/${pid}`);
   };
 
