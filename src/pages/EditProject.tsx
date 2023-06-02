@@ -12,7 +12,6 @@ import { Header } from '../components/Navigation/Header';
 import { getIsLoading } from '../modules/selectors/loading';
 import {
   clearCurrentProject,
-  createNewSubproject,
   fetchProjects,
   openCurrentProject,
 } from '../modules/actions/mainProjects';
@@ -25,7 +24,7 @@ import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../modules/actions/form';
 import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { endLoading, startLoading } from '../modules/actions/loading';
-import { clearTasks, fetchTasks } from '../modules/actions/currentProjectTasks';
+import { fetchTasks } from '../modules/actions/currentProjectTasks';
 import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 

@@ -32,9 +32,10 @@ export const TaskPage = () => {
   const { pid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const tabsId = 'main-tab';
 
   const handleCloseTaskPage = () => {
-    dispatch(setTabValue({ ['main-tab']: 'Задачі' }));
+    dispatch(setTabValue({ [tabsId]: 'Задачі' }));
     navigate(`/project-edit/${pid}`);
   };
 
