@@ -27,6 +27,7 @@ import { endLoading, startLoading } from '../modules/actions/loading';
 import { fetchTasks } from '../modules/actions/currentProjectTasks';
 import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
+import { setDefaultTabValue } from '../modules/actions/tabs';
 
 import './HomePage.scss';
 
@@ -120,10 +121,12 @@ const EditProject: React.FC<Props> = () => {
       await dispatch(fetchProjects() as any);
       navigate(`/project-edit/${pid}`);
       dispatch(endLoading());
+      dispatch(setDefaultTabValue());
     } else {
       navigate('/');
       dispatch(clearCurrentProject());
       dispatch(clearFormInput());
+      dispatch(setDefaultTabValue());
     }
   };
 

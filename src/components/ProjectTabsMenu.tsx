@@ -32,7 +32,7 @@ export const ProjectTabsMenu = ({
   const dispatch = useDispatch();
   const { pid } = useParams();
   const navigate = useNavigate();
-  const tabsId = 'main-tab';
+  const tabsId = 'main-tabs';
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
