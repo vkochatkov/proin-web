@@ -64,13 +64,15 @@ export const TaskPage = () => {
             token={token}
             entity={task}
           />
-          <InteractiveInput
-            label={'Опис'}
-            id="description"
-            inputHandler={inputHandler}
-            token={token}
-            entity={task}
-          />
+          <div className="task-page__input-wrapper">
+            <InteractiveInput
+              label={'Опис'}
+              id="description"
+              inputHandler={inputHandler}
+              token={token}
+              entity={task}
+            />
+          </div>
           <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
           <div className="task-page__uploader">
             <TaskFilesUpload id={'files'} />

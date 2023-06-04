@@ -1,8 +1,16 @@
-import { Avatar, Menu, MenuItem, Paper, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+  Avatar,
+  Checkbox,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+} from '@mui/material';
 import { ITask } from '../../modules/types/currentProjectTasks';
 import { Draggable } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
-import { getTasks } from '../../modules/selectors/currentProjectTasks';
+import { getTask, getTasks } from '../../modules/selectors/currentProjectTasks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
@@ -14,6 +22,8 @@ import { useContextMenu } from '../../hooks/useContextMenu';
 import { Button } from '../FormElement/Button';
 import { openModal } from '../../modules/actions/modal';
 import { selectTask } from '../../modules/actions/selectedTask';
+import { RootState } from '../../modules/store/store';
+import { updateTaskById } from '../../modules/actions/currentProjectTasks';
 
 import './ProjectTaskItem.scss';
 
@@ -24,7 +34,7 @@ export const ProjectTaskItem = ({
   task: ITask;
   index: number;
 }) => {
-  const { timestamp, actions, _id } = task;
+  const { timestamp, actions, _id, status } = task;
   const taskWrapperStyle = { padding: '10px', marginTop: '5px' };
   const tasks = useSelector(getTasks);
   const navigate = useNavigate();
@@ -40,6 +50,12 @@ export const ProjectTaskItem = ({
     : false;
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
+  const [checked, setChecked] = useState(status === 'done');
+  const currentTask = useSelector((state: RootState) => getTask(state)(_id));
+  const statusValues = ['new', 'in progress', 'done', 'canceled'];
+  const [selectedValue, setSelectedValue] = useState(
+    currentTask ? currentTask.status : statusValues[0]
+  );
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -62,7 +78,18 @@ export const ProjectTaskItem = ({
       month: 'numeric',
     });
 
-  const handleOpenTaskPage = (id: string) => {
+  useEffect(() => {
+    setChecked(status === 'done');
+  }, [status]);
+
+  const handleOpenTaskPage = (
+    e: React.MouseEvent<HTMLDivElement>,
+    id: string
+  ) => {
+    if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+      return;
+    }
+
     const currentTask = tasks.find((task) => task._id === id);
 
     if (currentTask) {
@@ -81,11 +108,35 @@ export const ProjectTaskItem = ({
     dispatch(selectTask(task._id));
   };
 
+  const handleChangeCeckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!_id) return;
+
+    const isChecked = e.target.checked;
+    const finishedTaskStatus = 'done';
+    const newTaskStatus = 'new';
+
+    setChecked(e.target.checked);
+
+    let newValue;
+
+    if (isChecked) {
+      setSelectedValue('done');
+      newValue = finishedTaskStatus;
+    } else {
+      setSelectedValue('new');
+      newValue = newTaskStatus;
+    }
+
+    if (!pid) return;
+
+    dispatch(updateTaskById(newValue, pid, _id) as any);
+  };
+
   return (
-    <Draggable draggableId={task.taskId} index={index}>
+    <Draggable draggableId={task._id} index={index}>
       {(provided) => (
         <div
-          onClick={() => handleOpenTaskPage(task._id)}
+          onClick={(e) => handleOpenTaskPage(e, task._id)}
           ref={provided.innerRef}
           className="task-item"
           {...provided.draggableProps}
@@ -105,7 +156,18 @@ export const ProjectTaskItem = ({
                 Видалити
               </MenuItem>
             </Menu>
-            <Typography variant="h6">{task.name}</Typography>
+            <div className="task-item__checkbox-wrapper">
+              <Checkbox
+                sx={{
+                  padding: 0,
+                  marginRight: '10px',
+                }}
+                checked={checked}
+                onChange={handleChangeCeckbox}
+                inputProps={{ 'aria-label': 'controlled' }}
+              />
+              <Typography variant="h6">{task.name}</Typography>
+            </div>
             <Button
               icon
               transparent
@@ -119,7 +181,12 @@ export const ProjectTaskItem = ({
                 variant="inherit"
                 sx={{ color: '#979797' }}
               >{`${formattedDate} ${formattedTime}`}</Typography>
-              <TaskStatusSelect id={_id} />
+              <TaskStatusSelect
+                id={_id}
+                selectedValue={selectedValue}
+                setSelectedValue={setSelectedValue}
+                valuesArray={statusValues}
+              />
             </div>
             {lastAction && firstLetter && (
               <div className="task-item__align-center">

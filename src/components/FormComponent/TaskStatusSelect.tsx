@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { Dispatch, SetStateAction } from 'react';
+import { useDispatch } from 'react-redux';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
 import { CustomSelect } from './CustomSelect';
-import { getTask } from '../../modules/selectors/currentProjectTasks';
-import { RootState } from '../../modules/store/store';
 import { updateTaskById } from '../../modules/actions/currentProjectTasks';
 import { useParams } from 'react-router-dom';
 import { getStatusLabel } from '../../utils/utils';
 
 interface IProps {
   id: string;
+  selectedValue: string;
+  setSelectedValue: Dispatch<SetStateAction<string>>;
+  valuesArray: string[];
 }
 
-export const TaskStatusSelect = ({ id }: IProps) => {
-  const currentTask = useSelector((state: RootState) => getTask(state)(id));
-  const statusValues = ['new', 'in progress', 'done', 'canceled'];
-  const [selectedValue, setSelectedValue] = useState(
-    currentTask ? currentTask.status : statusValues[0]
-  );
+export const TaskStatusSelect = ({
+  id,
+  selectedValue,
+  setSelectedValue,
+  valuesArray,
+}: IProps) => {
   const dispatch = useDispatch();
   const { pid } = useParams();
 
@@ -38,7 +39,7 @@ export const TaskStatusSelect = ({ id }: IProps) => {
       selectedValue={selectedValue}
       styling={{ width: '45%' }}
     >
-      {statusValues.map((status) => (
+      {valuesArray.map((status) => (
         <MenuItem
           key={status}
           onClick={(e) => e.stopPropagation()}
