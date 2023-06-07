@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useForm } from '../../hooks/useForm';
@@ -9,8 +9,15 @@ import {
   getCurrentProjects,
 } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
-import { FileUploader } from '../FormElement/FileUploader';
+import { Button } from '../FormElement/Button';
 import { InteractiveInput } from './InteractiveInput';
+import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
+import {
+  endFilesLoading,
+  startFilesLoading,
+} from '../../modules/actions/loading';
+import { getIsFilesLoading } from '../../modules/selectors/loading';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface IImageUpload {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -34,6 +41,7 @@ export const ImageUpload = ({
   const [isValid, setIsValid] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>('');
   const { token } = useSelector(getAuth);
+  const isLoading = useSelector(getIsFilesLoading);
   const dispatch = useDispatch();
   const { sendRequest } = useHttpClient();
   const { inputHandler } = useForm(
@@ -45,6 +53,7 @@ export const ImageUpload = ({
     },
     true
   );
+  const filePickerRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isUpdateValue && currentProject) {
@@ -119,7 +128,10 @@ export const ImageUpload = ({
     let value;
 
     if (projectId && pickedFile) {
+      dispatch(startFilesLoading());
       const res: any = await request(projectId, token, pickedFile);
+
+      dispatch(endFilesLoading());
 
       value = res.project.logoUrl;
 
@@ -129,14 +141,28 @@ export const ImageUpload = ({
     onInput(id, value, fileIsValid);
   };
 
+  const pickImageHandler = () => {
+    filePickerRef.current?.click();
+  };
+
   return (
     <>
       <div className={`file-uploader ${center ? 'center' : ''}`}>
-        {previewUrl && (
-          <div className="file-uploader__preview">
-            <img src={previewUrl} alt="Preview" />
-          </div>
-        )}
+        <Button icon transparent type="button" onClick={pickImageHandler}>
+          {previewUrl && !isLoading ? (
+            <div className="file-uploader__preview">
+              <img src={previewUrl} alt="Preview" />
+            </div>
+          ) : (
+            <div className="file-uploader__preview">
+              {isLoading ? (
+                <CircularProgress />
+              ) : (
+                <DriveFolderUploadIcon fontSize="large" />
+              )}
+            </div>
+          )}
+        </Button>
         <div
           style={{
             marginLeft: '1rem',
@@ -149,15 +175,17 @@ export const ImageUpload = ({
             entity={currentProject}
             entities={projects}
           />
+          <input
+            id={id}
+            ref={filePickerRef}
+            style={{ display: 'none' }}
+            type="file"
+            accept={'.jpg,.png,.jpeg'}
+            onChange={pickedHandler}
+            multiple={false}
+          />
         </div>
       </div>
-      <FileUploader
-        id={id}
-        pickedHandler={pickedHandler}
-        allowedTypes=".jpg,.png,.jpeg"
-        buttonLabel={'Додати лого'}
-        className="logo"
-      />
     </>
   );
 };
