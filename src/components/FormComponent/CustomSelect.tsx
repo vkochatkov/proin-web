@@ -25,16 +25,14 @@ export const CustomSelect = ({
         labelId="label"
         id="component-simple"
         value={selectedValue}
-        label="Оберіть проект"
+        label={label}
         onChange={onChange}
         onClick={(e) => e.stopPropagation()}
         sx={{
           '& .MuiInputBase-input:focus': {
             background: 'transparent',
           },
-          '&.MuiInputBase-root': {
-            marginTop: 0,
-          },
+          ...(label === '' ? { '&.MuiInputBase-root': { marginTop: 0 } } : {}),
         }}
       >
         {children}
