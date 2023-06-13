@@ -202,24 +202,16 @@ export const deleteComment =
     }
   };
 
-export const createNewProject =
-  (token: string) => async (dispatch: Dispatch) => {
-    try {
-      const response = await axios({
-        method: 'POST',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cancelToken: httpSource.token,
-      });
+export const createNewProject = () => async (dispatch: Dispatch) => {
+  try {
+    const response = await Api.Projects.create();
 
-      dispatch(createProjectSuccess(response.data.project));
-      dispatch(endLoading());
-    } catch (e) {
-      dispatch(editProjectFailure((e as any).message));
-    }
-  };
+    dispatch(createProjectSuccess(response.project));
+    dispatch(endLoading());
+  } catch (e) {
+    dispatch(editProjectFailure((e as any).message));
+  }
+};
 
 export const openCurrentProject =
   (id: string, sendRequest: boolean = false) =>
@@ -623,15 +615,17 @@ export const updateFilesOrder =
     try {
       await Api.Files.post({ files }, result.updatedEntity._id);
     } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `${
-          e.response.data
-            ? e.response.data.message
-            : 'Зберегти нову послідовність файлів не вдалося'
-        }. Перезавантажте сторінку`,
-      });
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${
+            e.response.data
+              ? e.response.data.message
+              : 'Зберегти нову послідовність файлів не вдалося'
+          }. Перезавантажте сторінку`,
+        })
+      );
     }
   };
 
@@ -690,14 +684,16 @@ export const updateSubprojectFilesOrder =
     try {
       await Api.Files.post({ files }, updatedSubproject._id);
     } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `${
-          e.response.data
-            ? e.response.data.message
-            : 'Зберегти нову послідовність файлів не вдалося'
-        }. Перезавантажте сторінку`,
-      });
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${
+            e.response.data
+              ? e.response.data.message
+              : 'Зберегти нову послідовність файлів не вдалося'
+          }. Перезавантажте сторінку`,
+        })
+      );
     }
   };

@@ -41,6 +41,7 @@ export const APIClient = new HTTPClient(baseURL);
 
 export const Api = {
   Projects: {
+    create: () => APIClient.post(`/projects`),
     getAll: (userId: string) => APIClient.get(`/projects/all/${userId}`),
     get: (id: string) => APIClient.get(`/projects/user/${id}`),
     put: (projects: Project[], id: string) =>

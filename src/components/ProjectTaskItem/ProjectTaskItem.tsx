@@ -9,10 +9,9 @@ import {
 } from '@mui/material';
 import { ITask } from '../../modules/types/projectTasks';
 import { Draggable } from '@hello-pangea/dnd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getTasks } from '../../modules/selectors/tasks';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
 import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { backgroundColor } from '../../utils/avatar-view';

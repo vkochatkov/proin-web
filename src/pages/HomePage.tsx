@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
   const { projects, currentProject } = useSelector(
     (state: RootState) => state.mainProjects
   );
-  const { userId, token } = useAuth();
+  const { userId } = useAuth();
   const navigate = useNavigate();
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
 
   const handleCreateProject = () => {
     setIsPressed(true);
-    dispatch(createNewProject(token) as any);
+    dispatch(createNewProject() as any);
     dispatch(startLoading());
   };
 

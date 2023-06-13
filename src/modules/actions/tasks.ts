@@ -174,10 +174,12 @@ export const fetchAllUserTasks = () => async (dispatch: Dispatch) => {
 
     dispatch(fetchAllUserTasksSuccess({ tasks: res.tasks }));
   } catch (e) {
-    changeSnackbarState({
-      id: 'error',
-      open: true,
-      message: `Виникла проблема.Перезавантажте сторінку`,
-    });
+    dispatch(
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `Виникла проблема.Перезавантажте сторінку`,
+      })
+    );
   }
 };
