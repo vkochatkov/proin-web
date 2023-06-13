@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { ComponentType, Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,6 +17,7 @@ const HomePage = React.lazy(() => import('./pages/HomePage'));
 const EditProject = React.lazy(() => import('./pages/EditProject'));
 const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
+const TaskListPage = React.lazy(() => import('./pages/TaskListPage'));
 
 export const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
           <Routes>
             <Route element={<AuthWrapper />}>
               <Route path="/" element={<HomePage />} />
+              <Route path="/tasks" element={<TaskListPage />} />
               <Route
                 path="/project-edit/:pid/:subprojectId?"
                 element={<EditProject />}

@@ -4,8 +4,8 @@ import {
   fetchTasksSuccess,
   updateTaskId,
   updateTasksSuccess,
-} from '../../actions/currentProjectTasks';
-import { ITask } from '../../types/currentProjectTasks';
+} from '../../actions/tasks';
+import { ITask } from '../../types/projectTasks';
 
 const initialState: ITask[] | undefined = [];
 

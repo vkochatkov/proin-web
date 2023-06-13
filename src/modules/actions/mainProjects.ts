@@ -10,7 +10,7 @@ import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
 import { Api } from '../../utils/API';
-import { fetchTasks } from './currentProjectTasks';
+import { fetchTasks } from './tasks';
 import { updateEnitites } from '../../utils/utils';
 
 export const setCurrentProject = createAction<Project>('setCurrentProject');

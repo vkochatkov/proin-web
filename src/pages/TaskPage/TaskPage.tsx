@@ -8,7 +8,7 @@ import { Header } from '../../components/Navigation/Header';
 import { Card } from '../../components/UIElements/Card';
 import { UserActivityDiary } from '../../components/UserActivityDiary';
 import { useForm } from '../../hooks/useForm';
-import { updateTaskFilesOrder } from '../../modules/actions/currentProjectTasks';
+import { updateTaskFilesOrder } from '../../modules/actions/tasks';
 import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { getAuth } from '../../modules/selectors/user';

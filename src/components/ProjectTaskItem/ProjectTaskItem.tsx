@@ -7,10 +7,10 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { ITask } from '../../modules/types/currentProjectTasks';
+import { ITask } from '../../modules/types/projectTasks';
 import { Draggable } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
-import { getTask, getTasks } from '../../modules/selectors/currentProjectTasks';
+import { getTasks } from '../../modules/selectors/tasks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
@@ -23,7 +23,8 @@ import { Button } from '../FormElement/Button';
 import { openModal } from '../../modules/actions/modal';
 import { selectTask } from '../../modules/actions/selectedTask';
 import { RootState } from '../../modules/store/store';
-import { updateTaskById } from '../../modules/actions/currentProjectTasks';
+import { updateTaskById } from '../../modules/actions/tasks';
+import { getUserTask } from '../../modules/selectors/userTasks';
 
 import './ProjectTaskItem.scss';
 
@@ -51,7 +52,9 @@ export const ProjectTaskItem = ({
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
   const [checked, setChecked] = useState(status === 'done');
-  const currentTask = useSelector((state: RootState) => getTask(state)(_id));
+  const currentTask = useSelector((state: RootState) =>
+    getUserTask(state)(_id)
+  );
   const statusValues = ['new', 'in progress', 'done', 'canceled'];
   const [selectedValue, setSelectedValue] = useState(
     currentTask ? currentTask.status : statusValues[0]

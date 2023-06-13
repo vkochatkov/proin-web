@@ -1,4 +1,4 @@
-import { IStatusLabels } from '../modules/types/currentProjectTasks';
+import { IStatusLabels } from '../modules/types/projectTasks';
 import { IFile } from '../modules/types/mainProjects';
 
 // drag and drop reorder

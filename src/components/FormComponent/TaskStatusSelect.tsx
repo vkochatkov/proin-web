@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
 import { CustomSelect } from './CustomSelect';
-import { updateTaskById } from '../../modules/actions/currentProjectTasks';
+import { updateTaskById } from '../../modules/actions/tasks';
 import { useParams } from 'react-router-dom';
 import { getStatusLabel } from '../../utils/utils';
 

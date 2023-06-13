@@ -1,7 +1,7 @@
 import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
 import { IComment, Project } from '../../modules/reducers/mainProjects';
-import { ITask, ITasks } from '../../modules/types/currentProjectTasks';
+import { ITask, ITasks } from '../../modules/types/projectTasks';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -92,5 +92,6 @@ export const Api = {
     updateTaskFilesOrder: (props: Partial<ITask>, tid: string) =>
       APIClient.post(`/project-tasks/task/${tid}`, props),
     deleteTask: (tid: string) => APIClient.delete(`/project-tasks/${tid}`),
+    getAllTasks: () => APIClient.get(`project-tasks/all`),
   },
 };

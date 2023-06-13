@@ -24,6 +24,7 @@ import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearDraggingStatus } from '../modules/actions/dragging';
+import { fetchAllUserTasks } from '../modules/actions/tasks';
 
 import './HomePage.scss';
 
@@ -61,6 +62,7 @@ const HomePage: React.FC = () => {
     if (!userId) return;
 
     dispatch(fetchProjects() as any);
+    dispatch(fetchAllUserTasks() as any);
     dispatch(fetchAllUserProjects() as any);
     dispatch(endLoading());
   }, [sendRequest, userId, dispatch]);

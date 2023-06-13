@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { getAuth } from '../../modules/selectors/user';
+
 import '../Navigation/NavLinks.scss';
 
 export const NavLinks = () => {
@@ -17,10 +18,13 @@ export const NavLinks = () => {
     <nav className="nav-links">
       {token && (
         <>
-          <li>
+          <li className="nav-links__item">
             <NavLink to="/">Проекти</NavLink>
           </li>
-          <li>
+          <li className="nav-links__item">
+            <NavLink to="/tasks">Задачі</NavLink>
+          </li>
+          <li className="nav-links__item">
             <button onClick={handleLogout}>Вийти</button>
           </li>
         </>

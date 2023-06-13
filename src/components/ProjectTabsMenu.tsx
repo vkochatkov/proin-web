@@ -17,6 +17,7 @@ import {
   updateFilesOrder,
   updateSubprojectFilesOrder,
 } from '../modules/actions/mainProjects';
+import { ProjectTasksComponent } from './ProjectTasksComponent';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -79,7 +80,7 @@ export const ProjectTabsMenu = ({
     { label: 'Фінанси', panel: <div>фінанси</div> },
     {
       label: 'Задачі',
-      panel: <ProjectTaskItemList />,
+      panel: <ProjectTasksComponent />,
     },
   ];
 

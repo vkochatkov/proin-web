@@ -4,7 +4,7 @@ import {
   updateCurrentTaskSuccess,
   updateTaskState,
 } from '../../actions/currentTask';
-import { ITask } from '../../types/currentProjectTasks';
+import { ITask } from '../../types/projectTasks';
 
 const initialState: ITask = {
   description: '',

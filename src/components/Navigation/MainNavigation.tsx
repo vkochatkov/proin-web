@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { SideDrawer } from './SideDrawer';
 import { NavLinks } from './NavLInks';
 import { Backdrop } from '../UIElements/Backdrop';
+
 import './MainNavigation.scss';
 
 interface Props {
@@ -19,6 +20,7 @@ export const MainNavigation: React.FC<Props> = (props) => {
   const handleCloseDrawer = () => {
     setDrawerIsOpen(false);
   };
+
   return (
     <>
       {drawerIsOpen && <Backdrop onClick={handleCloseDrawer} />}

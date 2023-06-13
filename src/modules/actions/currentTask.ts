@@ -1,6 +1,6 @@
 import { createAction, Dispatch } from 'redux-act';
 import { Api } from '../../utils/API';
-import { ITask } from '../types/currentProjectTasks';
+import { ITask } from '../types/projectTasks';
 import { changeSnackbarState } from './snackbar';
 
 export const chooseCurrentTaskSuccess = createAction<{ task: ITask }>(

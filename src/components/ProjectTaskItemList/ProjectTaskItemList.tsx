@@ -1,26 +1,21 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import {
-  changeTasksOrder,
-  createTask,
-} from '../../modules/actions/currentProjectTasks';
-import { getTasks } from '../../modules/selectors/currentProjectTasks';
-import { DynamicInput } from '../FormComponent/DynamicInput';
+import { useDispatch } from 'react-redux';
 import { ProjectTaskItem } from '../ProjectTaskItem/ProjectTaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
-import { clearInputState, setIsActiveInput } from '../../modules/actions/input';
-import { getIsActiveInputStatus } from '../../modules/selectors/input';
+import { clearInputState } from '../../modules/actions/input';
+import { ITask } from '../../modules/types/projectTasks';
 
 import './ProjectTaskItemList.scss';
 
-export const ProjectTaskItemList = () => {
-  const tasks = useSelector(getTasks);
-  const { pid } = useParams();
+interface IProps {
+  tasks: ITask[];
+  changeOrder: (tasks: ITask[]) => void;
+}
+
+export const ProjectTaskItemList = ({ tasks, changeOrder }: IProps) => {
   const dispatch = useDispatch();
-  const isActiveInput = useSelector(getIsActiveInputStatus);
 
   useEffect(() => {
     return () => {
@@ -28,22 +23,10 @@ export const ProjectTaskItemList = () => {
     };
   }, []);
 
-  const handleCloseInput = () => {
-    dispatch(setIsActiveInput(false));
-  };
-
-  const handleCreateNewTask = (value: string) => {
-    if (!pid) return;
-
-    dispatch(createTask({ projectId: pid, name: value }) as any);
-  };
-
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
     }
-
-    if (!pid) return;
 
     const newOrder = reorder(
       tasks,
@@ -51,27 +34,12 @@ export const ProjectTaskItemList = () => {
       result.destination.index
     );
 
-    dispatch(changeTasksOrder(pid, newOrder) as any);
+    changeOrder(newOrder);
     dispatch(setIsDragging(false));
   };
 
   return (
     <div className="project-tasks">
-      {isActiveInput && (
-        <div className="project-tasks__wrapper">
-          <DynamicInput
-            placeholder="Напишіть назву задачі"
-            onClick={(value) => {
-              handleCreateNewTask(value);
-              dispatch(setIsActiveInput(false));
-            }}
-            onCancel={handleCloseInput}
-            isActiveWithoutText={true}
-            buttonLabel={'Створити'}
-          />
-        </div>
-      )}
-
       <div>
         <DragDropContext
           onDragEnd={onDragEnd}

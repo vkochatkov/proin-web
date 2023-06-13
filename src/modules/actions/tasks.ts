@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
-import { ITask, ITasks } from '../types/currentProjectTasks';
+import { ITask, ITasks } from '../types/projectTasks';
 import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
@@ -14,6 +14,9 @@ export const clearTasks = createAction('clearTasks');
 export const updateTasksSuccess = createAction<ITasks>('updateTasksSuccess');
 export const updateTaskId = createAction<{ taskId: string; _id: string }>(
   'updateTaskId'
+);
+export const fetchAllUserTasksSuccess = createAction<ITasks>(
+  'fetchAllUserTasksSuccess'
 );
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
@@ -37,7 +40,7 @@ export const createTask =
   ({ projectId, name }: { projectId: string; name: string }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const { userId } = getState().user;
-    const tasks = JSON.parse(JSON.stringify(getState().currentProjectTasks));
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
     const timestamp = new Date().toISOString();
     const id = uuidv4();
 
@@ -93,7 +96,7 @@ export const changeTasksOrder =
 export const updateTaskById =
   (status: string, pid: string, taskId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const tasks = JSON.parse(JSON.stringify(getState().currentProjectTasks));
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
     try {
       const res = await Api.Tasks.updateCurrentTask({ status }, pid, taskId);
       const updatedTask = res.task;
@@ -122,7 +125,7 @@ export const updateTaskById =
 export const updateTaskFilesOrder =
   ({ files, taskId }: { files: IFile[]; taskId: string }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const tasks = getState().currentProjectTasks;
+    const tasks = getState().projectTasks;
     try {
       const result = updateEnitites(tasks, taskId, files);
 
@@ -150,7 +153,7 @@ export const updateTaskFilesOrder =
 
 export const deleteTask =
   (taskId: string) => async (dispatch: Dispatch, getState: () => RootState) => {
-    const tasks = JSON.parse(JSON.stringify(getState().currentProjectTasks));
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
     const updatedTasks = tasks.filter((task: ITask) => task._id !== taskId);
     try {
       dispatch(updateTasksSuccess({ tasks: updatedTasks }));
@@ -164,3 +167,17 @@ export const deleteTask =
       });
     }
   };
+
+export const fetchAllUserTasks = () => async (dispatch: Dispatch) => {
+  try {
+    const res = await Api.Tasks.getAllTasks();
+
+    dispatch(fetchAllUserTasksSuccess({ tasks: res.tasks }));
+  } catch (e) {
+    changeSnackbarState({
+      id: 'error',
+      open: true,
+      message: `Виникла проблема.Перезавантажте сторінку`,
+    });
+  }
+};

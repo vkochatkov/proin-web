@@ -1,6 +1,6 @@
 import { Button, DialogActions, DialogContent } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTask } from '../../modules/actions/currentProjectTasks';
+import { deleteTask } from '../../modules/actions/tasks';
 import { closeModal } from '../../modules/actions/modal';
 import { getModalStateById } from '../../modules/selectors/modal';
 import { getSelectedTask } from '../../modules/selectors/selectedTask';

@@ -15,7 +15,6 @@ export interface ITask {
   name: string;
   taskId: string;
   actions?: IAction[];
-  // [key: string]: string
 }
 
 export interface ITasks {

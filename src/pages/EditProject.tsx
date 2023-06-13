@@ -24,7 +24,7 @@ import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../modules/actions/form';
 import { ImageUpload } from '../components/FormComponent/ImageUpload';
 import { endLoading, startLoading } from '../modules/actions/loading';
-import { fetchTasks } from '../modules/actions/currentProjectTasks';
+import { fetchTasks } from '../modules/actions/tasks';
 import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 import { setDefaultTabValue } from '../modules/actions/tabs';

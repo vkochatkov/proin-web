@@ -1,5 +1,5 @@
 import { Avatar } from '@mui/material';
-import { IAction } from '../../modules/types/currentProjectTasks';
+import { IAction } from '../../modules/types/projectTasks';
 import { backgroundColor } from '../../utils/avatar-view';
 import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { Card } from '../UIElements/Card';
