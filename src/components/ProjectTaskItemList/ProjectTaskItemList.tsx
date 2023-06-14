@@ -12,9 +12,14 @@ import './ProjectTaskItemList.scss';
 interface IProps {
   tasks: ITask[];
   changeOrder: (tasks: ITask[]) => void;
+  generateNavigationString: (id: string) => void;
 }
 
-export const ProjectTaskItemList = ({ tasks, changeOrder }: IProps) => {
+export const ProjectTaskItemList = ({
+  tasks,
+  changeOrder,
+  generateNavigationString,
+}: IProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -49,7 +54,12 @@ export const ProjectTaskItemList = ({ tasks, changeOrder }: IProps) => {
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, index) => (
-                  <ProjectTaskItem task={task} index={index} key={task._id} />
+                  <ProjectTaskItem
+                    task={task}
+                    index={index}
+                    key={task._id}
+                    generateNavigationString={generateNavigationString}
+                  />
                 ))}
                 {provided.placeholder}
               </div>

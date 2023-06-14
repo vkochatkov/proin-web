@@ -93,6 +93,8 @@ export const Api = {
     updateTaskFilesOrder: (props: Partial<ITask>, tid: string) =>
       APIClient.post(`/project-tasks/task/${tid}`, props),
     deleteTask: (tid: string) => APIClient.delete(`/project-tasks/${tid}`),
-    getAllTasks: () => APIClient.get(`project-tasks/all`),
+    getAllTasks: () => APIClient.get(`/project-tasks/all`),
+    updateUserTasks: (props: { taskIds: string[] }) =>
+      APIClient.post(`project-tasks/user`, props),
   },
 };

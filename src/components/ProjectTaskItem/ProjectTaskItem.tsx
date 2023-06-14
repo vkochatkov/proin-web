@@ -23,20 +23,22 @@ import { openModal } from '../../modules/actions/modal';
 import { selectTask } from '../../modules/actions/selectedTask';
 import { RootState } from '../../modules/store/store';
 import { updateTaskById } from '../../modules/actions/tasks';
-import { getUserTask } from '../../modules/selectors/userTasks';
+import { getUserTask, getUserTasks } from '../../modules/selectors/userTasks';
 
 import './ProjectTaskItem.scss';
 
 export const ProjectTaskItem = ({
   task,
   index,
+  generateNavigationString,
 }: {
   task: ITask;
   index: number;
+  generateNavigationString: (id: string) => void;
 }) => {
   const { timestamp, actions, _id, status } = task;
   const taskWrapperStyle = { padding: '10px', marginTop: '5px' };
-  const tasks = useSelector(getTasks);
+  const tasks = useSelector(getUserTasks);
   const navigate = useNavigate();
   const { pid } = useParams();
   const dispatch = useDispatch();
@@ -100,7 +102,8 @@ export const ProjectTaskItem = ({
       if (anchorEl) {
         handleClose();
       } else {
-        navigate(`/project-edit/${pid}/task/${currentTask._id}`);
+        const query = generateNavigationString(currentTask._id);
+        navigate(`${query}`);
       }
     }
   };

@@ -18,12 +18,17 @@ export const ProjectTasksComponent = () => {
     dispatch(changeTasksOrder(pid, newOrder) as any);
   };
 
+  const handleGenerateNavigationQuery = (id: string) => {
+    return `/project-edit/${pid}/task/${id}`;
+  };
+
   return (
     <>
       <CreateTaskInput />
       <ProjectTaskItemList
         tasks={tasks}
         changeOrder={handleChangeTaskItemOrder}
+        generateNavigationString={handleGenerateNavigationQuery}
       />
     </>
   );

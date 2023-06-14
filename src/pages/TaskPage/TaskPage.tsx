@@ -35,8 +35,12 @@ export const TaskPage = () => {
   const tabsId = 'main-tabs';
 
   const handleCloseTaskPage = () => {
-    dispatch(setTabValue({ [tabsId]: 'Задачі' }));
-    navigate(`/project-edit/${pid}`);
+    if (pid) {
+      dispatch(setTabValue({ [tabsId]: 'Задачі' }));
+      navigate(`/project-edit/${pid}`);
+    } else {
+      navigate(`/tasks`);
+    }
   };
 
   const saveFilesOrder = (order: IFile[]) => {

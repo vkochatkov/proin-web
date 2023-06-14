@@ -42,6 +42,7 @@ export const App: React.FC = () => {
                 path="/project-edit/:pid/task/:taskId"
                 element={<TaskPage />}
               />
+              <Route path="/tasks/:taskId" element={<TaskPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
             <Route path="/auth" element={<Auth />} />

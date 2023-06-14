@@ -1,7 +1,8 @@
 import { Card, Container } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { ProjectTaskItemList } from '../components/ProjectTaskItemList/ProjectTaskItemList';
+import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
 import { ITask } from '../modules/types/projectTasks';
 
@@ -9,8 +10,15 @@ type Props = {};
 
 const TaskListPage: React.FC<Props> = () => {
   const tasks = useSelector(getAllUserTasks);
+  const dispatch = useDispatch();
 
-  const handleSaveTaskItemOrder = (newOrder: ITask[]) => {};
+  const handleSaveTaskItemOrder = (newOrder: ITask[]) => {
+    dispatch(changeUserTasksOrder(newOrder) as any);
+  };
+
+  const handleGenerateNavigationQuery = (id: string) => {
+    return `/tasks/${id}`;
+  };
 
   return (
     <>
@@ -35,6 +43,7 @@ const TaskListPage: React.FC<Props> = () => {
           <ProjectTaskItemList
             tasks={tasks}
             changeOrder={handleSaveTaskItemOrder}
+            generateNavigationString={handleGenerateNavigationQuery}
           />
         </Card>
       </Container>
