@@ -15,6 +15,8 @@ import {
   updateTaskState,
 } from '../../modules/actions/currentTask';
 import { useDebounce } from '../../hooks/useDebounce';
+import { Project } from '../../modules/reducers/mainProjects';
+import { fetchAllUserTasks, fetchTasks } from '../../modules/actions/tasks';
 
 import './InteractiveInput.scss';
 
@@ -47,6 +49,20 @@ export const InteractiveInput = ({
     }
   }, [id, text]);
 
+  const handleUpdatingArray = (updatedEntity: any, id: string) => {
+    const entityIndex = entities.findIndex((entity) => entity._id === id);
+
+    if (entityIndex === -1) {
+      return;
+    }
+
+    return [
+      ...entities.slice(0, entityIndex),
+      updatedEntity,
+      ...entities.slice(entityIndex + 1),
+    ];
+  };
+
   const handleChangeKeyValue = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -76,19 +92,14 @@ export const InteractiveInput = ({
       dispatch(setCurrentProject(updatedEntity));
       saveChanges(callback);
 
-      const entityIndex = entities.findIndex((entity) => entity._id === pid);
-
-      if (entityIndex === -1) {
-        return;
-      }
-
-      const updatedEnities = [
-        ...entities.slice(0, entityIndex),
+      const updatedEntities: Project[] | undefined = handleUpdatingArray(
         updatedEntity,
-        ...entities.slice(entityIndex + 1),
-      ];
+        pid
+      );
 
-      dispatch(updateProjectsSuccess(updatedEnities));
+      if (!updatedEntities) return;
+
+      dispatch(updateProjectsSuccess(updatedEntities));
     }
 
     if (subprojectId && subprojectId === updatedEntity.id) {
@@ -97,10 +108,28 @@ export const InteractiveInput = ({
     }
 
     if (pid && taskId && taskId === updatedEntity._id) {
-      const callback = () =>
-        dispatch(
+      const callback = async () => {
+        await dispatch(
           updateCurrentTask({ [id]: newValue }, pid, updatedEntity._id) as any
         );
+        dispatch(fetchTasks(pid) as any);
+      };
+
+      dispatch(updateTaskState({ task: updatedEntity }) as any);
+      saveChanges(callback);
+    }
+
+    if (!pid && taskId && taskId === updatedEntity._id) {
+      const callback = async () => {
+        await dispatch(
+          updateCurrentTask(
+            { [id]: newValue },
+            updatedEntity.projectId,
+            updatedEntity._id
+          ) as any
+        );
+        dispatch(fetchAllUserTasks() as any);
+      };
 
       dispatch(updateTaskState({ task: updatedEntity }) as any);
       saveChanges(callback);

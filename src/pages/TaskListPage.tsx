@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { Card, Container } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { ProjectTaskItemList } from '../components/ProjectTaskItemList/ProjectTaskItemList';
+import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
 import { ITask } from '../modules/types/projectTasks';
@@ -11,6 +13,10 @@ type Props = {};
 const TaskListPage: React.FC<Props> = () => {
   const tasks = useSelector(getAllUserTasks);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllUserTasks() as any);
+  }, []);
 
   const handleSaveTaskItemOrder = (newOrder: ITask[]) => {
     dispatch(changeUserTasksOrder(newOrder) as any);

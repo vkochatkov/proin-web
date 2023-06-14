@@ -1,5 +1,4 @@
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { changeTasksOrder } from '../modules/actions/tasks';
 import { getTasks } from '../modules/selectors/tasks';

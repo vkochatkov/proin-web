@@ -8,6 +8,7 @@ import { RootState } from '../store/store';
 import { IFile } from '../types/mainProjects';
 import { updateEnitites } from '../../utils/utils';
 import { updateCurrentTaskSuccess } from './currentTask';
+import { endLoading, startLoading } from './loading';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
@@ -170,9 +171,11 @@ export const deleteTask =
 
 export const fetchAllUserTasks = () => async (dispatch: Dispatch) => {
   try {
+    dispatch(startLoading());
     const res = await Api.Tasks.getAllTasks();
 
     dispatch(fetchAllUserTasksSuccess({ tasks: res.tasks }));
+    dispatch(endLoading());
   } catch (e) {
     dispatch(
       changeSnackbarState({

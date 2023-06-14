@@ -20,6 +20,10 @@ import './TaskPage.scss';
 export const TaskPage = () => {
   const { inputHandler } = useForm(
     {
+      name: {
+        value: '',
+        isValid: true,
+      },
       description: {
         value: '',
         isValid: true,
