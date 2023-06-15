@@ -13,10 +13,10 @@ import { Button } from '../FormElement/Button';
 import { InteractiveInput } from './InteractiveInput';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import {
-  endFilesLoading,
-  startFilesLoading,
+  endLogoLoading,
+  startLogoLoading,
 } from '../../modules/actions/loading';
-import { getIsFilesLoading } from '../../modules/selectors/loading';
+import { getIsLogoLoading } from '../../modules/selectors/loading';
 import CircularProgress from '@mui/material/CircularProgress';
 
 interface IImageUpload {
@@ -41,7 +41,7 @@ export const ImageUpload = ({
   const [isValid, setIsValid] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>('');
   const { token } = useSelector(getAuth);
-  const isLoading = useSelector(getIsFilesLoading);
+  const isLoading = useSelector(getIsLogoLoading);
   const dispatch = useDispatch();
   const { sendRequest } = useHttpClient();
   const { inputHandler } = useForm(
@@ -128,10 +128,11 @@ export const ImageUpload = ({
     let value;
 
     if (projectId && pickedFile) {
-      dispatch(startFilesLoading());
+      dispatch(startLogoLoading());
+
       const res: any = await request(projectId, token, pickedFile);
 
-      dispatch(endFilesLoading());
+      dispatch(endLogoLoading());
 
       value = res.project.logoUrl;
 
