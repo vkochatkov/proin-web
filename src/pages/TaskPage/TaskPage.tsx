@@ -13,6 +13,7 @@ import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { getAuth } from '../../modules/selectors/user';
 import { IFile } from '../../modules/types/mainProjects';
+import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
 
 import '../HomePage.scss';
 import './TaskPage.scss';
@@ -52,42 +53,45 @@ export const TaskPage = () => {
   };
 
   return (
-    <div className="container">
-      <Header>
-        <Button
-          size="small"
-          transparent={true}
-          icon={true}
-          customClassName="header__btn-close"
-          onClick={handleCloseTaskPage}
-        >
-          <img src="/back.svg" alt="back_logo" className="button__icon" />
-        </Button>
-      </Header>
-      <Card>
-        <Card className="task-page__card">
-          <InteractiveInput
-            id="name"
-            inputHandler={inputHandler}
-            token={token}
-            entity={task}
-          />
-          <div className="task-page__input-wrapper">
+    <>
+      <SnackbarUI />
+      <div className="container">
+        <Header>
+          <Button
+            size="small"
+            transparent={true}
+            icon={true}
+            customClassName="header__btn-close"
+            onClick={handleCloseTaskPage}
+          >
+            <img src="/back.svg" alt="back_logo" className="button__icon" />
+          </Button>
+        </Header>
+        <Card>
+          <Card className="task-page__card">
             <InteractiveInput
-              label={'Опис'}
-              id="description"
+              id="name"
               inputHandler={inputHandler}
               token={token}
               entity={task}
             />
-          </div>
-          <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
-          <div className="task-page__uploader">
-            <TaskFilesUpload id={'files'} />
-          </div>
+            <div className="task-page__input-wrapper">
+              <InteractiveInput
+                label={'Опис'}
+                id="description"
+                inputHandler={inputHandler}
+                token={token}
+                entity={task}
+              />
+            </div>
+            <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
+            <div className="task-page__uploader">
+              <TaskFilesUpload id={'files'} />
+            </div>
+          </Card>
+          <UserActivityDiary />
         </Card>
-        <UserActivityDiary />
-      </Card>
-    </div>
+      </div>
+    </>
   );
 };

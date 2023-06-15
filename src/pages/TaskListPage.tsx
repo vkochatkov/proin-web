@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { Card, Container } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
+import { Card, Container } from '@mui/material';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { ProjectTaskItemList } from '../components/ProjectTaskItemList/ProjectTaskItemList';
 import { fetchAllUserTasks } from '../modules/actions/tasks';

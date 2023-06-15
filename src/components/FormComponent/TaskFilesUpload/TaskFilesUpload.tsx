@@ -20,7 +20,12 @@ export const TaskFilesUpload = ({ id }: IProps) => {
 
       if (!pid || !taskId) return;
 
-      dispatch(updateCurrentTask({ files: fileDataArray }, pid, taskId) as any);
+      dispatch(
+        updateCurrentTask(
+          { files: fileDataArray, projectId: pid },
+          taskId
+        ) as any
+      );
     } catch (err) {
       console.log(err);
     }

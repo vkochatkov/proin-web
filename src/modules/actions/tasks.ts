@@ -9,6 +9,7 @@ import { IFile } from '../types/mainProjects';
 import { updateEnitites } from '../../utils/utils';
 import { updateCurrentTaskSuccess } from './currentTask';
 import { endLoading, startLoading } from './loading';
+import ApiErrors from '../../utils/API/APIErrors';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
@@ -99,7 +100,13 @@ export const updateTaskById =
   async (dispatch: Dispatch, getState: () => RootState) => {
     const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
     try {
-      const res = await Api.Tasks.updateCurrentTask({ status }, pid, taskId);
+      const res = await Api.Tasks.updateCurrentTask(
+        { status, projectId: pid },
+        taskId
+      );
+
+      ApiErrors.checkOnApiError(res);
+
       const updatedTask = res.task;
       const updatedTasks = tasks.map((task: ITask) => {
         if (task._id === taskId) {

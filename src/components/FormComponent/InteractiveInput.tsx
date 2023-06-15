@@ -110,7 +110,7 @@ export const InteractiveInput = ({
     if (pid && taskId && taskId === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
-          updateCurrentTask({ [id]: newValue }, pid, updatedEntity._id) as any
+          updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any
         );
         dispatch(fetchTasks(pid) as any);
       };
@@ -122,11 +122,7 @@ export const InteractiveInput = ({
     if (!pid && taskId && taskId === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
-          updateCurrentTask(
-            { [id]: newValue },
-            updatedEntity.projectId,
-            updatedEntity._id
-          ) as any
+          updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any
         );
         dispatch(fetchAllUserTasks() as any);
       };
