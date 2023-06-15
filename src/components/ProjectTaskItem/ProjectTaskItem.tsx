@@ -10,7 +10,6 @@ import {
 import { ITask } from '../../modules/types/projectTasks';
 import { Draggable } from '@hello-pangea/dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { getTasks } from '../../modules/selectors/tasks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
 import { getFirstLetter, getStatusLabel } from '../../utils/utils';
@@ -23,7 +22,7 @@ import { openModal } from '../../modules/actions/modal';
 import { selectTask } from '../../modules/actions/selectedTask';
 import { RootState } from '../../modules/store/store';
 import { updateTaskById } from '../../modules/actions/tasks';
-import { getUserTask, getUserTasks } from '../../modules/selectors/userTasks';
+import { getUserTask } from '../../modules/selectors/userTasks';
 
 import './ProjectTaskItem.scss';
 
@@ -38,7 +37,6 @@ export const ProjectTaskItem = ({
 }) => {
   const { timestamp, actions, _id, status } = task;
   const taskWrapperStyle = { padding: '10px', marginTop: '5px' };
-  const tasks = useSelector(getUserTasks);
   const navigate = useNavigate();
   const { pid } = useParams();
   const dispatch = useDispatch();
@@ -86,25 +84,18 @@ export const ProjectTaskItem = ({
     setChecked(status === 'done');
   }, [status]);
 
-  const handleOpenTaskPage = (
-    e: React.MouseEvent<HTMLDivElement>,
-    id: string
-  ) => {
+  const handleOpenTaskPage = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
       return;
     }
 
-    const currentTask = tasks.find((task) => task._id === id);
+    dispatch(chooseCurrentTaskSuccess({ task }));
 
-    if (currentTask) {
-      dispatch(chooseCurrentTaskSuccess({ task: currentTask }));
-
-      if (anchorEl) {
-        handleClose();
-      } else {
-        const query = generateNavigationString(currentTask._id);
-        navigate(`${query}`);
-      }
+    if (anchorEl) {
+      handleClose();
+    } else {
+      const query = generateNavigationString(task._id);
+      navigate(`${query}`);
     }
   };
 
@@ -138,10 +129,10 @@ export const ProjectTaskItem = ({
   };
 
   return (
-    <Draggable draggableId={task._id} index={index}>
+    <Draggable draggableId={task.taskId} index={index}>
       {(provided) => (
         <div
-          onClick={(e) => handleOpenTaskPage(e, task._id)}
+          onClick={(e) => handleOpenTaskPage(e)}
           ref={provided.innerRef}
           className="task-item"
           {...provided.draggableProps}
