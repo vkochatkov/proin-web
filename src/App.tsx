@@ -1,4 +1,4 @@
-import React, { ComponentType, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Routes,

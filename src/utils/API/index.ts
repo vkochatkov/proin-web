@@ -17,13 +17,17 @@ class HTTPClient extends HTTPClientCore {
 
   public makeRequest<T = any>(config: IRequestConfig): Promise<T> {
     const source = axios.CancelToken.source();
+    const storedDataString = localStorage.getItem('userData');
+    const storedData = storedDataString ? JSON.parse(storedDataString) : null;
 
     const requestConfig: AxiosRequestConfig = {
       ...config,
       cancelToken: source.token,
       headers: {
         ...config.headers,
-        Authorization: this.token ? `Bearer ${this.token}` : undefined,
+        Authorization: storedData.token
+          ? `Bearer ${storedData.token}`
+          : undefined,
         'Content-Type': 'application/json',
       },
     };
