@@ -5,6 +5,10 @@
   color: #555;
 }
 
+@mixin done-background {
+  background-color: rgba(236, 240, 241, 0.9);
+}
+
 @mixin align-center {
   display: flex;
   align-items: center;

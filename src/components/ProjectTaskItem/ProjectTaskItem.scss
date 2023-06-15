@@ -9,6 +9,10 @@
     margin-left: 5px !important;
   }
 
+  &__done {
+    @include done-background;
+  }
+
   &__text {
     margin-left: 5px !important;
   }

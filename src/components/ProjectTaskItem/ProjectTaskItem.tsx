@@ -36,7 +36,6 @@ export const ProjectTaskItem = ({
   generateNavigationString: (id: string) => void;
 }) => {
   const { timestamp, actions, _id, status } = task;
-  const taskWrapperStyle = { padding: '10px', marginTop: '5px' };
   const navigate = useNavigate();
   const { pid } = useParams();
   const dispatch = useDispatch();
@@ -51,6 +50,12 @@ export const ProjectTaskItem = ({
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
   const [checked, setChecked] = useState(status === 'done');
+  const taskWrapperStyle = {
+    padding: '10px',
+    marginTop: '5px',
+    backgroundColor:
+      status === 'done' && checked ? 'rgba(236, 240, 241, 0.9)' : '',
+  };
   const currentTask = useSelector((state: RootState) =>
     getUserTask(state)(_id)
   );
