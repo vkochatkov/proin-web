@@ -88,7 +88,7 @@ export const InteractiveInput = ({
           );
         });
 
-    if (pid && pid === updatedEntity.id) {
+    if (pid && pid === updatedEntity._id) {
       dispatch(setCurrentProject(updatedEntity));
       saveChanges(callback);
 
@@ -102,7 +102,7 @@ export const InteractiveInput = ({
       dispatch(updateProjectsSuccess(updatedEntities));
     }
 
-    if (subprojectId && subprojectId === updatedEntity.id) {
+    if (subprojectId && subprojectId === updatedEntity._id) {
       dispatch(setCurrentProject(updatedEntity));
       saveChanges(callback);
     }
