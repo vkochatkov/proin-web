@@ -25,7 +25,9 @@ class HTTPClient extends HTTPClientCore {
       cancelToken: source.token,
       headers: {
         ...config.headers,
-        Authorization: storedData.token
+        Authorization: this.token
+          ? `Bearer ${this.token}`
+          : storedData.token
           ? `Bearer ${storedData.token}`
           : undefined,
         'Content-Type': 'application/json',
@@ -92,10 +94,10 @@ export const Api = {
     get: (pid: string) => APIClient.get(`/project-tasks/${pid}/tasks`),
     updateTasksByProjectId: (props: ITasks, pid: string) =>
       APIClient.post(`/project-tasks/${pid}`, props),
-    updateCurrentTask: (props: Partial<ITask>, tid: string) =>
+    updateTask: (props: Partial<ITask>, tid: string) =>
       APIClient.post(`/project-tasks/task/${tid}`, props),
     updateTaskFilesOrder: (props: Partial<ITask>, tid: string) =>
-      APIClient.post(`/project-tasks/task/${tid}`, props),
+      APIClient.post(`/project-tasks/files/${tid}`, props),
     deleteTask: (tid: string) => APIClient.delete(`/project-tasks/${tid}`),
     getAllTasks: () => APIClient.get(`/project-tasks/all`),
     updateUserTasks: (props: { taskIds: string[] }) =>
