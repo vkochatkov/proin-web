@@ -185,9 +185,15 @@ export const updateTaskFilesOrder =
 export const deleteTask =
   (taskId: string) => async (dispatch: Dispatch, getState: () => RootState) => {
     const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
     const updatedTasks = tasks.filter((task: ITask) => task._id !== taskId);
+    const updatedUserTasks = userTasks.filter(
+      (task: ITask) => task._id !== taskId
+    );
+
     try {
       dispatch(updateTasksSuccess({ tasks: updatedTasks }));
+      dispatch(updateUserTasksSuccess(updatedUserTasks));
 
       await Api.Tasks.deleteTask(taskId);
     } catch (e) {
