@@ -24,9 +24,9 @@ import { RootState } from '../../modules/store/store';
 import { updateTaskById } from '../../modules/actions/tasks';
 import { getUserTask } from '../../modules/selectors/userTasks';
 
-import './ProjectTaskItem.scss';
+import './TaskItem.scss';
 
-export const ProjectTaskItem = ({
+export const TaskItem = ({
   task,
   index,
   generateNavigationString,
@@ -53,8 +53,7 @@ export const ProjectTaskItem = ({
   const taskWrapperStyle = {
     padding: '10px',
     marginTop: '5px',
-    backgroundColor:
-      status === 'done' && checked ? 'rgba(236, 240, 241, 0.9)' : '',
+    backgroundColor: checked ? 'rgba(236, 240, 241, 0.9)' : '',
   };
   const currentTask = useSelector((state: RootState) =>
     getUserTask(state)(_id)
@@ -128,9 +127,7 @@ export const ProjectTaskItem = ({
       newValue = newTaskStatus;
     }
 
-    if (!pid) return;
-
-    dispatch(updateTaskById(newValue, pid, _id) as any);
+    dispatch(updateTaskById({ status: newValue }, _id, pid) as any);
   };
 
   return (

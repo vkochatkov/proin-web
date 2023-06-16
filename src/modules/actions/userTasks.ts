@@ -4,8 +4,8 @@ import ApiErrors from '../../utils/API/APIErrors';
 import { ITask } from '../types/projectTasks';
 import { changeSnackbarState } from './snackbar';
 
-export const changeUserTasksOrderSuccess = createAction<ITask[]>(
-  'changeUserTasksOrder'
+export const updateUserTasksSuccess = createAction<ITask[]>(
+  'updateUserTasksSuccess'
 );
 
 export const changeUserTasksOrder =
@@ -13,7 +13,7 @@ export const changeUserTasksOrder =
     try {
       const taskIds = tasks.map((task) => task._id);
 
-      dispatch(changeUserTasksOrderSuccess(tasks));
+      dispatch(updateUserTasksSuccess(tasks));
       const res = await Api.Tasks.updateUserTasks({ taskIds });
 
       ApiErrors.checkOnApiError(res);

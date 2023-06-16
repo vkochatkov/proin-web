@@ -27,9 +27,7 @@ export const TaskStatusSelect = ({
 
     setSelectedValue(newValue);
 
-    if (!pid) return;
-
-    dispatch(updateTaskById(newValue, pid, id) as any);
+    dispatch(updateTaskById({ status: newValue }, id, pid) as any);
   };
 
   return (

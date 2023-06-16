@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { ProjectTaskItem } from '../ProjectTaskItem/ProjectTaskItem';
+import { TaskItem } from '../TaskItem/TaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
 import { clearInputState } from '../../modules/actions/input';
 import { ITask } from '../../modules/types/projectTasks';
 
-import './ProjectTaskItemList.scss';
+import './TaskItemList.scss';
 
 interface IProps {
   tasks: ITask[];
@@ -15,7 +15,7 @@ interface IProps {
   generateNavigationString: (id: string) => void;
 }
 
-export const ProjectTaskItemList = ({
+export const TaskItemList = ({
   tasks,
   changeOrder,
   generateNavigationString,
@@ -44,7 +44,7 @@ export const ProjectTaskItemList = ({
   };
 
   return (
-    <div className="project-tasks">
+    <div className="tasks-items">
       <div>
         <DragDropContext
           onDragEnd={onDragEnd}
@@ -54,7 +54,7 @@ export const ProjectTaskItemList = ({
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, index) => (
-                  <ProjectTaskItem
+                  <TaskItem
                     task={task}
                     index={index}
                     key={task._id}

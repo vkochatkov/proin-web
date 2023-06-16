@@ -14,7 +14,7 @@ export const updateTaskState = createAction<{ task: ITask }>('updateTaskState');
 export const updateCurrentTask =
   (data: any, tid: string) => async (dispatch: Dispatch) => {
     try {
-      const res = await Api.Tasks.updateCurrentTask(data, tid);
+      const res = await Api.Tasks.updateTask(data, tid);
       dispatch(updateCurrentTaskSuccess({ task: res.task }));
     } catch (e: any) {
       dispatch(

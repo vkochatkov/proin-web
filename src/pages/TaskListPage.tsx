@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Container } from '@mui/material';
 import { MainNavigation } from '../components/Navigation/MainNavigation';
-import { ProjectTaskItemList } from '../components/ProjectTaskItemList/ProjectTaskItemList';
+import { TaskItemList } from '../components/TaskItemList/TaskItemList';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
@@ -46,7 +46,7 @@ const TaskListPage: React.FC<Props> = () => {
             },
           }}
         >
-          <ProjectTaskItemList
+          <TaskItemList
             tasks={tasks}
             changeOrder={handleSaveTaskItemOrder}
             generateNavigationString={handleGenerateNavigationQuery}

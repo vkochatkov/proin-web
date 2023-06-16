@@ -4,7 +4,7 @@ import { changeTasksOrder } from '../modules/actions/tasks';
 import { getTasks } from '../modules/selectors/tasks';
 import { ITask } from '../modules/types/projectTasks';
 import { CreateTaskInput } from './CreateTaskInput';
-import { ProjectTaskItemList } from './ProjectTaskItemList/ProjectTaskItemList';
+import { TaskItemList } from './TaskItemList/TaskItemList';
 
 export const ProjectTasksComponent = () => {
   const tasks = useSelector(getTasks);
@@ -24,7 +24,7 @@ export const ProjectTasksComponent = () => {
   return (
     <>
       <CreateTaskInput />
-      <ProjectTaskItemList
+      <TaskItemList
         tasks={tasks}
         changeOrder={handleChangeTaskItemOrder}
         generateNavigationString={handleGenerateNavigationQuery}

@@ -10,6 +10,7 @@ import { updateEnitites } from '../../utils/utils';
 import { updateCurrentTaskSuccess } from './currentTask';
 import { endLoading, startLoading } from './loading';
 import ApiErrors from '../../utils/API/APIErrors';
+import { updateUserTasksSuccess } from './userTasks';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
@@ -20,6 +21,23 @@ export const updateTaskId = createAction<{ taskId: string; _id: string }>(
 export const fetchAllUserTasksSuccess = createAction<ITasks>(
   'fetchAllUserTasksSuccess'
 );
+
+export const updateTasksFunction = ({
+  tasks,
+  taskId,
+  updatedTask,
+}: {
+  tasks: ITask[];
+  taskId: string;
+  updatedTask: ITask;
+}) =>
+  tasks.map((task: ITask) => {
+    if (task._id === taskId) {
+      task = updatedTask;
+    }
+
+    return task;
+  });
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
   try {
@@ -96,27 +114,32 @@ export const changeTasksOrder =
   };
 
 export const updateTaskById =
-  (status: string, pid: string, taskId: string) =>
+  (data: Partial<ITask>, taskId: string, pid?: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
     try {
-      const res = await Api.Tasks.updateCurrentTask(
-        { status, projectId: pid },
+      const res = await Api.Tasks.updateTask(
+        { ...data, projectId: pid ? pid : '' },
         taskId
       );
 
       ApiErrors.checkOnApiError(res);
 
-      const updatedTask = res.task;
-      const updatedTasks = tasks.map((task: ITask) => {
-        if (task._id === taskId) {
-          task = updatedTask;
-        }
-
-        return task;
+      const updatedTask: ITask = res.task;
+      const updatedTasks = updateTasksFunction({
+        tasks,
+        taskId,
+        updatedTask,
+      });
+      const updatedUserTasks = updateTasksFunction({
+        tasks: userTasks,
+        taskId,
+        updatedTask,
       });
 
       dispatch(updateTasksSuccess({ tasks: updatedTasks }));
+      dispatch(updateUserTasksSuccess(updatedUserTasks));
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',
