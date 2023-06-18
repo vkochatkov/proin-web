@@ -5,6 +5,7 @@ import { setDefaultTabValue, setTabValue } from '../../actions/tabs';
 const initialState: ITab = {
   'main-tabs': 'Опис',
   'comment-tabs': 'Коментарі',
+  'task-tabs': 'Коментарі',
 };
 
 export const tabs = createReducer({}, initialState);
