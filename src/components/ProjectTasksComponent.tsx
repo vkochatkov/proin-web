@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { changeTasksOrder } from '../modules/actions/tasks';
 import { getTasks } from '../modules/selectors/tasks';
-import { ITask } from '../modules/types/projectTasks';
+import { ITask } from '../modules/types/tasks';
 import { CreateTaskInput } from './CreateTaskInput';
 import { TaskItemList } from './TaskItemList/TaskItemList';
 

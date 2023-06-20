@@ -71,6 +71,7 @@ export const createProjectComment =
           ? updatedCurrentProject
           : project
       );
+
       dispatch(
         updateMainProjectsSuccess({
           updatedCurrentProject,
@@ -143,16 +144,7 @@ export const updateComment =
         })
       );
 
-      await axios({
-        method: 'PATCH',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
-        data: JSON.stringify(updatedComment),
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        cancelToken: httpSource.token,
-      });
+      await Api.Comments.update({ ...updatedComment }, updatedComment.id);
     } catch (e) {
       dispatch(
         changeSnackbarState({

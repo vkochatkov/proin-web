@@ -6,7 +6,7 @@ import { TaskItemList } from '../components/TaskItemList/TaskItemList';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
-import { ITask } from '../modules/types/projectTasks';
+import { ITask } from '../modules/types/tasks';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 
 type Props = {};

@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 import { fetchAllUserTasksSuccess } from '../../actions/tasks';
 import { updateUserTasksSuccess } from '../../actions/userTasks';
-import { ITask } from '../../types/projectTasks';
+import { ITask } from '../../types/tasks';
 
 const initialState: ITask[] | undefined = [];
 

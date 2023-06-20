@@ -7,7 +7,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { ITask } from '../../modules/types/projectTasks';
+import { ITask } from '../../modules/types/tasks';
 import { Draggable } from '@hello-pangea/dnd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -40,7 +40,11 @@ export const TaskItem = ({
   const { pid } = useParams();
   const dispatch = useDispatch();
   const lastAction = actions ? actions[actions.length - 1] : null;
-  const firstLetter = lastAction ? getFirstLetter(lastAction.name) : null;
+  const firstLetter = lastAction
+    ? lastAction.name
+      ? getFirstLetter(lastAction.name)
+      : 'U'
+    : null;
   const isStatusInfo = lastAction
     ? lastAction.description.includes('Статус')
     : false;

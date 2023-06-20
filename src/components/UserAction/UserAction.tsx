@@ -1,5 +1,5 @@
 import { Avatar } from '@mui/material';
-import { IAction } from '../../modules/types/projectTasks';
+import { IAction } from '../../modules/types/tasks';
 import { backgroundColor } from '../../utils/avatar-view';
 import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { Card } from '../UIElements/Card';
@@ -17,7 +17,7 @@ const avatarStyle = {
 };
 
 export const UserAction = ({ action }: IProps) => {
-  const firstLetter = getFirstLetter(action.name);
+  const firstLetter = action.name ? getFirstLetter(action.name) : 'U';
   const isStatusInfo = action.description.includes('Статус');
   const isFilesInfo = action.description.includes('файл');
 

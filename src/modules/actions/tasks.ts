@@ -1,16 +1,17 @@
 import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
-import { ITask, ITasks } from '../types/projectTasks';
+import { ITask, ITaskRequest, ITasks } from '../types/tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
 import { IFile } from '../types/mainProjects';
-import { updateEnitites } from '../../utils/utils';
-import { updateCurrentTaskSuccess } from './currentTask';
+import { updateEnitites, updateObjects } from '../../utils/utils';
+import { updateCurrentTaskSuccess, updateTaskState } from './currentTask';
 import { endLoading, startLoading } from './loading';
 import ApiErrors from '../../utils/API/APIErrors';
 import { updateUserTasksSuccess } from './userTasks';
+import { IComment } from '../reducers/mainProjects';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
@@ -20,6 +21,9 @@ export const updateTaskId = createAction<{ taskId: string; _id: string }>(
 );
 export const fetchAllUserTasksSuccess = createAction<ITasks>(
   'fetchAllUserTasksSuccess'
+);
+export const deleteTaskCommentSuccess = createAction(
+  'deleteTaskCommentSuccess'
 );
 
 export const updateTasksFunction = ({
@@ -38,6 +42,25 @@ export const updateTasksFunction = ({
 
     return task;
   });
+
+export const taskStateUpdater = ({
+  tasks,
+  task,
+  userTasks,
+  dispatch,
+}: {
+  tasks: ITask[];
+  task: ITask;
+  userTasks: ITask[];
+  dispatch: Dispatch;
+}) => {
+  const updatedTasks = updateObjects(tasks, task);
+  const updatedUserTasks = updateObjects(userTasks, task);
+
+  dispatch(updateCurrentTaskSuccess({ task }));
+  dispatch(updateTasksSuccess({ tasks: updatedTasks }));
+  dispatch(updateUserTasksSuccess(updatedUserTasks));
+};
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
   try {
@@ -114,10 +137,11 @@ export const changeTasksOrder =
   };
 
 export const updateTaskById =
-  (data: Partial<ITask>, taskId: string, pid?: string) =>
+  (data: Partial<ITaskRequest>, taskId: string, pid?: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
     const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
+
     try {
       const res = await Api.Tasks.updateTask(
         { ...data, projectId: pid ? pid : '' },
@@ -127,19 +151,13 @@ export const updateTaskById =
       ApiErrors.checkOnApiError(res);
 
       const updatedTask: ITask = res.task;
-      const updatedTasks = updateTasksFunction({
-        tasks,
-        taskId,
-        updatedTask,
-      });
-      const updatedUserTasks = updateTasksFunction({
-        tasks: userTasks,
-        taskId,
-        updatedTask,
-      });
 
-      dispatch(updateTasksSuccess({ tasks: updatedTasks }));
-      dispatch(updateUserTasksSuccess(updatedUserTasks));
+      taskStateUpdater({
+        tasks,
+        task: updatedTask,
+        userTasks,
+        dispatch,
+      });
     } catch (e: any) {
       changeSnackbarState({
         id: 'error',
@@ -222,3 +240,75 @@ export const fetchAllUserTasks = () => async (dispatch: Dispatch) => {
     );
   }
 };
+
+export const createTaskComment =
+  (comment: IComment, taskId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const currentTask = getState().currentTask;
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
+
+    try {
+      const updatedCurrentTask = {
+        ...currentTask,
+        comments: currentTask.comments
+          ? [comment, ...currentTask.comments]
+          : [comment],
+      };
+
+      taskStateUpdater({
+        tasks,
+        task: updatedCurrentTask,
+        userTasks,
+        dispatch,
+      });
+
+      const res = await Api.Tasks.createComment({ comment }, taskId);
+
+      ApiErrors.checkOnApiError(res);
+
+      dispatch(
+        updateTaskState({
+          task: {
+            comments: res.task.comments,
+            actions: res.task.actions,
+          },
+        })
+      );
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Виникла проблема.Перезавантажте сторінку`,
+        })
+      );
+    }
+  };
+
+export const deleteTaskComment =
+  (taskId: string, commentId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks: ITask[] = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks: ITask[] = JSON.parse(JSON.stringify(getState().userTasks));
+
+    try {
+      const res = await Api.Tasks.deleteComment(taskId, commentId);
+
+      ApiErrors.checkOnApiError(res);
+
+      dispatch(deleteTaskCommentSuccess());
+
+      const task: ITask = res.task;
+
+      taskStateUpdater({ tasks, task, userTasks, dispatch });
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Виникла проблема.Перезавантажте сторінку`,
+        })
+      );
+    }
+  };

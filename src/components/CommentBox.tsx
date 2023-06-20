@@ -36,7 +36,6 @@ export const CommentBox: FC<Props> = ({
   const isUserOwnComment = auth.userId === userId;
   const { longPressProps, handleClose, contextMenuPosition, anchorEl } =
     useContextMenu();
-
   const firstLetter = getFirstLetter(name);
 
   const elapsedTime = useMemo(() => {

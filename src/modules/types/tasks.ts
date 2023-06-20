@@ -1,3 +1,4 @@
+import { IComment } from '../reducers/mainProjects';
 import { IFile } from './mainProjects';
 
 export interface IAction {
@@ -15,6 +16,11 @@ export interface ITask {
   name: string;
   taskId: string;
   actions?: IAction[];
+  comments?: IComment[];
+}
+
+export interface ITaskRequest extends ITask {
+  comment: IComment;
 }
 
 export interface ITasks {

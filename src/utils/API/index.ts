@@ -1,7 +1,7 @@
 import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
 import { IComment, Project } from '../../modules/reducers/mainProjects';
-import { ITask, ITasks } from '../../modules/types/projectTasks';
+import { ITask, ITasks } from '../../modules/types/tasks';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -73,6 +73,8 @@ export const Api = {
   Comments: {
     create: (props: Partial<IComment>, id: string) =>
       APIClient.post(`/projects/${id}/comment`, props),
+    update: (props: Partial<IComment>, id: string) =>
+      APIClient.patch(`projects/${id}/comment`, props),
   },
   CurrentProject: {
     get: (id: string) => APIClient.get(`/projects/${id}`),
@@ -102,5 +104,9 @@ export const Api = {
     getAllTasks: () => APIClient.get(`/project-tasks/all`),
     updateUserTasks: (props: { taskIds: string[] }) =>
       APIClient.post(`project-tasks/user`, props),
+    createComment: (props: { comment: IComment }, id: string) =>
+      APIClient.post(`project-tasks/${id}/comment`, props),
+    deleteComment: (tid: string, commentId: string) =>
+      APIClient.delete(`project-tasks/${tid}/comment/${commentId}`),
   },
 };

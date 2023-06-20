@@ -5,7 +5,7 @@ import {
   updateTaskId,
   updateTasksSuccess,
 } from '../../actions/tasks';
-import { ITask } from '../../types/projectTasks';
+import { ITask } from '../../types/tasks';
 
 const initialState: ITask[] | undefined = [];
 

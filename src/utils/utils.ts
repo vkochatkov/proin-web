@@ -1,4 +1,4 @@
-import { IStatusLabels } from '../modules/types/projectTasks';
+import { IStatusLabels } from '../modules/types/tasks';
 import { IFile } from '../modules/types/mainProjects';
 
 // drag and drop reorder
@@ -42,4 +42,8 @@ export const updateEnitites = (entities: any[], id: string, files: IFile[]) => {
   ];
 
   return { updatedEntity, updatedEnities };
+};
+
+export const updateObjects = (array: any, obj: any) => {
+  return array.map((task: any) => (task._id === obj._id ? obj : task));
 };

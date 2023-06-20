@@ -14,6 +14,7 @@ import {
 import { IProject } from '../../types/mainProjects';
 
 export interface IComment {
+  taskId?: string;
   id: string;
   name: string;
   text: string;

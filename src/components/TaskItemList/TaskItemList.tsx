@@ -5,7 +5,7 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
 import { clearInputState } from '../../modules/actions/input';
-import { ITask } from '../../modules/types/projectTasks';
+import { ITask } from '../../modules/types/tasks';
 
 import './TaskItemList.scss';
 

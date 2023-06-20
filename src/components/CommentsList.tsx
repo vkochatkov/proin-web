@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CommentBox } from './CommentBox';
 import { DynamicInput } from './FormComponent/DynamicInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
-import { getCurrentProject } from '../modules/selectors/mainProjects';
-import {
-  deleteComment,
-  setCurrentProject,
-  createProjectComment,
-  updateComment,
-} from '../modules/actions/mainProjects';
 import { IComment } from '../modules/reducers/mainProjects';
 
-export const CommentsList = () => {
-  const dispatch = useDispatch();
+interface IProps {
+  currentObj: any;
+  deleteComment: ({ id, updatedObj }: { id: string; updatedObj: any }) => void;
+  updateComment: (
+    updatedComment: IComment,
+    updatedComments: IComment[]
+  ) => void;
+  createComment: (comment: IComment) => void;
+}
+
+export const CommentsList = ({
+  currentObj,
+  deleteComment,
+  updateComment,
+  createComment,
+}: IProps) => {
   const auth = useSelector(getAuth);
-  const currentProject = useSelector(getCurrentProject);
   const [selectedCommentIds, setSelectedCommentIds] = React.useState<string[]>([
     '',
   ]);
@@ -24,7 +30,7 @@ export const CommentsList = () => {
   const [isInputActive, setIsInputActive] = useState(false);
 
   const handleCreatingComment = (value: string) => {
-    if (!currentProject) return;
+    if (!currentObj) return;
 
     const id = uuidv4();
 
@@ -35,7 +41,7 @@ export const CommentsList = () => {
 
     const sendTo = taggedUsers.map((name) => name.replace('@', ''));
 
-    const comment: IComment = {
+    const comment = {
       id,
       text: value,
       name: auth.name,
@@ -44,29 +50,26 @@ export const CommentsList = () => {
       mentions: sendTo,
     };
 
-    dispatch(
-      createProjectComment({
-        comment,
-      }) as any
-    );
+    createComment(comment);
 
     setIsInputActive(false);
   };
 
   const handleDeleteComment = (id: string) => {
-    if (!currentProject) return;
+    if (!currentObj) return;
 
-    const { comments } = currentProject;
+    const { comments } = currentObj;
 
     if (comments) {
-      const updatedComments = comments.filter((comment) => comment.id !== id);
-      const updatedProject = {
-        ...currentProject,
+      const updatedComments = comments.filter(
+        (comment: IComment) => comment.id !== id
+      );
+      const updatedObj = {
+        ...currentObj,
         comments: updatedComments,
       };
 
-      dispatch(deleteComment(id) as any);
-      dispatch(setCurrentProject(updatedProject));
+      deleteComment({ id, updatedObj });
     }
   };
 
@@ -82,14 +85,14 @@ export const CommentsList = () => {
   };
 
   const handleUpdateComment = (id: string, value: string) => {
-    if (!currentProject) return;
+    if (!currentObj) return;
 
-    const { comments } = currentProject;
+    const { comments } = currentObj;
     let updatedComment;
 
     if (!comments) return;
 
-    const updatedComments = comments.map((comment) => {
+    const updatedComments = comments.map((comment: IComment) => {
       if (comment.id === id) {
         updatedComment = {
           ...comment,
@@ -108,7 +111,7 @@ export const CommentsList = () => {
 
     if (!updatedComment) return;
 
-    dispatch(updateComment({ updatedComments, updatedComment }) as any);
+    updateComment(updatedComment, updatedComments);
     setSelectedCommentIds(updatedSelectedIds);
   };
 
@@ -125,9 +128,9 @@ export const CommentsList = () => {
           setDefaultInputValue('');
         }}
       />
-      {currentProject &&
-        currentProject.comments &&
-        currentProject.comments.map((comment, index) => {
+      {currentObj &&
+        currentObj.comments &&
+        currentObj.comments.map((comment: IComment, index: number) => {
           const updatedSelectedIds = selectedCommentIds.filter(
             (commentId) => commentId !== comment.id
           );

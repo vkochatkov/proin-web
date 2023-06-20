@@ -4,7 +4,7 @@ import {
   updateCurrentTaskSuccess,
   updateTaskState,
 } from '../../actions/currentTask';
-import { ITask } from '../../types/projectTasks';
+import { ITask } from '../../types/tasks';
 
 const initialState: ITask = {
   description: '',
@@ -24,5 +24,11 @@ currentTask.on(chooseCurrentTaskSuccess, (_, payload) => {
   return payload.task;
 });
 
-currentTask.on(updateCurrentTaskSuccess, (_, payload) => payload.task);
-currentTask.on(updateTaskState, (_, payload) => payload.task);
+currentTask.on(updateCurrentTaskSuccess, (state, payload) => ({
+  ...state,
+  ...payload.task,
+}));
+currentTask.on(updateTaskState, (state, payload) => ({
+  ...state,
+  ...payload.task,
+}));
