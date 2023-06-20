@@ -39,7 +39,7 @@ export const InteractiveInput = ({
 }: Props) => {
   const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = entity ? entity[id] : undefined;
-  const { pid, subprojectId, taskId } = useParams();
+  const { pid, subprojectId, tid } = useParams();
   const dispatch = useDispatch();
   const { saveChanges } = useDebounce();
 
@@ -73,7 +73,7 @@ export const InteractiveInput = ({
       [id]: newValue,
     };
 
-    if (updatedEntity.projectName === '') return;
+    if (updatedEntity.projectName === '' || updatedEntity.name === '') return;
 
     const callback = () =>
       Api.Projects.patch({ [id]: newValue }, entity._id)
@@ -107,7 +107,7 @@ export const InteractiveInput = ({
       saveChanges(callback);
     }
 
-    if (pid && taskId && taskId === updatedEntity._id) {
+    if (pid && tid && tid === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
           updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any
@@ -119,7 +119,7 @@ export const InteractiveInput = ({
       saveChanges(callback);
     }
 
-    if (!pid && taskId && taskId === updatedEntity._id) {
+    if (!pid && tid && tid === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
           updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any

@@ -12,19 +12,16 @@ interface IProps {
 export const TaskFilesUpload = ({ id }: IProps) => {
   const { files, setFiles, generateDataUrl } = useFiles();
   const dispatch = useDispatch();
-  const { pid, taskId } = useParams();
+  const { pid, tid } = useParams();
 
   const sendFilesToServer = async (files: File[]) => {
     try {
       const fileDataArray = await generateDataUrl(files);
 
-      if (!pid || !taskId) return;
+      if (!pid || !tid) return;
 
       dispatch(
-        updateCurrentTask(
-          { files: fileDataArray, projectId: pid },
-          taskId
-        ) as any
+        updateCurrentTask({ files: fileDataArray, projectId: pid }, tid) as any
       );
     } catch (err) {
       console.log(err);
