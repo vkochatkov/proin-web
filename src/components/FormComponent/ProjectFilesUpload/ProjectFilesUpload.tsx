@@ -16,7 +16,10 @@ interface IFileUpload {
   projectId?: string;
 }
 
-export const ProjectFilesUpload = ({ id, projectId }: IFileUpload) => {
+export const ProjectFilesUpload: React.FC<IFileUpload> = ({
+  id,
+  projectId,
+}) => {
   const { files, setFiles, generateDataUrl } = useFiles();
   const dispatch = useDispatch();
 
@@ -38,7 +41,7 @@ export const ProjectFilesUpload = ({ id, projectId }: IFileUpload) => {
     try {
       return await Api.Projects.patch({ files: fileDataArray }, id);
     } catch (err) {
-      // handle error
+      console.log(err);
     }
   };
 
@@ -68,6 +71,7 @@ export const ProjectFilesUpload = ({ id, projectId }: IFileUpload) => {
       buttonLabel={'Додати вкладення'}
       multiple
       className="file-uploader__btn"
+      isButtonHide
     />
   );
 };

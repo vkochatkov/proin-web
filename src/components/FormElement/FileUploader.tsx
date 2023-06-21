@@ -1,4 +1,5 @@
-import React, { useRef, FC } from 'react';
+import React, { FC, useContext } from 'react';
+import FilePickerRefContext from '../ContextProvider/FilesPickerRefProvider';
 import { Button } from './Button';
 
 import './FileUploader.scss';
@@ -10,6 +11,7 @@ type FileUploaderProps = {
   pickedHandler: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   buttonLabel: string;
   className?: string;
+  isButtonHide?: boolean;
 };
 
 export const FileUploader: FC<FileUploaderProps> = ({
@@ -19,10 +21,13 @@ export const FileUploader: FC<FileUploaderProps> = ({
   pickedHandler,
   buttonLabel,
   className,
+  isButtonHide = false,
 }) => {
-  const filePickerRef = useRef<HTMLInputElement>(null);
+  const filePickerRef = useContext(FilePickerRefContext);
 
   const pickImageHandler = () => {
+    if (!filePickerRef) return;
+
     filePickerRef.current?.click();
   };
 
@@ -37,9 +42,11 @@ export const FileUploader: FC<FileUploaderProps> = ({
         onChange={pickedHandler}
         multiple={multiple ? multiple : false}
       />
-      <Button type="button" onClick={pickImageHandler}>
-        {buttonLabel}
-      </Button>
+      {!isButtonHide && (
+        <Button type="button" onClick={pickImageHandler}>
+          {buttonLabel}
+        </Button>
+      )}
     </div>
   );
 };

@@ -28,6 +28,7 @@ import { fetchTasks } from '../modules/actions/tasks';
 import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 import { setDefaultTabValue } from '../modules/actions/tabs';
+import { FilePickerRefProvider } from '../components/ContextProvider/FilesPickerRefProvider';
 
 import './HomePage.scss';
 
@@ -163,17 +164,19 @@ const EditProject: React.FC<Props> = () => {
                     justifyContent: 'space-between',
                   }}
                 ></div>
-                <ImageUpload
-                  onInput={inputHandler}
-                  projectId={currentProject ? currentProject._id : undefined}
-                  id="logoUrl"
-                  inputHandler={inputHandler}
-                  isUpdateValue={true}
-                />
-                <ProjectTabsMenu
-                  subprojectId={subprojectId}
-                  inputHandler={inputHandler}
-                />
+                <FilePickerRefProvider>
+                  <ImageUpload
+                    onInput={inputHandler}
+                    projectId={currentProject ? currentProject._id : undefined}
+                    id="logoUrl"
+                    inputHandler={inputHandler}
+                    isUpdateValue={true}
+                  />
+                  <ProjectTabsMenu
+                    subprojectId={subprojectId}
+                    inputHandler={inputHandler}
+                  />
+                </FilePickerRefProvider>
               </>
             </div>
           </Card>
