@@ -44,7 +44,13 @@ export const InteractiveInput = ({
   const { saveChanges } = useDebounce();
 
   useEffect(() => {
-    if ((id === 'projectName' || id === 'name') && !text) {
+    if (
+      (id === 'projectName' ||
+        id === 'name' ||
+        id === 'sum' ||
+        id === 'classifier') &&
+      !text
+    ) {
       setIsActive(true);
     }
   }, [id, text]);

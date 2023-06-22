@@ -5,7 +5,6 @@ import { getAuth } from '../modules/selectors/user';
 import { FilesList } from './FilesList/FilesList';
 import { ProjectFilesUpload } from './FormComponent/ProjectFilesUpload/ProjectFilesUpload';
 import { InteractiveInput } from './FormComponent/InteractiveInput';
-import { ProjectTaskItemList } from './ProjectTaskItemList/ProjectTaskItemList';
 import { SubProjects } from './SubProjects';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { UsersTabsMenu } from './UsersTabsMenu';
@@ -80,7 +79,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
         </>
       ),
     },
-    { label: 'Фінанси', panel: <div>фінанси</div> },
+    { label: 'Фінанси', panel: <div>finance</div> },
     {
       label: 'Задачі',
       panel: <ProjectTasksComponent />,
@@ -109,12 +108,19 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
 
     filePickerRef.current?.click();
   };
+
+  const handleCreateTransaction = () => {
+    const _id = 'dfd';
+    navigate(`/project-edit/${pid}/transaction/${_id}`);
+  };
+
   return (
     <TabsMenu
       tabs={tabs}
-      handleTasksClick={handleOpenTaskNameInput}
+      handleClickCreateTaskButton={handleOpenTaskNameInput}
       handleCreateSubproject={handleCreateSubproject}
       handleDownloadFiles={handleDownloadFiles}
+      handleCreateTransaction={handleCreateTransaction}
       tabsId={tabsId}
     />
   );

@@ -27,6 +27,7 @@ interface TabsMenuProps {
   handleCreateSubproject?: () => void;
   tabsId: string;
   handleDownloadFiles?: () => void;
+  handleCreateTransaction?: () => void;
 }
 
 export const TabsMenu: React.FC<TabsMenuProps> = ({
@@ -34,6 +35,7 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   handleClickCreateTaskButton,
   handleCreateSubproject,
   handleDownloadFiles,
+  handleCreateTransaction,
   tabsId,
 }) => {
   const tabValue = useSelector((state: RootState) =>
@@ -63,6 +65,7 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   const isTaskTab = tabValue === 'Задачі';
   const isDescriptionTab = tabValue === 'Опис' && !subprojectId;
   const isFilesTab = tabValue === 'Вкладення';
+  const isTransactionsTab = tabValue === 'Фінанси';
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     dispatch(setTabValue({ [tabsId]: newValue }));
@@ -76,6 +79,8 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
         handleCreateSubproject();
       } else if (isFilesTab && handleDownloadFiles) {
         handleDownloadFiles();
+      } else if (isTransactionsTab && handleCreateTransaction) {
+        handleCreateTransaction();
       }
     },
     icon: true,
@@ -99,7 +104,10 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
               position: 'relative',
             }}
           >
-            {(isTaskTab || isDescriptionTab || isFilesTab) && (
+            {(isTaskTab ||
+              isDescriptionTab ||
+              isFilesTab ||
+              isTransactionsTab) && (
               <Button {...addButtonConfig}>
                 <AddIcon />
               </Button>

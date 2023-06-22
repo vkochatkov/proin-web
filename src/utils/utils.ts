@@ -23,6 +23,16 @@ export const getStatusLabel = (status: string) => {
   return statusLabels[status];
 };
 
+export const getTransactionLabel = (key: string) => {
+  const transactionLabels: { [key: string]: string } = {
+    income: 'Доходи',
+    expenses: 'Витрати',
+    transfer: 'Переказ',
+  };
+
+  return transactionLabels[key];
+};
+
 export const updateEnitites = (entities: any[], id: string, files: IFile[]) => {
   const entityIndex = entities.findIndex((entity) => entity._id === id);
 

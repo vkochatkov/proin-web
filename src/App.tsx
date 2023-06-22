@@ -18,6 +18,7 @@ const EditProject = React.lazy(() => import('./pages/EditProject'));
 const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
 const TaskListPage = React.lazy(() => import('./pages/TaskListPage'));
+const TransactionPage = React.lazy(() => import('./pages/TransactionPage'));
 
 export const App: React.FC = () => {
   return (
@@ -37,6 +38,10 @@ export const App: React.FC = () => {
               <Route
                 path="/project-edit/:pid/:subprojectId?"
                 element={<EditProject />}
+              />
+              <Route
+                path="/project-edit/:pid/transaction/:trId"
+                element={<TransactionPage />}
               />
               <Route
                 path="/project-edit/:pid/task/:tid"
