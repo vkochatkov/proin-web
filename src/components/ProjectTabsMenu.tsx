@@ -18,22 +18,25 @@ import {
   updateSubprojectFilesOrder,
 } from '../modules/actions/mainProjects';
 import { ProjectTasksComponent } from './ProjectTasksComponent';
+import { useContext } from 'react';
+import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
   subprojectId?: string;
 }
 
-export const ProjectTabsMenu = ({
+export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   inputHandler,
   subprojectId,
-}: IUsersTabsMenuProps) => {
+}) => {
   const { token } = useSelector(getAuth);
   const currentProject = useSelector(getCurrentProject);
   const dispatch = useDispatch();
   const { pid } = useParams();
   const navigate = useNavigate();
   const tabsId = 'main-tabs';
+  const filePickerRef = useContext(FilePickerRefContext);
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -101,11 +104,17 @@ export const ProjectTabsMenu = ({
     }
   };
 
+  const handleDownloadFiles = () => {
+    if (!filePickerRef) return;
+
+    filePickerRef.current?.click();
+  };
   return (
     <TabsMenu
       tabs={tabs}
       handleTasksClick={handleOpenTaskNameInput}
       handleCreateSubproject={handleCreateSubproject}
+      handleDownloadFiles={handleDownloadFiles}
       tabsId={tabsId}
     />
   );
