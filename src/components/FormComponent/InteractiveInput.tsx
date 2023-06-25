@@ -27,6 +27,7 @@ interface Props {
   id: string;
   label?: string;
   entities?: any[];
+  type?: string
 }
 
 export const InteractiveInput = ({
@@ -35,6 +36,7 @@ export const InteractiveInput = ({
   id,
   label,
   entities = [],
+  type
 }: Props) => {
   const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = entity ? entity[id] : undefined;
@@ -148,6 +150,7 @@ export const InteractiveInput = ({
         <div onBlur={() => handleHideInput(id, text)}>
           <Input
             id={id}
+            type={type ? type : undefined}
             element={id === 'description' ? 'textarea' : 'input'}
             onInput={inputHandler}
             isAnyValue={true}

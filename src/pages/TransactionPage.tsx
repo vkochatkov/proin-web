@@ -88,6 +88,7 @@ const TransactionPage: React.FC<IProps> = () => {
         <InteractiveInput
           label='Сума'
           id="sum"
+          type="number"
           inputHandler={inputHandler}
           entity={currentTransaction}
         />
