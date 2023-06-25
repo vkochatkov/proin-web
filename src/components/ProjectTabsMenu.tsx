@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
-import { getAuth } from '../modules/selectors/user';
 import { FilesList } from './FilesList/FilesList';
 import { ProjectFilesUpload } from './FormComponent/ProjectFilesUpload/ProjectFilesUpload';
 import { InteractiveInput } from './FormComponent/InteractiveInput';
@@ -30,7 +29,6 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   inputHandler,
   subprojectId,
 }) => {
-  const { token } = useSelector(getAuth);
   const currentProject = useSelector(getCurrentProject);
   const dispatch = useDispatch();
   const { pid } = useParams();
@@ -55,7 +53,6 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
           <InteractiveInput
             id="description"
             inputHandler={inputHandler}
-            token={token}
             entity={currentProject}
           />
           {subprojectId ? null : <SubProjects />}

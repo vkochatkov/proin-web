@@ -14,14 +14,12 @@ type InputProps = {
   placeholder?: string;
   initialValue?: string;
   initialValid?: boolean;
-  isAutosave?: boolean;
   validators?: { type: string }[];
   onInput: (id: string, value: string, isValid: boolean) => void;
   rows?: number;
   errorText?: string;
   isAnyValue?: boolean;
   projectId?: string;
-  token?: string;
   isUpdateValue?: boolean;
   project?: any;
   labelClassName?: string;

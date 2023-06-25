@@ -17,7 +17,7 @@ const TaskListPage: React.FC<Props> = () => {
 
   useEffect(() => {
     dispatch(fetchAllUserTasks() as any);
-  }, []);
+  }, [dispatch]);
 
   const handleSaveTaskItemOrder = (newOrder: ITask[]) => {
     dispatch(changeUserTasksOrder(newOrder) as any);

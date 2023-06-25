@@ -26,7 +26,7 @@ export const TaskItemList = ({
     return () => {
       dispatch(clearInputState());
     };
-  }, []);
+  }, [dispatch]);
 
   const onDragEnd = (result: any) => {
     if (!result.destination) {

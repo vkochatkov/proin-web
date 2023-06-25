@@ -59,7 +59,9 @@ const EditProject: React.FC<Props> = () => {
     if (pid) {
       dispatch(fetchTasks(pid) as any);
     }
-  }, []);
+
+    // eslint-disable-next-line
+  }, [dispatch]);
 
   useEffect(() => {
     if (!currentProject || (currentProject && !currentProject._id)) return;
@@ -114,6 +116,7 @@ const EditProject: React.FC<Props> = () => {
     if (subprojectId && currentProject && currentProject.id !== subprojectId) {
       dispatch(openCurrentProject(subprojectId, true) as any);
     }
+    // eslint-disable-next-line
   }, [pid, subprojectId, currentProject, navigate, dispatch]);
 
   const handleCloseProject = async () => {

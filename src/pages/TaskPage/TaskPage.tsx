@@ -10,7 +10,6 @@ import { useForm } from '../../hooks/useForm';
 import { updateTaskFilesOrder } from '../../modules/actions/tasks';
 import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
-import { getAuth } from '../../modules/selectors/user';
 import { IFile } from '../../modules/types/mainProjects';
 import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
 import { TaskTabsMenu } from '../../components/TaskTabsMenu';
@@ -32,7 +31,6 @@ export const TaskPage = () => {
     },
     true
   );
-  const { token } = useSelector(getAuth);
   const task = useSelector(getCurrentTask);
   const { pid } = useParams();
   const navigate = useNavigate();
@@ -72,7 +70,6 @@ export const TaskPage = () => {
             <InteractiveInput
               id="name"
               inputHandler={inputHandler}
-              token={token}
               entity={task}
             />
             <div className="task-page__input-wrapper">
@@ -80,7 +77,6 @@ export const TaskPage = () => {
                 label={'Опис'}
                 id="description"
                 inputHandler={inputHandler}
-                token={token}
                 entity={task}
               />
             </div>

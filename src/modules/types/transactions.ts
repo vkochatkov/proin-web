@@ -7,5 +7,6 @@ export interface ITransaction {
   id: string;
   timestamp: string;
   type: string;
+  classifiers: string[]
   // [key: string]: string;
 }

@@ -172,7 +172,6 @@ export const ImageUpload = ({
           <InteractiveInput
             id="projectName"
             inputHandler={inputHandler}
-            token={token}
             entity={currentProject}
             entities={projects}
           />

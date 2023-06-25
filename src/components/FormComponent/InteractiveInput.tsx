@@ -24,7 +24,6 @@ import './InteractiveInput.scss';
 interface Props {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
   entity: any | null;
-  token: string;
   id: string;
   label?: string;
   entities?: any[];
@@ -33,7 +32,6 @@ interface Props {
 export const InteractiveInput = ({
   inputHandler,
   entity,
-  token,
   id,
   label,
   entities = [],
@@ -134,9 +132,8 @@ export const InteractiveInput = ({
     if (transactionId && transactionId === updatedEntity._id) {
       const callback = async () => {
         await dispatch(updateTransactionOnServer({ 
-          [id]: newValue, 
-          projectId: updatedEntity.projectId 
-        }, transactionId) as any);
+          [id]: newValue
+        }, transactionId, updatedEntity.projectId ) as any);
       };
 
       dispatch(setCurrentTransaction(updatedEntity));
@@ -154,9 +151,7 @@ export const InteractiveInput = ({
             element={id === 'description' ? 'textarea' : 'input'}
             onInput={inputHandler}
             isAnyValue={true}
-            isAutosave={true}
             projectId={entity && entity.projectName ? entity._id : undefined}
-            token={token}
             isUpdateValue={true}
             project={entity}
             isActive={isActive}

@@ -11,11 +11,12 @@ const initialState: ITransaction = {
   id: '',
   type: '',
   timestamp: '',
+  classifiers: []
 };
 
 export const currentTransaction = createReducer({}, initialState);
 
 currentTransaction.on(setCurrentTransaction, (state, payload) => ({
-  ...state,
+  state,
   ...payload
 }));
