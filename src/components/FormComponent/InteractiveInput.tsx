@@ -17,6 +17,7 @@ import {
 import { useDebounce } from '../../hooks/useDebounce';
 import { Project } from '../../modules/reducers/mainProjects';
 import { fetchAllUserTasks, fetchTasks } from '../../modules/actions/tasks';
+import { setCurrentTransaction, updateTransactionOnServer } from '../../modules/actions/transactions';
 
 import './InteractiveInput.scss';
 
@@ -39,7 +40,7 @@ export const InteractiveInput = ({
 }: Props) => {
   const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = entity ? entity[id] : undefined;
-  const { pid, subprojectId, tid } = useParams();
+  const { pid, subprojectId, tid, transactionId } = useParams();
   const dispatch = useDispatch();
   const { saveChanges } = useDebounce();
 
@@ -113,28 +114,33 @@ export const InteractiveInput = ({
       saveChanges(callback);
     }
 
-    if (pid && tid && tid === updatedEntity._id) {
+    if (tid && tid === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
           updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any
         );
-        dispatch(fetchTasks(pid) as any);
+
+        if (pid) {
+          dispatch(fetchTasks(pid) as any);
+        } else {
+          dispatch(fetchAllUserTasks() as any);
+        }
       };
 
       dispatch(updateTaskState({ task: updatedEntity }) as any);
       saveChanges(callback);
     }
 
-    if (!pid && tid && tid === updatedEntity._id) {
+    if (transactionId && transactionId === updatedEntity._id) {
       const callback = async () => {
-        await dispatch(
-          updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any
-        );
-        dispatch(fetchAllUserTasks() as any);
+        await dispatch(updateTransactionOnServer({ 
+          [id]: newValue, 
+          projectId: updatedEntity.projectId 
+        }, transactionId) as any);
       };
 
-      dispatch(updateTaskState({ task: updatedEntity }) as any);
-      saveChanges(callback);
+      dispatch(setCurrentTransaction(updatedEntity));
+      saveChanges(callback)
     }
   };
 

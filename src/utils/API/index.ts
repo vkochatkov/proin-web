@@ -2,6 +2,7 @@ import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
 import { IComment, Project } from '../../modules/reducers/mainProjects';
 import { ITask, ITasks } from '../../modules/types/tasks';
+import { ITransaction } from '../../modules/types/transactions';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -28,8 +29,8 @@ class HTTPClient extends HTTPClientCore {
         Authorization: this.token
           ? `Bearer ${this.token}`
           : storedData.token
-          ? `Bearer ${storedData.token}`
-          : undefined,
+            ? `Bearer ${storedData.token}`
+            : undefined,
         'Content-Type': 'application/json',
       },
     };
@@ -75,6 +76,8 @@ export const Api = {
       APIClient.post(`/projects/${id}/comment`, props),
     update: (props: Partial<IComment>, id: string) =>
       APIClient.patch(`projects/${id}/comment`, props),
+    delete: (props: { id: string }, projectId: string) =>
+      APIClient.delete(`/projects/${projectId}/comment`, props),
   },
   CurrentProject: {
     get: (id: string) => APIClient.get(`/projects/${id}`),
@@ -108,5 +111,12 @@ export const Api = {
       APIClient.post(`project-tasks/${id}/comment`, props),
     deleteComment: (tid: string, commentId: string) =>
       APIClient.delete(`project-tasks/${tid}/comment/${commentId}`),
+  },
+  Transactions: {
+    create: (props: Partial<ITransaction>) =>
+      APIClient.post(`/transactions-list/transaction/`, props),
+    update: (props: Partial<ITransaction>, transactionId: string) =>
+      APIClient.patch(`transactions-list/transaction/${transactionId}`, props),
+    delete: (id: string) => APIClient.delete(`/transactions-list/transaction/${id}`),
   },
 };

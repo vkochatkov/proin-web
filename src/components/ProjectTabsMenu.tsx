@@ -19,6 +19,7 @@ import {
 import { ProjectTasksComponent } from './ProjectTasksComponent';
 import { useContext } from 'react';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
+import { createTransaction } from '../modules/actions/transactions';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -109,9 +110,14 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
     filePickerRef.current?.click();
   };
 
-  const handleCreateTransaction = () => {
-    const _id = 'dfd';
-    navigate(`/project-edit/${pid}/transaction/${_id}`);
+  const handleCreateTransaction = async () => {
+    if (!pid) return
+
+    const { transaction: { id } } = await dispatch(
+      createTransaction(pid) as any
+      );
+
+    navigate(`/project-edit/${pid}/transaction/${id}`);
   };
 
   return (
