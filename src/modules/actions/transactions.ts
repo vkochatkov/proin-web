@@ -8,6 +8,24 @@ import { changeSnackbarState } from './snackbar';
 
 export const setCurrentTransaction = createAction<ITransaction>('setCurrentTransaction');
 
+export const fetchTransactionById = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    const res = await Api.Transactions.getTransactionById(id);
+
+    ApiErrors.checkOnApiError(res);
+
+    dispatch(setCurrentTransaction(res.transaction))
+  } catch (e) {
+    dispatch(
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
+      })
+    );
+  }
+}
+
 export const createTransaction = (projectId: string) => async (dispatch: Dispatch) => {
   try {
     const res = await Api.Transactions.create({

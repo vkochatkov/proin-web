@@ -171,7 +171,7 @@ export const InteractiveInput = ({
           {!text && id === 'description' && (
             <div className="project-input-editor__btn">Додати опис</div>
           )}
-          <ProjectTextOutput text={text} fieldId={id} />
+          <ProjectTextOutput text={text.toString()} fieldId={id} />
         </div>
       )}
     </>

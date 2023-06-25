@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { InteractiveInput } from '../components/FormComponent/InteractiveInput';
 import { Card } from '../components/UIElements/Card';
@@ -12,6 +12,7 @@ import { TransactionSelect } from '../components/FormComponent/TransactionSelect
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
+import { fetchTransactionById } from '../modules/actions/transactions';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -27,7 +28,7 @@ const TransactionPage: React.FC<IProps> = () => {
   const [selectedClassifierValue, setSelectedClassifierValue] = useState<string>(
     currentTransaction ? currentTransaction.classifier : ''
   );
-  const { pid } = useParams();
+  const { pid, transactionId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const tabsId = 'main-tabs';
@@ -43,6 +44,12 @@ const TransactionPage: React.FC<IProps> = () => {
     },
     true
   );
+
+  useEffect(() => {
+    if (!transactionId) return;
+
+    dispatch(fetchTransactionById(transactionId) as any);
+  }, []);
 
   const handleCloseTransactionPage = () => {
     if (pid) {

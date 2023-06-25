@@ -16,7 +16,6 @@ const initialState: ITransaction = {
 
 export const currentTransaction = createReducer({}, initialState);
 
-currentTransaction.on(setCurrentTransaction, (state, payload) => ({
-  state,
+currentTransaction.on(setCurrentTransaction, (_, payload) => ({
   ...payload
 }));
