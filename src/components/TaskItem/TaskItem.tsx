@@ -60,12 +60,13 @@ export const TaskItem = ({
     backgroundColor: checked ? 'rgba(236, 240, 241, 0.9)' : '',
   };
   const currentTask = useSelector((state: RootState) =>
-    getUserTask(state)(_id)
+    getUserTask(state)(_id),
   );
   const statusValues = ['new', 'in progress', 'done', 'canceled'];
   const [selectedValue, setSelectedValue] = useState(
-    currentTask ? currentTask.status : statusValues[0]
+    currentTask ? currentTask.status : statusValues[0],
   );
+  const modalId = 'remove-task';
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -140,7 +141,7 @@ export const TaskItem = ({
         <div
           onClick={(e) => handleOpenTaskPage(e)}
           ref={provided.innerRef}
-          className="task-item"
+          className='task-item'
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
@@ -154,11 +155,11 @@ export const TaskItem = ({
                 left: contextMenuPosition.left,
               }}
             >
-              <MenuItem onClick={() => handleOpenModal('remove-task')}>
+              <MenuItem onClick={() => handleOpenModal(modalId)}>
                 Видалити
               </MenuItem>
             </Menu>
-            <div className="task-item__checkbox-wrapper">
+            <div className='task-item__checkbox-wrapper'>
               <Checkbox
                 sx={{
                   padding: 0,
@@ -168,19 +169,19 @@ export const TaskItem = ({
                 onChange={handleChangeCeckbox}
                 inputProps={{ 'aria-label': 'controlled' }}
               />
-              <Typography variant="h6">{task.name}</Typography>
+              <Typography variant='h6'>{task.name}</Typography>
             </div>
             <Button
               icon
               transparent
-              customClassName="task-item__btn"
+              customClassName='task-item__btn'
               onClick={handleContextMenu}
             >
-              <MoreVertIcon className="item__icon" />
+              <MoreVertIcon className='item__icon' />
             </Button>
-            <div className="task-item__select-wrapper">
+            <div className='task-item__select-wrapper'>
               <Typography
-                variant="inherit"
+                variant='inherit'
                 sx={{ color: '#979797' }}
               >{`${formattedDate} ${formattedTime}`}</Typography>
               <TaskStatusSelect
@@ -191,9 +192,9 @@ export const TaskItem = ({
               />
             </div>
             {lastAction && firstLetter && (
-              <div className="task-item__align-center">
+              <div className='task-item__align-center'>
                 <Avatar
-                  alt="Remy Sharp"
+                  alt='Remy Sharp'
                   // src={logoLink}
                   sx={{
                     bgcolor: () => backgroundColor(firstLetter),
@@ -204,18 +205,18 @@ export const TaskItem = ({
                 >
                   {firstLetter}
                 </Avatar>
-                <Typography variant="inherit" className="task-item__text">
+                <Typography variant='inherit' className='task-item__text'>
                   {formattedShortDate}:
                 </Typography>
-                <Typography variant="inherit" className="task-item__text">
+                <Typography variant='inherit' className='task-item__text'>
                   {lastAction.description}
                 </Typography>
                 {!isFilesInfo && (
                   <>
                     <div style={{ marginLeft: '5px' }}>&#8594;</div>
                     <Typography
-                      variant="inherit"
-                      className="task-item__value-text"
+                      variant='inherit'
+                      className='task-item__value-text'
                     >
                       {isStatusInfo
                         ? getStatusLabel(lastAction.newValue)

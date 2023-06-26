@@ -29,6 +29,7 @@ import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 import { setDefaultTabValue } from '../modules/actions/tabs';
 import { FilePickerRefProvider } from '../components/ContextProvider/FilesPickerRefProvider';
+import { fetchTransactions } from '../modules/actions/transactions';
 
 import './HomePage.scss';
 
@@ -52,12 +53,13 @@ const EditProject: React.FC<Props> = () => {
         isValid: true,
       },
     },
-    true
+    true,
   );
 
   useEffect(() => {
     if (pid) {
       dispatch(fetchTasks(pid) as any);
+      dispatch(fetchTransactions(pid) as any);
     }
 
     // eslint-disable-next-line
@@ -67,7 +69,7 @@ const EditProject: React.FC<Props> = () => {
     if (!currentProject || (currentProject && !currentProject._id)) return;
 
     const foundProjects = projects.find((project) =>
-      project.subProjects.some((p: Project) => p.id === subprojectId)
+      project.subProjects.some((p: Project) => p.id === subprojectId),
     );
 
     const subProject = foundProjects ? foundProjects.subProjects[0] : null;
@@ -136,20 +138,20 @@ const EditProject: React.FC<Props> = () => {
 
   return (
     <>
-      <div className="container">
+      <div className='container'>
         <Header>
           <Button
-            size="small"
+            size='small'
             transparent={true}
             icon={true}
-            customClassName="header__btn-close"
+            customClassName='header__btn-close'
             onClick={handleCloseProject}
           >
-            <img src="/back.svg" alt="back_logo" className="button__icon" />
+            <img src='/back.svg' alt='back_logo' className='button__icon' />
           </Button>
         </Header>
         {isLoading ? (
-          <div className="loading">
+          <div className='loading'>
             <LoadingSpinner />
           </div>
         ) : (
@@ -171,7 +173,7 @@ const EditProject: React.FC<Props> = () => {
                   <ImageUpload
                     onInput={inputHandler}
                     projectId={currentProject ? currentProject._id : undefined}
-                    id="logoUrl"
+                    id='logoUrl'
                     inputHandler={inputHandler}
                     isUpdateValue={true}
                   />

@@ -1,3 +1,3 @@
 import { RootState } from '../store/store';
 
-export const getProjectTransaction = (state: RootState) => state.transactions;
+export const getProjectTransactions = (state: RootState) => state.projectTransactions;

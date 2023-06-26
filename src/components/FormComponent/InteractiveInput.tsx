@@ -17,7 +17,10 @@ import {
 import { useDebounce } from '../../hooks/useDebounce';
 import { Project } from '../../modules/reducers/mainProjects';
 import { fetchAllUserTasks, fetchTasks } from '../../modules/actions/tasks';
-import { setCurrentTransaction, updateTransactionOnServer } from '../../modules/actions/transactions';
+import {
+  setCurrentTransaction,
+  updateTransactionOnServer,
+} from '../../modules/actions/transactions';
 
 import './InteractiveInput.scss';
 
@@ -27,7 +30,7 @@ interface Props {
   id: string;
   label?: string;
   entities?: any[];
-  type?: string
+  type?: string;
 }
 
 export const InteractiveInput = ({
@@ -36,7 +39,7 @@ export const InteractiveInput = ({
   id,
   label,
   entities = [],
-  type
+  type,
 }: Props) => {
   const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = entity ? entity[id] : undefined;
@@ -71,7 +74,7 @@ export const InteractiveInput = ({
   };
 
   const handleChangeKeyValue = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const newValue = event.target.value;
 
@@ -91,7 +94,7 @@ export const InteractiveInput = ({
               id: 'error',
               message: 'Не вдалося зберегти, щось пішло не так',
               open: true,
-            })
+            }),
           );
         });
 
@@ -101,7 +104,7 @@ export const InteractiveInput = ({
 
       const updatedEntities: Project[] | undefined = handleUpdatingArray(
         updatedEntity,
-        pid
+        pid,
       );
 
       if (!updatedEntities) return;
@@ -117,7 +120,7 @@ export const InteractiveInput = ({
     if (tid && tid === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
-          updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any
+          updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any,
         );
 
         if (pid) {
@@ -133,13 +136,19 @@ export const InteractiveInput = ({
 
     if (transactionId && transactionId === updatedEntity._id) {
       const callback = async () => {
-        await dispatch(updateTransactionOnServer({ 
-          [id]: newValue
-        }, transactionId, updatedEntity.projectId ) as any);
+        await dispatch(
+          updateTransactionOnServer(
+            {
+              [id]: newValue,
+            },
+            transactionId,
+            updatedEntity.projectId,
+          ) as any,
+        );
       };
 
       dispatch(setCurrentTransaction(updatedEntity));
-      saveChanges(callback)
+      saveChanges(callback);
     }
   };
 
@@ -169,9 +178,12 @@ export const InteractiveInput = ({
           }}
         >
           {!text && id === 'description' && (
-            <div className="project-input-editor__btn">Додати опис</div>
+            <div className='project-input-editor__btn'>Додати опис</div>
           )}
-          <ProjectTextOutput text={text.toString()} fieldId={id} />
+          <ProjectTextOutput
+            text={text ? text.toString() : text}
+            fieldId={id}
+          />
         </div>
       )}
     </>

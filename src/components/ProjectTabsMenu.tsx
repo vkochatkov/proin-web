@@ -19,6 +19,8 @@ import { ProjectTasksComponent } from './ProjectTasksComponent';
 import { useContext } from 'react';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 import { createTransaction } from '../modules/actions/transactions';
+import { TransactionItemList } from './TransactionItemList/TransactionItemList';
+import { getProjectTransactions } from '../modules/selectors/transactions';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -35,6 +37,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   const navigate = useNavigate();
   const tabsId = 'main-tabs';
   const filePickerRef = useContext(FilePickerRefContext);
+  const transactions = useSelector(getProjectTransactions);
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -51,7 +54,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
       panel: (
         <>
           <InteractiveInput
-            id="description"
+            id='description'
             inputHandler={inputHandler}
             entity={currentProject}
           />
@@ -77,7 +80,10 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
         </>
       ),
     },
-    { label: 'Фінанси', panel: <div>finance</div> },
+    {
+      label: 'Фінанси',
+      panel: <TransactionItemList transactions={transactions} />,
+    },
     {
       label: 'Задачі',
       panel: <ProjectTasksComponent />,
@@ -108,11 +114,11 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   };
 
   const handleCreateTransaction = async () => {
-    if (!pid) return
+    if (!pid) return;
 
-    const { transaction: { id } } = await dispatch(
-      createTransaction(pid) as any
-      );
+    const {
+      transaction: { id },
+    } = await dispatch(createTransaction(pid) as any);
 
     navigate(`/project-edit/${pid}/transaction/${id}`);
   };

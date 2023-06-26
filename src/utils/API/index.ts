@@ -118,6 +118,7 @@ export const Api = {
     update: (props: Partial<ITransaction>, transactionId: string) =>
       APIClient.patch(`transactions-list/transaction/${transactionId}`, props),
     delete: (id: string) => APIClient.delete(`/transactions-list/transaction/${id}`),
-    getTransactionById: (id: string) => APIClient.get(`/transactions-list/transaction/${id}`)
+    getTransactionById: (id: string) => APIClient.get(`/transactions-list/transaction/${id}`),
+    getProjectTransactions: (projectId: string) => APIClient.get(`/transactions-list/project/${projectId}`)
   },
 };
