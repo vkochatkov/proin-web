@@ -9,6 +9,8 @@ import { changeSnackbarState } from './snackbar';
 export const setCurrentTransaction = createAction<ITransaction>('setCurrentTransaction');
 export const fetchProjectTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('fetchProjectTransactionsSuccess');
+export const updateProjectTransactionsSuccess =
+  createAction<{ transactions: ITransaction[] }>('updateProjectTransactionsSuccess');
 
 export const fetchTransactionById = (id: string) => async (dispatch: Dispatch) => {
   try {
@@ -95,6 +97,25 @@ export const updateTransactionOnServer = (
           id: 'error',
           open: true,
           message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
+        })
+      );
+    }
+  }
+
+export const saveProjectTransactionsOrder = (transactions: ITransaction[], projectId: string) =>
+  async (dispatch: Dispatch) => {
+    try {
+      dispatch(updateProjectTransactionsSuccess({ transactions }));
+
+      const res = await Api.Transactions.updateTransactionsByProjectId(transactions, projectId);
+
+      ApiErrors.checkOnApiError(res);
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Зберегти порядок транзакцій не вийшло. Перезавантажте сторінку!`,
         })
       );
     }

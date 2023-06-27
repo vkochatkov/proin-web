@@ -28,6 +28,15 @@ export const TransactionItem: React.FC<IProps> = ({
     marginTop: '5px',
     backgroundColor: transaction.type === 'income' ? '#86e7d6' : '#DCA2A3',
   };
+  // Convert the timestamp to a Date object
+  const transactionDate = new Date(transaction.timestamp);
+
+  // Format the date and time
+  const formattedDate = transactionDate.toLocaleDateString('uk-UA', {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+  });
 
   const handleOpenTransaction = () => {
     const query = generateNavigationString(transaction.id);
@@ -57,8 +66,13 @@ export const TransactionItem: React.FC<IProps> = ({
                 Видалити
               </MenuItem>
             </Menu> */}
+            <Typography
+              variant='inherit'
+              // sx={{ color: '#979797' }}
+            >{`${formattedDate}`}</Typography>
             <Typography>
-              {getTransactionLabel(transaction.type)}: {transaction.sum}
+              {getTransactionLabel(transaction.type)}
+              {transaction.type && ':'} {transaction.sum}
             </Typography>
             <Typography>{transaction.classifier}</Typography>
             <Button
@@ -69,10 +83,6 @@ export const TransactionItem: React.FC<IProps> = ({
             >
               <MoreVertIcon className='transaction-item__icon' />
             </Button>
-            {/* <Typography
-                variant='inherit'
-                sx={{ color: '#979797' }}
-              >{`${formattedDate} ${formattedTime}`}</Typography> */}
           </Paper>
         </div>
       )}
