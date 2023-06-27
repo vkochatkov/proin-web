@@ -19,8 +19,8 @@ import { ProjectTasksComponent } from './ProjectTasksComponent';
 import { useContext } from 'react';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 import { createTransaction } from '../modules/actions/transactions';
-import { TransactionItemList } from './TransactionItemList/TransactionItemList';
 import { getProjectTransactions } from '../modules/selectors/transactions';
+import { ProjectTransactionsComponent } from './ProjectTransactionsComponent';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -37,7 +37,6 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   const navigate = useNavigate();
   const tabsId = 'main-tabs';
   const filePickerRef = useContext(FilePickerRefContext);
-  const transactions = useSelector(getProjectTransactions);
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -82,7 +81,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
     },
     {
       label: 'Фінанси',
-      panel: <TransactionItemList transactions={transactions} />,
+      panel: <ProjectTransactionsComponent />,
     },
     {
       label: 'Задачі',

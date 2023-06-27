@@ -5,9 +5,15 @@ import { TransactionItem } from '../TransactionItem/TransactionItem';
 
 interface IProps {
   transactions: ITransaction[];
+  changeOrder: (tasks: ITransaction[]) => void;
+  generateNavigationString: (id: string) => void;
 }
 
-export const TransactionItemList: React.FC<IProps> = ({ transactions }) => {
+export const TransactionItemList: React.FC<IProps> = ({
+  transactions,
+  changeOrder,
+  generateNavigationString,
+}) => {
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
@@ -19,7 +25,7 @@ export const TransactionItemList: React.FC<IProps> = ({ transactions }) => {
       result.destination.index,
     );
 
-    // changeOrder(newOrder);
+    changeOrder(newOrder);
     // dispatch(setIsDragging(false));
   };
 
@@ -34,12 +40,11 @@ export const TransactionItemList: React.FC<IProps> = ({ transactions }) => {
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {transactions.map((transaction, index) => (
-                  // <div>{transaction.sum}</div>
                   <TransactionItem
                     transaction={transaction}
                     index={index}
                     key={transaction.id}
-                    // generateNavigationString={generateNavigationString}
+                    generateNavigationString={generateNavigationString}
                   />
                 ))}
                 {provided.placeholder}

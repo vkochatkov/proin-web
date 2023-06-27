@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Draggable } from '@hello-pangea/dnd';
 import { Paper, Typography } from '@mui/material';
 import { useContextMenu } from '../../hooks/useContextMenu';
@@ -6,27 +7,43 @@ import { Button } from '../FormElement/Button';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { getTransactionLabel } from '../../utils/utils';
 
+import './TransactionItem.scss';
+
 interface IProps {
   transaction: ITransaction;
   index: number;
+  generateNavigationString: (id: string) => void;
 }
 
-export const TransactionItem: React.FC<IProps> = ({ transaction, index }) => {
+export const TransactionItem: React.FC<IProps> = ({
+  transaction,
+  index,
+  generateNavigationString,
+}) => {
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
+  const navigate = useNavigate();
+  const transactionkWrapperStyle = {
+    padding: '10px',
+    marginTop: '5px',
+    backgroundColor: transaction.type === 'income' ? '#86e7d6' : '#DCA2A3',
+  };
 
-  const handleOpenTransaction = (e: React.MouseEvent<HTMLDivElement>) => {};
+  const handleOpenTransaction = () => {
+    const query = generateNavigationString(transaction.id);
+    navigate(`${query}`);
+  };
   return (
     <Draggable draggableId={transaction.id} index={index}>
       {(provided) => (
         <div
-          onClick={(e) => handleOpenTransaction(e)}
+          onClick={handleOpenTransaction}
           ref={provided.innerRef}
-          className='task-item'
+          className='transaction-item'
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Paper>
+          <Paper sx={transactionkWrapperStyle}>
             {/* <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -40,16 +57,17 @@ export const TransactionItem: React.FC<IProps> = ({ transaction, index }) => {
                 Видалити
               </MenuItem>
             </Menu> */}
-            <Typography>{getTransactionLabel(transaction.type)}</Typography>
+            <Typography>
+              {getTransactionLabel(transaction.type)}: {transaction.sum}
+            </Typography>
             <Typography>{transaction.classifier}</Typography>
-            <Typography>Сума:{transaction.sum}</Typography>
             <Button
               icon
               transparent
-              customClassName='task-item__btn'
+              customClassName='transaction-item__btn'
               onClick={handleContextMenu}
             >
-              <MoreVertIcon className='item__icon' />
+              <MoreVertIcon className='transaction-item__icon' />
             </Button>
             {/* <Typography
                 variant='inherit'

@@ -1,0 +1,9 @@
+.transaction-item {
+  position: relative;
+  &__btn {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translate(0, -50%);
+  }
+}
