@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Draggable } from '@hello-pangea/dnd';
-import { Paper, Typography } from '@mui/material';
+import { Menu, MenuItem, Paper, Typography } from '@mui/material';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { ITransaction } from '../../modules/types/transactions';
 import { Button } from '../FormElement/Button';
@@ -53,7 +53,7 @@ export const TransactionItem: React.FC<IProps> = ({
           {...provided.dragHandleProps}
         >
           <Paper sx={transactionkWrapperStyle}>
-            {/* <Menu
+            <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
@@ -62,10 +62,12 @@ export const TransactionItem: React.FC<IProps> = ({
                 left: contextMenuPosition.left,
               }}
             >
-              <MenuItem onClick={() => handleOpenModal(modalId)}>
+              <MenuItem
+              // onClick={() => handleOpenModal(modalId)}
+              >
                 Видалити
               </MenuItem>
-            </Menu> */}
+            </Menu>
             <Typography
               variant='inherit'
               // sx={{ color: '#979797' }}
