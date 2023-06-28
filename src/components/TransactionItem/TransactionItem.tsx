@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Draggable } from '@hello-pangea/dnd';
 import { Menu, MenuItem, Paper, Typography } from '@mui/material';
@@ -6,6 +7,7 @@ import { ITransaction } from '../../modules/types/transactions';
 import { Button } from '../FormElement/Button';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { getTransactionLabel } from '../../utils/utils';
+import { setCurrentTransaction } from '../../modules/actions/transactions';
 
 import './TransactionItem.scss';
 
@@ -23,6 +25,7 @@ export const TransactionItem: React.FC<IProps> = ({
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const transactionkWrapperStyle = {
     padding: '10px',
     marginTop: '5px',
@@ -39,6 +42,8 @@ export const TransactionItem: React.FC<IProps> = ({
   });
 
   const handleOpenTransaction = () => {
+    dispatch(setCurrentTransaction(transaction));
+
     const query = generateNavigationString(transaction.id);
     navigate(`${query}`);
   };
