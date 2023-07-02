@@ -30,7 +30,7 @@ const updateTransactionStates = ({
   // const updatedUserTransactions = updateObjects(userTransactions, transaction);
 
   dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
-  // dispatch(setCurrentTransaction(transaction));
+  dispatch(setCurrentTransaction(transaction));
   // dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
 }
 
@@ -70,28 +70,34 @@ export const fetchTransactions = (projectId: string) => async (dispatch: Dispatc
   }
 }
 
-export const createTransaction = (projectId: string) => async (dispatch: Dispatch) => {
-  try {
-    const res = await Api.Transactions.create({
-      projectId,
-      timestamp: new Date().toISOString(),
-    });
+export const createTransaction = (projectId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projectTransactions = getState().projectTransactions;
 
-    ApiErrors.checkOnApiError(res);
+    try {
+      const res = await Api.Transactions.create({
+        projectId,
+        timestamp: new Date().toISOString(),
+      });
 
-    dispatch(setCurrentTransaction(res.transaction));
+      ApiErrors.checkOnApiError(res);
 
-    return res;
-  } catch (e) {
-    dispatch(
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
-      })
-    );
-  }
-};
+      const updatedTransactions = [...projectTransactions, res.transaction];
+
+      dispatch(setCurrentTransaction(res.transaction));
+      dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
+
+      return res;
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
+        })
+      );
+    }
+  };
 
 export const updateTransactionOnServer = (
   data: Partial<ITransaction>,
@@ -100,12 +106,17 @@ export const updateTransactionOnServer = (
 ) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const currentTransaction = getState().currentTransaction;
+    const projectTransactions = getState().projectTransactions;
     const updatedTransaction = {
       ...currentTransaction,
       ...data
     }
     try {
-      dispatch(setCurrentTransaction(updatedTransaction));
+      updateTransactionStates({
+        transactions: projectTransactions,
+        transaction: updatedTransaction,
+        dispatch
+      });
 
       const res = await Api.Transactions.update({
         ...data,
