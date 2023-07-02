@@ -55,5 +55,5 @@ export const updateEnitites = (entities: any[], id: string, files: IFile[]) => {
 };
 
 export const updateObjects = (array: any, obj: any) => {
-  return array.map((task: any) => (task._id === obj._id ? obj : task));
+  return array.map((item: any) => (item._id === obj._id ? obj : item));
 };

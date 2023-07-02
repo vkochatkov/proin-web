@@ -8,6 +8,7 @@ import { Button } from '../FormElement/Button';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { getTransactionLabel } from '../../utils/utils';
 import { setCurrentTransaction } from '../../modules/actions/transactions';
+import { openModal } from '../../modules/actions/modal';
 
 import './TransactionItem.scss';
 
@@ -26,6 +27,7 @@ export const TransactionItem: React.FC<IProps> = ({
     useContextMenu();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const modalId = 'remove-transaction';
   const transactionkWrapperStyle = {
     padding: '10px',
     marginTop: '5px',
@@ -44,9 +46,19 @@ export const TransactionItem: React.FC<IProps> = ({
   const handleOpenTransaction = () => {
     dispatch(setCurrentTransaction(transaction));
 
-    const query = generateNavigationString(transaction.id);
-    navigate(`${query}`);
+    if (anchorEl) {
+      handleClose();
+    } else {
+      const query = generateNavigationString(transaction.id);
+      navigate(`${query}`);
+    }
   };
+
+  const handleOpenModal = (modalId: string) => {
+    dispatch(openModal({ id: modalId }));
+    dispatch(setCurrentTransaction(transaction));
+  };
+
   return (
     <Draggable draggableId={transaction.id} index={index}>
       {(provided) => (
@@ -67,9 +79,7 @@ export const TransactionItem: React.FC<IProps> = ({
                 left: contextMenuPosition.left,
               }}
             >
-              <MenuItem
-              // onClick={() => handleOpenModal(modalId)}
-              >
+              <MenuItem onClick={() => handleOpenModal(modalId)}>
                 Видалити
               </MenuItem>
             </Menu>

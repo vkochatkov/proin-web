@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
+import { updateObjects } from '../../utils/utils';
 import { RootState } from '../store/store';
 import { ITransaction } from '../types/transactions';
 import { changeSnackbarState } from './snackbar';
@@ -11,6 +12,27 @@ export const fetchProjectTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('fetchProjectTransactionsSuccess');
 export const updateProjectTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('updateProjectTransactionsSuccess');
+export const updateUserTransactionsSuccess =
+  createAction<{ transactions: ITransaction[] }>('updateUserTransactionsSuccess');
+
+const updateTransactionStates = ({
+  transactions,
+  transaction,
+  // userTransactions,
+  dispatch,
+}: {
+  transactions: ITransaction[];
+  transaction: ITransaction;
+  // userTransactions: ITransaction[];
+  dispatch: Dispatch;
+}) => {
+  const updatedTransactions = updateObjects(transactions, transaction);
+  // const updatedUserTransactions = updateObjects(userTransactions, transaction);
+
+  dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
+  // dispatch(setCurrentTransaction(transaction));
+  // dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
+}
 
 export const fetchTransactionById = (id: string) => async (dispatch: Dispatch) => {
   try {
@@ -120,3 +142,25 @@ export const saveProjectTransactionsOrder = (transactions: ITransaction[], proje
       );
     }
   }
+
+export const deleteTransaction = (id: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const transactions = getState().projectTransactions;
+    try {
+      const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
+
+      dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
+
+      const res = await Api.Transactions.delete(id);
+
+      ApiErrors.checkOnApiError(res);
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Видалити транзакцію не вийшло. Перезавантажте сторінку!`,
+        })
+      );
+    }
+  };

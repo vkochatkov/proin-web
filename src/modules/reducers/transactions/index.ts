@@ -1,10 +1,12 @@
 import { createReducer } from 'redux-act';
-import { fetchProjectTransactionsSuccess, updateProjectTransactionsSuccess } from '../../actions/transactions';
+import { fetchProjectTransactionsSuccess, updateProjectTransactionsSuccess, updateUserTransactionsSuccess } from '../../actions/transactions';
 import { ITransaction } from '../../types/transactions';
 
 const initialState: ITransaction[] = [];
 
-export const transactions = createReducer({}, initialState);
+export const userTransactions = createReducer({}, initialState);
+
+userTransactions.on(updateUserTransactionsSuccess, (_, payload) => payload.transactions);
 
 export const projectTransactions = createReducer({}, initialState);
 

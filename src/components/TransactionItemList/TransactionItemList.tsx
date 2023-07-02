@@ -26,16 +26,12 @@ export const TransactionItemList: React.FC<IProps> = ({
     );
 
     changeOrder(newOrder);
-    // dispatch(setIsDragging(false));
   };
 
   return (
     <div className='transaction-items'>
       <div>
-        <DragDropContext
-          onDragEnd={onDragEnd}
-          // onDragStart={() => dispatch(setIsDragging(true))}
-        >
+        <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId='droppable'>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>

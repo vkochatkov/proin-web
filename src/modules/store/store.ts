@@ -17,7 +17,7 @@ import { selectedTask } from '../reducers/selectedTask';
 import { tabs } from '../reducers/tabs';
 import { userTasks } from '../reducers/userTasks';
 import { currentTransaction } from '../reducers/currentTransaction';
-import { projectTransactions, transactions } from '../reducers/transactions';
+import { projectTransactions, userTransactions } from '../reducers/transactions';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -37,6 +37,7 @@ const rootReducer = combineReducers({
   userTasks,
   currentTransaction,
   projectTransactions,
+  userTransactions
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
