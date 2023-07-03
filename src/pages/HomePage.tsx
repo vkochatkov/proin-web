@@ -25,13 +25,14 @@ import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearDraggingStatus } from '../modules/actions/dragging';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
+import { fetchUserTransactions } from '../modules/actions/transactions';
 
 import './HomePage.scss';
 
 const HomePage: React.FC = () => {
   const { sendRequest } = useHttpClient();
   const { projects, currentProject } = useSelector(
-    (state: RootState) => state.mainProjects
+    (state: RootState) => state.mainProjects,
   );
   const { userId } = useAuth();
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ const HomePage: React.FC = () => {
     dispatch(fetchProjects() as any);
     dispatch(fetchAllUserTasks() as any);
     dispatch(fetchAllUserProjects() as any);
+    dispatch(fetchUserTransactions() as any);
     dispatch(endLoading());
   }, [sendRequest, userId, dispatch]);
 
@@ -96,23 +98,23 @@ const HomePage: React.FC = () => {
       <MoveProjectModal />
       <RemoveProjectModal />
       <SnackbarUI />
-      <div className="container">
+      <div className='container'>
         <MainNavigation>
           <Button
-            size="small"
+            size='small'
             transparent={true}
             icon={true}
             onClick={handleCreateProject}
           >
             <img
-              src="/plus_icon.svg"
-              className="button__icon"
-              alt="button icon"
+              src='/plus_icon.svg'
+              className='button__icon'
+              alt='button icon'
             />
           </Button>
         </MainNavigation>
         {isLoading && (
-          <div className="loading">
+          <div className='loading'>
             <LoadingSpinner />
           </div>
         )}

@@ -5,7 +5,7 @@ import { TransactionItem } from '../TransactionItem/TransactionItem';
 
 interface IProps {
   transactions: ITransaction[];
-  changeOrder: (tasks: ITransaction[]) => void;
+  changeOrder: (transactions: ITransaction[]) => void;
   generateNavigationString: (id: string) => void;
 }
 

@@ -122,6 +122,7 @@ export const Api = {
     getProjectTransactions: (projectId: string) =>
       APIClient.get(`/transactions-list/project/${projectId}`),
     updateTransactionsByProjectId: (transactions: ITransaction[], projectId: string) =>
-      APIClient.patch(`/transactions-list/project/${projectId}`, { transactions })
+      APIClient.patch(`/transactions-list/project/${projectId}`, { transactions }),
+    getUserTransactions: () => APIClient.get(`/transactions-list/all`)
   },
 };

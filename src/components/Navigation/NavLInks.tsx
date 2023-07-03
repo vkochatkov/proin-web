@@ -15,23 +15,26 @@ export const NavLinks = () => {
   };
 
   return (
-    <nav className="nav-links">
+    <nav className='nav-links'>
       {token && (
         <>
-          <li className="nav-links__item">
-            <NavLink to="/">Проекти</NavLink>
+          <li className='nav-links__item'>
+            <NavLink to='/'>Проекти</NavLink>
           </li>
-          <li className="nav-links__item">
-            <NavLink to="/tasks">Задачі</NavLink>
+          <li className='nav-links__item'>
+            <NavLink to='/tasks'>Задачі</NavLink>
           </li>
-          <li className="nav-links__item">
+          <li className='nav-links__item'>
+            <NavLink to='/transactions'>Транзакції</NavLink>
+          </li>
+          <li className='nav-links__item'>
             <button onClick={handleLogout}>Вийти</button>
           </li>
         </>
       )}
       {!token && (
         <li>
-          <NavLink to="/auth">Реєстрація</NavLink>
+          <NavLink to='/auth'>Реєстрація</NavLink>
         </li>
       )}
     </nav>

@@ -14,6 +14,8 @@ export const updateProjectTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('updateProjectTransactionsSuccess');
 export const updateUserTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('updateUserTransactionsSuccess');
+export const fetchUserTransactionsSuccess =
+  createAction<{ transactions: ITransaction[] }>('fetchUserTransactionsSuccess');
 
 const updateTransactionStates = ({
   transactions,
@@ -175,3 +177,20 @@ export const deleteTransaction = (id: string) =>
       );
     }
   };
+
+export const fetchUserTransactions = () => async (dispatch: Dispatch) => {
+  try {
+    const res = await Api.Transactions.getUserTransactions();
+    ApiErrors.checkOnApiError(res);
+
+    dispatch(fetchUserTransactionsSuccess({ transactions: res.transactions }));
+  } catch (e) {
+    dispatch(
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `Сталася помилка. Перезавантажте сторінку!`,
+      })
+    );
+  }
+}

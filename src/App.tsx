@@ -19,6 +19,9 @@ const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
 const TaskListPage = React.lazy(() => import('./pages/TaskListPage'));
 const TransactionPage = React.lazy(() => import('./pages/TransactionPage'));
+const TransactionListPage = React.lazy(
+  () => import('./pages/TransactionListPage'),
+);
 
 export const App: React.FC = () => {
   return (
@@ -26,38 +29,39 @@ export const App: React.FC = () => {
       <main>
         <Suspense
           fallback={
-            <div className="loading">
+            <div className='loading'>
               <LoadingSpinner />
             </div>
           }
         >
           <Routes>
             <Route element={<AuthWrapper />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/tasks" element={<TaskListPage />} />
+              <Route path='/' element={<HomePage />} />
+              <Route path='/tasks' element={<TaskListPage />} />
+              <Route path='/transactions' element={<TransactionListPage />} />
               <Route
-                path="/project-edit/:pid/:subprojectId?"
+                path='/project-edit/:pid/:subprojectId?'
                 element={<EditProject />}
               />
               <Route
-                path="/project-edit/:pid/transaction/:transactionId"
+                path='/project-edit/:pid/transaction/:transactionId'
                 element={<TransactionPage />}
               />
               <Route
-                path="/project-edit/:pid/task/:tid"
+                path='/project-edit/:pid/task/:tid'
                 element={<TaskPage />}
               />
-              <Route path="/tasks/:tid" element={<TaskPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path='/tasks/:tid' element={<TaskPage />} />
+              <Route path='*' element={<Navigate to='/' replace />} />
             </Route>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path='/auth' element={<Auth />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/reset-password/:token' element={<ResetPassword />} />
             <Route
-              path="/projects/:id/invitations/:invitationId"
+              path='/projects/:id/invitations/:invitationId'
               element={<InvitePage />}
             />
-            <Route path="*" element={<Navigate to="/auth" replace />} />
+            <Route path='*' element={<Navigate to='/auth' replace />} />
           </Routes>
         </Suspense>
       </main>
