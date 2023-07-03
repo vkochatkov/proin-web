@@ -48,6 +48,10 @@ export const App: React.FC = () => {
                 element={<TransactionPage />}
               />
               <Route
+                path='/transactions/:transactionId'
+                element={<TransactionPage />}
+              />
+              <Route
                 path='/project-edit/:pid/task/:tid'
                 element={<TaskPage />}
               />
