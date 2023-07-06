@@ -145,7 +145,8 @@ export const saveProjectTransactionsOrder = (transactions: ITransaction[], proje
     try {
       dispatch(updateProjectTransactionsSuccess({ transactions }));
 
-      const res = await Api.Transactions.updateTransactionsByProjectId(transactions, projectId);
+      const res = await Api.Transactions
+        .updateTransactionsByProjectId(transactions, projectId);
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
@@ -196,4 +197,17 @@ export const fetchUserTransactions = () => async (dispatch: Dispatch) => {
       })
     );
   }
-}
+};
+
+export const saveUserTransactionOrder = (transactions: ITransaction[], userId: string) =>
+  async (dispatch: Dispatch) => {
+    try {
+      dispatch(updateUserTransactionsSuccess({ transactions }));
+
+      const res = await Api.Transactions.updateTransactionsByUserId(transactions, userId);
+
+      ApiErrors.checkOnApiError(res);
+    } catch (e) {
+
+    }
+  }
