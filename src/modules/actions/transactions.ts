@@ -20,20 +20,20 @@ export const fetchUserTransactionsSuccess =
 const updateTransactionStates = ({
   transactions,
   transaction,
-  // userTransactions,
+  userTransactions,
   dispatch,
 }: {
   transactions: ITransaction[];
   transaction: ITransaction;
-  // userTransactions: ITransaction[];
+  userTransactions: ITransaction[];
   dispatch: Dispatch;
 }) => {
   const updatedTransactions = updateObjects(transactions, transaction);
-  // const updatedUserTransactions = updateObjects(userTransactions, transaction);
+  const updatedUserTransactions = updateObjects(userTransactions, transaction);
 
   dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
   dispatch(setCurrentTransaction(transaction));
-  // dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
+  dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
 }
 
 export const fetchTransactionById = (id: string) => async (dispatch: Dispatch) => {
@@ -109,14 +109,17 @@ export const updateTransactionOnServer = (
   async (dispatch: Dispatch, getState: () => RootState) => {
     const currentTransaction = getState().currentTransaction;
     const projectTransactions = getState().projectTransactions;
+    const userTransactions = getState().userTransactions;
     const updatedTransaction = {
       ...currentTransaction,
       ...data
-    }
+    };
+
     try {
       updateTransactionStates({
         transactions: projectTransactions,
         transaction: updatedTransaction,
+        userTransactions,
         dispatch
       });
 
