@@ -4,6 +4,7 @@ import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { useForm } from '../hooks/useForm';
 import {
   getCurrentProject,
+  getCurrentProjectId,
   getCurrentProjects,
 } from '../modules/selectors/mainProjects';
 import { Button } from '../components/FormElement/Button';
@@ -40,6 +41,7 @@ const EditProject: React.FC<Props> = () => {
   const { pid, subprojectId } = useParams();
   const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
+  const currentProjectId = useSelector(getCurrentProjectId);
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,13 +60,22 @@ const EditProject: React.FC<Props> = () => {
   );
 
   useEffect(() => {
-    if (pid) {
+    if (!currentProjectId || !pid) return;
+
+    if (pid === currentProjectId) {
       dispatch(fetchTasks(pid) as any);
       dispatch(fetchTransactions(pid) as any);
     }
 
+    if (!subprojectId) return;
+
+    if (subprojectId === currentProjectId) {
+      dispatch(fetchTasks(subprojectId) as any);
+      dispatch(fetchTransactions(subprojectId) as any);
+    }
+
     // eslint-disable-next-line
-  }, [dispatch]);
+  }, [dispatch, currentProjectId]);
 
   useEffect(() => {
     if (!currentProject || (currentProject && !currentProject._id)) return;

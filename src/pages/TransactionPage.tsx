@@ -29,7 +29,7 @@ const TransactionPage: React.FC<IProps> = () => {
   const currentProject = useSelector(getCurrentProject);
   const [selectedClassifierValue, setSelectedClassifierValue] =
     useState<string>(currentTransaction ? currentTransaction.classifier : '');
-  const { pid, transactionId } = useParams();
+  const { pid, subprojectId, transactionId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const tabsId = 'main-tabs';
@@ -61,19 +61,30 @@ const TransactionPage: React.FC<IProps> = () => {
     )
       return;
 
-    if (pid && currentProject._id !== pid) {
+    if (
+      (pid && !subprojectId && currentProject._id !== pid) ||
+      (subprojectId && currentProject._id !== subprojectId)
+    ) {
       navigate('/');
     }
 
     if (pid && transactionId && transactionId !== currentTransaction.id) {
+      if (subprojectId) {
+        navigate(`/project-edit/${pid}/${subprojectId}`);
+        return;
+      }
+
       navigate(`/project-edit/${pid}`);
     }
-  }, [pid, currentTransaction, currentProject, transactionId]);
+  }, [pid, currentTransaction, currentProject, transactionId, subprojectId]);
 
   const handleCloseTransactionPage = () => {
-    if (pid) {
+    if (pid && !subprojectId) {
       dispatch(setTabValue({ [tabsId]: 'Фінанси' }));
       navigate(`/project-edit/${pid}`);
+    } else if (pid && subprojectId) {
+      dispatch(setTabValue({ [tabsId]: 'Фінанси' }));
+      navigate(`/project-edit/${pid}/${subprojectId}`);
     } else {
       navigate(`/transactions`);
     }

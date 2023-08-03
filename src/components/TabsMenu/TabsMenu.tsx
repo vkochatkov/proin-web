@@ -23,7 +23,7 @@ interface TabData {
 
 interface TabsMenuProps {
   tabs: TabData[];
-  handleClickCreateTaskButton?: () => void;
+  handleCreateTaskName?: () => void;
   handleCreateSubproject?: () => void;
   tabsId: string;
   handleDownloadFiles?: () => void;
@@ -32,14 +32,14 @@ interface TabsMenuProps {
 
 export const TabsMenu: React.FC<TabsMenuProps> = ({
   tabs,
-  handleClickCreateTaskButton,
+  handleCreateTaskName,
   handleCreateSubproject,
   handleDownloadFiles,
   handleCreateTransaction,
   tabsId,
 }) => {
   const tabValue = useSelector((state: RootState) =>
-    getValueByTabId(state)(tabsId)
+    getValueByTabId(state)(tabsId),
   );
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -73,8 +73,8 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
 
   const addButtonConfig = {
     onClick: () => {
-      if (isTaskTab && handleClickCreateTaskButton) {
-        handleClickCreateTaskButton();
+      if (isTaskTab && handleCreateTaskName) {
+        handleCreateTaskName();
       } else if (isDescriptionTab && handleCreateSubproject) {
         handleCreateSubproject();
       } else if (isFilesTab && handleDownloadFiles) {
@@ -118,7 +118,7 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
                 value={tab.label}
                 sx={tabStyle}
                 label={
-                  <Typography variant="body1" sx={tabTextStyle}>
+                  <Typography variant='body1' sx={tabTextStyle}>
                     {tab.label}
                   </Typography>
                 }

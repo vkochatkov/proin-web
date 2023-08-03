@@ -5,19 +5,30 @@ import { getProjectTransactions } from '../modules/selectors/transactions';
 import { ITransaction } from '../modules/types/transactions';
 import { TransactionItemList } from './TransactionItemList/TransactionItemList';
 
-export const ProjectTransactionsComponent: React.FC = () => {
-  const { pid } = useParams();
+interface IProps {}
+
+export const ProjectTransactionsComponent: React.FC<IProps> = () => {
+  const { pid, subprojectId } = useParams();
   const transactions = useSelector(getProjectTransactions);
   const dispatch = useDispatch();
 
   const handleChangeTaskItemOrder = (newOrder: ITransaction[]) => {
     if (!pid) return;
 
-    dispatch(saveProjectTransactionsOrder(newOrder, pid) as any);
+    if (!subprojectId) {
+      dispatch(saveProjectTransactionsOrder(newOrder, pid) as any);
+    } else {
+      dispatch(saveProjectTransactionsOrder(newOrder, subprojectId) as any);
+    }
   };
 
   const handleGenerateNavigationQuery = (id: string) => {
-    return `/project-edit/${pid}/transaction/${id}`;
+    const query =
+      pid && subprojectId
+        ? `/project-edit/${pid}/${subprojectId}/transaction/${id}`
+        : `/project-edit/${pid}/transaction/${id}`;
+
+    return query;
   };
 
   return (

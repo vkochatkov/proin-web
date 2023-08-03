@@ -4,6 +4,12 @@ export const getCurrentProject = (state: RootState) => {
   return state.mainProjects.currentProject;
 };
 
+export const getCurrentProjectId = (state: RootState) => {
+  const currentProject = state.mainProjects.currentProject;
+
+  return currentProject ? currentProject.id : '';
+}
+
 export const getCurrentProjects = (state: RootState) =>
   state.mainProjects.projects;
 

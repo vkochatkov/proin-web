@@ -40,6 +40,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
+
     if (!subprojectId) {
       dispatch(updateFilesOrder(pid, order) as any);
     } else {
@@ -115,17 +116,25 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   const handleCreateTransaction = async () => {
     if (!pid) return;
 
+    const projectId = pid && subprojectId ? subprojectId : pid;
+
     const {
       transaction: { id },
-    } = await dispatch(createTransaction(pid) as any);
+    } = await dispatch(createTransaction(projectId) as any);
 
-    navigate(`/project-edit/${pid}/transaction/${id}`);
+    if (pid && !subprojectId) {
+      navigate(`/project-edit/${pid}/transaction/${id}`);
+    }
+
+    if (subprojectId) {
+      navigate(`/project-edit/${pid}/${subprojectId}/transaction/${id}`);
+    }
   };
 
   return (
     <TabsMenu
       tabs={tabs}
-      handleClickCreateTaskButton={handleOpenTaskNameInput}
+      handleCreateTaskName={handleOpenTaskNameInput}
       handleCreateSubproject={handleCreateSubproject}
       handleDownloadFiles={handleDownloadFiles}
       handleCreateTransaction={handleCreateTransaction}
