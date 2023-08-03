@@ -52,7 +52,7 @@ export const App: React.FC = () => {
                 element={<TransactionPage />}
               />
               <Route
-                path='/project-edit/:pid/task/:tid'
+                path='/project-edit/:pid/:subprojectId?/task/:tid'
                 element={<TaskPage />}
               />
               <Route path='/tasks/:tid' element={<TaskPage />} />

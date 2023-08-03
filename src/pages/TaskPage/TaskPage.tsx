@@ -29,18 +29,21 @@ export const TaskPage = () => {
         isValid: true,
       },
     },
-    true
+    true,
   );
   const task = useSelector(getCurrentTask);
-  const { pid } = useParams();
+  const { pid, subprojectId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tabsId = 'main-tabs';
 
   const handleCloseTaskPage = () => {
-    if (pid) {
+    if (pid && !subprojectId) {
       dispatch(setTabValue({ [tabsId]: 'Задачі' }));
       navigate(`/project-edit/${pid}`);
+    } else if (subprojectId) {
+      dispatch(setTabValue({ [tabsId]: 'Задачі' }));
+      navigate(`/project-edit/${pid}/${subprojectId}`);
     } else {
       navigate(`/tasks`);
     }
@@ -53,35 +56,35 @@ export const TaskPage = () => {
   return (
     <>
       <SnackbarUI />
-      <div className="container">
+      <div className='container'>
         <Header>
           <Button
-            size="small"
+            size='small'
             transparent={true}
             icon={true}
-            customClassName="header__btn-close"
+            customClassName='header__btn-close'
             onClick={handleCloseTaskPage}
           >
-            <img src="/back.svg" alt="back_logo" className="button__icon" />
+            <img src='/back.svg' alt='back_logo' className='button__icon' />
           </Button>
         </Header>
         <Card>
-          <Card className="task-page__card">
+          <Card className='task-page__card'>
             <InteractiveInput
-              id="name"
+              id='name'
               inputHandler={inputHandler}
               entity={task}
             />
-            <div className="task-page__input-wrapper">
+            <div className='task-page__input-wrapper'>
               <InteractiveInput
                 label={'Опис'}
-                id="description"
+                id='description'
                 inputHandler={inputHandler}
                 entity={task}
               />
             </div>
             <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
-            <div className="task-page__uploader">
+            <div className='task-page__uploader'>
               <TaskFilesUpload id={'files'} />
             </div>
           </Card>

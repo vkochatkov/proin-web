@@ -19,7 +19,6 @@ import { ProjectTasksComponent } from './ProjectTasksComponent';
 import { useContext } from 'react';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 import { createTransaction } from '../modules/actions/transactions';
-import { getProjectTransactions } from '../modules/selectors/transactions';
 import { ProjectTransactionsComponent } from './ProjectTransactionsComponent';
 
 interface IUsersTabsMenuProps {
