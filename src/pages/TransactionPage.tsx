@@ -116,14 +116,20 @@ const TransactionPage: React.FC<IProps> = () => {
             values={types}
             getTranslation={getTransactionLabel}
           />
-          <TransactionSelect
-            label={'Класифікатор'}
-            keyValue={'classifier'}
-            selectedValue={selectedClassifierValue}
-            setSelectedValue={setSelectedClassifierValue}
-            values={currentTransaction.classifiers}
-          />
-          <AddClassifierInputComponent inputHandler={inputHandler} />
+          <div
+            style={{
+              position: 'relative',
+            }}
+          >
+            <TransactionSelect
+              label={'Класифікатор'}
+              keyValue={'classifier'}
+              selectedValue={selectedClassifierValue}
+              setSelectedValue={setSelectedClassifierValue}
+              values={currentTransaction.classifiers}
+            />
+            <AddClassifierInputComponent inputHandler={inputHandler} />
+          </div>
           <InteractiveInput
             label='Сума'
             id='sum'

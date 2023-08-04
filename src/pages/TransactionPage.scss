@@ -1,6 +1,15 @@
+@import '../utils/mixins.scss';
+
 .transaction {
   &__btn {
-    border: 1px solid;
-    margin-top: 10px;
+    @include button-absolute;
   }
+
+  &__input-wrapper {
+    position: relative;
+  }
+}
+
+.built-in__btn {
+  top: 63%;
 }

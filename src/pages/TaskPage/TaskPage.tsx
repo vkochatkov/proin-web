@@ -12,7 +12,7 @@ import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { IFile } from '../../modules/types/mainProjects';
 import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
-import { TaskTabsMenu } from '../../components/TaskTabsMenu';
+import { LowerTabsMenu } from '../../components/LowerTabsMenu';
 
 import '../HomePage.scss';
 import './TaskPage.scss';
@@ -88,7 +88,7 @@ export const TaskPage = () => {
               <TaskFilesUpload id={'files'} />
             </div>
           </Card>
-          <TaskTabsMenu />
+          <LowerTabsMenu />
           {/* <UserActivityDiary /> */}
         </Card>
       </div>

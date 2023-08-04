@@ -13,7 +13,7 @@ import { CommentsList } from './CommentsList';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { UserActivityDiary } from './UserActivityDiary';
 
-export const TaskTabsMenu = () => {
+export const LowerTabsMenu = () => {
   const dispatch = useDispatch();
   const currentTask = useSelector(getCurrentTask);
   const tabsId = 'task-tabs';
@@ -21,7 +21,7 @@ export const TaskTabsMenu = () => {
 
   const handeSaveUpdatedComment = (
     updatedComment: IComment,
-    updatedComments: IComment[]
+    updatedComments: IComment[],
   ) => {
     if (!updatedComment.taskId) return;
 
@@ -32,8 +32,8 @@ export const TaskTabsMenu = () => {
     dispatch(
       updateTaskById(
         { comments: updatedComments, comment: updatedComment },
-        updatedComment.taskId
-      ) as any
+        updatedComment.taskId,
+      ) as any,
     );
   };
 

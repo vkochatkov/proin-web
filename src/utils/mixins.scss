@@ -35,3 +35,11 @@
   text-overflow: ellipsis;
   max-width: 133%;
 }
+
+@mixin button-absolute {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+}
