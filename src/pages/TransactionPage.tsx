@@ -14,6 +14,7 @@ import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
 import { fetchTransactionById } from '../modules/actions/transactions';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
+import { endLoading } from '../modules/actions/loading';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -50,6 +51,7 @@ const TransactionPage: React.FC<IProps> = () => {
     if (!transactionId) return;
 
     dispatch(fetchTransactionById(transactionId) as any);
+    dispatch(endLoading());
   }, []);
 
   useEffect(() => {
