@@ -133,6 +133,7 @@ const TransactionPage: React.FC<IProps> = () => {
           />
           <div style={style}>
             <InteractiveInput
+              label='Опис'
               id='description'
               inputHandler={inputHandler}
               entity={currentTransaction}
