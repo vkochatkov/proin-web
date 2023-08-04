@@ -19,11 +19,11 @@ export const CustomSelect = ({
   styling = { margin: 1, width: '90%' },
 }: IProps) => {
   return (
-    <FormControl variant="standard" sx={styling}>
-      <InputLabel id="label">{label}</InputLabel>
+    <FormControl variant='standard' sx={styling}>
+      <InputLabel id='label'>{label}</InputLabel>
       <Select
-        labelId="label"
-        id="component-simple"
+        labelId='label'
+        id='component-simple'
         value={selectedValue}
         label={label}
         onChange={onChange}
@@ -31,6 +31,9 @@ export const CustomSelect = ({
         sx={{
           '& .MuiInputBase-input:focus': {
             background: 'transparent',
+          },
+          '& .MuiFormControl-root': {
+            margin: '8px 0',
           },
           ...(label === '' ? { '&.MuiInputBase-root': { marginTop: 0 } } : {}),
         }}

@@ -13,7 +13,10 @@ import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
 import { fetchTransactionById } from '../modules/actions/transactions';
-import { getCurrentProject } from '../modules/selectors/mainProjects';
+import {
+  getCurrentProject,
+  getCurrentProjects,
+} from '../modules/selectors/mainProjects';
 import { endLoading } from '../modules/actions/loading';
 
 import '../index.scss';
@@ -33,6 +36,7 @@ const TransactionPage: React.FC<IProps> = () => {
   const { pid, subprojectId, transactionId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const projects = useSelector(getCurrentProjects);
   const tabsId = 'main-tabs';
   const style = {
     marginTop: '10px',
@@ -40,6 +44,10 @@ const TransactionPage: React.FC<IProps> = () => {
   const { inputHandler } = useForm(
     {
       sum: {
+        value: '',
+        isValid: true,
+      },
+      projectName: {
         value: '',
         isValid: true,
       },
@@ -108,6 +116,12 @@ const TransactionPage: React.FC<IProps> = () => {
           </Button>
         </Header>
         <Card>
+          <InteractiveInput
+            id='projectName'
+            inputHandler={inputHandler}
+            entity={currentProject}
+            entities={projects}
+          />
           <TransactionSelect
             label={'Тип транзакції'}
             keyValue={'type'}
