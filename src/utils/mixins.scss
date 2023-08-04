@@ -19,3 +19,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@mixin small-title {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  display: block;
+  transform-origin: top left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 133%;
+}

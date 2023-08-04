@@ -20,7 +20,7 @@ import { useContext } from 'react';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 import { createTransaction } from '../modules/actions/transactions';
 import { ProjectTransactionsComponent } from './ProjectTransactionsComponent';
-import { endLoading, startLoading } from '../modules/actions/loading';
+import { startLoading } from '../modules/actions/loading';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
