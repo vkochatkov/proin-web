@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { ReactNode } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 interface IProps {
   onChange: (e: SelectChangeEvent) => void;
@@ -16,10 +16,16 @@ export const CustomSelect = ({
   selectedValue,
   label,
   children,
-  styling = { margin: 1, width: '90%' },
+  styling = { margin: 1, width: "90%" },
 }: IProps) => {
+  const customFormControlStyles = {
+    margin: "8px 0", // Set margin to 8px top and bottom, 0 left and right
+  };
   return (
-    <FormControl variant='standard' sx={styling}>
+    <FormControl
+      variant='standard'
+      sx={{ ...styling, ...customFormControlStyles }}
+    >
       <InputLabel id='label'>{label}</InputLabel>
       <Select
         labelId='label'
@@ -29,13 +35,10 @@ export const CustomSelect = ({
         onChange={onChange}
         onClick={(e) => e.stopPropagation()}
         sx={{
-          '& .MuiInputBase-input:focus': {
-            background: 'transparent',
+          "& .MuiInputBase-input:focus": {
+            background: "transparent",
           },
-          '& .MuiFormControl-root': {
-            margin: '8px 0',
-          },
-          ...(label === '' ? { '&.MuiInputBase-root': { marginTop: 0 } } : {}),
+          ...(label === "" ? { "&.MuiInputBase-root": { marginTop: 0 } } : {}),
         }}
       >
         {children}
