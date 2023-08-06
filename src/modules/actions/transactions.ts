@@ -163,10 +163,14 @@ export const saveProjectTransactionsOrder = (transactions: ITransaction[], proje
 export const deleteTransaction = (id: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const transactions = getState().projectTransactions;
+    const userTransactions = getState().userTransactions;
     try {
       const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
+      const updatedUserTransactions = userTransactions
+        .filter(transaction => transaction.id !== id);
 
       dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
+      dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
 
       const res = await Api.Transactions.delete(id);
 

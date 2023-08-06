@@ -35,7 +35,9 @@ export const RemoveTransactionModal: React.FC<IProps> = () => {
   return (
     <Modal open={open} handleClose={handleClose} label={'Видалення транзакції'}>
       <form onSubmit={submitHandler}>
-        <DialogContent>Ви впевнені, що бажаєте видалити задачу?</DialogContent>
+        <DialogContent>
+          Ви впевнені, що бажаєте видалити транзакцію?
+        </DialogContent>
         <DialogActions>
           <Button type='submit'>Видалити</Button>
         </DialogActions>

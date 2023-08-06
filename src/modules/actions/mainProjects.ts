@@ -435,7 +435,7 @@ export const fetchAllUserProjects =
 
     const response = await Api.Projects.getAll(userId);
 
-    const allUserProjects = response.data.projects.map((project: Project) => ({
+    const allUserProjects = response.projects.map((project: Project) => ({
       projectName: project.projectName,
       _id: project._id,
       subProjects: project.subProjects,
@@ -521,8 +521,8 @@ export const moveToProject =
             id: 'error',
             open: true,
             message: `${e.response.data
-                ? e.response.data.message
-                : 'Переміщення проекту не вдалося'
+              ? e.response.data.message
+              : 'Переміщення проекту не вдалося'
               }. Результат не збережено. Перезавантажте сторінку`,
           })
         );
@@ -553,8 +553,8 @@ export const removeFile =
           id: 'error',
           open: true,
           message: `${e.response.data
-              ? e.response.data.message
-              : 'Видалити файл не вдалося'
+            ? e.response.data.message
+            : 'Видалити файл не вдалося'
             }. Результат не збережено. Перезавантажте сторінку`,
         })
       );
@@ -574,8 +574,8 @@ export const createNewSubproject =
           id: 'error',
           open: true,
           message: `${e.response.data
-              ? e.response.data.message
-              : 'Видалити файл не вдалося'
+            ? e.response.data.message
+            : 'Видалити файл не вдалося'
             }. Результат не збережено. Перезавантажте сторінку`,
         })
       );
@@ -608,8 +608,8 @@ export const updateFilesOrder =
             id: 'error',
             open: true,
             message: `${e.response.data
-                ? e.response.data.message
-                : 'Зберегти нову послідовність файлів не вдалося'
+              ? e.response.data.message
+              : 'Зберегти нову послідовність файлів не вдалося'
               }. Перезавантажте сторінку`,
           })
         );
@@ -676,8 +676,8 @@ export const updateSubprojectFilesOrder =
             id: 'error',
             open: true,
             message: `${e.response.data
-                ? e.response.data.message
-                : 'Зберегти нову послідовність файлів не вдалося'
+              ? e.response.data.message
+              : 'Зберегти нову послідовність файлів не вдалося'
               }. Перезавантажте сторінку`,
           })
         );
