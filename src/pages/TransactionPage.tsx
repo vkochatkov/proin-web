@@ -13,10 +13,7 @@ import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
 import { fetchTransactionById } from '../modules/actions/transactions';
-import {
-  getCurrentProject,
-  getCurrentProjects,
-} from '../modules/selectors/mainProjects';
+import { getAllUserProjects } from '../modules/selectors/mainProjects';
 import { endLoading } from '../modules/actions/loading';
 
 import '../index.scss';
@@ -30,13 +27,15 @@ const TransactionPage: React.FC<IProps> = () => {
   const [selectedTypeValue, setSelectedTypeValue] = useState<string>(
     currentTransaction ? currentTransaction.type : '',
   );
-  const currentProject = useSelector(getCurrentProject);
   const [selectedClassifierValue, setSelectedClassifierValue] =
     useState<string>(currentTransaction ? currentTransaction.classifier : '');
   const { pid, subprojectId, transactionId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const projects = useSelector(getCurrentProjects);
+  const projects = useSelector(getAllUserProjects);
+  const currentProject = projects.find(
+    (project) => project._id === currentTransaction.projectId,
+  );
   const tabsId = 'main-tabs';
   const style = {
     marginTop: '10px',
@@ -116,12 +115,8 @@ const TransactionPage: React.FC<IProps> = () => {
           </Button>
         </Header>
         <Card>
-          <InteractiveInput
-            id='projectName'
-            inputHandler={inputHandler}
-            entity={currentProject}
-            entities={projects}
-          />
+          <h3 className='transaction__title'>Проект</h3>
+          <p>{currentProject && currentProject?.projectName}</p>
           <TransactionSelect
             label={'Тип транзакції'}
             keyValue={'type'}

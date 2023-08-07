@@ -8,8 +8,17 @@
   &__input-wrapper {
     position: relative;
   }
+
+  &__title {
+    margin-top: 0;
+  }
 }
 
 .built-in__btn {
   top: 63%;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
 }
