@@ -16,12 +16,14 @@ interface IProps {
   transaction: ITransaction;
   index: number;
   generateNavigationString: (id: string) => void;
+  isDraggable?: boolean;
 }
 
 export const TransactionItem: React.FC<IProps> = ({
   transaction,
   index,
   generateNavigationString,
+  isDraggable = false,
 }) => {
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
@@ -59,50 +61,61 @@ export const TransactionItem: React.FC<IProps> = ({
     dispatch(setCurrentTransaction(transaction));
   };
 
+  const renderItem = () => (
+    <Paper sx={transactionkWrapperStyle}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorPosition={{
+          top: contextMenuPosition.top,
+          left: contextMenuPosition.left,
+        }}
+      >
+        <MenuItem onClick={() => handleOpenModal(modalId)}>Видалити</MenuItem>
+      </Menu>
+      <Typography
+        variant='inherit'
+        // sx={{ color: '#979797' }}
+      >{`${formattedDate}`}</Typography>
+      <Typography>
+        {getTransactionLabel(transaction.type)}
+        {transaction.type && ':'} {transaction.sum}
+      </Typography>
+      <Typography>{transaction.classifier}</Typography>
+      <Button
+        icon
+        transparent
+        customClassName='transaction-item__btn'
+        onClick={handleContextMenu}
+      >
+        <MoreVertIcon className='transaction-item__icon' />
+      </Button>
+    </Paper>
+  );
+
   return (
-    <Draggable draggableId={transaction.id} index={index}>
-      {(provided) => (
-        <div
-          onClick={handleOpenTransaction}
-          ref={provided.innerRef}
-          className='transaction-item'
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <Paper sx={transactionkWrapperStyle}>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorPosition={{
-                top: contextMenuPosition.top,
-                left: contextMenuPosition.left,
-              }}
+    <>
+      {isDraggable && (
+        <Draggable draggableId={transaction.id} index={index}>
+          {(provided) => (
+            <div
+              onClick={handleOpenTransaction}
+              ref={provided.innerRef}
+              className='transaction-item'
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
             >
-              <MenuItem onClick={() => handleOpenModal(modalId)}>
-                Видалити
-              </MenuItem>
-            </Menu>
-            <Typography
-              variant='inherit'
-              // sx={{ color: '#979797' }}
-            >{`${formattedDate}`}</Typography>
-            <Typography>
-              {getTransactionLabel(transaction.type)}
-              {transaction.type && ':'} {transaction.sum}
-            </Typography>
-            <Typography>{transaction.classifier}</Typography>
-            <Button
-              icon
-              transparent
-              customClassName='transaction-item__btn'
-              onClick={handleContextMenu}
-            >
-              <MoreVertIcon className='transaction-item__icon' />
-            </Button>
-          </Paper>
+              {renderItem()}
+            </div>
+          )}
+        </Draggable>
+      )}
+      {!isDraggable && (
+        <div onClick={handleOpenTransaction} className='transaction-item'>
+          {renderItem()}
         </div>
       )}
-    </Draggable>
+    </>
   );
 };

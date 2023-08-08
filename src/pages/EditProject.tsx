@@ -30,8 +30,16 @@ import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 import { setDefaultTabValue } from '../modules/actions/tabs';
 import { FilePickerRefProvider } from '../components/ContextProvider/FilesPickerRefProvider';
-import { fetchTransactions } from '../modules/actions/transactions';
+import {
+  fetchTransactions,
+  saveProjectTransactionsOrder,
+} from '../modules/actions/transactions';
 import { RemoveTransactionModal } from '../components/Modals/RemoveTransactionModal';
+import { getProjectTransactions } from '../modules/selectors/transactions';
+import { ITransaction } from '../modules/types/transactions';
+import { TransactionListSlider } from '../components/Slider/Slider';
+import { RootState } from '../modules/store/store';
+import { getValueByTabId } from '../modules/selectors/tabs';
 
 import './HomePage.scss';
 
@@ -45,6 +53,7 @@ const EditProject: React.FC<Props> = () => {
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const transactions = useSelector(getProjectTransactions);
   const { inputHandler } = useForm(
     {
       projectName: {
@@ -57,6 +66,9 @@ const EditProject: React.FC<Props> = () => {
       },
     },
     true,
+  );
+  const tabValue = useSelector((state: RootState) =>
+    getValueByTabId(state)('main-tabs'),
   );
 
   useEffect(() => {
@@ -148,6 +160,25 @@ const EditProject: React.FC<Props> = () => {
     }
   };
 
+  const handleChangeTaskItemOrder = (newOrder: ITransaction[]) => {
+    if (!pid) return;
+
+    if (!subprojectId) {
+      dispatch(saveProjectTransactionsOrder(newOrder, pid) as any);
+    } else {
+      dispatch(saveProjectTransactionsOrder(newOrder, subprojectId) as any);
+    }
+  };
+
+  const handleGenerateNavigationQuery = (id: string) => {
+    const query =
+      pid && subprojectId
+        ? `/project-edit/${pid}/${subprojectId}/transaction/${id}`
+        : `/project-edit/${pid}/transaction/${id}`;
+
+    return query;
+  };
+
   return (
     <>
       <div className='container'>
@@ -167,36 +198,53 @@ const EditProject: React.FC<Props> = () => {
             <LoadingSpinner />
           </div>
         ) : (
-          <Card
-            sx={{
-              background: 'rgba(248, 248, 248, .8)',
-              margin: '0 1rem',
-            }}
-          >
-            <div>
-              <>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                  }}
-                ></div>
-                <FilePickerRefProvider>
-                  <ImageUpload
-                    onInput={inputHandler}
-                    projectId={currentProject ? currentProject._id : undefined}
-                    id='logoUrl'
-                    inputHandler={inputHandler}
-                    isUpdateValue={true}
-                  />
-                  <ProjectTabsMenu
-                    subprojectId={subprojectId}
-                    inputHandler={inputHandler}
-                  />
-                </FilePickerRefProvider>
-              </>
-            </div>
-          </Card>
+          <>
+            <Card
+              sx={{
+                background: 'rgba(248, 248, 248, .8)',
+                margin: '0 1rem',
+              }}
+            >
+              <div>
+                <>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                    }}
+                  ></div>
+                  <FilePickerRefProvider>
+                    <ImageUpload
+                      onInput={inputHandler}
+                      projectId={
+                        currentProject ? currentProject._id : undefined
+                      }
+                      id='logoUrl'
+                      inputHandler={inputHandler}
+                      isUpdateValue={true}
+                    />
+                    <ProjectTabsMenu
+                      subprojectId={subprojectId}
+                      inputHandler={inputHandler}
+                    />
+                  </FilePickerRefProvider>
+                </>
+              </div>
+            </Card>
+            {tabValue === 'Фінанси' && (
+              <div
+                style={{
+                  margin: '1rem',
+                }}
+              >
+                <TransactionListSlider
+                  changeOrder={handleChangeTaskItemOrder}
+                  generateNavigationString={handleGenerateNavigationQuery}
+                  transactions={transactions}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
       <InviteModal />

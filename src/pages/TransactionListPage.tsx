@@ -56,6 +56,7 @@ const TransactionListPage: React.FC<Props> = () => {
               transactions={transactions}
               changeOrder={handleSaveTransactionItemOrder}
               generateNavigationString={handleGenerateNavigationQuery}
+              isDraggable
             />
           </Card>
         )}
