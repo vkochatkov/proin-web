@@ -13,7 +13,8 @@ interface IProps {
   values: string[];
   keyValue: string;
   getTranslation?: (value: string) => ReactNode;
-  label: string
+  label: string;
+  styling?: React.CSSProperties;
 }
 
 export const TransactionSelect: React.FC<IProps> = ({
@@ -22,7 +23,8 @@ export const TransactionSelect: React.FC<IProps> = ({
   values,
   keyValue,
   getTranslation,
-  label
+  label,
+  styling,
 }) => {
   const dispatch = useDispatch();
   const { transactionId } = useParams();
@@ -32,13 +34,15 @@ export const TransactionSelect: React.FC<IProps> = ({
     if (!transactionId) return;
 
     const newValue = e.target.value;
-    
-    setSelectedValue(newValue);    
-    dispatch(updateTransactionOnServer(
-      { [keyValue]: newValue }, 
-      transactionId, 
-      currentTransaction.projectId
-      ) as any)
+
+    setSelectedValue(newValue);
+    dispatch(
+      updateTransactionOnServer(
+        { [keyValue]: newValue },
+        transactionId,
+        currentTransaction.projectId,
+      ) as any,
+    );
   };
 
   return (
@@ -46,9 +50,14 @@ export const TransactionSelect: React.FC<IProps> = ({
       label={label}
       onChange={handleChange}
       selectedValue={selectedValue}
+      styling={styling}
     >
       {values.map((value) => (
-        <MenuItem key={value} onClick={(e) => e.stopPropagation()} value={value}>
+        <MenuItem
+          key={value}
+          onClick={(e) => e.stopPropagation()}
+          value={value}
+        >
           {getTranslation ? getTranslation(value) : value}
         </MenuItem>
       ))}

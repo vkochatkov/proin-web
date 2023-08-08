@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { getProjectTransactions } from '../modules/selectors/transactions';
+import { TransactionsSettings } from './TransactionSettings/TransactionsSettings';
 
 interface IProps {}
 
@@ -19,7 +20,14 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
 
   return (
     <>
-      <p>Загалом: {totals}</p>
+      <p
+        style={{
+          margin: 0,
+        }}
+      >
+        Загалом: {totals}
+      </p>
+      <TransactionsSettings />
     </>
   );
 };

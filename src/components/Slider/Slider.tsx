@@ -24,8 +24,10 @@ export const TransactionListSlider: React.FC<IProps> = ({
   generateNavigationString,
 }) => {
   const expensesTransactions = transactions.filter(
-    (transaction) =>
-      transaction.type === 'expenses' || transaction.type === 'transfer',
+    (transaction) => transaction.type === 'expenses',
+  );
+  const transferTransactions = transactions.filter(
+    (transaction) => transaction.type === 'transfer',
   );
   const incomeTransactions = transactions.filter(
     (transaction) => transaction.type === 'income',
@@ -66,9 +68,7 @@ export const TransactionListSlider: React.FC<IProps> = ({
             <h3>Всі</h3>
             <TransactionItemList
               transactions={transactions}
-              changeOrder={changeOrder}
               generateNavigationString={generateNavigationString}
-              droppableId='droppable-1'
             />
           </div>
         </Card>
@@ -78,9 +78,7 @@ export const TransactionListSlider: React.FC<IProps> = ({
             <h3>Витрати</h3>
             <TransactionItemList
               transactions={expensesTransactions}
-              changeOrder={() => console.log('chnage order')}
               generateNavigationString={generateNavigationString}
-              droppableId='droppable-2'
             />
           </div>
         </Card>
@@ -90,9 +88,17 @@ export const TransactionListSlider: React.FC<IProps> = ({
             <h3>Доходи</h3>
             <TransactionItemList
               transactions={incomeTransactions}
-              changeOrder={() => console.log('chnage order')}
               generateNavigationString={generateNavigationString}
-              droppableId='droppable-3'
+            />
+          </div>
+        </Card>
+        <Card className='slider-transaction-list__card'>
+          {/* Render 'Income' Transactions */}
+          <div className='slider-transaction-list__wrapper'>
+            <h3>Перекази</h3>
+            <TransactionItemList
+              transactions={transferTransactions}
+              generateNavigationString={generateNavigationString}
             />
           </div>
         </Card>

@@ -1,0 +1,25 @@
+@import '../../utils/mixins.scss';
+
+.transaction-settings {
+  &__select-wrapper {
+    display: flex;
+    position: relative;
+  }
+
+  &__btn {
+    @include button-absolute;
+    top: 63%;
+  }
+
+  &__btn--1 {
+    right: 50px;
+  }
+
+  &__btn--2 {
+    right: 25px;
+  }
+
+  &__btn--3 {
+    right: -2px;
+  }
+}

@@ -5,7 +5,7 @@ import { TransactionItem } from '../TransactionItem/TransactionItem';
 
 interface IProps {
   transactions: ITransaction[];
-  changeOrder: (transactions: ITransaction[]) => void;
+  changeOrder?: (transactions: ITransaction[]) => void;
   generateNavigationString: (id: string) => void;
   droppableId?: string;
   isDraggable?: boolean;
@@ -19,7 +19,7 @@ export const TransactionItemList: React.FC<IProps> = ({
   isDraggable = false,
 }) => {
   const onDragEnd = (result: any) => {
-    if (!result.destination) {
+    if (!result.destination || !changeOrder) {
       return;
     }
 
