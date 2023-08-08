@@ -3,6 +3,9 @@ import Slider from 'react-slick';
 import { TransactionItemList } from '../TransactionItemList/TransactionItemList';
 import { ITransaction } from '../../modules/types/transactions';
 import { Card } from '../UIElements/Card';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { Button } from '../FormElement/Button';
 
 import './Slider.scss';
 
@@ -34,6 +37,24 @@ export const TransactionListSlider: React.FC<IProps> = ({
     slidesToScroll: 1,
     useTransform: false,
     draggable: false,
+    prevArrow: (
+      <Button
+        transparent
+        icon
+        customClassName='slider-transaction-list__left-arrow'
+      >
+        <KeyboardArrowLeftIcon />
+      </Button>
+    ),
+    nextArrow: (
+      <Button
+        transparent
+        icon
+        customClassName='slider-transaction-list__right-arrow'
+      >
+        <KeyboardArrowRightIcon />
+      </Button>
+    ),
   };
 
   return (

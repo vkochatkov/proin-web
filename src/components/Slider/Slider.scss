@@ -7,4 +7,18 @@
   &__wrapper {
     padding: 20px;
   }
+
+  &__left-arrow {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    top: 50%;
+  }
+
+  &__right-arrow {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+    top: 50%;
+  }
 }
