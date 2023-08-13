@@ -34,10 +34,6 @@
   }
 
   &__input-wrapper button {
-    background: transparent;
-    border: 1px solid black;
-    margin-left: 5px;
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
+    @include bordered-button;
   }
 }

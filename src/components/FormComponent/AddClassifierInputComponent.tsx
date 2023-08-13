@@ -13,7 +13,10 @@ interface IProps {}
 
 export const AddClassifierInputComponent: React.FC<IProps> = () => {
   const dispatch = useDispatch();
-  const { isActive, setIsActive } = useActiveInput();
+  const { isActive, setIsActive } = useActiveInput() as {
+    isActive: boolean;
+    setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   const currentProject = useSelector(getCurrentProject);
   const inputKey = 'classifierToAdd';
   const { formState, inputHandler } = useForm(
@@ -73,7 +76,7 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
                 setIsActive(false);
               }
             }}
-            className='transaction__input-wrapper'
+            className='transaction__input-container'
           >
             <Input
               id={inputKey}
@@ -86,12 +89,11 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
               // changeHandler={handleChangeKeyValue}
             />
             <Button
-              customClassName='transaction__btn'
+              customClassName='classifier__btn'
               transparent
-              icon
               onClick={handleSaveClassifier}
             >
-              <AddIcon />
+              Додати
             </Button>
           </div>
         </>
