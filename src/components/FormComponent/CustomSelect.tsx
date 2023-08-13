@@ -1,7 +1,9 @@
+import React from 'react';
 import { ReactNode } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { MenuItem } from '@mui/material';
 
 interface IProps {
   onChange: (e: SelectChangeEvent) => void;
@@ -21,6 +23,8 @@ export const CustomSelect = ({
   const customFormControlStyles = {
     margin: '8px 0',
   };
+  const noOptionsAvailable = React.Children.count(children) === 0;
+
   return (
     <FormControl
       variant='standard'
@@ -41,7 +45,18 @@ export const CustomSelect = ({
           ...(label === '' ? { '&.MuiInputBase-root': { marginTop: 0 } } : {}),
         }}
       >
-        {children}
+        {noOptionsAvailable ? (
+          <MenuItem
+            key={''}
+            onClick={(e) => e.stopPropagation()}
+            value={''}
+            disabled
+          >
+            Пусто. Додайте класифікатор
+          </MenuItem>
+        ) : (
+          children
+        )}
       </Select>
     </FormControl>
   );
