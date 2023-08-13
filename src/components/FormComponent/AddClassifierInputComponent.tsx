@@ -6,12 +6,15 @@ import { getCurrentTransaction } from '../../modules/selectors/currentTransactio
 import { Button } from '../FormElement/Button';
 import { Input } from '../FormElement/Input';
 import AddIcon from '@mui/icons-material/Add';
+import { getCurrentProject } from '../../modules/selectors/mainProjects';
+import { setCurrentProject } from '../../modules/actions/mainProjects';
 
 interface IProps {}
 
 export const AddClassifierInputComponent: React.FC<IProps> = () => {
   const dispatch = useDispatch();
   const { isActive, setIsActive } = useActiveInput();
+  const currentProject = useSelector(getCurrentProject);
   const inputKey = 'classifierToAdd';
   const { formState, inputHandler } = useForm(
     {
@@ -28,8 +31,15 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
   const currentTransaction = useSelector(getCurrentTransaction);
 
   const handleSaveClassifier = () => {
-    const updatedClassifiers = currentTransaction.classifiers.concat(value);
+    if (!currentProject) return;
 
+    const updatedClassifiers = currentTransaction.classifiers.concat(value);
+    const updatedProject = {
+      ...currentProject,
+      classifiers: updatedClassifiers,
+    };
+
+    dispatch(setCurrentProject(updatedProject));
     dispatch(
       updateTransactionOnServer(
         { classifiers: updatedClassifiers },
@@ -37,6 +47,7 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
         currentTransaction.projectId,
       ) as any,
     );
+
     setIsActive(false);
   };
 
