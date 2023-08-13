@@ -12,14 +12,32 @@
   }
 
   &__btn--1 {
-    right: 50px;
+    right: 15%;
   }
 
   &__btn--2 {
-    right: 25px;
+    right: 7%;
   }
 
   &__btn--3 {
     right: -2px;
+  }
+
+  &__input-wrapper {
+    display: flex;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  &__input-wrapper .form-control {
+    width: 75%;
+  }
+
+  &__input-wrapper button {
+    background: transparent;
+    border: 1px solid black;
+    margin-left: 5px;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
   }
 }

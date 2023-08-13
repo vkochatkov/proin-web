@@ -15,6 +15,7 @@ interface IProps {
   getTranslation?: (value: string) => ReactNode;
   label: string;
   styling?: React.CSSProperties;
+  isCommon?: boolean;
 }
 
 export const TransactionSelect: React.FC<IProps> = ({
@@ -25,24 +26,32 @@ export const TransactionSelect: React.FC<IProps> = ({
   getTranslation,
   label,
   styling,
+  isCommon,
 }) => {
   const dispatch = useDispatch();
   const { transactionId } = useParams();
   const currentTransaction = useSelector(getCurrentTransaction);
 
   const handleChange = (e: SelectChangeEvent) => {
-    if (!transactionId) return;
+    // if (!isCommon) return;
 
     const newValue = e.target.value;
 
     setSelectedValue(newValue);
-    dispatch(
-      updateTransactionOnServer(
-        { [keyValue]: newValue },
-        transactionId,
-        currentTransaction.projectId,
-      ) as any,
-    );
+
+    if (isCommon) {
+      return;
+    }
+
+    if (transactionId) {
+      dispatch(
+        updateTransactionOnServer(
+          { [keyValue]: newValue },
+          transactionId,
+          currentTransaction.projectId,
+        ) as any,
+      );
+    }
   };
 
   return (
@@ -52,15 +61,16 @@ export const TransactionSelect: React.FC<IProps> = ({
       selectedValue={selectedValue}
       styling={styling}
     >
-      {values.map((value) => (
-        <MenuItem
-          key={value}
-          onClick={(e) => e.stopPropagation()}
-          value={value}
-        >
-          {getTranslation ? getTranslation(value) : value}
-        </MenuItem>
-      ))}
+      {values &&
+        values.map((value) => (
+          <MenuItem
+            key={value}
+            onClick={(e) => e.stopPropagation()}
+            value={value}
+          >
+            {getTranslation ? getTranslation(value) : value}
+          </MenuItem>
+        ))}
     </CustomSelect>
   );
 };

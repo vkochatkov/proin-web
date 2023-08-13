@@ -137,7 +137,7 @@ const TransactionPage: React.FC<IProps> = () => {
               setSelectedValue={setSelectedClassifierValue}
               values={currentTransaction.classifiers}
             />
-            <AddClassifierInputComponent inputHandler={inputHandler} />
+            <AddClassifierInputComponent />
           </div>
           <InteractiveInput
             label='Сума'

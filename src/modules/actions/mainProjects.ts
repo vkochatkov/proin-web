@@ -268,7 +268,7 @@ export const updateOrderProjects =
     };
 
 export const updateProject =
-  (props: Partial<IProject>, parentId: string) =>
+  (props: Partial<Project>, parentId: string) =>
     async (dispatch: Dispatch) => {
       try {
         await Api.Projects.patch(props, parentId);

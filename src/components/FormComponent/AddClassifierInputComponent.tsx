@@ -7,17 +7,13 @@ import { Button } from '../FormElement/Button';
 import { Input } from '../FormElement/Input';
 import AddIcon from '@mui/icons-material/Add';
 
-interface IProps {
-  inputHandler: (id: string, value: string, isValid: boolean) => void;
-}
+interface IProps {}
 
-export const AddClassifierInputComponent: React.FC<IProps> = ({
-  inputHandler,
-}) => {
+export const AddClassifierInputComponent: React.FC<IProps> = () => {
   const dispatch = useDispatch();
   const { isActive, setIsActive } = useActiveInput();
   const inputKey = 'classifierToAdd';
-  const { formState } = useForm(
+  const { formState, inputHandler } = useForm(
     {
       [inputKey]: {
         value: '',

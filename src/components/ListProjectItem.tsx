@@ -34,7 +34,7 @@ export const ListProjectItem = ({
     const newItems = reorder(
       projects,
       result.source.index,
-      result.destination.index
+      result.destination.index,
     );
 
     updateOrder(newItems, result.destination.index);
@@ -47,13 +47,13 @@ export const ListProjectItem = ({
         onDragEnd={onDragEnd}
         onDragStart={() => dispatch(setIsDragging(true))}
       >
-        <Droppable droppableId="droppable">
+        <Droppable droppableId='droppable'>
           {(provided, snapshot) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
               style={
-                projects.length > 0
+                projects && projects.length > 0
                   ? getListStyle(snapshot.isDraggingOver, isWrapped)
                   : undefined
               }
