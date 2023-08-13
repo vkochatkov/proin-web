@@ -58,22 +58,23 @@ export const ListProjectItem = ({
                   : undefined
               }
             >
-              {projects.map((item: Project, index: number) => {
-                return (
-                  <ProjectItem
-                    key={item._id}
-                    projectId={item._id}
-                    name={item.projectName ? item.projectName : ''}
-                    logo={item.logoUrl}
-                    description={item.description}
-                    index={index}
-                    onClick={onClick}
-                    sharedWith={item.sharedWith}
-                    id={item._id}
-                    project={item}
-                  />
-                );
-              })}
+              {projects &&
+                projects.map((item: Project, index: number) => {
+                  return (
+                    <ProjectItem
+                      key={item._id}
+                      projectId={item._id}
+                      name={item.projectName ? item.projectName : ''}
+                      logo={item.logoUrl}
+                      description={item.description}
+                      index={index}
+                      onClick={onClick}
+                      sharedWith={item.sharedWith}
+                      id={item._id}
+                      project={item}
+                    />
+                  );
+                })}
               {provided.placeholder}
             </div>
           )}

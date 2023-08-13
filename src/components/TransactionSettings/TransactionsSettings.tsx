@@ -15,6 +15,8 @@ import {
 import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { ITransaction } from '../../modules/types/transactions';
 import { updateProjectTransactionsSuccess } from '../../modules/actions/transactions';
+import { closeModal, openModal } from '../../modules/actions/modal';
+import { RemoveClassifierModal } from '../Modals/RemoveClassifierModal';
 
 import './TransactionSettings.scss';
 
@@ -31,6 +33,7 @@ export const TransactionsSettings = () => {
   const [placeholder, setPlaceholder] = useState('');
   const currentProject = useSelector(getCurrentProject);
   const projectTransactions = useSelector(getProjectTransactions);
+  const modalId = 'remove-classifier';
   const { inputHandler } = useForm(
     {
       [classifierAction]: {
@@ -64,6 +67,34 @@ export const TransactionsSettings = () => {
     const inputPlacehoder = 'Редагувати класифікатор';
 
     handleActiveInput(inputId, inputPlacehoder);
+  };
+
+  const handleUpdatingClassifierValues = (
+    updatingArrayWithValues: string[],
+  ) => {
+    if (!currentProject) return;
+
+    const updatedProject = {
+      ...currentProject,
+      classifiers: updatingArrayWithValues,
+    };
+
+    dispatch(
+      updateProject(
+        { classifiers: updatingArrayWithValues },
+        currentProject.id,
+      ) as any,
+    );
+
+    if (updatingArrayWithValues.includes(selectedEdittingValue)) {
+      setSelectedEdittingsValue(selectedEdittingValue);
+    } else {
+      setSelectedEdittingsValue('');
+    }
+
+    dispatch(setCurrentProject(updatedProject));
+
+    setIsActiveInput(false);
   };
 
   const handleSaveClassifier = (action: string) => {
@@ -101,31 +132,48 @@ export const TransactionsSettings = () => {
       updatingArrayWithValues = classifiers.concat([changedValue]);
     }
 
-    const updatedProject = {
-      ...currentProject,
-      classifiers: updatingArrayWithValues,
-    };
+    handleUpdatingClassifierValues(updatingArrayWithValues);
+  };
 
-    dispatch(
-      updateProject(
-        { classifiers: updatingArrayWithValues },
-        currentProject.id,
-      ) as any,
+  const handleRemoveClassifier = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+
+    if (!currentProject) return;
+
+    const updatedClassifiers = [...currentProject.classifiers].filter(
+      (classifier) => classifier !== selectedEdittingValue,
+    );
+    const transactionsToUpdate = JSON.parse(
+      JSON.stringify(projectTransactions),
     );
 
-    if (updatingArrayWithValues.includes(selectedEdittingValue)) {
-      setSelectedEdittingsValue(selectedEdittingValue);
-    } else {
-      setSelectedEdittingsValue('');
-    }
+    transactionsToUpdate.forEach((transaction: ITransaction) => {
+      if (transaction.classifier === selectedEdittingValue) {
+        transaction.classifier = '';
+      }
+    });
 
-    dispatch(setCurrentProject(updatedProject));
+    dispatch(
+      updateProjectTransactionsSuccess({
+        transactions: transactionsToUpdate,
+      }),
+    );
+    handleUpdatingClassifierValues(updatedClassifiers);
 
-    setIsActiveInput(false);
+    dispatch(closeModal({ id: modalId }));
+  };
+
+  const handleOpenModal = () => {
+    dispatch(
+      openModal({
+        id: modalId,
+      }),
+    );
   };
 
   return (
     <>
+      <RemoveClassifierModal submitHandler={handleRemoveClassifier} />
       <div className='transaction-settings__select-wrapper'>
         <TransactionSelect
           label={'Класифікатор'}
@@ -154,9 +202,11 @@ export const TransactionsSettings = () => {
           <EditIcon />
         </Button>
         <Button
+          onClick={handleOpenModal}
           transparent
           icon
           customClassName='transaction-settings__btn transaction-settings__btn--3'
+          disabled={selectedEdittingValue === ''}
         >
           <DeleteIcon />
         </Button>
