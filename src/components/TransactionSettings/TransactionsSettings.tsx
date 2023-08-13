@@ -8,12 +8,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useForm } from '../../hooks/useForm';
 import { Input } from '../FormElement/Input';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
-
-import './TransactionSettings.scss';
 import {
   setCurrentProject,
   updateProject,
 } from '../../modules/actions/mainProjects';
+import { getProjectTransactions } from '../../modules/selectors/transactions';
+import { ITransaction } from '../../modules/types/transactions';
+import { updateProjectTransactionsSuccess } from '../../modules/actions/transactions';
+
+import './TransactionSettings.scss';
 
 const classifierToAdd = 'classifierToAdd';
 const classifierToEdit = 'classifierToEdit';
@@ -26,8 +29,8 @@ export const TransactionsSettings = () => {
   const [classifierAction, setClassifierAction] =
     useState<ClassifierAction>('classifierToAdd');
   const [placeholder, setPlaceholder] = useState('');
-  // const currentTransaction = useSelector(getCurrentTransaction);
   const currentProject = useSelector(getCurrentProject);
+  const projectTransactions = useSelector(getProjectTransactions);
   const { inputHandler } = useForm(
     {
       [classifierAction]: {
@@ -68,12 +71,30 @@ export const TransactionsSettings = () => {
 
     const classifiers = currentProject.classifiers;
 
-    let updatingArrayWithValues;
+    let updatingArrayWithValues: string[] = [];
 
     if (action === classifierToEdit) {
-      updatingArrayWithValues = classifiers
-        .filter((classifier: string) => classifier !== selectedEdittingValue)
-        .concat([changedValue]);
+      const transactionsToUpdate = JSON.parse(
+        JSON.stringify(projectTransactions),
+      );
+      const classifierIndex = classifiers.findIndex(
+        (classifier: string) => classifier === selectedEdittingValue,
+      );
+
+      updatingArrayWithValues = [...classifiers];
+      updatingArrayWithValues.splice(classifierIndex, 1, changedValue);
+
+      transactionsToUpdate.forEach((transaction: ITransaction) => {
+        if (transaction.classifier === selectedEdittingValue) {
+          transaction.classifier = updatingArrayWithValues[classifierIndex];
+        }
+      });
+
+      dispatch(
+        updateProjectTransactionsSuccess({
+          transactions: transactionsToUpdate,
+        }),
+      );
     }
 
     if (action === classifierToAdd) {
@@ -91,6 +112,13 @@ export const TransactionsSettings = () => {
         currentProject.id,
       ) as any,
     );
+
+    if (updatingArrayWithValues.includes(selectedEdittingValue)) {
+      setSelectedEdittingsValue(selectedEdittingValue);
+    } else {
+      setSelectedEdittingsValue('');
+    }
+
     dispatch(setCurrentProject(updatedProject));
 
     setIsActiveInput(false);
