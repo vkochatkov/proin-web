@@ -231,19 +231,21 @@ const EditProject: React.FC<Props> = () => {
                 </>
               </div>
             </Card>
-            {tabValue === 'Фінанси' && (
-              <div
-                style={{
-                  margin: '1rem',
-                }}
-              >
-                <TransactionListSlider
-                  changeOrder={handleChangeTaskItemOrder}
-                  generateNavigationString={handleGenerateNavigationQuery}
-                  transactions={transactions}
-                />
-              </div>
-            )}
+            {tabValue === 'Фінанси' &&
+              transactions &&
+              transactions.length > 0 && (
+                <div
+                  style={{
+                    margin: '1rem',
+                  }}
+                >
+                  <TransactionListSlider
+                    changeOrder={handleChangeTaskItemOrder}
+                    generateNavigationString={handleGenerateNavigationQuery}
+                    transactions={transactions}
+                  />
+                </div>
+              )}
           </>
         )}
       </div>
