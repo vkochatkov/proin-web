@@ -6,6 +6,11 @@
 
   &__wrapper {
     padding: 20px;
+
+    h2 {
+      color: rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
   }
 
   &__left-arrow {

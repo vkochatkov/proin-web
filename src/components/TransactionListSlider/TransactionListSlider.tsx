@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'react-slick';
 import { TransactionItemList } from '../TransactionItemList/TransactionItemList';
 import { ITransaction } from '../../modules/types/transactions';
@@ -6,23 +7,26 @@ import { Card } from '../UIElements/Card';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button } from '../FormElement/Button';
+import { getCurrentTabIndex } from '../../modules/selectors/activeTabIndex';
+import { setActiveTabIndex } from '../../modules/actions/activeTabIndex';
 
-import './Slider.scss';
+import './TransactionListSlider.scss';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 interface IProps {
   transactions: ITransaction[];
-  changeOrder: (transactions: ITransaction[]) => void;
   generateNavigationString: (id: string) => void;
 }
 
 export const TransactionListSlider: React.FC<IProps> = ({
   transactions,
-  changeOrder,
   generateNavigationString,
 }) => {
+  const activeIndex = useSelector(getCurrentTabIndex);
+  const dispatch = useDispatch();
+  const sliderRef = useRef<Slider | null>(null);
   const expensesTransactions = transactions.filter(
     (transaction) => transaction.type === 'expenses',
   );
@@ -32,6 +36,7 @@ export const TransactionListSlider: React.FC<IProps> = ({
   const incomeTransactions = transactions.filter(
     (transaction) => transaction.type === 'income',
   );
+
   const settings = {
     infinite: true,
     speed: 500,
@@ -59,47 +64,82 @@ export const TransactionListSlider: React.FC<IProps> = ({
     ),
   };
 
+  useEffect(() => {
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(activeIndex);
+    }
+  }, [activeIndex]);
+
+  const handleSliderAfterChange = (index: number) => {
+    if (index !== activeIndex) {
+      dispatch(setActiveTabIndex(index));
+    }
+  };
+
+  const isTransactionsExist = (transactions: ITransaction[]) => {
+    if (!transactions) return;
+
+    return transactions && transactions.length > 0;
+  };
+
   return (
     <div>
-      <Slider {...settings}>
+      <Slider
+        ref={sliderRef}
+        {...settings}
+        afterChange={handleSliderAfterChange}
+      >
         <Card className='slider-transaction-list__card'>
           {/* Render 'All' Transactions */}
           <div className='slider-transaction-list__wrapper'>
-            <h3>Всі</h3>
-            <TransactionItemList
-              transactions={transactions}
-              generateNavigationString={generateNavigationString}
-            />
+            {isTransactionsExist(transactions) ? (
+              <TransactionItemList
+                transactions={transactions}
+                generateNavigationString={generateNavigationString}
+              />
+            ) : (
+              <h2>Транзакцій немає</h2>
+            )}
           </div>
         </Card>
         <Card className='slider-transaction-list__card'>
           {/* Render 'Expenses' Transactions */}
           <div className='slider-transaction-list__wrapper'>
-            <h3>Витрати</h3>
-            <TransactionItemList
-              transactions={expensesTransactions}
-              generateNavigationString={generateNavigationString}
-            />
+            {isTransactionsExist(expensesTransactions) ? (
+              <TransactionItemList
+                transactions={expensesTransactions}
+                generateNavigationString={generateNavigationString}
+              />
+            ) : (
+              <h2>Витрат немає</h2>
+            )}
           </div>
         </Card>
         <Card className='slider-transaction-list__card'>
           {/* Render 'Income' Transactions */}
           <div className='slider-transaction-list__wrapper'>
-            <h3>Доходи</h3>
-            <TransactionItemList
-              transactions={incomeTransactions}
-              generateNavigationString={generateNavigationString}
-            />
+            {/* <h3>Доходи</h3> */}
+            {isTransactionsExist(incomeTransactions) ? (
+              <TransactionItemList
+                transactions={incomeTransactions}
+                generateNavigationString={generateNavigationString}
+              />
+            ) : (
+              <h2>Доходів немає</h2>
+            )}
           </div>
         </Card>
         <Card className='slider-transaction-list__card'>
           {/* Render 'Income' Transactions */}
           <div className='slider-transaction-list__wrapper'>
-            <h3>Перекази</h3>
-            <TransactionItemList
-              transactions={transferTransactions}
-              generateNavigationString={generateNavigationString}
-            />
+            {isTransactionsExist(transferTransactions) ? (
+              <TransactionItemList
+                transactions={transferTransactions}
+                generateNavigationString={generateNavigationString}
+              />
+            ) : (
+              <h2>Переказів немає</h2>
+            )}
           </div>
         </Card>
       </Slider>

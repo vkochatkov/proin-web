@@ -37,7 +37,7 @@ import {
 import { RemoveTransactionModal } from '../components/Modals/RemoveTransactionModal';
 import { getProjectTransactions } from '../modules/selectors/transactions';
 import { ITransaction } from '../modules/types/transactions';
-import { TransactionListSlider } from '../components/Slider/Slider';
+import { TransactionListSlider } from '../components/TransactionListSlider/TransactionListSlider';
 import { RootState } from '../modules/store/store';
 import { getValueByTabId } from '../modules/selectors/tabs';
 
@@ -240,7 +240,6 @@ const EditProject: React.FC<Props> = () => {
                   }}
                 >
                   <TransactionListSlider
-                    changeOrder={handleChangeTaskItemOrder}
                     generateNavigationString={handleGenerateNavigationQuery}
                     transactions={transactions}
                   />

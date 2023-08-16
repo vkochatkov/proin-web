@@ -6,6 +6,7 @@ const initialState: ITab = {
   'main-tabs': 'Опис',
   'comment-tabs': 'Коментарі',
   'task-tabs': 'Коментарі',
+  'transaction-tabs': 'Всі'
 };
 
 export const tabs = createReducer({}, initialState);

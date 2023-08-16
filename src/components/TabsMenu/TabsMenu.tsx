@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React, { SyntheticEvent, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -13,6 +13,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getValueByTabId } from '../../modules/selectors/tabs';
 import { RootState } from '../../modules/store/store';
 import { setTabValue } from '../../modules/actions/tabs';
+import { setActiveTabIndex } from '../../modules/actions/activeTabIndex';
+import { getCurrentTabIndex } from '../../modules/selectors/activeTabIndex';
 
 import './TabsMenu.scss';
 
@@ -26,6 +28,7 @@ interface TabsMenuProps {
   handleCreateTaskName?: () => void;
   handleCreateSubproject?: () => void;
   tabsId: string;
+  isTabIndex?: boolean;
   handleDownloadFiles?: () => void;
   handleCreateTransaction?: () => void;
 }
@@ -37,10 +40,12 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   handleDownloadFiles,
   handleCreateTransaction,
   tabsId,
+  isTabIndex,
 }) => {
   const tabValue = useSelector((state: RootState) =>
     getValueByTabId(state)(tabsId),
   );
+  const activeTabIndex = useSelector(getCurrentTabIndex);
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -67,8 +72,21 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   const isFilesTab = tabValue === 'Вкладення';
   const isTransactionsTab = tabValue === 'Фінанси';
 
+  useEffect(() => {
+    if (isTabIndex) {
+      const currentTabLabel = tabs[activeTabIndex].label;
+
+      dispatch(setTabValue({ [tabsId]: currentTabLabel }));
+    }
+  }, [activeTabIndex, isTabIndex, dispatch, tabsId, tabs]);
+
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     dispatch(setTabValue({ [tabsId]: newValue }));
+
+    if (isTabIndex) {
+      const tabIndex = tabs.findIndex((tab) => tab.label === newValue);
+      dispatch(setActiveTabIndex(tabIndex));
+    }
   };
 
   const addButtonConfig = {

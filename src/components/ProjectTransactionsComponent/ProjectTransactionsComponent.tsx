@@ -4,6 +4,7 @@ import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { TransactionsSettings } from '../TransactionSettings/TransactionsSettings';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Button } from '../FormElement/Button';
+import { TransactionTabsMenu } from '../TransactionTabsMenu';
 
 import './ProjectTransactionsComponent.scss';
 
@@ -43,6 +44,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         </Button>
       </div>
       {showSettings && <TransactionsSettings />}
+      <TransactionTabsMenu />
     </>
   );
 };
