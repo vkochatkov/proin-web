@@ -15,6 +15,7 @@ import { RootState } from '../../modules/store/store';
 import { setTabValue } from '../../modules/actions/tabs';
 import { setActiveTabIndex } from '../../modules/actions/activeTabIndex';
 import { getCurrentTabIndex } from '../../modules/selectors/activeTabIndex';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import './TabsMenu.scss';
 
@@ -45,6 +46,10 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   const tabValue = useSelector((state: RootState) =>
     getValueByTabId(state)(tabsId),
   );
+  const transactionsTabValue = useSelector((state: RootState) =>
+    getValueByTabId(state)('transaction-tabs'),
+  );
+  const classifierTab = 'Класифікатори';
   const activeTabIndex = useSelector(getCurrentTabIndex);
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -73,17 +78,24 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   const isTransactionsTab = tabValue === 'Фінанси';
 
   useEffect(() => {
-    if (isTabIndex) {
+    if (isTabIndex && transactionsTabValue !== classifierTab) {
       const currentTabLabel = tabs[activeTabIndex].label;
 
       dispatch(setTabValue({ [tabsId]: currentTabLabel }));
     }
-  }, [activeTabIndex, isTabIndex, dispatch, tabsId, tabs]);
+  }, [
+    activeTabIndex,
+    isTabIndex,
+    dispatch,
+    tabsId,
+    tabs,
+    transactionsTabValue,
+  ]);
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     dispatch(setTabValue({ [tabsId]: newValue }));
 
-    if (isTabIndex) {
+    if (isTabIndex && newValue !== classifierTab) {
       const tabIndex = tabs.findIndex((tab) => tab.label === newValue);
       dispatch(setActiveTabIndex(tabIndex));
     }
@@ -134,11 +146,21 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
               <Tab
                 key={tab.label}
                 value={tab.label}
-                sx={tabStyle}
+                sx={{
+                  ...tabStyle,
+                  ...(tab.label === classifierTab
+                    ? { marginLeft: 'auto' }
+                    : {}),
+                }}
                 label={
-                  <Typography variant='body1' sx={tabTextStyle}>
-                    {tab.label}
-                  </Typography>
+                  tab.label !== classifierTab && (
+                    <Typography variant='body1' sx={tabTextStyle}>
+                      {tab.label}
+                    </Typography>
+                  )
+                }
+                icon={
+                  tab.label === classifierTab ? <SettingsIcon /> : undefined
                 }
               />
             ))}

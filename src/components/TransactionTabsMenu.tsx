@@ -1,4 +1,5 @@
 import { TabsMenu } from './TabsMenu/TabsMenu';
+import { TransactionsSettings } from './TransactionSettings/TransactionsSettings';
 
 interface IProps {}
 
@@ -21,6 +22,14 @@ export const TransactionTabsMenu: React.FC<IProps> = () => {
     {
       label: 'Перекази',
       panel: null,
+    },
+    {
+      label: 'Класифікатори',
+      panel: (
+        <>
+          <TransactionsSettings />
+        </>
+      ),
     },
   ];
 

@@ -13,17 +13,18 @@
     }
   }
 
-  &__left-arrow {
+  &__left-arrow,
+  &__right-arrow {
     position: absolute;
-    left: 0;
     z-index: 1;
-    top: 20%;
+    top: 30%;
+  }
+
+  &__left-arrow {
+    left: 0;
   }
 
   &__right-arrow {
-    position: absolute;
     right: 0;
-    z-index: 1;
-    top: 20%;
   }
 }
