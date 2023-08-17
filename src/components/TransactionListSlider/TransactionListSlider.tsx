@@ -112,7 +112,6 @@ export const TransactionListSlider: React.FC<IProps> = ({
         </div>
         {/* Render 'Income' Transactions */}
         <div className='slider-transaction-list__wrapper'>
-          {/* <h3>Доходи</h3> */}
           {isTransactionsExist(incomeTransactions) ? (
             <TransactionItemList
               transactions={incomeTransactions}

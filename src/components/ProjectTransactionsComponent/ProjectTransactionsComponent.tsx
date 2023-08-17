@@ -23,10 +23,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
   const totals = transactions.reduce((acc, transaction) => {
     if (transaction.type === 'income') {
       acc += transaction.sum;
-    } else if (
-      transaction.type === 'expenses' ||
-      transaction.type === 'transfer'
-    ) {
+    } else if (transaction.type === 'expenses') {
       acc -= transaction.sum;
     }
     return acc;
