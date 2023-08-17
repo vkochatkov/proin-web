@@ -32,10 +32,6 @@ import { setDefaultTabValue } from '../modules/actions/tabs';
 import { FilePickerRefProvider } from '../components/ContextProvider/FilesPickerRefProvider';
 import { fetchTransactions } from '../modules/actions/transactions';
 import { RemoveTransactionModal } from '../components/Modals/RemoveTransactionModal';
-import { getProjectTransactions } from '../modules/selectors/transactions';
-import { TransactionListSlider } from '../components/TransactionListSlider/TransactionListSlider';
-import { RootState } from '../modules/store/store';
-import { getValueByTabId } from '../modules/selectors/tabs';
 
 import './HomePage.scss';
 
@@ -49,7 +45,6 @@ const EditProject: React.FC<Props> = () => {
   const projects = useSelector(getCurrentProjects);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const transactions = useSelector(getProjectTransactions);
   const { inputHandler } = useForm(
     {
       projectName: {
@@ -63,13 +58,6 @@ const EditProject: React.FC<Props> = () => {
     },
     true,
   );
-  const tabValue = useSelector((state: RootState) =>
-    getValueByTabId(state)('main-tabs'),
-  );
-  const transactionsTabValue = useSelector((state: RootState) =>
-    getValueByTabId(state)('transaction-tabs'),
-  );
-  const classifierTab = 'Класифікатори';
 
   useEffect(() => {
     if (!currentProjectId || !pid) return;
@@ -160,25 +148,6 @@ const EditProject: React.FC<Props> = () => {
     }
   };
 
-  // const handleChangeTaskItemOrder = (newOrder: ITransaction[]) => {
-  //   if (!pid) return;
-
-  //   if (!subprojectId) {
-  //     dispatch(saveProjectTransactionsOrder(newOrder, pid) as any);
-  //   } else {
-  //     dispatch(saveProjectTransactionsOrder(newOrder, subprojectId) as any);
-  //   }
-  // };
-
-  const handleGenerateNavigationQuery = (id: string) => {
-    const query =
-      pid && subprojectId
-        ? `/project-edit/${pid}/${subprojectId}/transaction/${id}`
-        : `/project-edit/${pid}/transaction/${id}`;
-
-    return query;
-  };
-
   return (
     <>
       <div className='container'>
@@ -231,21 +200,6 @@ const EditProject: React.FC<Props> = () => {
                 </>
               </div>
             </Card>
-            {tabValue === 'Фінанси' &&
-              transactions &&
-              transactions.length > 0 &&
-              transactionsTabValue !== classifierTab && (
-                <div
-                  style={{
-                    margin: '1rem',
-                  }}
-                >
-                  <TransactionListSlider
-                    generateNavigationString={handleGenerateNavigationQuery}
-                    transactions={transactions}
-                  />
-                </div>
-              )}
           </>
         )}
       </div>

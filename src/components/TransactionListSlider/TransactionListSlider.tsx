@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'react-slick';
 import { TransactionItemList } from '../TransactionItemList/TransactionItemList';
 import { ITransaction } from '../../modules/types/transactions';
-import { Card } from '../UIElements/Card';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button } from '../FormElement/Button';
@@ -89,59 +88,51 @@ export const TransactionListSlider: React.FC<IProps> = ({
         {...settings}
         afterChange={handleSliderAfterChange}
       >
-        <Card className='slider-transaction-list__card'>
-          {/* Render 'All' Transactions */}
-          <div className='slider-transaction-list__wrapper'>
-            {isTransactionsExist(transactions) ? (
-              <TransactionItemList
-                transactions={transactions}
-                generateNavigationString={generateNavigationString}
-              />
-            ) : (
-              <h2>Транзакцій немає</h2>
-            )}
-          </div>
-        </Card>
-        <Card className='slider-transaction-list__card'>
-          {/* Render 'Expenses' Transactions */}
-          <div className='slider-transaction-list__wrapper'>
-            {isTransactionsExist(expensesTransactions) ? (
-              <TransactionItemList
-                transactions={expensesTransactions}
-                generateNavigationString={generateNavigationString}
-              />
-            ) : (
-              <h2>Витрат немає</h2>
-            )}
-          </div>
-        </Card>
-        <Card className='slider-transaction-list__card'>
-          {/* Render 'Income' Transactions */}
-          <div className='slider-transaction-list__wrapper'>
-            {/* <h3>Доходи</h3> */}
-            {isTransactionsExist(incomeTransactions) ? (
-              <TransactionItemList
-                transactions={incomeTransactions}
-                generateNavigationString={generateNavigationString}
-              />
-            ) : (
-              <h2>Доходів немає</h2>
-            )}
-          </div>
-        </Card>
-        <Card className='slider-transaction-list__card'>
-          {/* Render 'Income' Transactions */}
-          <div className='slider-transaction-list__wrapper'>
-            {isTransactionsExist(transferTransactions) ? (
-              <TransactionItemList
-                transactions={transferTransactions}
-                generateNavigationString={generateNavigationString}
-              />
-            ) : (
-              <h2>Переказів немає</h2>
-            )}
-          </div>
-        </Card>
+        {/* Render 'All' Transactions */}
+        <div className='slider-transaction-list__wrapper'>
+          {isTransactionsExist(transactions) ? (
+            <TransactionItemList
+              transactions={transactions}
+              generateNavigationString={generateNavigationString}
+            />
+          ) : (
+            <h2>Транзакцій немає</h2>
+          )}
+        </div>
+        {/* Render 'Expenses' Transactions */}
+        <div className='slider-transaction-list__wrapper'>
+          {isTransactionsExist(expensesTransactions) ? (
+            <TransactionItemList
+              transactions={expensesTransactions}
+              generateNavigationString={generateNavigationString}
+            />
+          ) : (
+            <h2>Витрат немає</h2>
+          )}
+        </div>
+        {/* Render 'Income' Transactions */}
+        <div className='slider-transaction-list__wrapper'>
+          {/* <h3>Доходи</h3> */}
+          {isTransactionsExist(incomeTransactions) ? (
+            <TransactionItemList
+              transactions={incomeTransactions}
+              generateNavigationString={generateNavigationString}
+            />
+          ) : (
+            <h2>Доходів немає</h2>
+          )}
+        </div>
+        {/* Render 'Income' Transactions */}
+        <div className='slider-transaction-list__wrapper'>
+          {isTransactionsExist(transferTransactions) ? (
+            <TransactionItemList
+              transactions={transferTransactions}
+              generateNavigationString={generateNavigationString}
+            />
+          ) : (
+            <h2>Переказів немає</h2>
+          )}
+        </div>
       </Slider>
     </div>
   );
