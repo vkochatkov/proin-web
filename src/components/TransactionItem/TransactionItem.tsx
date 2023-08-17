@@ -33,7 +33,7 @@ export const TransactionItem: React.FC<IProps> = ({
   const transactionkWrapperStyle = {
     padding: '10px',
     marginTop: '5px',
-    backgroundColor: transaction.type === 'income' ? '#86e7d6' : '#DCA2A3',
+    // backgroundColor: transaction.type === 'income' ? '#86e7d6' : '#DCA2A3',
   };
   // Convert the timestamp to a Date object
   const transactionDate = new Date(transaction.timestamp);
@@ -78,7 +78,18 @@ export const TransactionItem: React.FC<IProps> = ({
         variant='inherit'
         // sx={{ color: '#979797' }}
       >{`${formattedDate}`}</Typography>
-      <Typography>
+      <Typography
+        sx={{
+          display: 'inline-block',
+          background: `${
+            transaction.type === 'expenses'
+              ? '#DCA2A3'
+              : transaction.type === 'income'
+              ? '#86e7d6'
+              : 'lightblue'
+          }`,
+        }}
+      >
         {getTransactionLabel(transaction.type)}
         {transaction.type && ':'} {transaction.sum}
       </Typography>
