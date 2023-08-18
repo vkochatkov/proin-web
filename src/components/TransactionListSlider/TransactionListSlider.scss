@@ -28,4 +28,9 @@
   &__right-arrow {
     right: 0;
   }
+
+  &__spinner-wrapper {
+    display: flex !important;
+    justify-content: center;
+  }
 }

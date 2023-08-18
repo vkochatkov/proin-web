@@ -6,12 +6,15 @@ import {
   startLoading,
   startLogoLoading,
   endLogoLoading,
+  startSliderLoading,
+  endSliderLoading,
 } from '../../actions/loading';
 
 const initialState = {
   global: false,
   files: false,
   logo: false,
+  slider: false,
 };
 
 export const loadingReducer = createReducer({}, initialState);
@@ -44,3 +47,13 @@ loadingReducer.on(endLogoLoading, (state) => ({
   ...state,
   logo: false,
 }));
+
+loadingReducer.on(startSliderLoading, (state) => ({
+  ...state,
+  slider: true
+}));
+
+loadingReducer.on(endSliderLoading, (state) => ({
+  ...state,
+  slider: false
+}))
