@@ -9,7 +9,7 @@ import { modal } from '../reducers/modal';
 import { dragging } from '../reducers/dragging';
 import { projectMembers } from '../reducers/projectMembers/intex';
 import { foundUsers } from '../reducers/foundUsers';
-import { loadState, saveState } from './sessionStorage';
+import { loadState, saveState } from './localStorage';
 import { tasks } from '../reducers/tasks';
 import { input } from '../reducers/input';
 import { currentTask } from '../reducers/currentTask';

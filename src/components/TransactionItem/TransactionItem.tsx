@@ -33,7 +33,6 @@ export const TransactionItem: React.FC<IProps> = ({
   const transactionkWrapperStyle = {
     padding: '10px',
     marginTop: '5px',
-    // backgroundColor: transaction.type === 'income' ? '#86e7d6' : '#DCA2A3',
   };
   // Convert the timestamp to a Date object
   const transactionDate = new Date(transaction.timestamp);
