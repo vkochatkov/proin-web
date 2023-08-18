@@ -433,7 +433,7 @@ export const fetchAllUserProjects =
   () => async (dispatch: Dispatch, getState: () => RootState) => {
     const { userId } = getState().user;
 
-    const response = await Api.Projects.getAll(userId);
+    const response = await Api.Projects.get(userId);
 
     const allUserProjects = response.projects.map((project: Project) => ({
       projectName: project.projectName,
