@@ -36,8 +36,8 @@ export const ProjectTextOutput = ({ text, fieldId }: Props) => {
               id: 'success',
               message: 'Скопійовано в буфер',
               open: true,
-            })
-          )
+            }),
+          ),
         )
         .catch((error) => console.error('Failed to copy to clipboard:', error));
     }
@@ -93,7 +93,7 @@ export const ProjectTextOutput = ({ text, fieldId }: Props) => {
                 style={{ wordBreak: 'break-all' }}
                 onClick={handleClick}
                 key={`${key}-${uuidv4()}`}
-                href="#"
+                href='#'
               >
                 {match}
               </a>
@@ -133,7 +133,7 @@ export const ProjectTextOutput = ({ text, fieldId }: Props) => {
               style={{ wordBreak: 'break-all' }}
               onClick={handleClick}
               key={`${key}-${uuidv4()}`}
-              href="#"
+              href='#'
             >
               {match}
             </a>
@@ -163,13 +163,14 @@ export const ProjectTextOutput = ({ text, fieldId }: Props) => {
               style={{
                 textAlign: 'left',
                 margin: '0',
-                fontWeight: `${fieldId === 'projectName' ? 700 : 300}`,
+                fontWeight: `${fieldId === 'projectName' ? 700 : 400}`,
+                fontSize: '1rem',
               }}
             >
               {words.map((word: string, wordIndex: number) => {
                 const linkElement = linkify(
                   word + ' ',
-                  index * words.length + wordIndex
+                  index * words.length + wordIndex,
                 );
 
                 if (linkElement) {
