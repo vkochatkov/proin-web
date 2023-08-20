@@ -16,7 +16,6 @@ import { setTabValue } from '../../modules/actions/tabs';
 import { setActiveTabIndex } from '../../modules/actions/activeTabIndex';
 import { getCurrentTabIndex } from '../../modules/selectors/activeTabIndex';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { startSliderLoading } from '../../modules/actions/loading';
 
 import './TabsMenu.scss';
 
@@ -105,12 +104,6 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   }, []);
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
-    const oldValue = transactionsTabValue;
-
-    if (oldValue === classifierTab) {
-      dispatch(startSliderLoading());
-    }
-
     dispatch(setTabValue({ [tabsId]: newValue }));
 
     if (isTabIndex && newValue !== classifierTab) {

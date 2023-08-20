@@ -8,9 +8,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Button } from '../FormElement/Button';
 import { getCurrentTabIndex } from '../../modules/selectors/activeTabIndex';
 import { setActiveTabIndex } from '../../modules/actions/activeTabIndex';
-import { endSliderLoading } from '../../modules/actions/loading';
-import { getIsSliderLoading } from '../../modules/selectors/loading';
-import { LoadingSpinner } from '../UIElements/LoadingSpinner';
 
 import './TransactionListSlider.scss';
 
@@ -38,7 +35,6 @@ export const TransactionListSlider: React.FC<IProps> = ({
   const incomeTransactions = transactions.filter(
     (transaction) => transaction.type === 'income',
   );
-  const isLoading = useSelector(getIsSliderLoading);
 
   const settings = {
     infinite: true,
@@ -71,17 +67,11 @@ export const TransactionListSlider: React.FC<IProps> = ({
     if (sliderRef.current) {
       sliderRef.current.slickGoTo(activeIndex);
     }
-  }, [activeIndex, isLoading]);
+  }, [activeIndex]);
 
   const handleSliderAfterChange = (index: number) => {
     if (index !== activeIndex) {
       dispatch(setActiveTabIndex(index));
-    }
-  };
-
-  const handleSliderBeforeChange = (oldIndex: number, newIndex: number) => {
-    if (isLoading && newIndex === 0) {
-      dispatch(endSliderLoading());
     }
   };
 
@@ -97,14 +87,9 @@ export const TransactionListSlider: React.FC<IProps> = ({
         ref={sliderRef}
         {...settings}
         afterChange={handleSliderAfterChange}
-        beforeChange={handleSliderBeforeChange}
+        initialSlide={activeIndex}
       >
         {/* Render 'All' Transactions */}
-        {isLoading && (
-          <div className='slider-transaction-list__spinner-wrapper'>
-            <LoadingSpinner blue />
-          </div>
-        )}
         <div className='slider-transaction-list__wrapper'>
           {isTransactionsExist(transactions) ? (
             <TransactionItemList

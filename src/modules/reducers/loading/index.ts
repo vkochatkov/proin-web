@@ -6,8 +6,8 @@ import {
   startLoading,
   startLogoLoading,
   endLogoLoading,
-  startSliderLoading,
-  endSliderLoading,
+  // startSliderLoading,
+  // endSliderLoading,
 } from '../../actions/loading';
 
 const initialState = {
@@ -48,12 +48,12 @@ loadingReducer.on(endLogoLoading, (state) => ({
   logo: false,
 }));
 
-loadingReducer.on(startSliderLoading, (state) => ({
-  ...state,
-  slider: true
-}));
+// loadingReducer.on(startSliderLoading, (state) => ({
+//   ...state,
+//   slider: true
+// }));
 
-loadingReducer.on(endSliderLoading, (state) => ({
-  ...state,
-  slider: false
-}))
+// loadingReducer.on(endSliderLoading, (state) => ({
+//   ...state,
+//   slider: false
+// }))
