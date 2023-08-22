@@ -1,0 +1,26 @@
+.classifiers {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: 0;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__label-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__btns-wrapper {
+    display: flex;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+  }
+}

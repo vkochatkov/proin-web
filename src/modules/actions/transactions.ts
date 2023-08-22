@@ -12,10 +12,13 @@ export const fetchProjectTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('fetchProjectTransactionsSuccess');
 export const updateProjectTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('updateProjectTransactionsSuccess');
+export const clearProjectTransactions = createAction('clearProjectTransactions');
 export const updateUserTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('updateUserTransactionsSuccess');
 export const fetchUserTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('fetchUserTransactionsSuccess');
+export const clearUserTransactions = createAction('clearProjectTransactions');
+
 
 const updateTransactionStates = ({
   transactions,
@@ -42,7 +45,7 @@ export const fetchTransactionById = (id: string) => async (dispatch: Dispatch) =
 
     ApiErrors.checkOnApiError(res);
 
-    dispatch(setCurrentTransaction(res.transaction))
+    dispatch(setCurrentTransaction(res.transaction));
   } catch (e) {
     dispatch(
       changeSnackbarState({
@@ -114,6 +117,7 @@ export const updateTransactionOnServer = (
       ...currentTransaction,
       ...data
     };
+    // const classifiersByTheType = updatedTransaction.classifiers[currentTransaction.type];
 
     try {
       updateTransactionStates({
@@ -125,6 +129,7 @@ export const updateTransactionOnServer = (
 
       const res = await Api.Transactions.update({
         ...data,
+        // classifiers: classifiersByTheType,
         projectId
       }, transactionId);
 

@@ -1,22 +1,16 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TransactionSelect } from '../FormComponent/TransactionSelect';
 import { Button } from '../FormElement/Button';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Create';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useForm } from '../../hooks/useForm';
 import { Input } from '../FormElement/Input';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
-import {
-  setCurrentProject,
-  updateProject,
-} from '../../modules/actions/mainProjects';
+import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { ITransaction } from '../../modules/types/transactions';
 import { updateProjectTransactionsSuccess } from '../../modules/actions/transactions';
 import { closeModal, openModal } from '../../modules/actions/modal';
 import { RemoveClassifierModal } from '../Modals/RemoveClassifierModal';
+import { ClassifiersComponent } from '../ClassifiersComponent/ClassifiersComponent';
 
 import './TransactionSettings.scss';
 
@@ -24,9 +18,11 @@ const classifierToAdd = 'classifierToAdd';
 const classifierToEdit = 'classifierToEdit';
 
 type ClassifierAction = 'classifierToAdd' | 'classifierToEdit';
+type ClassifierType = 'income' | 'expenses' | 'transfer';
 
 export const TransactionsSettings = () => {
   const [selectedEdittingValue, setSelectedEdittingsValue] = useState('');
+  const [selectedClassifierType, setSelectedClassifierType] = useState('');
   const [isActiveInput, setIsActiveInput] = useState(false);
   const [classifierAction, setClassifierAction] =
     useState<ClassifierAction>('classifierToAdd');
@@ -69,24 +65,36 @@ export const TransactionsSettings = () => {
     handleActiveInput(inputId, inputPlacehoder);
   };
 
-  const handleUpdatingClassifierValues = (
-    updatingArrayWithValues: string[],
-  ) => {
+  const handleUpdatingClassifierValues = (updatingClassifiers: {
+    income: string[];
+    expenses: string[];
+    transfer: string[];
+  }) => {
     if (!currentProject) return;
 
     const updatedProject = {
       ...currentProject,
-      classifiers: updatingArrayWithValues,
+      classifiers: updatingClassifiers,
     };
 
-    dispatch(
-      updateProject(
-        { classifiers: updatingArrayWithValues },
-        currentProject.id,
-      ) as any,
-    );
+    // dispatch(
+    //   updateProject(
+    //     {
+    //       classifiers: updatingClassifiers,
+    //       classifierType: selectedClassifierType,
+    //     },
+    //     currentProject.id,
+    //   ) as any,
+    // );
 
-    if (updatingArrayWithValues.includes(selectedEdittingValue)) {
+    if (
+      (selectedClassifierType === 'income' ||
+        selectedClassifierType === 'expenses' ||
+        selectedClassifierType === 'transfer') &&
+      updatingClassifiers[selectedClassifierType].includes(
+        selectedEdittingValue,
+      )
+    ) {
       setSelectedEdittingsValue(selectedEdittingValue);
     } else {
       setSelectedEdittingsValue('');
@@ -100,24 +108,28 @@ export const TransactionsSettings = () => {
   const handleSaveClassifier = (action: string) => {
     if (!currentProject) return;
 
-    const classifiers = currentProject.classifiers;
-
-    let updatingArrayWithValues: string[] = [];
+    const classifiers = { ...currentProject.classifiers }; // Assuming you're using the new structure
+    let updatedClassifiers = { ...classifiers };
 
     if (action === classifierToEdit) {
       const transactionsToUpdate = JSON.parse(
         JSON.stringify(projectTransactions),
       );
-      const classifierIndex = classifiers.findIndex(
-        (classifier: string) => classifier === selectedEdittingValue,
-      );
 
-      updatingArrayWithValues = [...classifiers];
-      updatingArrayWithValues.splice(classifierIndex, 1, changedValue);
+      const classifierIndex = updatedClassifiers[
+        selectedClassifierType
+      ].findIndex((classifier: string) => classifier === selectedEdittingValue);
+
+      const classifiersByType = updatedClassifiers[selectedClassifierType];
+
+      updatedClassifiers[selectedClassifierType] = classifiersByType.map(
+        (classifier: string) =>
+          classifier === selectedEdittingValue ? changedValue : classifier,
+      );
 
       transactionsToUpdate.forEach((transaction: ITransaction) => {
         if (transaction.classifier === selectedEdittingValue) {
-          transaction.classifier = updatingArrayWithValues[classifierIndex];
+          transaction.classifier = classifiersByType[classifierIndex];
         }
       });
 
@@ -129,10 +141,12 @@ export const TransactionsSettings = () => {
     }
 
     if (action === classifierToAdd) {
-      updatingArrayWithValues = classifiers.concat([changedValue]);
+      updatedClassifiers[selectedClassifierType] = updatedClassifiers[
+        selectedClassifierType
+      ].concat([changedValue]);
     }
 
-    handleUpdatingClassifierValues(updatingArrayWithValues);
+    handleUpdatingClassifierValues(updatedClassifiers);
   };
 
   const handleRemoveClassifier = (event: { preventDefault: () => void }) => {
@@ -140,9 +154,12 @@ export const TransactionsSettings = () => {
 
     if (!currentProject) return;
 
-    const updatedClassifiers = [...currentProject.classifiers].filter(
-      (classifier) => classifier !== selectedEdittingValue,
-    );
+    const updatedClassifiers = {
+      ...currentProject.classifiers,
+      [selectedClassifierType]: currentProject.classifiers[
+        selectedClassifierType
+      ].filter((classifier: string) => classifier !== selectedEdittingValue),
+    };
     const transactionsToUpdate = JSON.parse(
       JSON.stringify(projectTransactions),
     );
@@ -174,43 +191,24 @@ export const TransactionsSettings = () => {
   return (
     <>
       <RemoveClassifierModal submitHandler={handleRemoveClassifier} />
-      <div className='transaction-settings__select-wrapper'>
-        <TransactionSelect
-          label={'Класифікатор'}
-          keyValue={'classifier'}
-          selectedValue={selectedEdittingValue}
-          setSelectedValue={setSelectedEdittingsValue}
-          values={currentProject ? currentProject.classifiers : []}
-          styling={{ margin: 1, width: '75%' }}
-          isCommon
-        />
-        <Button
-          transparent
-          icon
-          customClassName='transaction-settings__btn transaction-settings__btn--1'
-          onClick={handleAddClassifier}
-        >
-          <AddIcon />
-        </Button>
-        <Button
-          transparent
-          icon
-          customClassName='transaction-settings__btn transaction-settings__btn--2'
-          onClick={handleEditClassifier}
-          disabled={selectedEdittingValue === ''}
-        >
-          <EditIcon />
-        </Button>
-        <Button
-          onClick={handleOpenModal}
-          transparent
-          icon
-          customClassName='transaction-settings__btn transaction-settings__btn--3'
-          disabled={selectedEdittingValue === ''}
-        >
-          <DeleteIcon />
-        </Button>
-      </div>
+      <ClassifiersComponent
+        classifiers={
+          currentProject ? currentProject.classifiers['expenses'] : []
+        }
+        label='Витрати'
+      />
+      <ClassifiersComponent
+        classifiers={currentProject ? currentProject.classifiers['income'] : []}
+        label='Доходи'
+      />
+      <ClassifiersComponent
+        classifiers={
+          currentProject ? currentProject.classifiers['transfer'] : []
+        }
+        label='Переказ'
+      />
+
+      <div className='transaction-settings__select-wrapper'></div>
       {isActiveInput && (
         <div
           onBlur={() => {
@@ -235,13 +233,13 @@ export const TransactionsSettings = () => {
             changeHandler={(e) => setChangedValue(e.target.value)}
           />
           <Button
-            onClick={() =>
-              handleSaveClassifier(
-                classifierAction === classifierToEdit
-                  ? classifierToEdit
-                  : classifierToAdd,
-              )
-            }
+          // onClick={() =>
+          //   handleSaveClassifier(
+          //     classifierAction === classifierToEdit
+          //       ? classifierToEdit
+          //       : classifierToAdd,
+          //   )
+          // }
           >
             {classifierAction === classifierToEdit ? 'Редагувати' : 'Додати'}
           </Button>

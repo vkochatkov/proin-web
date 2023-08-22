@@ -10,8 +10,10 @@ import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
 import { Api } from '../../utils/API';
-import { fetchTasks } from './tasks';
+import { clearTasks, fetchTasks } from './tasks';
 import { updateEnitites } from '../../utils/utils';
+import { updateUserTasksSuccess } from './userTasks';
+import { clearProjectTransactions, clearUserTransactions } from './transactions';
 
 export const setCurrentProject = createAction<Project>('setCurrentProject');
 export const updateProjectsSuccess = createAction<Project[]>(
@@ -198,6 +200,11 @@ export const createNewProject = () => async (dispatch: Dispatch) => {
     const response = await Api.Projects.create();
 
     dispatch(createProjectSuccess(response.project));
+    dispatch(updateUserTasksSuccess([]));
+    dispatch(clearTasks());
+    dispatch(clearProjectTransactions());
+    dispatch(clearUserTransactions());
+
     dispatch(endLoading());
   } catch (e) {
     dispatch(editProjectFailure((e as any).message));
@@ -268,10 +275,10 @@ export const updateOrderProjects =
     };
 
 export const updateProject =
-  (props: Partial<Project>, parentId: string) =>
+  (props: Partial<Project>, projectId: string) =>
     async (dispatch: Dispatch) => {
       try {
-        await Api.Projects.patch(props, parentId);
+        await Api.Projects.patch(props, projectId);
       } catch (e) {
         dispatch(
           changeSnackbarState({
