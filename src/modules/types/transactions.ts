@@ -1,7 +1,5 @@
 export interface IClassifiers {
-  expenses: string[],
-  income: string[],
-  transfer: string[]
+  [key: string]: string[],
 }
 
 export interface ITransaction {

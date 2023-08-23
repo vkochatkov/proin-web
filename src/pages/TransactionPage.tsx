@@ -135,7 +135,7 @@ const TransactionPage: React.FC<IProps> = () => {
               keyValue={'classifier'}
               selectedValue={selectedClassifierValue}
               setSelectedValue={setSelectedClassifierValue}
-              values={currentTransaction.classifiers}
+              values={currentTransaction.classifiers[currentTransaction.type]}
             />
             <AddClassifierInputComponent />
           </div>

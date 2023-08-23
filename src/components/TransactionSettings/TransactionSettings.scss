@@ -26,14 +26,9 @@
   &__input-wrapper {
     display: flex;
     width: 100%;
-    margin-top: 1rem;
   }
 
   &__input-wrapper .form-control {
-    width: 75%;
-  }
-
-  &__input-wrapper button {
-    @include bordered-button;
+    width: 95%;
   }
 }

@@ -1,19 +1,36 @@
+import { useState } from 'react';
 import { Button } from '../FormElement/Button';
+import { ConfirmInputComponent } from '../ConfirmInputComponent/ConfirmInputComponent';
+import { ClassifiersList } from '../ClassifiersList/ClassifiersList';
+
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Create';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import './ClassifiersComponent.scss';
 
 interface IProps {
   classifiers: string[];
   label: string;
+  type: string;
+  action: { classifierToAdd: string; classifierToEdit: string };
+  onSubmit: (props: {
+    action: string;
+    type: string;
+    newValue: string;
+    value: string;
+  }) => void;
+  onOpenModal: (type: string, classifier: string) => void;
 }
 
 export const ClassifiersComponent: React.FC<IProps> = ({
   classifiers,
   label,
+  type,
+  action,
+  onSubmit,
+  onOpenModal,
 }) => {
+  const [isActive, setIsActive] = useState(false);
+
   return (
     <div className='classifiers'>
       <div className='classifiers__label-wrapper'>
@@ -22,37 +39,27 @@ export const ClassifiersComponent: React.FC<IProps> = ({
           transparent
           icon
           customClassName='classifiers__btn'
-          // onClick={handleAddClassifier}
+          onClick={() => {
+            setIsActive(true);
+          }}
         >
           <AddIcon />
         </Button>
       </div>
-      <ul className='classifiers__list'>
-        {classifiers.map((classifier: string) => (
-          <li className='classifiers__item'>
-            <div>{classifier}</div>
-            <div className='classifiers__btns-wrapper'>
-              <Button
-                transparent
-                icon
-                customClassName='classifiers__btn'
-                // onClick={handleEditClassifier}
-                // disabled={selectedEdittingValue === ''}
-              >
-                <EditIcon />
-              </Button>
-              <Button
-                // onClick={handleOpenModal}
-                transparent
-                icon
-                // disabled={selectedEdittingValue === ''}
-              >
-                <DeleteIcon />
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <ConfirmInputComponent
+        isActive={isActive}
+        onConfirm={onSubmit}
+        setIsActive={setIsActive}
+        type={type}
+        action={action.classifierToAdd}
+      />
+      <ClassifiersList
+        classifiers={classifiers}
+        type={type}
+        action={action.classifierToEdit}
+        onSubmit={onSubmit}
+        onOpenModal={onOpenModal}
+      />
     </div>
   );
 };

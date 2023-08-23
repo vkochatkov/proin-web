@@ -8,6 +8,7 @@ import { Input } from '../FormElement/Input';
 import AddIcon from '@mui/icons-material/Add';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
 import { setCurrentProject } from '../../modules/actions/mainProjects';
+import { IClassifiers } from '../../modules/types/transactions';
 
 interface IProps {}
 
@@ -36,7 +37,22 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
   const handleSaveClassifier = () => {
     if (!currentProject) return;
 
-    const updatedClassifiers = currentTransaction.classifiers.concat(value);
+    if (
+      currentTransaction.type !== 'income' &&
+      currentTransaction.type !== 'expenses' &&
+      currentTransaction.type !== 'transfer'
+    ) {
+      return;
+    }
+
+    const classifiersKey: keyof IClassifiers = currentTransaction.type;
+
+    const updatedClassifiers = {
+      ...currentTransaction.classifiers,
+      [classifiersKey]:
+        currentTransaction.classifiers[classifiersKey].concat(value),
+    };
+
     const updatedProject = {
       ...currentProject,
       classifiers: updatedClassifiers,
