@@ -48,7 +48,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
             sx={{
               width: '95%',
             }}
-            placeholder='Enter a value'
+            placeholder='Введіть класифікатор'
             value={changedValue}
             onChange={(e) => setChangedValue(e.target.value)}
           />
