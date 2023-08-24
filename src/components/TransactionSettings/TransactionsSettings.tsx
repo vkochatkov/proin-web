@@ -95,6 +95,8 @@ export const TransactionsSettings = () => {
     }
 
     if (action === classifierToAdd) {
+      if (!newValue) return;
+
       updatedClassifiers[type] = updatedClassifiers[type].concat([newValue]);
     }
 
