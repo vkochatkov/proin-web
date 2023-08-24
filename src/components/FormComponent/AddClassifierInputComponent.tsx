@@ -1,14 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useActiveInput } from '../../hooks/useActiveInput';
-import { useForm } from '../../hooks/useForm';
 import { updateTransactionOnServer } from '../../modules/actions/transactions';
 import { getCurrentTransaction } from '../../modules/selectors/currentTransaction';
 import { Button } from '../FormElement/Button';
-import { Input } from '../FormElement/Input';
 import AddIcon from '@mui/icons-material/Add';
 import { getCurrentProject } from '../../modules/selectors/mainProjects';
 import { setCurrentProject } from '../../modules/actions/mainProjects';
 import { IClassifiers } from '../../modules/types/transactions';
+import CheckIcon from '@mui/icons-material/Check';
+import { useState } from 'react';
+import { Input } from '@mui/material';
 
 interface IProps {}
 
@@ -19,29 +20,13 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
     setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
   };
   const currentProject = useSelector(getCurrentProject);
-  const inputKey = 'classifierToAdd';
-  const { formState, inputHandler } = useForm(
-    {
-      [inputKey]: {
-        value: '',
-        isValid: true,
-      },
-    },
-    true,
-  );
-  const value = formState.inputs[inputKey]
-    ? formState.inputs[inputKey].value
-    : [];
+  const [changedValue, setChangedValue] = useState('');
   const currentTransaction = useSelector(getCurrentTransaction);
 
   const handleSaveClassifier = () => {
     if (!currentProject) return;
 
-    if (
-      currentTransaction.type !== 'income' &&
-      currentTransaction.type !== 'expenses' &&
-      currentTransaction.type !== 'transfer'
-    ) {
+    if (!currentTransaction.type) {
       return;
     }
 
@@ -50,7 +35,7 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
     const updatedClassifiers = {
       ...currentTransaction.classifiers,
       [classifiersKey]:
-        currentTransaction.classifiers[classifiersKey].concat(value),
+        currentTransaction.classifiers[classifiersKey].concat(changedValue),
     };
 
     const updatedProject = {
@@ -88,28 +73,22 @@ export const AddClassifierInputComponent: React.FC<IProps> = () => {
         <>
           <div
             onBlur={() => {
-              if (!value) {
+              if (!changedValue) {
                 setIsActive(false);
               }
             }}
             className='transaction__input-container'
           >
             <Input
-              id={inputKey}
-              element='input'
-              placeholder='Додайте класифікатор'
-              onInput={inputHandler}
-              isAnyValue={true}
-              isUpdateValue={true}
-              isActive={true}
-              // changeHandler={handleChangeKeyValue}
+              sx={{
+                width: '95%',
+              }}
+              placeholder='Введіть класифікатор'
+              value={changedValue}
+              onChange={(e) => setChangedValue(e.target.value)}
             />
-            <Button
-              customClassName='classifier__btn'
-              transparent
-              onClick={handleSaveClassifier}
-            >
-              Додати
+            <Button icon transparent onClick={handleSaveClassifier}>
+              <CheckIcon />
             </Button>
           </div>
         </>
