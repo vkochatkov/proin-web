@@ -69,21 +69,21 @@ export const TransactionsSettings = () => {
     let updatedClassifiers: IClassifiers = { ...classifiers };
 
     if (action === classifierToEdit && value) {
-      const transactionsToUpdate = [...projectTransactions];
+      const transactionsToUpdate = JSON.parse(
+        JSON.stringify(projectTransactions),
+      );
 
       const classifierIndex = updatedClassifiers[type].findIndex(
         (classifier: string) => classifier === value,
       );
 
-      const classifiersByType = updatedClassifiers[type];
-
-      updatedClassifiers[type] = classifiersByType.map((classifier: string) =>
-        classifier === value ? newValue : classifier,
+      updatedClassifiers[type] = updatedClassifiers[type].map(
+        (classifier: string) => (classifier === value ? newValue : classifier),
       );
 
       transactionsToUpdate.forEach((transaction: ITransaction) => {
         if (transaction.classifier === value) {
-          transaction.classifier = classifiersByType[classifierIndex];
+          transaction.classifier = updatedClassifiers[type][classifierIndex];
         }
       });
 
@@ -112,7 +112,9 @@ export const TransactionsSettings = () => {
         selectedClassifierType
       ].filter((classifier: string) => classifier !== valueForRemove),
     };
-    const transactionsToUpdate = [...projectTransactions];
+    const transactionsToUpdate = JSON.parse(
+      JSON.stringify(projectTransactions),
+    );
 
     transactionsToUpdate.forEach((transaction: ITransaction) => {
       if (transaction.classifier === valueForRemove) {
