@@ -169,7 +169,13 @@ export const TaskItem = ({
                 onChange={handleChangeCeckbox}
                 inputProps={{ 'aria-label': 'controlled' }}
               />
-              <Typography variant='h6'>{task.name}</Typography>
+              <Typography
+                sx={{
+                  fontSize: '1rem',
+                }}
+              >
+                {task.name}
+              </Typography>
             </div>
             <Button
               icon
