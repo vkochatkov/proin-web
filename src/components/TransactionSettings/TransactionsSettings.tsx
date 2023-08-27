@@ -9,7 +9,7 @@ import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { IClassifiers, ITransaction } from '../../modules/types/transactions';
 import { updateProjectTransactionsSuccess } from '../../modules/actions/transactions';
 import { closeModal, openModal } from '../../modules/actions/modal';
-import { RemoveClassifierModal } from '../Modals/RemoveClassifierModal';
+import { RemoveModal } from '../Modals/RemoveModal';
 import { ClassifiersComponent } from '../ClassifiersComponent/ClassifiersComponent';
 
 import './TransactionSettings.scss';
@@ -149,7 +149,11 @@ export const TransactionsSettings = () => {
 
   return (
     <>
-      <RemoveClassifierModal submitHandler={handleRemoveClassifier} />
+      <RemoveModal
+        submitHandler={handleRemoveClassifier}
+        modalId={modalId}
+        text='класифікатор'
+      />
       <ClassifiersComponent
         classifiers={currentProject ? currentProject.classifiers.expenses : []}
         label='Витрати'

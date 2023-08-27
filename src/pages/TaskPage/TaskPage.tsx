@@ -7,12 +7,18 @@ import { Button } from '../../components/FormElement/Button';
 import { Header } from '../../components/Navigation/Header';
 import { Card } from '../../components/UIElements/Card';
 import { useForm } from '../../hooks/useForm';
-import { updateTaskFilesOrder } from '../../modules/actions/tasks';
+import {
+  removeFileFromTask,
+  updateTaskFilesOrder,
+} from '../../modules/actions/tasks';
 import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { IFile } from '../../modules/types/mainProjects';
 import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
 import { LowerTabsMenu } from '../../components/LowerTabsMenu';
+import { closeModal, openModal } from '../../modules/actions/modal';
+import { RemoveModal } from '../../components/Modals/RemoveModal';
+import { useState } from 'react';
 
 import '../HomePage.scss';
 import './TaskPage.scss';
@@ -36,6 +42,8 @@ export const TaskPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tabsId = 'main-tabs';
+  const modalId = 'remove-file';
+  const [selectedFileId, setSelectedFileId] = useState('');
 
   const handleCloseTaskPage = () => {
     if (pid && !subprojectId) {
@@ -53,8 +61,25 @@ export const TaskPage = () => {
     dispatch(updateTaskFilesOrder({ files: order, taskId: task._id }) as any);
   };
 
+  const handleDeleteFile = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+
+    dispatch(removeFileFromTask(task._id, selectedFileId) as any);
+    dispatch(closeModal({ id: modalId }));
+  };
+
+  const handleOpenRemoveFileModal = (id: string) => {
+    setSelectedFileId(id);
+    dispatch(openModal({ id: modalId }));
+  };
+
   return (
     <>
+      <RemoveModal
+        submitHandler={handleDeleteFile}
+        modalId={modalId}
+        text='файл'
+      />
       <SnackbarUI />
       <div className='container'>
         <Header>
@@ -83,7 +108,11 @@ export const TaskPage = () => {
                 entity={task}
               />
             </div>
-            <FilesList files={task.files} saveFilesOrder={saveFilesOrder} />
+            <FilesList
+              files={task.files}
+              saveFilesOrder={saveFilesOrder}
+              handleOpenModal={handleOpenRemoveFileModal}
+            />
             <div className='task-page__uploader'>
               <TaskFilesUpload id={'files'} />
             </div>

@@ -1,3 +1,4 @@
+import { useContext, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
@@ -12,15 +13,17 @@ import { IFile } from '../modules/types/mainProjects';
 import {
   createNewSubproject,
   fetchProjects,
+  removeFile,
   updateFilesOrder,
   updateSubprojectFilesOrder,
 } from '../modules/actions/mainProjects';
 import { ProjectTasksComponent } from './ProjectTasksComponent';
-import { useContext } from 'react';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 import { createTransaction } from '../modules/actions/transactions';
 import { ProjectTransactionsComponent } from './ProjectTransactionsComponent/ProjectTransactionsComponent';
 import { startLoading } from '../modules/actions/loading';
+import { RemoveModal } from './Modals/RemoveModal';
+import { closeModal, openModal } from '../modules/actions/modal';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -37,6 +40,8 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   const navigate = useNavigate();
   const tabsId = 'main-tabs';
   const filePickerRef = useContext(FilePickerRefContext);
+  const [selectedFile, setSelectedFile] = useState('');
+  const modalId = 'remove-file';
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -46,6 +51,17 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
     } else {
       dispatch(updateSubprojectFilesOrder(pid, subprojectId, order) as any);
     }
+  };
+
+  const handleDeleteFile = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    dispatch(removeFile(selectedFile) as any);
+    dispatch(closeModal({ id: modalId }));
+  };
+
+  const handleOpenModal = (id: string) => {
+    setSelectedFile(id);
+    dispatch(openModal({ id: modalId }));
   };
 
   const tabs = [
@@ -67,11 +83,17 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
       label: 'Вкладення',
       panel: (
         <>
+          <RemoveModal
+            submitHandler={handleDeleteFile}
+            modalId={modalId}
+            text='файл'
+          />
           <FilesList
             files={
               currentProject && currentProject.files ? currentProject.files : []
             }
             saveFilesOrder={saveFilesOrder}
+            handleOpenModal={handleOpenModal}
           />
           <ProjectFilesUpload
             id={'files'}

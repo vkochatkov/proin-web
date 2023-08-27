@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useFiles } from '../../../hooks/useFiles';
 import { updateCurrentTask } from '../../../modules/actions/currentTask';
+import { FilePickerRefProvider } from '../../ContextProvider/FilesPickerRefProvider';
 import { FileUploader } from '../../FormElement/FileUploader';
 
 interface IProps {
@@ -21,7 +22,7 @@ export const TaskFilesUpload = ({ id }: IProps) => {
       if (!pid || !tid) return;
 
       dispatch(
-        updateCurrentTask({ files: fileDataArray, projectId: pid }, tid) as any
+        updateCurrentTask({ files: fileDataArray, projectId: pid }, tid) as any,
       );
     } catch (err) {
       console.log(err);
@@ -47,12 +48,14 @@ export const TaskFilesUpload = ({ id }: IProps) => {
   };
 
   return (
-    <FileUploader
-      id={id}
-      pickedHandler={pickedHandler}
-      buttonLabel={'Завантажити файли'}
-      multiple
-      className="file-uploader__btn"
-    />
+    <FilePickerRefProvider>
+      <FileUploader
+        id={id}
+        pickedHandler={pickedHandler}
+        buttonLabel={'Завантажити файли'}
+        multiple
+        className='file-uploader__btn'
+      />
+    </FilePickerRefProvider>
   );
 };

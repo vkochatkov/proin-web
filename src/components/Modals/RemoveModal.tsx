@@ -8,10 +8,15 @@ import { closeModal } from '../../modules/actions/modal';
 
 interface IProps {
   submitHandler: (event: { preventDefault: () => void }) => void;
+  modalId: string;
+  text: string;
 }
 
-export const RemoveClassifierModal: React.FC<IProps> = ({ submitHandler }) => {
-  const modalId = 'remove-classifier';
+export const RemoveModal: React.FC<IProps> = ({
+  submitHandler,
+  modalId,
+  text,
+}) => {
   const dispatch = useDispatch();
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
@@ -22,14 +27,10 @@ export const RemoveClassifierModal: React.FC<IProps> = ({ submitHandler }) => {
   };
 
   return (
-    <Modal
-      open={open}
-      handleClose={handleClose}
-      label={'Видалити класифікатор'}
-    >
+    <Modal open={open} handleClose={handleClose} label={`Видалити ${text}`}>
       <form onSubmit={submitHandler}>
         <DialogContent>
-          Ви впевнені, що бажаєте видалити класифікатор?
+          {`Ви впевнені, що бажаєте видалити ${text}?`}
         </DialogContent>
         <DialogActions>
           <Button type='submit'>Видалити</Button>

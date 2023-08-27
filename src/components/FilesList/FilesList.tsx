@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { LoadingSpinner } from '../UIElements/LoadingSpinner';
 import { getIsFilesLoading } from '../../modules/selectors/loading';
 import { Button } from '../FormElement/Button';
-import { removeFile } from '../../modules/actions/mainProjects';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { setIsDragging } from '../../modules/actions/dragging';
 import { reorder } from '../../utils/utils';
@@ -15,18 +14,17 @@ import './FilesList.scss';
 interface IProps {
   files: IFile[];
   saveFilesOrder: (order: IFile[]) => void;
+  handleOpenModal: (id: string) => void;
 }
 
-export const FilesList = ({ files, saveFilesOrder }: IProps) => {
-  // const currentProject = useSelector(getCurrentProject);
+export const FilesList = ({
+  files,
+  saveFilesOrder,
+  handleOpenModal,
+}: IProps) => {
   const isLoading = useSelector(getIsFilesLoading);
   const [showAllFiles, setShowAllFiles] = useState(false);
   const dispatch = useDispatch();
-  // const { pid, subprojectId } = useParams();
-
-  const handleDeleteFile = (id: string) => {
-    dispatch(removeFile(id) as any);
-  };
 
   const filesToShow = showAllFiles ? files : files ? files.slice(0, 20) : [];
 
@@ -44,7 +42,7 @@ export const FilesList = ({ files, saveFilesOrder }: IProps) => {
     const newOrder = reorder(
       copiedFiles,
       result.source.index,
-      result.destination.index
+      result.destination.index,
     );
 
     saveFilesOrder(newOrder);
@@ -57,7 +55,7 @@ export const FilesList = ({ files, saveFilesOrder }: IProps) => {
         onDragEnd={onDragEnd}
         onDragStart={() => dispatch(setIsDragging(true))}
       >
-        <Droppable droppableId="droppable">
+        <Droppable droppableId='droppable'>
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {filesToShow &&
@@ -67,7 +65,7 @@ export const FilesList = ({ files, saveFilesOrder }: IProps) => {
                     name={file.name}
                     url={file.url}
                     id={file.id}
-                    onDelete={handleDeleteFile}
+                    onDelete={handleOpenModal}
                     index={index}
                   />
                 ))}
@@ -77,12 +75,12 @@ export const FilesList = ({ files, saveFilesOrder }: IProps) => {
         </Droppable>
       </DragDropContext>
       {files.length > 20 && (
-        <Button onClick={toggleShowAllFiles} customClassName="files-list__btn">
+        <Button onClick={toggleShowAllFiles} customClassName='files-list__btn'>
           {showAllFiles ? 'Показати менше' : 'Показати більше'}
         </Button>
       )}
       {isLoading && (
-        <div className="center">
+        <div className='center'>
           <LoadingSpinner blue />
         </div>
       )}
