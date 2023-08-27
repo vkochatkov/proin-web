@@ -22,16 +22,17 @@ export const ClassifiersList: React.FC<IProps> = ({
 }) => {
   return (
     <ul className='classifiers__list'>
-      {classifiers.map((classifier: string, index: number) => (
-        <ClassifierItem
-          key={`${classifier}-${index}`}
-          classifier={classifier}
-          type={type}
-          action={action}
-          onSubmit={onSubmit}
-          onOpenModal={onOpenModal}
-        />
-      ))}
+      {classifiers &&
+        classifiers.map((classifier: string, index: number) => (
+          <ClassifierItem
+            key={`${classifier}-${index}`}
+            classifier={classifier}
+            type={type}
+            action={action}
+            onSubmit={onSubmit}
+            onOpenModal={onOpenModal}
+          />
+        ))}
     </ul>
   );
 };
