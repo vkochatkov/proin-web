@@ -47,7 +47,7 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
     display: 'flex',
     padding: '5px',
     paddingBottom: '5px !important',
-    alignItem: 'center',
+    alignItems: 'center',
   };
 
   const handleDownload = () => {
@@ -66,10 +66,10 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
             <Button
               icon
               transparent
-              customClassName="file__btn"
+              customClassName='file__btn'
               onClick={handleContextMenu}
             >
-              <MoreVertIcon className="file__icon" />
+              <MoreVertIcon className='file__icon' />
             </Button>
             <Menu
               anchorEl={anchorEl}
@@ -98,18 +98,18 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
             >
               {isImage ? (
                 <CardMedia
-                  component="img"
+                  component='img'
                   image={url}
-                  height="140"
+                  height='140'
                   title={name}
                   sx={imageContainerStyle}
                 />
               ) : (
-                <CardMedia component="div" sx={emptyImageContainerStyle}>
+                <CardMedia component='div' sx={emptyImageContainerStyle}>
                   <Typography
-                    variant="h6"
-                    component="h2"
-                    align="center"
+                    variant='h6'
+                    component='h2'
+                    align='center'
                     sx={{ paddingTop: '60px' }}
                   >
                     {extension.replace('.', '')}
@@ -119,10 +119,10 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
               <CardContent sx={cardContentStyle}>
                 <Typography
                   gutterBottom
-                  variant="h5"
-                  component="h2"
+                  variant='h5'
+                  component='h2'
                   noWrap
-                  style={{ fontSize: '14px', fontWeight: 600 }}
+                  style={{ fontSize: '14px', fontWeight: 600, margin: '0' }}
                 >
                   {displayName}
                 </Typography>
