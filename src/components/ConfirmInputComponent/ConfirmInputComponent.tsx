@@ -1,7 +1,10 @@
 import { Dispatch, SetStateAction, useState } from 'react';
+import { Action } from 'redux-act';
 import { Button } from '../FormElement/Button';
 import CheckIcon from '@mui/icons-material/Check';
 import { Input } from '@mui/material';
+
+import './ConfirmInputComponent.scss';
 
 interface IProps {
   isActive: boolean;
@@ -11,16 +14,20 @@ interface IProps {
     newValue: string;
     value: string;
   }) => void;
-  setIsActive: Dispatch<SetStateAction<boolean>>;
+  setIsActive:
+    | Dispatch<SetStateAction<boolean>>
+    | ((value: boolean) => Action<boolean, {}>);
   action: string;
   type: string;
   value?: string;
+  placeholder: string;
 }
 
 export const ConfirmInputComponent: React.FC<IProps> = ({
   isActive,
   onConfirm,
   setIsActive,
+  placeholder,
   action,
   type,
   value = '',
@@ -37,7 +44,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
     <>
       {isActive && (
         <div
-          className='transaction-settings__input-wrapper'
+          className='confirm-input__input-wrapper'
           onBlur={() => {
             if (!changedValue) {
               setIsActive(false);
@@ -48,7 +55,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
             sx={{
               width: '95%',
             }}
-            placeholder='Введіть класифікатор'
+            placeholder={placeholder}
             value={changedValue}
             onChange={(e) => setChangedValue(e.target.value)}
           />

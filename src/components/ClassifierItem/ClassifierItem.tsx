@@ -52,6 +52,7 @@ export const ClassifierItem: React.FC<IProps> = ({
                 action={action}
                 type={type}
                 value={classifier}
+                placeholder={'Введіть класифікатор'}
               />
             </>
           )}

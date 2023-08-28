@@ -3,24 +3,27 @@ import { useParams } from 'react-router-dom';
 import { setIsActiveInput } from '../modules/actions/input';
 import { createTask } from '../modules/actions/tasks';
 import { getIsActiveInputStatus } from '../modules/selectors/input';
-import { DynamicInput } from './FormComponent/DynamicInput';
+import { ConfirmInputComponent } from './ConfirmInputComponent/ConfirmInputComponent';
 
 export const CreateTaskInput = () => {
   const isActiveInput = useSelector(getIsActiveInputStatus);
   const dispatch = useDispatch();
   const { pid, subprojectId } = useParams();
 
-  const handleCloseInput = () => {
-    dispatch(setIsActiveInput(false));
-  };
+  const handleCreateNewTask = (props: {
+    action: string;
+    type: string;
+    newValue: string;
+  }) => {
+    const { newValue } = props;
 
-  const handleCreateNewTask = (value: string) => {
     if (!pid) return;
+    if (!newValue) return;
 
     if (!subprojectId) {
-      dispatch(createTask({ projectId: pid, name: value }) as any);
+      dispatch(createTask({ projectId: pid, name: newValue }) as any);
     } else {
-      dispatch(createTask({ projectId: subprojectId, name: value }) as any);
+      dispatch(createTask({ projectId: subprojectId, name: newValue }) as any);
     }
   };
 
@@ -28,15 +31,13 @@ export const CreateTaskInput = () => {
     <>
       {isActiveInput && (
         <div className='project-tasks__wrapper'>
-          <DynamicInput
-            placeholder='Напишіть назву задачі'
-            onClick={(value) => {
-              handleCreateNewTask(value);
-              dispatch(setIsActiveInput(false));
-            }}
-            onCancel={handleCloseInput}
-            isActiveWithoutText={true}
-            buttonLabel={'Створити'}
+          <ConfirmInputComponent
+            isActive={isActiveInput}
+            onConfirm={handleCreateNewTask}
+            setIsActive={(value: boolean) => dispatch(setIsActiveInput(value))}
+            type={'task'}
+            action={'addTask'}
+            placeholder='Введіть назву задачі'
           />
         </div>
       )}

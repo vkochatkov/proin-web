@@ -54,6 +54,7 @@ export const ClassifiersComponent: React.FC<IProps> = ({
         setIsActive={setIsActive}
         type={type}
         action={action.classifierToAdd}
+        placeholder='Введіть класифікатор'
       />
       <ClassifiersList
         classifiers={classifiers}
