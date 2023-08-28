@@ -19,6 +19,7 @@ interface IProps {
     value: string;
   }) => void;
   onOpenModal: (type: string, classifier: string) => void;
+  onChangeOrder: (newOrder: string[], type: string) => void;
 }
 
 export const ClassifiersComponent: React.FC<IProps> = ({
@@ -28,6 +29,7 @@ export const ClassifiersComponent: React.FC<IProps> = ({
   action,
   onSubmit,
   onOpenModal,
+  onChangeOrder,
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -59,6 +61,7 @@ export const ClassifiersComponent: React.FC<IProps> = ({
         action={action.classifierToEdit}
         onSubmit={onSubmit}
         onOpenModal={onOpenModal}
+        onChangeOrder={onChangeOrder}
       />
     </div>
   );

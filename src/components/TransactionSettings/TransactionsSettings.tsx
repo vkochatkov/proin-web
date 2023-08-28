@@ -103,6 +103,18 @@ export const TransactionsSettings = () => {
     handleUpdatingClassifierValues({ updatedClassifiers, type });
   };
 
+  const handleChangeClassifiersOrder = (newOrder: string[], type: string) => {
+    if (!currentProject) return;
+
+    const classifiers = { ...currentProject.classifiers };
+    const updatedClassifiers: IClassifiers = {
+      ...classifiers,
+      [type]: newOrder,
+    };
+
+    handleUpdatingClassifierValues({ updatedClassifiers, type });
+  };
+
   const handleRemoveClassifier = (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
@@ -161,6 +173,7 @@ export const TransactionsSettings = () => {
         action={{ classifierToAdd, classifierToEdit }}
         onSubmit={handleSaveClassifier}
         onOpenModal={handleOpenModal}
+        onChangeOrder={handleChangeClassifiersOrder}
       />
       <ClassifiersComponent
         classifiers={currentProject ? currentProject.classifiers.income : []}
@@ -169,6 +182,7 @@ export const TransactionsSettings = () => {
         action={{ classifierToAdd, classifierToEdit }}
         onSubmit={handleSaveClassifier}
         onOpenModal={handleOpenModal}
+        onChangeOrder={handleChangeClassifiersOrder}
       />
       <ClassifiersComponent
         classifiers={currentProject ? currentProject.classifiers.transfer : []}
@@ -177,6 +191,7 @@ export const TransactionsSettings = () => {
         action={{ classifierToAdd, classifierToEdit }}
         onSubmit={handleSaveClassifier}
         onOpenModal={handleOpenModal}
+        onChangeOrder={handleChangeClassifiersOrder}
       />
     </>
   );

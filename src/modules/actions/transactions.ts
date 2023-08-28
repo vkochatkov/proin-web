@@ -217,6 +217,12 @@ export const saveUserTransactionOrder = (transactions: ITransaction[], userId: s
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
-
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Сталася помилка. Перезавантажте сторінку!`,
+        })
+      );
     }
   }

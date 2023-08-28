@@ -17,12 +17,12 @@ interface Props {
   buttonLabel: string;
 }
 
-export const DynamicInput = (props: Props) => {
+export const DynamicInput: React.FC<Props> = (props) => {
   const [value, setValue] = useState<string | undefined>(
-    props.isActive && props.text ? props.text : ''
+    props.isActive && props.text ? props.text : '',
   );
   const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
-    props.isActive ? props.isActive : false
+    props.isActive ? props.isActive : false,
   );
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const DynamicInput = (props: Props) => {
   }, [props.isActive, props.text]);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setValue(event.target.value);
   };
@@ -77,13 +77,13 @@ export const DynamicInput = (props: Props) => {
               }}
             >
               <CloseButton
-                customClassName="comment-input__close-btn"
+                customClassName='comment-input__close-btn'
                 onClick={props.onCancel}
               >
                 <img
-                  src="/close.svg"
-                  alt="close_logo"
-                  className="comment-input__close-icon"
+                  src='/close.svg'
+                  alt='close_logo'
+                  className='comment-input__close-icon'
                 />
               </CloseButton>
               <Button onClick={handleClick}>{props.buttonLabel}</Button>
