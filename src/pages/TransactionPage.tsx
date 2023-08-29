@@ -12,9 +12,13 @@ import { TransactionSelect } from '../components/FormComponent/TransactionSelect
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
-import { fetchTransactionById } from '../modules/actions/transactions';
+import {
+  fetchTransactionById,
+  updateTransactionOnServer,
+} from '../modules/actions/transactions';
 import { getAllUserProjects } from '../modules/selectors/mainProjects';
 import { endLoading } from '../modules/actions/loading';
+import { InteractiveDatePicker } from '../components/InteractiveDatePicker/InterfactiveDatePicker';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -99,6 +103,20 @@ const TransactionPage: React.FC<IProps> = () => {
     }
   };
 
+  const handleUpdateTransactionDate = (date: Date) => {
+    const timestamp = date.toISOString();
+
+    dispatch(
+      updateTransactionOnServer(
+        {
+          timestamp,
+        },
+        currentTransaction.id,
+        currentTransaction.projectId,
+      ) as any,
+    );
+  };
+
   return (
     <>
       <SnackbarUI />
@@ -117,6 +135,11 @@ const TransactionPage: React.FC<IProps> = () => {
         <Card>
           <h3 className='transaction__title'>Проект</h3>
           <p>{currentProject && currentProject?.projectName}</p>
+          <h3>Дата</h3>
+          <InteractiveDatePicker
+            timestamp={currentTransaction.timestamp}
+            handleChange={handleUpdateTransactionDate}
+          />
           <TransactionSelect
             label={'Тип транзакції'}
             keyValue={'type'}

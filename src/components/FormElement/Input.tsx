@@ -26,11 +26,11 @@ type InputProps = {
   isActive?: boolean;
   className?: string;
   changeHandler?: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
 };
 
-export const Input = (props: InputProps) => {
+export const Input: React.FC<InputProps> = (props) => {
   const [inputState, setInputState] = useState({
     value: props.initialValue || '',
     isTouched: false,
@@ -86,7 +86,7 @@ export const Input = (props: InputProps) => {
   }, [dispatch, props.isUpdateValue, inputState, isLoading]);
 
   const handleChangeInput = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const newValue = e.target.value;
 
@@ -139,7 +139,7 @@ export const Input = (props: InputProps) => {
         onBlur={touchHandler}
         value={inputState.value}
         ref={textareaRef}
-        autoComplete="off"
+        autoComplete='off'
         className={props.className ? props.className : ''}
         // onClick={openFullscreen}
         // onKeyDown={(event) => {

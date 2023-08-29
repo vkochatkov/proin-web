@@ -117,7 +117,6 @@ export const updateTransactionOnServer = (
       ...currentTransaction,
       ...data
     };
-    // const classifiersByTheType = updatedTransaction.classifiers[currentTransaction.type];
 
     try {
       updateTransactionStates({
@@ -129,7 +128,6 @@ export const updateTransactionOnServer = (
 
       const res = await Api.Transactions.update({
         ...data,
-        // classifiers: classifiersByTheType,
         projectId
       }, transactionId);
 

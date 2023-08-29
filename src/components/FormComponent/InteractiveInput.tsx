@@ -33,14 +33,14 @@ interface Props {
   type?: string;
 }
 
-export const InteractiveInput = ({
+export const InteractiveInput: React.FC<Props> = ({
   inputHandler,
   entity,
   id,
   label,
   entities = [],
   type,
-}: Props) => {
+}) => {
   const { isActive, setIsActive, handleHideInput } = useActiveInput();
   const text = entity ? entity[id] : undefined;
   const { pid, subprojectId, tid, transactionId } = useParams();
@@ -83,10 +83,14 @@ export const InteractiveInput = ({
       [id]: newValue,
     };
 
+    let updatedValue = {
+      [id]: newValue,
+    };
+
     if (updatedEntity.projectName === '' || updatedEntity.name === '') return;
 
     const callback = () =>
-      Api.Projects.patch({ [id]: newValue }, entity._id)
+      Api.Projects.patch(updatedValue, entity._id)
         .then(() => {})
         .catch(() => {
           dispatch(
@@ -120,7 +124,7 @@ export const InteractiveInput = ({
     if (tid && tid === updatedEntity._id) {
       const callback = async () => {
         await dispatch(
-          updateCurrentTask({ [id]: newValue }, updatedEntity._id) as any,
+          updateCurrentTask(updatedValue, updatedEntity._id) as any,
         );
 
         if (pid) {
@@ -138,9 +142,7 @@ export const InteractiveInput = ({
       const callback = async () => {
         await dispatch(
           updateTransactionOnServer(
-            {
-              [id]: newValue,
-            },
+            updatedValue,
             transactionId,
             updatedEntity.projectId,
           ) as any,
@@ -173,7 +175,7 @@ export const InteractiveInput = ({
       )}
       {!isActive && (
         <div
-          onClick={(e) => {
+          onClick={() => {
             setIsActive(true);
           }}
         >
