@@ -217,7 +217,13 @@ export const TaskItem = ({
                 <Typography variant='inherit' className='task-item__text'>
                   {formattedShortDate}:
                 </Typography>
-                <Typography variant='inherit' className='task-item__text'>
+                <Typography
+                  variant='inherit'
+                  className='task-item__text'
+                  sx={{
+                    minWidth: '80px',
+                  }}
+                >
                   {lastAction.description}
                 </Typography>
                 {!isFilesInfo && (

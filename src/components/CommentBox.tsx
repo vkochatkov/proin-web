@@ -38,59 +38,52 @@ export const CommentBox: FC<Props> = ({
     useContextMenu();
   const firstLetter = getFirstLetter(name);
 
-  const elapsedTime = useMemo(() => {
-    const now = new Date();
+  const elapsedTime: string = useMemo(() => {
     const posted = new Date(timestamp);
-    const diffMs = now.getTime() - posted.getTime();
-    const diffSeconds = Math.floor(diffMs / 1000);
-    const diffMinutes = Math.floor(diffSeconds / 60);
 
-    if (diffMinutes < 1) {
-      return 'posted 1 minute ago';
-    } else if (diffMinutes < 60) {
-      return `posted ${diffMinutes} minutes ago`;
-    } else {
-      const diffHours = Math.floor(diffMinutes / 60);
-      if (diffHours < 24) {
-        return `posted ${diffHours} hours ago`;
-      } else {
-        const diffDays = Math.floor(diffHours / 24);
-        return `posted ${diffDays} days ago`;
-      }
-    }
+    return posted.toLocaleDateString('uk-UA', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    });
   }, [timestamp]);
 
   return (
     <>
       <Paper
-        className="disable-text-selection"
+        className='disable-text-selection'
         style={{ padding: '20px', marginTop: '1rem' }}
         {...longPressProps}
       >
-        <Grid container wrap="nowrap" spacing={2}>
-          <Grid item>
-            <Avatar
-              alt="Remy Sharp"
-              src={logoLink}
-              sx={{
-                bgcolor: () => backgroundColor(firstLetter),
-                width: 40,
-                height: 40,
-              }}
-            >
-              {firstLetter}
-            </Avatar>
+        <Grid container wrap='nowrap' direction='column'>
+          <Grid
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Grid container direction='row' alignItems='center'>
+              <Avatar
+                alt='user_logo'
+                src={logoLink}
+                sx={{
+                  bgcolor: () => backgroundColor(firstLetter),
+                  width: 20,
+                  height: 20,
+                  fontSize: 14,
+                }}
+              >
+                {firstLetter}
+              </Avatar>
+              <h4 style={{ margin: '0 0 0 10px' }}>{name}</h4>
+            </Grid>
+            <p style={{ color: 'gray', margin: '0' }}>{elapsedTime}</p>
           </Grid>
-          <Grid justifyContent="left" item xs zeroMinWidth>
-            <h4 style={{ margin: 0, textAlign: 'left' }}>{name}</h4>
-            <ProjectTextOutput text={text} />
-            <p style={{ textAlign: 'left', color: 'gray', marginBottom: '0' }}>
-              {elapsedTime}
-            </p>
-          </Grid>
+          <ProjectTextOutput text={text} />
         </Grid>
       </Paper>
-      <Grid container alignItems="center" justifyContent="space-between">
+      <Grid container alignItems='center' justifyContent='space-between'>
         <div>
           {!isUserOwnComment && (
             <Menu
