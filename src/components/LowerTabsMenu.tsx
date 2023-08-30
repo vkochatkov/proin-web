@@ -68,7 +68,7 @@ export const LowerTabsMenu = () => {
       ),
     },
     {
-      label: 'Щоденник',
+      label: 'Журнал',
       panel: <UserActivityDiary />,
     },
   ];
