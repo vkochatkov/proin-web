@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DatePickerComponent } from '../DatePickerComponent/DatePickerComponent';
 import { ProjectTextOutput } from '../FormComponent/ProjectTextOutput';
 
@@ -18,13 +18,26 @@ export const InteractiveDatePicker: React.FC<IProps> = ({
     month: 'numeric',
     year: 'numeric',
   });
+  const datePickerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      datePickerRef.current &&
+      !datePickerRef.current.contains(event.target as Node)
+    ) {
+      setIsActive(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      window.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
   return (
-    <div
-      onBlur={() => {
-        // setIsActive(false);
-      }}
-    >
+    <div ref={datePickerRef}>
       {isActive && (
         <DatePickerComponent
           initialValue={timestamp}
