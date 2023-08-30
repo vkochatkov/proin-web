@@ -171,7 +171,10 @@ export const TaskItem = ({
               />
               <Typography
                 sx={{
-                  fontSize: '1rem',
+                  marginRight: '10px',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
                 }}
               >
                 {task.name}
