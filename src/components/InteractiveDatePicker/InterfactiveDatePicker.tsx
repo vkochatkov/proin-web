@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { DatePickerComponent } from '../DatePickerComponent/DatePickerComponent';
 import { ProjectTextOutput } from '../FormComponent/ProjectTextOutput';
 
+import './InteractiveDatePicker.scss';
+
 interface IProps {
   timestamp: string;
   handleChange: (date: Date) => void;
@@ -37,7 +39,7 @@ export const InteractiveDatePicker: React.FC<IProps> = ({
   }, []);
 
   return (
-    <div ref={datePickerRef}>
+    <div ref={datePickerRef} className='interactive-datepicker'>
       {isActive && (
         <DatePickerComponent
           initialValue={timestamp}
