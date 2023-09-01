@@ -8,13 +8,10 @@ import {
 import { IComment } from '../modules/reducers/mainProjects';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { CommentsList } from './CommentsList';
-import { MembersInfo } from './MembersInfo';
-import { TabsMenu } from './TabsMenu/TabsMenu';
 
-export const UsersTabsMenu = () => {
+export const CommentsComponent = () => {
   const dispatch = useDispatch();
   const currentProject = useSelector(getCurrentProject);
-  const tabsId = 'comment-tabs';
 
   const handleSaveDeletedComment = ({
     id,
@@ -42,19 +39,15 @@ export const UsersTabsMenu = () => {
     );
   };
 
-  const tabs = [
-    {
-      label: 'Коментарі',
-      panel: (
-        <CommentsList
-          currentObj={currentProject}
-          deleteComment={handleSaveDeletedComment}
-          updateComment={handeSaveUpdatedComment}
-          createComment={handleSaveCreatedComment}
-        />
-      ),
-    },
-  ];
-
-  return <TabsMenu tabs={tabs} tabsId={tabsId} />;
+  return (
+    <>
+      <h3>Коментарі</h3>
+      <CommentsList
+        currentObj={currentProject}
+        deleteComment={handleSaveDeletedComment}
+        updateComment={handeSaveUpdatedComment}
+        createComment={handleSaveCreatedComment}
+      />
+    </>
+  );
 };

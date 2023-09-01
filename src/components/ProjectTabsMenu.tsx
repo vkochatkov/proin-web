@@ -7,7 +7,7 @@ import { ProjectFilesUpload } from './FormComponent/ProjectFilesUpload/ProjectFi
 import { InteractiveInput } from './FormComponent/InteractiveInput';
 import { SubProjects } from './SubProjects';
 import { TabsMenu } from './TabsMenu/TabsMenu';
-import { UsersTabsMenu } from './UsersTabsMenu';
+import { CommentsComponent } from './CommentsComponent';
 import { setIsActiveInput } from '../modules/actions/input';
 import { IFile } from '../modules/types/mainProjects';
 import {
@@ -76,7 +76,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
             entity={currentProject}
           />
           {subprojectId ? null : <SubProjects />}
-          <UsersTabsMenu />
+          <CommentsComponent />
         </>
       ),
     },
