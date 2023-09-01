@@ -13,7 +13,7 @@ import { CommentsList } from './CommentsList';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { UserActivityDiary } from './UserActivityDiary';
 
-export const LowerTabsMenu = () => {
+export const TaskTabsMenu: React.FC = () => {
   const dispatch = useDispatch();
   const currentTask = useSelector(getCurrentTask);
   const tabsId = 'task-tabs';
