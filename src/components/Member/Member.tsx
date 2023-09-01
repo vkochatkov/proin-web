@@ -1,13 +1,12 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Avatar, Grid } from '@mui/material';
 import { IMember } from '../../modules/types/projectMembers';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '../FormElement/Button';
 import { backgroundColor } from '../../utils/avatar-view';
-import { removeProjectMember } from '../../modules/actions/projectMembers';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getAuth } from '../../modules/selectors/user';
+import { openModal } from '../../modules/actions/modal';
+import { setIdForDelete } from '../../modules/actions/idForRemove';
 
 import './Member.scss';
 
@@ -19,20 +18,17 @@ export const Member = ({
   disabled: boolean;
 }) => {
   const dispatch = useDispatch();
-  const { userId } = useSelector(getAuth);
   const id = member.userId;
   const firstLetter = member.name.charAt(0).toUpperCase();
-  const { pid } = useParams();
-  const navigate = useNavigate();
+  const modalId = 'remove-member';
 
-  const handleRemoveUsersAccess = async () => {
-    if (id && pid) {
-      await dispatch(removeProjectMember(id, pid) as any);
-
-      if (userId === id) {
-        navigate('/');
-      }
-    }
+  const handleOpenRemoveModal = () => {
+    dispatch(
+      openModal({
+        id: modalId,
+      }),
+    );
+    dispatch(setIdForDelete(id));
   };
 
   return (
@@ -86,7 +82,7 @@ export const Member = ({
           customClassName='member__btn'
           icon
           transparent
-          onClick={handleRemoveUsersAccess}
+          onClick={handleOpenRemoveModal}
         >
           <DeleteIcon />
         </Button>
