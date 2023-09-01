@@ -15,7 +15,7 @@ import { setTabValue } from '../../modules/actions/tabs';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
 import { IFile } from '../../modules/types/mainProjects';
 import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
-import { LowerTabsMenu } from '../../components/LowerTabsMenu';
+import { TaskTabsMenu } from '../../components/TaskTabsMenu';
 import { closeModal, openModal } from '../../modules/actions/modal';
 import { RemoveModal } from '../../components/Modals/RemoveModal';
 import { useState } from 'react';
@@ -117,7 +117,7 @@ export const TaskPage = () => {
               <TaskFilesUpload id={'files'} />
             </div>
           </Card>
-          <LowerTabsMenu />
+          <TaskTabsMenu />
           {/* <UserActivityDiary /> */}
         </Card>
       </div>

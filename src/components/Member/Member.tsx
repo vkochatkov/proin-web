@@ -36,12 +36,7 @@ export const Member = ({
   };
 
   return (
-    <Grid
-      container
-      sx={{
-        borderBottom: '1px solid lightgray',
-      }}
-    >
+    <Grid container>
       <Grid
         item
         xs={3}
@@ -50,7 +45,7 @@ export const Member = ({
         }}
       >
         <Avatar
-          alt="Remy Sharp"
+          alt='Remy Sharp'
           src={''}
           sx={{
             bgcolor: () => backgroundColor(firstLetter),
@@ -69,11 +64,11 @@ export const Member = ({
           py: 1,
         }}
       >
-        <div className="member__item">
-          <p className="member__name">{member.name}</p>
-          <p className="member__subline">{member.email}</p>
+        <div className='member__item'>
+          <p className='member__name'>{member.name}</p>
+          <p className='member__subline'>{member.email}</p>
           <div>Статус: {member.status}</div>
-          <div className="member__item">
+          <div className='member__item'>
             {member.role === 'admin' ? 'Адміністратор' : member.role}
           </div>
         </div>
@@ -81,7 +76,7 @@ export const Member = ({
       <Grid item xs={2} sx={{ py: 1, display: 'grid' }}>
         <Button
           disabled={disabled}
-          customClassName="member__btn"
+          customClassName='member__btn'
           icon
           transparent
           onClick={handleRemoveUsersAccess}

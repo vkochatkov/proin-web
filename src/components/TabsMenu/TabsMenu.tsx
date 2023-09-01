@@ -26,12 +26,13 @@ interface TabData {
 
 interface TabsMenuProps {
   tabs: TabData[];
-  handleCreateTaskName?: () => void;
-  handleCreateSubproject?: () => void;
   tabsId: string;
   isTabIndex?: boolean;
+  handleCreateTaskName?: () => void;
+  handleCreateSubproject?: () => void;
   handleDownloadFiles?: () => void;
   handleCreateTransaction?: () => void;
+  handleInviteNewMember?: () => void;
 }
 
 export const TabsMenu: React.FC<TabsMenuProps> = ({
@@ -40,6 +41,7 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   handleCreateSubproject,
   handleDownloadFiles,
   handleCreateTransaction,
+  handleInviteNewMember,
   tabsId,
   isTabIndex,
 }) => {
@@ -57,7 +59,7 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   const { subprojectId } = useParams();
   const tabTextStyle = {
     textTransform: 'none',
-    fontSize: isMobile ? '12px' : '1rem',
+    fontSize: isMobile ? '11px' : '1rem',
   };
   const tabStyle = {
     padding: '0 5px',
@@ -76,6 +78,7 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
   const isDescriptionTab = tabValue === 'Опис' && !subprojectId;
   const isFilesTab = tabValue === 'Вкладення';
   const isTransactionsTab = tabValue === 'Фінанси';
+  const isUsersTab = tabValue === 'Користувачі';
 
   useEffect(() => {
     if (isTabIndex && transactionsTabValue !== classifierTab) {
@@ -122,6 +125,8 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
         handleDownloadFiles();
       } else if (isTransactionsTab && handleCreateTransaction) {
         handleCreateTransaction();
+      } else if (isUsersTab && handleInviteNewMember) {
+        handleInviteNewMember();
       }
     },
     icon: true,
@@ -148,7 +153,8 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
             {(isTaskTab ||
               isDescriptionTab ||
               isFilesTab ||
-              isTransactionsTab) && (
+              isTransactionsTab ||
+              isUsersTab) && (
               <Button {...addButtonConfig}>
                 <AddIcon />
               </Button>

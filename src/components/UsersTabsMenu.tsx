@@ -29,7 +29,7 @@ export const UsersTabsMenu = () => {
 
   const handeSaveUpdatedComment = (
     updatedComment: IComment,
-    updatedComments: IComment[]
+    updatedComments: IComment[],
   ) => {
     dispatch(updateComment({ updatedComments, updatedComment }) as any);
   };
@@ -38,7 +38,7 @@ export const UsersTabsMenu = () => {
     dispatch(
       createProjectComment({
         comment,
-      }) as any
+      }) as any,
     );
   };
 
@@ -53,10 +53,6 @@ export const UsersTabsMenu = () => {
           createComment={handleSaveCreatedComment}
         />
       ),
-    },
-    {
-      label: 'Користувачі',
-      panel: <MembersInfo />,
     },
   ];
 

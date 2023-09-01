@@ -24,6 +24,7 @@ import { ProjectTransactionsComponent } from './ProjectTransactionsComponent/Pro
 import { startLoading } from '../modules/actions/loading';
 import { RemoveModal } from './Modals/RemoveModal';
 import { closeModal, openModal } from '../modules/actions/modal';
+import { MembersInfo } from './MembersInfo';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -110,6 +111,10 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
       label: 'Задачі',
       panel: <ProjectTasksComponent />,
     },
+    {
+      label: 'Користувачі',
+      panel: <MembersInfo />,
+    },
   ];
 
   const handleOpenTaskNameInput = () => {
@@ -155,6 +160,12 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
     }
   };
 
+  const handleOpenInvitationPopup = () => {
+    const modalId = 'invite';
+
+    dispatch(openModal({ id: modalId }));
+  };
+
   return (
     <TabsMenu
       tabs={tabs}
@@ -162,6 +173,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
       handleCreateSubproject={handleCreateSubproject}
       handleDownloadFiles={handleDownloadFiles}
       handleCreateTransaction={handleCreateTransaction}
+      handleInviteNewMember={handleOpenInvitationPopup}
       tabsId={tabsId}
     />
   );
