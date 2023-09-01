@@ -36,7 +36,14 @@ export const Member = ({
   };
 
   return (
-    <Grid container>
+    <Grid
+      container
+      sx={{
+        borderTop: '1px solid lightgray',
+        borderBottom: '1px solid lightgray',
+        margin: '2px 0',
+      }}
+    >
       <Grid
         item
         xs={3}

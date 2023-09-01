@@ -38,22 +38,22 @@ export const fetchMembers =
 
 export const removeProjectMember =
   (userId: string, projectId: string) =>
-  async (dispatch: Dispatch, getState: () => RootState) => {
-    const members = getState().projectMembers.filter(
-      (member) => member.userId !== userId
-    );
-
-    dispatch(removeProjectMemberSuccess({ members }));
-
-    try {
-      await Api.ProjectMembers.delete(userId, projectId);
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку!`,
-        })
+    async (dispatch: Dispatch, getState: () => RootState) => {
+      const members = getState().projectMembers.filter(
+        (member) => member.userId !== userId
       );
-    }
-  };
+
+      dispatch(removeProjectMemberSuccess({ members }));
+
+      try {
+        await Api.ProjectMembers.delete({ userId }, projectId);
+      } catch (e: any) {
+        dispatch(
+          changeSnackbarState({
+            id: 'error',
+            open: true,
+            message: `${e.response.data.message}. Перезавантажте сторінку!`,
+          })
+        );
+      }
+    };
