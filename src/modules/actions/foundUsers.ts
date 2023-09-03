@@ -1,10 +1,8 @@
-import axios from 'axios';
 import { createAction, Dispatch } from 'redux-act';
+import { Api } from '../../utils/API';
 import { RootState } from '../store/store';
 import { IFoundUser, IFoundUsers } from '../types/users';
 import { changeSnackbarState } from './snackbar';
-
-const httpSource = axios.CancelToken.source();
 
 export const foundUsersSuccess = createAction<IFoundUsers>('foundUsersSuccess');
 
@@ -13,16 +11,9 @@ export const searchUsers =
     const { userId } = getState().user;
 
     try {
-      const response = await axios({
-        method: 'GET',
-        url: `${process.env.REACT_APP_BACKEND_URL}/users?id=${userId}&search=${search}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cancelToken: httpSource.token,
-      });
+      const response = await Api.ProjectMembers.find(userId, search);
 
-      const foundUsers = response.data.users.map((user: IFoundUser) => ({
+      const foundUsers = response.users.map((user: IFoundUser) => ({
         name: user.name,
         email: user.email,
         id: user.id,

@@ -85,7 +85,9 @@ export const Api = {
   ProjectMembers: {
     get: (projectId: string) => APIClient.get(`/project-members/${projectId}`),
     delete: (props: { userId: string }, projectId: string) =>
-      APIClient.delete(`/project-members/${projectId}/${props.userId}`)
+      APIClient.delete(`/project-members/${projectId}/${props.userId}`),
+    find: ((userId: string, search: string) =>
+      APIClient.get(`/users?id=${userId}&search=${search}`))
   },
   Files: {
     post: (props: Partial<Project>, pid: string) =>
