@@ -25,12 +25,14 @@ import { IFoundUser } from '../../modules/types/users';
 import { fetchMembers } from '../../modules/actions/projectMembers';
 import { useParams } from 'react-router-dom';
 import { Modal } from './Modal';
+import { getMembers } from '../../modules/selectors/projectMembers';
 
 export const InviteModal = () => {
   const { email } = useSelector(getAuth);
   const [open, setOpen] = React.useState(false);
   const [selectedUsers, setSelectedUsers] = useState<IFoundUser[] | []>([]);
   const options = useSelector(getFoundUsers);
+  const existingMembers = useSelector(getMembers);
   const { pid } = useParams();
   const { formState, inputHandler } = useForm(
     {
@@ -39,13 +41,18 @@ export const InviteModal = () => {
         isValid: false,
       },
     },
-    false
+    false,
   );
   const [isLoading, setIsLoading] = useState(false);
   const openModal = useSelector((state: RootState) =>
-    getModalStateById(state)('invite')
+    getModalStateById(state)('invite'),
   );
   const dispatch = useDispatch();
+
+  const isOptionDisabled = (option: Partial<IFoundUser>) => {
+    // Check if the option's id exists in existingMembers
+    return existingMembers.some((member) => member.userId === option.id);
+  };
 
   const handleClose = () => {
     dispatch(closeModal({ id: 'invite' }));
@@ -67,9 +74,9 @@ export const InviteModal = () => {
 
         setIsLoading(false);
       },
-      500
+      500,
     ),
-    []
+    [],
   );
 
   return (
@@ -82,10 +89,11 @@ export const InviteModal = () => {
         <form onSubmit={submitHandler}>
           <DialogContent>
             <Autocomplete
-              id="asynchronous-demo"
+              id='asynchronous-demo'
               sx={{ width: '100%' }}
               multiple
               open={open}
+              getOptionDisabled={isOptionDisabled}
               onOpen={() => {
                 if (
                   formState.inputs.email &&
@@ -131,11 +139,11 @@ export const InviteModal = () => {
               clearOnBlur={
                 formState.inputs.email && formState.inputs.email.value === ''
               }
-              noOptionsText="Користувач не знайдений"
+              noOptionsText='Користувач не знайдений'
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  variant="standard"
+                  variant='standard'
                   label="Введіть ім'я або електронну адресу"
                   sx={{
                     '& .MuiChip-root': {
@@ -150,7 +158,7 @@ export const InviteModal = () => {
                     endAdornment: (
                       <>
                         {isLoading ? (
-                          <CircularProgress color="inherit" size={20} />
+                          <CircularProgress color='inherit' size={20} />
                         ) : null}
                         {params.InputProps.endAdornment}
                       </>
@@ -162,7 +170,7 @@ export const InviteModal = () => {
           </DialogContent>
           <DialogActions>
             <Button
-              type="submit"
+              type='submit'
               disabled={
                 !formState.inputs.email?.isValid ||
                 email === formState.inputs.email?.value
