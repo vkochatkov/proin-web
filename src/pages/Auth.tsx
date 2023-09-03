@@ -37,7 +37,7 @@ const Auth = () => {
 
   const { formState, inputHandler, setFormData } = useForm(
     defaultFormValue,
-    false
+    false,
   );
   const dispatch = useDispatch();
   const isLoading = useSelector(getIsLoading);
@@ -50,7 +50,7 @@ const Auth = () => {
           //@ts-ignore
           name: undefined,
         },
-        formState.inputs.email.isValid && formState.inputs.password.isValid
+        formState.inputs.email.isValid && formState.inputs.password.isValid,
       );
     } else {
       setFormData(
@@ -61,7 +61,7 @@ const Auth = () => {
             isValid: false,
           },
         },
-        false
+        false,
       );
     }
     setIsLoginMode((prevMode) => !prevMode);
@@ -97,7 +97,7 @@ const Auth = () => {
             id: 'error',
             open: true,
             message: `${e.response.data.message}. Перезавантажте сторінку`,
-          })
+          }),
         );
       }
     } else {
@@ -125,7 +125,7 @@ const Auth = () => {
             id: 'error',
             message: err.response.data.message,
             open: true,
-          })
+          }),
         );
       }
     }
@@ -133,7 +133,7 @@ const Auth = () => {
 
   return (
     <React.Fragment>
-      <Card className="authentication">
+      <Card className='authentication'>
         {isLoading && <LoadingSpinner asOverlay blue />}
         {isLoginMode ? <h2>Авторизація</h2> : <h2>Реєстрація</h2>}
         <p>ПРОІН - сервіс адміністрування проектів</p>
@@ -141,39 +141,42 @@ const Auth = () => {
         <form onSubmit={authSubmitHandler}>
           {!isLoginMode && (
             <Input
-              element="input"
-              id="name"
-              type="text"
+              element='input'
+              id='name'
+              type='text'
               label="Ваше ім'я"
               validators={[VALIDATOR_REQUIRE()]}
-              errorText="Please enter a name."
+              errorText='Please enter a name.'
               onInput={inputHandler}
             />
           )}
           <Input
-            element="input"
-            id="email"
-            type="email"
-            label="Електронна адреса"
+            element='input'
+            id='email'
+            type='email'
+            label='Електронна адреса'
             validators={[VALIDATOR_EMAIL()]}
-            errorText="Please enter a valid email address."
+            errorText='Please enter a valid email address.'
             onInput={inputHandler}
           />
-          <Input
-            element="input"
-            id="password"
-            type="password"
-            label="Пароль"
-            validators={[VALIDATOR_MINLENGTH(6)]}
-            errorText="Please enter a valid password, at least 6 characters."
-            onInput={inputHandler}
-          />
+          <div className='authentication__input-wrapper'>
+            <Input
+              element='input'
+              id='password'
+              type='password'
+              label='Пароль'
+              validators={[VALIDATOR_MINLENGTH(6)]}
+              errorText='Please enter a valid password, at least 6 characters.'
+              onInput={inputHandler}
+            />
+          </div>
           {isLoginMode && (
-            <div className="authentication__link-wrapper">
-              <NavLink to="/forgot-password">Відновити пароль</NavLink>
+            <div className='authentication__link-wrapper'>
+              <NavLink to='/forgot-password'>Відновити пароль</NavLink>
             </div>
           )}
-          <Button type="submit" disabled={!formState.isValid}>
+
+          <Button type='submit' disabled={!formState.isValid}>
             {isLoginMode ? 'ВХІД' : 'РЕЄСТРАЦІЯ'}
           </Button>
         </form>
