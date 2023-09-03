@@ -60,9 +60,10 @@ export const InviteModal = () => {
 
   const submitHandler = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    dispatch(closeModal({ id: 'invite' }));
+
     await dispatch(sendInvitation(selectedUsers) as any);
     if (pid) dispatch(fetchMembers(pid) as any);
-    dispatch(closeModal({ id: 'invite' }));
   };
 
   const handleChange = useCallback(

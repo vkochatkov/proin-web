@@ -22,6 +22,12 @@ export const MembersInfo = () => {
   const handleRemoveUsersAccess = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
+    dispatch(
+      closeModal({
+        id: modalId,
+      }),
+    );
+
     if (id && pid) {
       await dispatch(removeProjectMember(id, pid) as any);
 
@@ -31,11 +37,6 @@ export const MembersInfo = () => {
     }
 
     dispatch(setIdForDelete(''));
-    dispatch(
-      closeModal({
-        id: modalId,
-      }),
-    );
   };
 
   return (
