@@ -1,5 +1,6 @@
 import { createAction, Dispatch } from 'redux-act';
 import { Api } from '../../utils/API';
+import ApiErrors from '../../utils/API/APIErrors';
 import { ITask } from '../types/tasks';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
@@ -23,8 +24,10 @@ export const updateCurrentTask =
       }
 
       const res = await Api.Tasks.updateTask(data, tid);
+
+      ApiErrors.checkOnApiError(res);
       dispatch(endFilesLoading());
-      dispatch(updateCurrentTaskSuccess({ task: res.task }));
+      // dispatch(updateCurrentTaskSuccess({ task: res.task }));
     } catch (e: any) {
       dispatch(
         changeSnackbarState({

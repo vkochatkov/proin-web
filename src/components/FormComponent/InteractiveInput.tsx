@@ -122,10 +122,8 @@ export const InteractiveInput: React.FC<Props> = ({
     }
 
     if (tid && tid === updatedEntity._id) {
-      const callback = async () => {
-        await dispatch(
-          updateCurrentTask(updatedValue, updatedEntity._id) as any,
-        );
+      const callback = () => {
+        dispatch(updateCurrentTask(updatedValue, updatedEntity._id) as any);
 
         if (pid) {
           dispatch(fetchTasks(pid) as any);
