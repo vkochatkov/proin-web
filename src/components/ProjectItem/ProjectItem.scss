@@ -20,12 +20,16 @@
   }
 
   &__first-block {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 60px 1fr;
   }
 
   &__text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     margin-left: 1rem;
+    height: 60px;
   }
 
   &__image-empty {
@@ -40,11 +44,20 @@
     width: 45vw;
     font-size: 12px;
     color: gray;
+    margin: 0;
   }
 
   &__name {
     font-size: 16px;
     font-weight: 600;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit the element to two lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+    white-space: normal; /* Allow for wrapping within the two lines */
+    max-height: 3.6em; /* Adjust based on your font size and line height */
   }
 
   img {
