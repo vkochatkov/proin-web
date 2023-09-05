@@ -29,10 +29,11 @@ currentTask.on(updateCurrentTaskSuccess, (state, payload) => ({
   ...state,
   ...payload.task,
 }));
-currentTask.on(updateCurrentTaskDiarySuccess, (state, { actions }) => ({
+currentTask.on(updateCurrentTaskDiarySuccess, (state, { task }) => ({
   ...state,
-  actions
-}))
+  actions: task.actions,
+  files: task.files ? task.files : []
+}));
 currentTask.on(updateTaskState, (state, payload) => ({
   ...state,
   ...payload.task,

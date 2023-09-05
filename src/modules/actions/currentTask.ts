@@ -15,7 +15,7 @@ export const updateCurrentTaskSuccess = createAction<{ task: ITask }>(
 export const updateTaskState = createAction<{ task: Partial<ITask> }>(
   'updateTaskState'
 );
-export const updateCurrentTaskDiarySuccess = createAction<{ actions: IAction[] }>(
+export const updateCurrentTaskDiarySuccess = createAction<{ task: Partial<ITask> }>(
   'updateCurrentTaskDiarySuccess'
 );
 
@@ -48,7 +48,7 @@ export const updateCurrentTaskDiary =
       const res = await Api.Tasks.updateTask(data, tid);
 
       ApiErrors.checkOnApiError(res);
-      dispatch(updateCurrentTaskDiarySuccess({ actions: res.task.actions }));
+      dispatch(updateCurrentTaskDiarySuccess({ task: res.task }));
     } catch (e: any) {
       dispatch(
         changeSnackbarState({

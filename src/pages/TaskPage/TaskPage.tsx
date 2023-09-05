@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FilesList } from '../../components/FilesList/FilesList';
@@ -18,7 +19,6 @@ import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
 import { TaskTabsMenu } from '../../components/TaskTabsMenu';
 import { closeModal, openModal } from '../../modules/actions/modal';
 import { RemoveModal } from '../../components/Modals/RemoveModal';
-import { useState } from 'react';
 
 import '../HomePage.scss';
 import './TaskPage.scss';
