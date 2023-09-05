@@ -1,6 +1,7 @@
 import { createReducer } from 'redux-act';
 import {
   chooseCurrentTaskSuccess,
+  updateCurrentTaskDiarySuccess,
   updateCurrentTaskSuccess,
   updateTaskState,
 } from '../../actions/currentTask';
@@ -28,6 +29,10 @@ currentTask.on(updateCurrentTaskSuccess, (state, payload) => ({
   ...state,
   ...payload.task,
 }));
+currentTask.on(updateCurrentTaskDiarySuccess, (state, { actions }) => ({
+  ...state,
+  actions
+}))
 currentTask.on(updateTaskState, (state, payload) => ({
   ...state,
   ...payload.task,

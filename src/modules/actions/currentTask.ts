@@ -1,7 +1,7 @@
 import { createAction, Dispatch } from 'redux-act';
 import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
-import { ITask } from '../types/tasks';
+import { IAction, ITask } from '../types/tasks';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
 
@@ -15,6 +15,9 @@ export const updateCurrentTaskSuccess = createAction<{ task: ITask }>(
 export const updateTaskState = createAction<{ task: Partial<ITask> }>(
   'updateTaskState'
 );
+export const updateCurrentTaskDiarySuccess = createAction<{ actions: IAction[] }>(
+  'updateCurrentTaskDiarySuccess'
+);
 
 export const updateCurrentTask =
   (data: any, tid: string) => async (dispatch: Dispatch) => {
@@ -27,7 +30,7 @@ export const updateCurrentTask =
 
       ApiErrors.checkOnApiError(res);
       dispatch(endFilesLoading());
-      // dispatch(updateCurrentTaskSuccess({ task: res.task }));
+      dispatch(updateCurrentTaskSuccess({ task: res.task }));
     } catch (e: any) {
       dispatch(
         changeSnackbarState({
@@ -38,3 +41,21 @@ export const updateCurrentTask =
       );
     }
   };
+
+export const updateCurrentTaskDiary =
+  (data: any, tid: string) => async (dispatch: Dispatch) => {
+    try {
+      const res = await Api.Tasks.updateTask(data, tid);
+
+      ApiErrors.checkOnApiError(res);
+      dispatch(updateCurrentTaskDiarySuccess({ actions: res.task.actions }));
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Оновити задачу не вдалося. Перезавантажте сторінку!`,
+        })
+      );
+    }
+  };  
