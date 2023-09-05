@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { openModal } from '../modules/actions/modal';
 
-export const useFiles = () => {
+export const useFiles = (modalId: string) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [selectedFileId, setSelectedFileId] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!files.length) {
@@ -32,9 +36,17 @@ export const useFiles = () => {
     );
   };
 
+  const handleOpenRemoveFileModal = (id: string) => {
+    setSelectedFileId(id);
+    dispatch(openModal({ id: modalId }));
+  };
+
   return {
     files,
     setFiles,
     generateDataUrl,
+    selectedFileId,
+    setSelectedFileId,
+    handleOpenRemoveFileModal
   };
 };

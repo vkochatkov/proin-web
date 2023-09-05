@@ -161,9 +161,9 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
   };
 
   const handleOpenInvitationPopup = () => {
-    const modalId = 'invite';
+    const inviteModalId = 'invite';
 
-    dispatch(openModal({ id: modalId }));
+    dispatch(openModal({ id: inviteModalId }));
   };
 
   return (

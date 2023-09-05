@@ -5,6 +5,7 @@ import ApiErrors from '../../utils/API/APIErrors';
 import { updateObjects } from '../../utils/utils';
 import { RootState } from '../store/store';
 import { ITransaction } from '../types/transactions';
+import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
 
 export const setCurrentTransaction = createAction<ITransaction>('setCurrentTransaction');
@@ -18,7 +19,7 @@ export const updateUserTransactionsSuccess =
 export const fetchUserTransactionsSuccess =
   createAction<{ transactions: ITransaction[] }>('fetchUserTransactionsSuccess');
 export const clearUserTransactions = createAction('clearProjectTransactions');
-
+export const deleteFileFromTransactionSuccess = createAction('deleteFileFromTransactionSuccess');
 
 const updateTransactionStates = ({
   transactions,
@@ -103,6 +104,47 @@ export const createTransaction = (projectId: string) =>
       );
     }
   };
+
+export const uploadFilesToTHeServer = (
+  data: { files: any[]; },
+  transactionId: string,
+  projectId: string
+) => async (dispatch: Dispatch, getState: () => RootState) => {
+  const projectTransactions = getState().projectTransactions;
+  const userTransactions = getState().userTransactions;
+
+  try {
+    dispatch(startFilesLoading());
+
+    const res = await Api.Transactions.update({
+      ...data,
+      projectId
+    }, transactionId);
+
+    ApiErrors.checkOnApiError(res);
+
+    const updatedTransaction = {
+      ...res.transaction
+    };
+
+    updateTransactionStates({
+      transactions: projectTransactions,
+      transaction: updatedTransaction,
+      userTransactions,
+      dispatch
+    });
+
+    dispatch(endFilesLoading());
+  } catch (e) {
+    dispatch(
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `Завантажити файл не вдалося. Щось пішло не так!`,
+      })
+    );
+  }
+}
 
 export const updateTransactionOnServer = (
   data: Partial<ITransaction>,
@@ -220,6 +262,36 @@ export const saveUserTransactionOrder = (transactions: ITransaction[], userId: s
           id: 'error',
           open: true,
           message: `Сталася помилка. Перезавантажте сторінку!`,
+        })
+      );
+    }
+  }
+
+export const removeFileFromTransaction = (tid: string, fileId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const transactions: ITransaction[] = JSON.parse(JSON.stringify(getState().projectTransactions));
+    const userTransactions: ITransaction[] = JSON.parse(JSON.stringify(getState().userTransactions));
+
+    try {
+      const res = await Api.Files.deleteTransactionsFile(tid, fileId);
+      ApiErrors.checkOnApiError(res);
+
+      dispatch(deleteFileFromTransactionSuccess());
+
+      const transaction = res.transaction;
+
+      updateTransactionStates({
+        transactions: transactions,
+        transaction,
+        userTransactions,
+        dispatch
+      });
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Неможливо видалити файл. Перезавантажте сторінку`,
         })
       );
     }

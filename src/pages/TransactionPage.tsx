@@ -14,11 +14,18 @@ import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
 import {
   fetchTransactionById,
+  removeFileFromTransaction,
   updateTransactionOnServer,
+  uploadFilesToTHeServer,
 } from '../modules/actions/transactions';
 import { getAllUserProjects } from '../modules/selectors/mainProjects';
 import { endLoading } from '../modules/actions/loading';
 import { InteractiveDatePicker } from '../components/InteractiveDatePicker/InterfactiveDatePicker';
+import { useFiles } from '../hooks/useFiles';
+import { FileUploadComponent } from '../components/FormComponent/FileUploadComponent/FileUploadComponent';
+import { FilesList } from '../components/FilesList/FilesList';
+import { closeModal } from '../modules/actions/modal';
+import { RemoveModal } from '../components/Modals/RemoveModal';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -37,6 +44,7 @@ const TransactionPage: React.FC<IProps> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const projects = useSelector(getAllUserProjects);
+  const modalId = 'remove-file';
   const currentProject = projects.find(
     (project) => project._id === currentTransaction.projectId,
   );
@@ -57,12 +65,21 @@ const TransactionPage: React.FC<IProps> = () => {
     },
     true,
   );
+  const {
+    files,
+    setFiles,
+    generateDataUrl,
+    handleOpenRemoveFileModal,
+    selectedFileId,
+  } = useFiles(modalId);
 
   useEffect(() => {
     if (!transactionId) return;
 
     dispatch(fetchTransactionById(transactionId) as any);
     dispatch(endLoading());
+
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -89,7 +106,14 @@ const TransactionPage: React.FC<IProps> = () => {
 
       navigate(`/project-edit/${pid}`);
     }
-  }, [pid, currentTransaction, currentProject, transactionId, subprojectId]);
+  }, [
+    pid,
+    currentTransaction,
+    currentProject,
+    transactionId,
+    subprojectId,
+    navigate,
+  ]);
 
   const handleCloseTransactionPage = () => {
     if (pid && !subprojectId) {
@@ -117,8 +141,40 @@ const TransactionPage: React.FC<IProps> = () => {
     );
   };
 
+  const sendFilesToServer = async (files: File[]) => {
+    try {
+      const fileDataArray = await generateDataUrl(files);
+
+      if (!pid || !transactionId) return;
+
+      dispatch(
+        uploadFilesToTHeServer(
+          { files: fileDataArray },
+          transactionId,
+          pid,
+        ) as any,
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteFile = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+
+    dispatch(
+      removeFileFromTransaction(currentTransaction.id, selectedFileId) as any,
+    );
+    dispatch(closeModal({ id: modalId }));
+  };
+
   return (
     <>
+      <RemoveModal
+        submitHandler={handleDeleteFile}
+        modalId={modalId}
+        text='файл'
+      />
       <SnackbarUI />
       <div className='container'>
         <Header>
@@ -175,6 +231,21 @@ const TransactionPage: React.FC<IProps> = () => {
               id='description'
               inputHandler={inputHandler}
               entity={currentTransaction}
+            />
+          </div>
+          <div className='transaction__files-wrapper'>
+            <FilesList
+              files={currentTransaction.files}
+              saveFilesOrder={() => console.log('click order')}
+              handleOpenModal={handleOpenRemoveFileModal}
+            />
+          </div>
+          <div className='transaction__files-wrapper'>
+            <FileUploadComponent
+              id={'files'}
+              files={files}
+              setFiles={setFiles}
+              sendFilesToServer={sendFilesToServer}
             />
           </div>
         </Card>

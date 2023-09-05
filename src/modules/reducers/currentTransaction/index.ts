@@ -17,7 +17,8 @@ const initialState: ITransaction = {
   id: '',
   type: 'expenses',
   timestamp: '',
-  classifiers: initialClassifiers
+  classifiers: initialClassifiers,
+  files: []
 };
 
 export const currentTransaction = createReducer({}, initialState);

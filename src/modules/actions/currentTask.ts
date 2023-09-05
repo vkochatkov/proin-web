@@ -23,7 +23,7 @@ export const updateCurrentTask =
   (data: any, tid: string) => async (dispatch: Dispatch) => {
     try {
       if (data.files) {
-        dispatch(startFilesLoading())
+        dispatch(startFilesLoading());
       }
 
       const res = await Api.Tasks.updateTask(data, tid);

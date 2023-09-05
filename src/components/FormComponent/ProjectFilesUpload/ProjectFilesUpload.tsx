@@ -20,7 +20,8 @@ export const ProjectFilesUpload: React.FC<IFileUpload> = ({
   id,
   projectId,
 }) => {
-  const { files, setFiles, generateDataUrl } = useFiles();
+  const modalId = 'remove-file';
+  const { files, setFiles, generateDataUrl } = useFiles(modalId);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export const ProjectFilesUpload: React.FC<IFileUpload> = ({
       pickedHandler={pickedHandler}
       buttonLabel={'Додати вкладення'}
       multiple
-      className="file-uploader__btn"
+      className='file-uploader__btn'
       isButtonHide
     />
   );

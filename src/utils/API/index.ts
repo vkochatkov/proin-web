@@ -95,7 +95,9 @@ export const Api = {
     delete: (pid: string, fileId: string) =>
       APIClient.delete(`projects/${pid}/files/${fileId}`),
     deleteTasksFile: (tid: string, fileId: string) =>
-      APIClient.delete(`/project-tasks/files/${tid}/${fileId}`)
+      APIClient.delete(`/project-tasks/files/${tid}/${fileId}`),
+    deleteTransactionsFile: (transactionId: string, fileId: string) =>
+      APIClient.delete(`/transactions-list/files/${transactionId}/${fileId}`)
   },
   Tasks: {
     create: (props: Partial<ITask>, id: string) =>

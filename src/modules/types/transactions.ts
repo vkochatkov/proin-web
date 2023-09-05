@@ -1,8 +1,11 @@
+import { IFile } from "./mainProjects";
+
 export interface IClassifiers {
   [key: string]: string[],
 }
 
 export interface ITransaction {
+  files: IFile[];
   description: string;
   projectId: string;
   userId: string;

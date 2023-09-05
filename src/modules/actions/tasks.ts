@@ -315,6 +315,7 @@ export const removeFileFromTask = (tid: string, fileId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const tasks: ITask[] = JSON.parse(JSON.stringify(getState().projectTasks));
     const userTasks: ITask[] = JSON.parse(JSON.stringify(getState().userTasks));
+
     try {
       const res = await Api.Files.deleteTasksFile(tid, fileId);
       ApiErrors.checkOnApiError(res);
