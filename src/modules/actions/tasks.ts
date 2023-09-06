@@ -182,7 +182,7 @@ export const updateTaskFilesOrder =
         dispatch(updateTasksSuccess({ tasks: result.updatedEnities }));
         dispatch(updateCurrentTaskSuccess({ task: result.updatedEntity }));
 
-        await Api.Tasks.updateTaskFilesOrder(
+        await Api.Files.updateTaskFilesOrder(
           { files: result.updatedEntity.files },
           taskId
         );

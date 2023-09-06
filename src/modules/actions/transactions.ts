@@ -2,8 +2,9 @@ import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
-import { updateObjects } from '../../utils/utils';
+import { updateEnitites, updateObjects } from '../../utils/utils';
 import { RootState } from '../store/store';
+import { IFile } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
@@ -296,3 +297,28 @@ export const removeFileFromTransaction = (tid: string, fileId: string) =>
       );
     }
   }
+
+export const changeTransactionFilesOrder =
+  ({ files, transactionId }: { files: IFile[]; transactionId: string }) =>
+    async (dispatch: Dispatch, getState: () => RootState) => {
+      const projectTransactions = getState().projectTransactions;
+      try {
+        const result = updateEnitites(projectTransactions, transactionId, files);
+
+        if (!result) return;
+
+        dispatch(setCurrentTransaction(result.updatedEntity));
+        dispatch(updateProjectTransactionsSuccess({ transactions: result.updatedEnities }));
+
+        await Api.Files.updateTransactionFilesOrder(
+          { files: result.updatedEntity.files },
+          transactionId
+        );
+      } catch (e: any) {
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Оновити транзакцію не вдалося`,
+        });
+      }
+    };

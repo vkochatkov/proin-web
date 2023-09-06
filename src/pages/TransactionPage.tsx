@@ -13,6 +13,7 @@ import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { getTransactionLabel } from '../utils/utils';
 import { AddClassifierInputComponent } from '../components/FormComponent/AddClassifierInputComponent';
 import {
+  changeTransactionFilesOrder,
   fetchTransactionById,
   removeFileFromTransaction,
   updateTransactionOnServer,
@@ -26,6 +27,7 @@ import { FileUploadComponent } from '../components/FormComponent/FileUploadCompo
 import { FilesList } from '../components/FilesList/FilesList';
 import { closeModal } from '../modules/actions/modal';
 import { RemoveModal } from '../components/Modals/RemoveModal';
+import { IFile } from '../modules/types/mainProjects';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -159,6 +161,15 @@ const TransactionPage: React.FC<IProps> = () => {
     }
   };
 
+  const saveFilesOrder = (order: IFile[]) => {
+    dispatch(
+      changeTransactionFilesOrder({
+        files: order,
+        transactionId: currentTransaction.id,
+      }) as any,
+    );
+  };
+
   const handleDeleteFile = (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
@@ -236,7 +247,7 @@ const TransactionPage: React.FC<IProps> = () => {
           <div className='transaction__files-wrapper'>
             <FilesList
               files={currentTransaction.files}
-              saveFilesOrder={() => console.log('click order')}
+              saveFilesOrder={saveFilesOrder}
               handleOpenModal={handleOpenRemoveFileModal}
             />
           </div>

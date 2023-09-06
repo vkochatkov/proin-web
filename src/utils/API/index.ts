@@ -96,8 +96,12 @@ export const Api = {
       APIClient.delete(`projects/${pid}/files/${fileId}`),
     deleteTasksFile: (tid: string, fileId: string) =>
       APIClient.delete(`/project-tasks/files/${tid}/${fileId}`),
+    updateTaskFilesOrder: (props: Partial<ITask>, tid: string) =>
+      APIClient.post(`/project-tasks/files/${tid}`, props),
     deleteTransactionsFile: (transactionId: string, fileId: string) =>
-      APIClient.delete(`/transactions-list/files/${transactionId}/${fileId}`)
+      APIClient.delete(`/transactions-list/files/${transactionId}/${fileId}`),
+    updateTransactionFilesOrder: (props: Partial<ITransaction>, transactionId: string) =>
+      APIClient.post(`/transactions-list/files/${transactionId}`, props),
   },
   Tasks: {
     create: (props: Partial<ITask>, id: string) =>
@@ -107,8 +111,6 @@ export const Api = {
       APIClient.post(`/project-tasks/${pid}`, props),
     updateTask: (props: Partial<ITask>, tid: string) =>
       APIClient.post(`/project-tasks/task/${tid}`, props),
-    updateTaskFilesOrder: (props: Partial<ITask>, tid: string) =>
-      APIClient.post(`/project-tasks/files/${tid}`, props),
     deleteTask: (tid: string) => APIClient.delete(`/project-tasks/${tid}`),
     getAllTasks: () => APIClient.get(`/project-tasks/all`),
     updateUserTasks: (props: { taskIds: string[] }) =>
