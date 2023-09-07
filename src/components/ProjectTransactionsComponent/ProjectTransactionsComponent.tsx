@@ -20,14 +20,38 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
     getValueByTabId(state)('transaction-tabs'),
   );
   const classifierTab = 'Класифікатори';
-  const totals = transactions.reduce((acc, transaction) => {
-    if (transaction.type === 'income') {
-      acc += transaction.sum;
-    } else if (transaction.type === 'expenses') {
-      acc -= transaction.sum;
-    }
-    return acc;
-  }, 0);
+
+  const handleCountTotal = () => {
+    return transactions.reduce((acc, transaction) => {
+      switch (transactionsTabValue) {
+        case 'Всі':
+          if (transaction.type === 'income') {
+            acc += transaction.sum;
+          } else if (transaction.type === 'expenses') {
+            acc -= transaction.sum;
+          }
+          break;
+        case 'Витрати':
+          if (transaction.type === 'expenses') {
+            acc -= transaction.sum;
+          }
+          break;
+        case 'Доходи':
+          if (transaction.type === 'income') {
+            acc += transaction.sum;
+          }
+          break;
+        case 'Перекази':
+          if (transaction.type === 'transfer') {
+            acc += transaction.sum;
+          }
+          break;
+        default:
+          break;
+      }
+      return acc;
+    }, 0);
+  };
 
   const handleGenerateNavigationQuery = (id: string) => {
     const query =
@@ -46,7 +70,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
             margin: 0,
           }}
         >
-          Загалом: {totals}
+          Загалом: {handleCountTotal()}
         </p>
       </div>
       <TransactionTabsMenu />
