@@ -75,11 +75,12 @@ export const TransactionItem: React.FC<IProps> = ({
       </Menu>
       <Typography
         variant='inherit'
-        // sx={{ color: '#979797' }}
+        sx={{ display: 'inline' }}
       >{`${formattedDate}`}</Typography>
       <Typography
         sx={{
-          display: 'inline-block',
+          display: 'inline',
+          marginLeft: '10px',
           background: `${
             transaction.type === 'expenses'
               ? '#DCA2A3'
@@ -92,7 +93,19 @@ export const TransactionItem: React.FC<IProps> = ({
         {getTransactionLabel(transaction.type)}
         {transaction.type && ':'} {transaction.sum}
       </Typography>
-      <Typography>{transaction.classifier}</Typography>
+      <div className='transaction-item__text-wrapper'>
+        <Typography>{transaction.classifier}: </Typography>
+        <Typography
+          sx={{
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            marginLeft: '5px',
+          }}
+        >
+          {transaction.description}
+        </Typography>
+      </div>
       <Button
         icon
         transparent
