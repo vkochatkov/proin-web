@@ -27,7 +27,7 @@ export const getTransactionLabel = (key: string) => {
   const transactionLabels: { [key: string]: string } = {
     income: 'Доходи',
     expenses: 'Витрати',
-    transfer: 'Переказ',
+    transfer: 'Перекази',
   };
 
   return transactionLabels[key];

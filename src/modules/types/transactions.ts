@@ -13,7 +13,7 @@ export interface ITransaction {
   classifier: string;
   id: string;
   timestamp: string;
-  type: 'expenses' | 'income' | 'transfer';
+  type: string;
   classifiers: IClassifiers
   // [key: string]: string;
 }

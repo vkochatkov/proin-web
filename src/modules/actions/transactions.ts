@@ -80,11 +80,21 @@ export const fetchTransactions = (projectId: string) => async (dispatch: Dispatc
 export const createTransaction = (projectId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const projectTransactions = getState().projectTransactions;
+    const tabValue = getState().tabs['transaction-tabs'];
+    const transactionLabels: { [key: string]: string } = {
+      income: 'Доходи',
+      expenses: 'Витрати',
+      transfer: 'Перекази',
+    };
+
+    const selectedLabel = Object
+      .keys(transactionLabels).find(key => transactionLabels[key] === tabValue);
 
     try {
       const res = await Api.Transactions.create({
         projectId,
         timestamp: new Date().toISOString(),
+        type: selectedLabel ? selectedLabel : ''
       });
 
       ApiErrors.checkOnApiError(res);
