@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import {
   Card,
@@ -12,6 +12,7 @@ import {
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { Button } from '../FormElement/Button';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
+import { Skeleton } from '@mui/material';
 
 import './File.scss';
 
@@ -28,6 +29,7 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
   const extension = '.' + (name?.split('.')?.pop() ?? '');
   const { handleContextMenu, handleClose, contextMenuPosition, anchorEl } =
     useContextMenu();
+  const [loaded, setLoaded] = useState(false);
   const displayName = name.substring(0, name.length - extension.length);
   const cardStyle = {
     position: 'relative',
@@ -97,13 +99,25 @@ export const File: React.FC<IProps> = ({ name, url, id, onDelete, index }) => {
               }}
             >
               {isImage ? (
-                <CardMedia
-                  component='img'
-                  image={url}
-                  height='140'
-                  title={name}
-                  sx={imageContainerStyle}
-                />
+                <>
+                  <CardMedia
+                    component='img'
+                    image={url}
+                    height='140'
+                    title={name}
+                    sx={imageContainerStyle}
+                    onLoad={() => {
+                      setLoaded(true);
+                    }}
+                    style={{ display: loaded ? 'block' : 'none' }}
+                  />
+                  <Skeleton
+                    variant='rectangular'
+                    width='100%'
+                    height={140}
+                    style={{ display: loaded ? 'none' : 'block' }}
+                  />
+                </>
               ) : (
                 <CardMedia component='div' sx={emptyImageContainerStyle}>
                   <Typography
