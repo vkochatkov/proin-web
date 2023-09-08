@@ -94,7 +94,10 @@ export const TransactionItem: React.FC<IProps> = ({
         {transaction.type && ':'} {transaction.sum}
       </Typography>
       <div className='transaction-item__text-wrapper'>
-        <Typography>{transaction.classifier}: </Typography>
+        <Typography>
+          {transaction.classifier}
+          {transaction.classifier && ':'}{' '}
+        </Typography>
         <Typography
           sx={{
             textOverflow: 'ellipsis',
