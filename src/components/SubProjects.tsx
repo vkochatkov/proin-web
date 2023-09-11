@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { PROJECTS_PATH } from '../config/routes';
 import {
   openCurrentProject,
   updatedSubProjectsOrder,
@@ -17,13 +18,13 @@ export const SubProjects = () => {
     const sendRequest = true;
 
     if (!currentProject) return;
-    navigate(`/project-edit/${currentProject._id}/${projectId}`);
+    navigate(`${PROJECTS_PATH}/${currentProject._id}/${projectId}`);
     await dispatch(openCurrentProject(projectId, sendRequest) as any);
   };
 
   const handleUpdateSubProjectsOrder = (
     orderedProjects: Project[],
-    index?: string
+    index?: string,
   ) => {
     if (!currentProject) return;
 
@@ -34,7 +35,7 @@ export const SubProjects = () => {
         projectId,
         newOrder: orderedProjects,
         subProjectIndex: index ? index : '0',
-      }) as any
+      }) as any,
     );
   };
 

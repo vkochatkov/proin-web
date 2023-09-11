@@ -2,6 +2,7 @@ import { Card } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
+import { PROJECTS_PATH } from '../config/routes';
 import { getAuth } from '../modules/selectors/user';
 import Auth from './Auth';
 
@@ -19,11 +20,11 @@ export const InvitePage = () => {
       JSON.stringify({
         id,
         invitationId,
-      })
+      }),
     );
 
     if (isLoggedIn) {
-      navigate('/');
+      navigate(PROJECTS_PATH);
     }
   }, [id, invitationId, navigate, isLoggedIn]);
 
@@ -50,7 +51,7 @@ export const InvitePage = () => {
               згоду приєднатися
             </p>
           </Card>
-          <div className="invite-page__auth">
+          <div className='invite-page__auth'>
             <Auth />
           </div>
         </>

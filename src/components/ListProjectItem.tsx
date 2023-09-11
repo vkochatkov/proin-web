@@ -14,16 +14,17 @@ interface Props {
 
 const getListStyle = (isDraggingOver: boolean, isWrapped: boolean) => ({
   backgroundColor: 'rgba(248, 248, 248, .8)',
-  padding: isWrapped ? 8 : 0,
+  padding: isWrapped ? '0 5px' : 0,
   borderRadius: '5px',
+  margin: '0 10px',
 });
 
-export const ListProjectItem = ({
+export const ListProjectItem: React.FC<Props> = ({
   projects,
   onClick,
   updateOrder,
   isWrapped = false,
-}: Props) => {
+}) => {
   const dispatch = useDispatch();
 
   const onDragEnd = (result: any) => {

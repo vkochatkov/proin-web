@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Container } from '@mui/material';
-import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { TaskItemList } from '../components/TaskItemList/TaskItemList';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { changeUserTasksOrder } from '../modules/actions/userTasks';
@@ -29,16 +28,11 @@ const TaskListPage: React.FC<Props> = () => {
 
   return (
     <>
-      <div
-        style={{
-          width: '100%',
+      <Container
+        sx={{
+          padding: '0 10px',
         }}
       >
-        <MainNavigation>
-          <div />
-        </MainNavigation>
-      </div>
-      <Container>
         <Card
           sx={{
             '&.MuiPaper-root': {

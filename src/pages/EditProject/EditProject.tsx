@@ -1,39 +1,40 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
-import { useForm } from '../hooks/useForm';
+import { LoadingSpinner } from '../../components/UIElements/LoadingSpinner';
+import { useForm } from '../../hooks/useForm';
 import {
   getCurrentProject,
   getCurrentProjectId,
   getCurrentProjects,
-} from '../modules/selectors/mainProjects';
-import { Button } from '../components/FormElement/Button';
+} from '../../modules/selectors/mainProjects';
+import { Button } from '../../components/FormElement/Button';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../components/Navigation/Header';
-import { getIsLoading } from '../modules/selectors/loading';
+import { getIsLoading } from '../../modules/selectors/loading';
 import {
   clearCurrentProject,
   fetchProjects,
   openCurrentProject,
-} from '../modules/actions/mainProjects';
+} from '../../modules/actions/mainProjects';
 import { Card } from '@mui/joy';
-import { SnackbarUI } from '../components/UIElements/SnackbarUI';
-import { InviteModal } from '../components/Modals/InviteModal';
-import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
-import { Project } from '../modules/reducers/mainProjects';
-import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
-import { clearFormInput } from '../modules/actions/form';
-import { ImageUpload } from '../components/FormComponent/ImageUpload';
-import { endLoading, startLoading } from '../modules/actions/loading';
-import { fetchTasks } from '../modules/actions/tasks';
-import { ProjectTabsMenu } from '../components/ProjectTabsMenu';
-import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
-import { setDefaultTabValue } from '../modules/actions/tabs';
-import { FilePickerRefProvider } from '../components/ContextProvider/FilesPickerRefProvider';
-import { fetchTransactions } from '../modules/actions/transactions';
-import { RemoveTransactionModal } from '../components/Modals/RemoveTransactionModal';
+import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
+import { InviteModal } from '../../components/Modals/InviteModal';
+import { MoveProjectModal } from '../../components/Modals/MoveProjectModal';
+import { Project } from '../../modules/reducers/mainProjects';
+import { RemoveProjectModal } from '../../components/Modals/RemoveProjectModal';
+import { clearFormInput } from '../../modules/actions/form';
+import { ImageUpload } from '../../components/FormComponent/ImageUpload';
+import { endLoading, startLoading } from '../../modules/actions/loading';
+import { fetchTasks } from '../../modules/actions/tasks';
+import { ProjectTabsMenu } from '../../components/ProjectTabsMenu';
+import { RemoveTaskModal } from '../../components/Modals/RemoveTaskModal';
+import { setDefaultTabValue } from '../../modules/actions/tabs';
+import { FilePickerRefProvider } from '../../components/ContextProvider/FilesPickerRefProvider';
+import { fetchTransactions } from '../../modules/actions/transactions';
+import { RemoveTransactionModal } from '../../components/Modals/RemoveTransactionModal';
+import { PROJECTS_PATH } from '../../config/routes';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import './HomePage.scss';
+import '../../index.scss';
 
 type Props = {};
 
@@ -78,24 +79,23 @@ const EditProject: React.FC<Props> = () => {
   }, [dispatch, currentProjectId]);
 
   useEffect(() => {
-    if (!currentProject || (currentProject && !currentProject._id)) return;
-
+    if (!currentProject || (currentProject && !currentProject._id)) {
+      navigate(PROJECTS_PATH);
+      return;
+    }
     const foundProjects = projects.find((project) =>
       project.subProjects.some((p: Project) => p.id === subprojectId),
     );
-
     const subProject = foundProjects ? foundProjects.subProjects[0] : null;
-
     if (
       pid &&
       !subprojectId &&
       currentProject &&
       currentProject._id.length !== pid.length
     ) {
-      navigate('/');
+      navigate(PROJECTS_PATH);
       return;
     }
-
     if (
       pid &&
       currentProject._id &&
@@ -105,43 +105,44 @@ const EditProject: React.FC<Props> = () => {
       dispatch(openCurrentProject(pid) as any);
       return;
     }
-
     if (pid && !currentProject && !subprojectId) {
       dispatch(openCurrentProject(pid) as any);
       return;
     }
-
     if (
       subprojectId &&
       currentProject &&
       currentProject.id &&
       currentProject.id.length !== subprojectId.length
     ) {
-      navigate(`/project-edit/${pid}`);
+      navigate(`${PROJECTS_PATH}/${pid}`);
       return;
     }
-
     if (subprojectId && subProject && !currentProject) {
       dispatch(openCurrentProject(subprojectId, true) as any);
-
       return;
     }
-
     if (subprojectId && currentProject && currentProject.id !== subprojectId) {
       dispatch(openCurrentProject(subprojectId, true) as any);
     }
     // eslint-disable-next-line
   }, [pid, subprojectId, currentProject, navigate, dispatch]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearCurrentProject());
+    };
+  }, [dispatch]);
+
   const handleCloseProject = async () => {
     if (subprojectId) {
       dispatch(startLoading());
       await dispatch(fetchProjects() as any);
-      navigate(`/project-edit/${pid}`);
+      navigate(`${PROJECTS_PATH}/${pid}`);
       dispatch(endLoading());
       dispatch(setDefaultTabValue());
     } else {
-      navigate('/');
+      navigate(PROJECTS_PATH);
       dispatch(clearCurrentProject());
       dispatch(clearFormInput());
       dispatch(setDefaultTabValue());
@@ -151,17 +152,6 @@ const EditProject: React.FC<Props> = () => {
   return (
     <>
       <div className='container'>
-        <Header>
-          <Button
-            size='small'
-            transparent={true}
-            icon={true}
-            customClassName='header__btn-close'
-            onClick={handleCloseProject}
-          >
-            <img src='/back.svg' alt='back_logo' className='button__icon' />
-          </Button>
-        </Header>
         {isLoading ? (
           <div className='loading'>
             <LoadingSpinner />
@@ -175,13 +165,17 @@ const EditProject: React.FC<Props> = () => {
               }}
             >
               <div>
+                <Button
+                  size='small'
+                  transparent
+                  icon
+                  customClassName='back__btn'
+                  onClick={handleCloseProject}
+                >
+                  <ArrowBackIosIcon />
+                  <p>Назад</p>
+                </Button>
                 <>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    }}
-                  ></div>
                   <FilePickerRefProvider>
                     <ImageUpload
                       onInput={inputHandler}

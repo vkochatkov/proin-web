@@ -26,6 +26,8 @@ import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { clearDraggingStatus } from '../modules/actions/dragging';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { fetchUserTransactions } from '../modules/actions/transactions';
+import AddIcon from '@mui/icons-material/Add';
+import { PROJECTS_PATH } from '../config/routes';
 
 import './HomePage.scss';
 
@@ -39,12 +41,6 @@ const HomePage: React.FC = () => {
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(getIsLoading);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearDraggingStatus());
-    };
-  }, [dispatch]);
 
   useEffect(() => {
     const storedDataString = localStorage.getItem('accessInfo');
@@ -71,7 +67,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     if (isPressed && currentProject && currentProject.status === 'success') {
-      navigate(`/project-edit/${currentProject._id}`);
+      navigate(`${PROJECTS_PATH}/${currentProject._id}`);
       setIsPressed(false);
     }
   }, [currentProject, isPressed, navigate]);
@@ -86,7 +82,7 @@ const HomePage: React.FC = () => {
     dispatch(startLoading());
     dispatch(openCurrentProject(id) as any);
     dispatch(selectProject(id));
-    navigate(`/project-edit/${id}`);
+    navigate(`${PROJECTS_PATH}/${id}`);
   };
 
   const handleUpdateProjectOrder = (items: Project[]) => {
@@ -99,20 +95,10 @@ const HomePage: React.FC = () => {
       <RemoveProjectModal />
       <SnackbarUI />
       <div className='container'>
-        <MainNavigation>
-          <Button
-            size='small'
-            transparent={true}
-            icon={true}
-            onClick={handleCreateProject}
-          >
-            <img
-              src='/plus_icon.svg'
-              className='button__icon'
-              alt='button icon'
-            />
-          </Button>
-        </MainNavigation>
+        <Button transparent icon onClick={handleCreateProject}>
+          <AddIcon />
+        </Button>
+
         {isLoading && (
           <div className='loading'>
             <LoadingSpinner />

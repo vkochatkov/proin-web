@@ -15,11 +15,11 @@ interface IProps {
   generateNavigationString: (id: string) => void;
 }
 
-export const TaskItemList = ({
+export const TaskItemList: React.FC<IProps> = ({
   tasks,
   changeOrder,
   generateNavigationString,
-}: IProps) => {
+}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const TaskItemList = ({
     const newOrder = reorder(
       tasks,
       result.source.index,
-      result.destination.index
+      result.destination.index,
     );
 
     changeOrder(newOrder);
@@ -44,13 +44,13 @@ export const TaskItemList = ({
   };
 
   return (
-    <div className="tasks-items">
+    <div className='tasks-items'>
       <div>
         <DragDropContext
           onDragEnd={onDragEnd}
           onDragStart={() => dispatch(setIsDragging(true))}
         >
-          <Droppable droppableId="droppable">
+          <Droppable droppableId='droppable'>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, index) => (

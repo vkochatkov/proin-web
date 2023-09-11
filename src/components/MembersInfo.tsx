@@ -9,6 +9,7 @@ import { RemoveModal } from './Modals/RemoveModal';
 import { getIdForRemove } from '../modules/selectors/idForRemove';
 import { setIdForDelete } from '../modules/actions/idForRemove';
 import { closeModal } from '../modules/actions/modal';
+import { PROJECTS_PATH } from '../config/routes';
 
 export const MembersInfo = () => {
   const members = useSelector(getMembers);
@@ -32,7 +33,7 @@ export const MembersInfo = () => {
       await dispatch(removeProjectMember(id, pid) as any);
 
       if (userId === id) {
-        navigate('/');
+        navigate(PROJECTS_PATH);
       }
     }
 

@@ -25,6 +25,7 @@ import { startLoading } from '../modules/actions/loading';
 import { RemoveModal } from './Modals/RemoveModal';
 import { closeModal, openModal } from '../modules/actions/modal';
 import { MembersInfo } from './MembersInfo';
+import { PROJECTS_PATH } from '../config/routes';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -127,7 +128,7 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
     try {
       const { _id } = await dispatch(createNewSubproject(pid) as any);
 
-      navigate(`/project-edit/${pid}/${_id}`);
+      navigate(`${PROJECTS_PATH}/${pid}/${_id}`);
       await dispatch(fetchProjects() as any);
     } catch (error) {
       console.log(error);
@@ -152,11 +153,11 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
     } = await dispatch(createTransaction(projectId) as any);
 
     if (pid && !subprojectId) {
-      navigate(`/project-edit/${pid}/transaction/${id}`);
+      navigate(`${PROJECTS_PATH}/${pid}/transaction/${id}`);
     }
 
     if (subprojectId) {
-      navigate(`/project-edit/${pid}/${subprojectId}/transaction/${id}`);
+      navigate(`${PROJECTS_PATH}/${pid}/${subprojectId}/transaction/${id}`);
     }
   };
 

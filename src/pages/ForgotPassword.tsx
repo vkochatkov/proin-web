@@ -1,8 +1,7 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '../components/FormElement/Button';
 import { Input } from '../components/FormElement/Input';
-import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Card } from '../components/UIElements/Card';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { useForm } from '../hooks/useForm';
@@ -21,7 +20,7 @@ const ForgotPassword = () => {
         isValid: false,
       },
     },
-    false
+    false,
   );
 
   const submitHandler = (event: { preventDefault: () => void }) => {
@@ -33,28 +32,19 @@ const ForgotPassword = () => {
   return (
     <>
       <SnackbarUI />
-      <div className="container forgot-password__container">
-        <MainNavigation>
-          <h2
-            style={{
-              color: '#fff',
-            }}
-          >
-            Pro In
-          </h2>
-        </MainNavigation>
-        <div className="forgot-password">
+      <div className='container forgot-password__container'>
+        <div className='forgot-password'>
           <Card>
             <p>ПРОІН - сервіс адміністрування проектів</p>
             <hr />
             <form onSubmit={submitHandler}>
               <Input
-                element="input"
-                id="email"
-                type="email"
-                label="Електронна пошта"
+                element='input'
+                id='email'
+                type='email'
+                label='Електронна пошта'
                 validators={[VALIDATOR_EMAIL()]}
-                errorText="Please enter a valid email address."
+                errorText='Please enter a valid email address.'
                 onInput={inputHandler}
               />
               <div
@@ -62,7 +52,7 @@ const ForgotPassword = () => {
                   marginTop: '10px',
                 }}
               ></div>
-              <Button type="submit" disabled={!formState.isValid}>
+              <Button type='submit' disabled={!formState.isValid}>
                 ВІДПРАВИТИ
               </Button>
             </form>

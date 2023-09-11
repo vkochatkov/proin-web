@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../components/UIElements/Card';
 import { Input } from '../components/FormElement/Input';
 import { Button } from '../components/FormElement/Button';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import {
   VALIDATOR_EMAIL,
@@ -17,12 +17,15 @@ import { getIsLoading } from '../modules/selectors/loading';
 import axios from 'axios';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { changeSnackbarState } from '../modules/actions/snackbar';
+import { getAuth } from '../modules/selectors/user';
+import { PROJECTS_PATH } from '../config/routes';
 
 import './Auth.scss';
 
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { login } = useAuth();
+  const { token } = useSelector(getAuth); // Get the user's authentication token
   const navigate = useNavigate();
   const defaultFormValue = {
     email: {
@@ -41,6 +44,11 @@ const Auth = () => {
   );
   const dispatch = useDispatch();
   const isLoading = useSelector(getIsLoading);
+
+  if (token) {
+    // If the user is already authenticated, redirect to the dashboard or home page
+    return <Navigate to={`${PROJECTS_PATH}`} replace />;
+  }
 
   const switchModeHandler = () => {
     if (!isLoginMode) {
@@ -89,7 +97,7 @@ const Auth = () => {
         });
 
         login(data.userId, data.token, data.email, data.name);
-        navigate('/');
+        navigate(PROJECTS_PATH);
       } catch (e: any) {
         dispatch(endLoading());
         dispatch(
@@ -117,7 +125,7 @@ const Auth = () => {
         });
 
         login(data.userId, data.token, data.email, data.name);
-        navigate('/');
+        navigate(`${PROJECTS_PATH}`);
       } catch (err: any) {
         dispatch(endLoading());
         dispatch(

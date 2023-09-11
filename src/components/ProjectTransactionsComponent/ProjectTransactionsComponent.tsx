@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { PROJECTS_PATH } from '../../config/routes';
 import { getValueByTabId } from '../../modules/selectors/tabs';
 import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { RootState } from '../../modules/store/store';
@@ -56,8 +57,8 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
   const handleGenerateNavigationQuery = (id: string) => {
     const query =
       pid && subprojectId
-        ? `/project-edit/${pid}/${subprojectId}/transaction/${id}`
-        : `/project-edit/${pid}/transaction/${id}`;
+        ? `${PROJECTS_PATH}/${pid}/${subprojectId}/transaction/${id}`
+        : `${PROJECTS_PATH}/${pid}/transaction/${id}`;
 
     return query;
   };

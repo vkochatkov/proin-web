@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FilesList } from '../../components/FilesList/FilesList';
 import { InteractiveInput } from '../../components/FormComponent/InteractiveInput';
 import { FileUploadComponent } from '../../components/FormComponent/FileUploadComponent/FileUploadComponent';
-import { Button } from '../../components/FormElement/Button';
-import { Header } from '../../components/Navigation/Header';
 import { Card } from '../../components/UIElements/Card';
 import { useForm } from '../../hooks/useForm';
 import {
@@ -20,8 +18,11 @@ import { closeModal } from '../../modules/actions/modal';
 import { RemoveModal } from '../../components/Modals/RemoveModal';
 import { useFiles } from '../../hooks/useFiles';
 import { updateCurrentTask } from '../../modules/actions/currentTask';
+import { PROJECTS_PATH } from '../../config/routes';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Button } from '../../components/FormElement/Button';
 
-import '../HomePage.scss';
+import '../../index.scss';
 import './TaskPage.scss';
 
 export const TaskPage = () => {
@@ -55,10 +56,10 @@ export const TaskPage = () => {
   const handleCloseTaskPage = () => {
     if (pid && !subprojectId) {
       dispatch(setTabValue({ [tabsId]: 'Задачі' }));
-      navigate(`/project-edit/${pid}`);
+      navigate(`${PROJECTS_PATH}/${pid}`);
     } else if (subprojectId) {
       dispatch(setTabValue({ [tabsId]: 'Задачі' }));
-      navigate(`/project-edit/${pid}/${subprojectId}`);
+      navigate(`${PROJECTS_PATH}/${pid}/${subprojectId}`);
     } else {
       navigate(`/tasks`);
     }
@@ -98,18 +99,17 @@ export const TaskPage = () => {
       />
       <SnackbarUI />
       <div className='container'>
-        <Header>
+        <Card>
           <Button
             size='small'
-            transparent={true}
-            icon={true}
-            customClassName='header__btn-close'
+            transparent
+            icon
+            customClassName='back__btn'
             onClick={handleCloseTaskPage}
           >
-            <img src='/back.svg' alt='back_logo' className='button__icon' />
+            <ArrowBackIosIcon />
+            <p>Назад</p>
           </Button>
-        </Header>
-        <Card>
           <Card className='task-page__card'>
             <InteractiveInput
               id='name'

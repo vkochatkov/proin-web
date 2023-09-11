@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { InteractiveInput } from '../components/FormComponent/InteractiveInput';
 import { Card } from '../components/UIElements/Card';
 import { useForm } from '../hooks/useForm';
-import { Header } from '../components/Navigation/Header';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setTabValue } from '../modules/actions/tabs';
@@ -28,6 +27,8 @@ import { FilesList } from '../components/FilesList/FilesList';
 import { closeModal } from '../modules/actions/modal';
 import { RemoveModal } from '../components/Modals/RemoveModal';
 import { IFile } from '../modules/types/mainProjects';
+import { PROJECTS_PATH } from '../config/routes';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -97,16 +98,16 @@ const TransactionPage: React.FC<IProps> = () => {
       (pid && !subprojectId && currentProject._id !== pid) ||
       (subprojectId && currentProject._id !== subprojectId)
     ) {
-      navigate('/');
+      navigate(PROJECTS_PATH);
     }
 
     if (pid && transactionId && transactionId !== currentTransaction.id) {
       if (subprojectId) {
-        navigate(`/project-edit/${pid}/${subprojectId}`);
+        navigate(`${PROJECTS_PATH}/${pid}/${subprojectId}`);
         return;
       }
 
-      navigate(`/project-edit/${pid}`);
+      navigate(`${PROJECTS_PATH}/${pid}`);
     }
   }, [
     pid,
@@ -120,10 +121,10 @@ const TransactionPage: React.FC<IProps> = () => {
   const handleCloseTransactionPage = () => {
     if (pid && !subprojectId) {
       dispatch(setTabValue({ [tabsId]: 'Фінанси' }));
-      navigate(`/project-edit/${pid}`);
+      navigate(`${PROJECTS_PATH}/${pid}`);
     } else if (pid && subprojectId) {
       dispatch(setTabValue({ [tabsId]: 'Фінанси' }));
-      navigate(`/project-edit/${pid}/${subprojectId}`);
+      navigate(`${PROJECTS_PATH}/${pid}/${subprojectId}`);
     } else {
       navigate(`/transactions`);
     }
@@ -188,18 +189,17 @@ const TransactionPage: React.FC<IProps> = () => {
       />
       <SnackbarUI />
       <div className='container'>
-        <Header>
+        <Card>
           <Button
             size='small'
-            transparent={true}
-            icon={true}
-            customClassName='header__btn-close'
+            transparent
+            icon
+            customClassName='back__btn'
             onClick={handleCloseTransactionPage}
           >
-            <img src='/back.svg' alt='back_logo' className='button__icon' />
+            <ArrowBackIosIcon />
+            <p>Назад</p>
           </Button>
-        </Header>
-        <Card>
           <h3 className='transaction__title'>Проект</h3>
           <p>{currentProject && currentProject?.projectName}</p>
           <h3>Дата</h3>

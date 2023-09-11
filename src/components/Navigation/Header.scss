@@ -2,7 +2,7 @@
 
 .header {
   height: 60px;
-  background-color: $mainBackgroundColor;
+  // background-color: $headerBackground;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -26,7 +26,6 @@
       border: none !important;
       margin: 0;
       padding: 0.5rem 0 !important;
-      font-size: 20px !important;
     }
 
     .logo {

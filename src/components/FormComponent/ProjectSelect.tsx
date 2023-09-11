@@ -9,6 +9,7 @@ import {
 } from '../../modules/selectors/mainProjects';
 import { CustomSelect } from './CustomSelect';
 import { Project } from '../../modules/reducers/mainProjects';
+import { PROJECTS_PATH } from '../../config/routes';
 
 interface IProps {
   handleChange: (e: SelectChangeEvent) => void;
@@ -18,7 +19,7 @@ interface IProps {
 export const ProjectSelect = ({ selectedValue, handleChange }: IProps) => {
   const selectedProjectId = useSelector(getSelectedProjectId);
   const location = useLocation();
-  const isRoot = location.pathname === '/';
+  const isRoot = location.pathname === PROJECTS_PATH;
   const openedProject = useSelector(getCurrentProject);
   const projects = useSelector(getCurrentProjects);
   const filtered = projects
@@ -39,7 +40,7 @@ export const ProjectSelect = ({ selectedValue, handleChange }: IProps) => {
       selectedValue={selectedValue}
       onChange={handleChange}
     >
-      {!isRoot && <MenuItem value="В корінь">В корінь</MenuItem>}
+      {!isRoot && <MenuItem value='В корінь'>В корінь</MenuItem>}
       {filtered.map((project: Project) => (
         <MenuItem key={project._id} value={project._id}>
           {project.projectName}

@@ -33,16 +33,11 @@ const TransactionListPage: React.FC<Props> = () => {
 
   return (
     <>
-      <div
-        style={{
-          width: '100%',
+      <Container
+        sx={{
+          padding: '0 10px',
         }}
       >
-        <MainNavigation>
-          <div />
-        </MainNavigation>
-      </div>
-      <Container>
         {transactions.length > 0 && (
           <Card
             sx={{

@@ -1,6 +1,18 @@
 @import './utils/variables.scss';
 @import './utils/mixins.scss';
 
+.back {
+  &__btn {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  &__btn p {
+    margin: 0;
+  }
+}
+
 body {
   margin: 0;
   background: $mainBackgroundColor;

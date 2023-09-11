@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
+import { PROJECTS_PATH } from '../../config/routes';
 import { APIClient } from '../../utils/API';
 import { UserState } from '../reducers/user';
 import { RootState } from '../store/store';
@@ -15,20 +16,20 @@ const httpSource = axios.CancelToken.source();
 
 export const signin =
   (uid: string, token: string, email: string, name: string) =>
-  (dispatch: Dispatch) => {
-    try {
-      APIClient.setToken(token);
-      dispatch(
-        loginSuccess({
-          userId: uid,
-          token,
-          email,
-          name,
-        })
-      );
-      dispatch(endLoading());
-    } catch (e) {}
-  };
+    (dispatch: Dispatch) => {
+      try {
+        APIClient.setToken(token);
+        dispatch(
+          loginSuccess({
+            userId: uid,
+            token,
+            email,
+            name,
+          })
+        );
+        dispatch(endLoading());
+      } catch (e) { }
+    };
 
 export const signout = () => (dispatch: Dispatch) => {
   dispatch(logoutSuccess());
@@ -105,7 +106,7 @@ export const resetPassword =
       );
 
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = PROJECTS_PATH;
       }, 6000);
     } catch (e: any) {
       dispatch(

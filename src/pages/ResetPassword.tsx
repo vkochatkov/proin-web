@@ -2,7 +2,6 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Button } from '../components/FormElement/Button';
 import { Input } from '../components/FormElement/Input';
-import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Card } from '../components/UIElements/Card';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { useForm } from '../hooks/useForm';
@@ -21,7 +20,7 @@ const ResetPassword = () => {
         isValid: false,
       },
     },
-    false
+    false,
   );
   const dispatch = useDispatch();
 
@@ -38,31 +37,22 @@ const ResetPassword = () => {
   return (
     <>
       <SnackbarUI />
-      <div className="container forgot-password__container">
-        <MainNavigation>
-          <h2
-            style={{
-              color: '#fff',
-            }}
-          >
-            Pro In
-          </h2>
-        </MainNavigation>
-        <div className="forgot-password">
+      <div className='container forgot-password__container'>
+        <div className='forgot-password'>
           <Card>
             <p>ПРОІН - сервіс адміністрування проектів</p>
             <hr />
             <form onSubmit={submitHandler}>
               <Input
-                element="input"
-                id="password"
-                type="password"
-                label="Введіть новий пароль"
+                element='input'
+                id='password'
+                type='password'
+                label='Введіть новий пароль'
                 validators={[VALIDATOR_MINLENGTH(6)]}
-                errorText="Будь-ласка, додайте валідну електронну адресу."
+                errorText='Будь-ласка, додайте валідну електронну адресу.'
                 onInput={inputHandler}
               />
-              <Button type="submit" disabled={!formState.isValid}>
+              <Button type='submit' disabled={!formState.isValid}>
                 ВІДНОВИТИ ПАРОЛЬ
               </Button>
             </form>

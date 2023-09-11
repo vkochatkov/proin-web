@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { PROJECTS_PATH } from '../config/routes';
 import { changeTasksOrder } from '../modules/actions/tasks';
 import { getTasks } from '../modules/selectors/tasks';
 import { ITask } from '../modules/types/tasks';
@@ -24,8 +25,8 @@ export const ProjectTasksComponent = () => {
   const handleGenerateNavigationQuery = (id: string) => {
     const query =
       pid && subprojectId
-        ? `/project-edit/${pid}/${subprojectId}/task/${id}`
-        : `/project-edit/${pid}/task/${id}`;
+        ? `${PROJECTS_PATH}/${pid}/${subprojectId}/task/${id}`
+        : `${PROJECTS_PATH}/${pid}/task/${id}`;
 
     return query;
   };

@@ -14,6 +14,7 @@ import { clearTasks, fetchTasks } from './tasks';
 import { updateEnitites } from '../../utils/utils';
 import { updateUserTasksSuccess } from './userTasks';
 import { clearProjectTransactions, clearUserTransactions } from './transactions';
+import ApiErrors from '../../utils/API/APIErrors';
 
 export const setCurrentProject = createAction<Project>('setCurrentProject');
 export const updateProjectsSuccess = createAction<Project[]>(
@@ -198,6 +199,8 @@ export const deleteComment =
 export const createNewProject = () => async (dispatch: Dispatch) => {
   try {
     const response = await Api.Projects.create();
+
+    ApiErrors.checkOnApiError(response)
 
     dispatch(createProjectSuccess(response.project));
     dispatch(updateUserTasksSuccess([]));
