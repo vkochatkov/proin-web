@@ -10,10 +10,9 @@ import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
 import { Api } from '../../utils/API';
-import { clearTasks, fetchTasks } from './tasks';
+import { fetchTasks } from './tasks';
 import { updateEnitites } from '../../utils/utils';
 import { updateUserTasksSuccess } from './userTasks';
-import { clearProjectTransactions, clearUserTransactions } from './transactions';
 import ApiErrors from '../../utils/API/APIErrors';
 
 export const setCurrentProject = createAction<Project>('setCurrentProject');
@@ -204,10 +203,7 @@ export const createNewProject = () => async (dispatch: Dispatch) => {
 
     dispatch(createProjectSuccess(response.project));
     dispatch(updateUserTasksSuccess([]));
-    dispatch(clearTasks());
-    dispatch(clearProjectTransactions());
-    dispatch(clearUserTransactions());
-
+  
     dispatch(endLoading());
   } catch (e) {
     dispatch(editProjectFailure((e as any).message));

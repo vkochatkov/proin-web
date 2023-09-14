@@ -80,13 +80,14 @@ const EditProject: React.FC<Props> = () => {
 
   useEffect(() => {
     if (!currentProject || (currentProject && !currentProject._id)) {
-      navigate(PROJECTS_PATH);
       return;
     }
+
     const foundProjects = projects.find((project) =>
       project.subProjects.some((p: Project) => p.id === subprojectId),
     );
     const subProject = foundProjects ? foundProjects.subProjects[0] : null;
+
     if (
       pid &&
       !subprojectId &&
@@ -127,12 +128,6 @@ const EditProject: React.FC<Props> = () => {
     }
     // eslint-disable-next-line
   }, [pid, subprojectId, currentProject, navigate, dispatch]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearCurrentProject());
-    };
-  }, [dispatch]);
 
   const handleCloseProject = async () => {
     if (subprojectId) {
