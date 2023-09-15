@@ -13,7 +13,6 @@ import {
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store/store';
 import { ListProjectItem } from '../components/ListProjectItem';
-import { MainNavigation } from '../components/Navigation/MainNavigation';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
 import { getIsLoading } from '../modules/selectors/loading';
@@ -23,13 +22,12 @@ import { Project } from '../modules/reducers/mainProjects';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
-import { clearDraggingStatus } from '../modules/actions/dragging';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { fetchUserTransactions } from '../modules/actions/transactions';
 import AddIcon from '@mui/icons-material/Add';
 import { PROJECTS_PATH } from '../config/routes';
 
-import './HomePage.scss';
+import '../index.scss';
 
 const HomePage: React.FC = () => {
   const { sendRequest } = useHttpClient();

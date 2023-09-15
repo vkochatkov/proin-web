@@ -1,33 +1,36 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CommentBox } from './CommentBox';
 import { DynamicInput } from './FormComponent/DynamicInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
 import { IComment } from '../modules/reducers/mainProjects';
+import { openModal } from '../modules/actions/modal';
+import { setIdForDelete } from '../modules/actions/idForRemove';
 
 interface IProps {
   currentObj: any;
-  deleteComment: ({ id, updatedObj }: { id: string; updatedObj: any }) => void;
+  modalId: string;
   updateComment: (
     updatedComment: IComment,
-    updatedComments: IComment[]
+    updatedComments: IComment[],
   ) => void;
   createComment: (comment: IComment) => void;
 }
 
-export const CommentsList = ({
+export const CommentsList: React.FC<IProps> = ({
   currentObj,
-  deleteComment,
+  modalId,
   updateComment,
   createComment,
-}: IProps) => {
+}) => {
   const auth = useSelector(getAuth);
   const [selectedCommentIds, setSelectedCommentIds] = React.useState<string[]>([
     '',
   ]);
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const [isInputActive, setIsInputActive] = useState(false);
+  const dispatch = useDispatch();
 
   const handleCreatingComment = (value: string) => {
     if (!currentObj) return;
@@ -53,24 +56,6 @@ export const CommentsList = ({
     createComment(comment);
 
     setIsInputActive(false);
-  };
-
-  const handleDeleteComment = (id: string) => {
-    if (!currentObj) return;
-
-    const { comments } = currentObj;
-
-    if (comments) {
-      const updatedComments = comments.filter(
-        (comment: IComment) => comment.id !== id
-      );
-      const updatedObj = {
-        ...currentObj,
-        comments: updatedComments,
-      };
-
-      deleteComment({ id, updatedObj });
-    }
   };
 
   const handleEditComment = (id: string) => {
@@ -106,13 +91,22 @@ export const CommentsList = ({
     });
 
     const updatedSelectedIds = selectedCommentIds.filter(
-      (commentId) => commentId !== id
+      (commentId) => commentId !== id,
     );
 
     if (!updatedComment) return;
 
     updateComment(updatedComment, updatedComments);
     setSelectedCommentIds(updatedSelectedIds);
+  };
+
+  const handleOpenRemoveModal = (id: string) => {
+    dispatch(
+      openModal({
+        id: modalId,
+      }),
+    );
+    dispatch(setIdForDelete(id));
   };
 
   return (
@@ -122,7 +116,7 @@ export const CommentsList = ({
         isActive={isInputActive}
         text={defaultInputValue}
         buttonLabel={'Зберегти'}
-        placeholder="Напишіть коментар"
+        placeholder='Напишіть коментар'
         onCancel={() => {
           setIsInputActive(false);
           setDefaultInputValue('');
@@ -132,11 +126,11 @@ export const CommentsList = ({
         currentObj.comments &&
         currentObj.comments.map((comment: IComment, index: number) => {
           const updatedSelectedIds = selectedCommentIds.filter(
-            (commentId) => commentId !== comment.id
+            (commentId) => commentId !== comment.id,
           );
 
           const selectedCommentId = selectedCommentIds.find(
-            (id) => id === comment.id
+            (id) => id === comment.id,
           );
 
           if (!comment.id) return null;
@@ -150,7 +144,7 @@ export const CommentsList = ({
                 key={`${comment.id}-${Math.random()}`}
               >
                 <DynamicInput
-                  placeholder="Напишіть коментар"
+                  placeholder='Напишіть коментар'
                   onClick={(value) => handleUpdateComment(comment.id, value)}
                   onCancel={() => setSelectedCommentIds(updatedSelectedIds)}
                   isActive={true}
@@ -168,7 +162,7 @@ export const CommentsList = ({
                 timestamp={comment.timestamp}
                 id={comment.id}
                 userId={comment.userId}
-                onDelete={handleDeleteComment}
+                onDelete={handleOpenRemoveModal}
                 onEdit={handleEditComment}
                 onReply={handleReplyComment}
               />

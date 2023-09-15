@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '../components/FormElement/Button';
 import { Input } from '../components/FormElement/Input';
@@ -9,7 +8,7 @@ import { sendRecaveryEmail } from '../modules/actions/user';
 import { VALIDATOR_EMAIL } from '../utils/validators';
 
 import './ForgotPassword.scss';
-import './HomePage.scss';
+import '../index.scss';
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();

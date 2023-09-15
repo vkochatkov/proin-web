@@ -9,7 +9,7 @@ import { resetPassword } from '../modules/actions/user';
 import { VALIDATOR_MINLENGTH } from '../utils/validators';
 
 import './ForgotPassword.scss';
-import './HomePage.scss';
+import '../index.scss';
 
 const ResetPassword = () => {
   const { token } = useParams();
