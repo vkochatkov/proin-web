@@ -19,6 +19,7 @@ interface Props {
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
   onReply: (name: string) => void;
+  onCopy: (textToCopy: string) => void;
 }
 
 export const CommentBox: FC<Props> = ({
@@ -31,6 +32,7 @@ export const CommentBox: FC<Props> = ({
   onDelete,
   onEdit,
   onReply,
+  onCopy,
 }) => {
   const auth = useSelector(getAuth);
   const isUserOwnComment = auth.userId === userId;
@@ -117,6 +119,14 @@ export const CommentBox: FC<Props> = ({
             >
               <MenuItem onClick={() => onEdit(id)}>Редагувати</MenuItem>
               <MenuItem onClick={() => onDelete(id)}>Видалити</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onCopy(text);
+                  handleClose();
+                }}
+              >
+                Копіювати
+              </MenuItem>
             </Menu>
           )}
         </div>

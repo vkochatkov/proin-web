@@ -109,6 +109,10 @@ export const CommentsList: React.FC<IProps> = ({
     dispatch(setIdForDelete(id));
   };
 
+  const handleCopyClick = (textToCopy: string) => {
+    navigator.clipboard.writeText(textToCopy);
+  };
+
   return (
     <>
       <DynamicInput
@@ -165,6 +169,7 @@ export const CommentsList: React.FC<IProps> = ({
                 onDelete={handleOpenRemoveModal}
                 onEdit={handleEditComment}
                 onReply={handleReplyComment}
+                onCopy={handleCopyClick}
               />
             );
           }
