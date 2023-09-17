@@ -120,6 +120,14 @@ export const CommentBox: FC<Props> = ({
               >
                 Відповісти
               </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onCopy(text);
+                  handleClose();
+                }}
+              >
+                Копіювати
+              </MenuItem>
             </Menu>
           )}
           {isUserOwnComment && (
