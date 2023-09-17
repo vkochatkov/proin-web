@@ -26,9 +26,12 @@ export const DynamicInput: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    if ((props.isActive && props.text) || props.isActiveWithoutText) {
+    if (props.isActive || props.isActiveWithoutText) {
       setIsTextareaActive(true);
-      setValue(props.text);
+
+      if (props.text) {
+        setValue(props.text);
+      }
     } else {
       setIsTextareaActive(false);
       setValue('');

@@ -4,3 +4,28 @@
   -ms-user-select: none; /* IE*/
   user-select: none; /* Standard syntax */
 }
+
+.comment {
+  &__reply-wrapper {
+    border-left: 1px solid black;
+    padding: 0 0 0 10px;
+    margin: 0 0 10px;
+    color: black;
+    transform: opacity .3 ease-in-out;
+
+    &:hover {
+      opacity: .7;
+    }
+  }
+
+  &__reply-text {
+    margin: 0;
+    font-size: 12px;
+
+    &:nth-child(2) {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}

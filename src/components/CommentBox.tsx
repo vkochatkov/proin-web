@@ -6,6 +6,7 @@ import { ProjectTextOutput } from './FormComponent/ProjectTextOutput';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { backgroundColor } from '../utils/avatar-view';
 import { getFirstLetter } from '../utils/utils';
+import { ReplyCommentComponent } from './ReplyCommentComponent';
 
 import './CommentBox.scss';
 
@@ -16,9 +17,12 @@ interface Props {
   logoLink?: string;
   id: string;
   userId: string;
+  parentCommentId?: string;
+  replyUser?: string;
+  replyUserCommentText?: string;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
-  onReply: (name: string) => void;
+  onReply: (id: string, name?: string) => void;
   onCopy: (textToCopy: string) => void;
 }
 
@@ -29,6 +33,9 @@ export const CommentBox: FC<Props> = ({
   logoLink = '',
   id,
   userId,
+  parentCommentId,
+  replyUser,
+  replyUserCommentText,
   onDelete,
   onEdit,
   onReply,
@@ -56,8 +63,16 @@ export const CommentBox: FC<Props> = ({
         className='disable-text-selection'
         style={{ padding: '20px', marginTop: '1rem' }}
         {...longPressProps}
+        id={`comment-${id}`}
       >
         <Grid container wrap='nowrap' direction='column'>
+          {parentCommentId && (
+            <ReplyCommentComponent
+              parentCommentId={parentCommentId}
+              replyUser={replyUser}
+              replyUserCommentText={replyUserCommentText}
+            />
+          )}
           <Grid
             sx={{
               display: 'flex',
@@ -99,7 +114,7 @@ export const CommentBox: FC<Props> = ({
             >
               <MenuItem
                 onClick={() => {
-                  onReply(name);
+                  onReply(id, name);
                   handleClose();
                 }}
               >
@@ -126,6 +141,14 @@ export const CommentBox: FC<Props> = ({
                 }}
               >
                 Копіювати
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onReply(id);
+                  handleClose();
+                }}
+              >
+                Відповісти
               </MenuItem>
             </Menu>
           )}

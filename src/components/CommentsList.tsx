@@ -30,6 +30,7 @@ export const CommentsList: React.FC<IProps> = ({
   ]);
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const [isInputActive, setIsInputActive] = useState(false);
+  const [selectedParentId, setSelectedParentId] = useState<string>('');
   const dispatch = useDispatch();
 
   const handleCreatingComment = (value: string) => {
@@ -44,7 +45,7 @@ export const CommentsList: React.FC<IProps> = ({
 
     const sendTo = taggedUsers.map((name) => name.replace('@', ''));
 
-    const comment = {
+    const comment: IComment = {
       id,
       text: value,
       name: auth.name,
@@ -53,20 +54,32 @@ export const CommentsList: React.FC<IProps> = ({
       mentions: sendTo,
     };
 
+    if (selectedParentId) {
+      comment.parentId = selectedParentId;
+    }
+
     createComment(comment);
 
     setIsInputActive(false);
+
+    if (selectedParentId) {
+      setSelectedParentId('');
+    }
   };
 
   const handleEditComment = (id: string) => {
     setSelectedCommentIds([...selectedCommentIds, id]);
   };
 
-  const handleReplyComment = (name: string) => {
-    const userName = `@${name}`;
-
+  const handleReplyComment = (parentId: string, name?: string) => {
     setIsInputActive(true);
-    setDefaultInputValue(userName);
+    setSelectedParentId(parentId);
+
+    if (name) {
+      const userName = `@${name}`;
+
+      setDefaultInputValue(userName);
+    }
   };
 
   const handleUpdateComment = (id: string, value: string) => {
@@ -158,6 +171,9 @@ export const CommentsList: React.FC<IProps> = ({
               </div>
             );
           } else {
+            const repliedComment = currentObj.comments.find(
+              (c: IComment) => c.id === comment.parentId,
+            );
             return (
               <CommentBox
                 key={`${comment.id}-${index}`}
@@ -166,6 +182,11 @@ export const CommentsList: React.FC<IProps> = ({
                 timestamp={comment.timestamp}
                 id={comment.id}
                 userId={comment.userId}
+                parentCommentId={comment.parentId}
+                replyUserCommentText={
+                  repliedComment ? repliedComment.text : undefined
+                }
+                replyUser={repliedComment ? repliedComment.name : undefined}
                 onDelete={handleOpenRemoveModal}
                 onEdit={handleEditComment}
                 onReply={handleReplyComment}
