@@ -95,17 +95,6 @@ export const TabsMenu: React.FC<TabsMenuProps> = ({
     transactionsTabValue,
   ]);
 
-  useEffect(() => {
-    return () => {
-      if (isTabIndex) {
-        const defaultTabLave = tabs[0].label;
-
-        dispatch(setTabValue({ [tabsId]: defaultTabLave }));
-        dispatch(setActiveTabIndex(0));
-      }
-    };
-  }, []);
-
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     dispatch(setTabValue({ [tabsId]: newValue }));
 
