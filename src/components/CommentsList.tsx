@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentBox } from './CommentBox';
 import { DynamicInput } from './FormComponent/DynamicInput';
@@ -31,6 +31,7 @@ export const CommentsList: React.FC<IProps> = ({
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const [isInputActive, setIsInputActive] = useState(false);
   const [selectedParentId, setSelectedParentId] = useState<string>('');
+  const inputRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
   const handleCreatingComment = (value: string) => {
@@ -74,6 +75,14 @@ export const CommentsList: React.FC<IProps> = ({
   const handleReplyComment = (parentId: string, name?: string) => {
     setIsInputActive(true);
     setSelectedParentId(parentId);
+
+    // Scroll to the DynamicInput
+    if (inputRef.current) {
+      inputRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
 
     if (name) {
       const userName = `@${name}`;
@@ -128,17 +137,19 @@ export const CommentsList: React.FC<IProps> = ({
 
   return (
     <>
-      <DynamicInput
-        onClick={handleCreatingComment}
-        isActive={isInputActive}
-        text={defaultInputValue}
-        buttonLabel={'Зберегти'}
-        placeholder='Напишіть коментар'
-        onCancel={() => {
-          setIsInputActive(false);
-          setDefaultInputValue('');
-        }}
-      />
+      <div ref={inputRef}>
+        <DynamicInput
+          onClick={handleCreatingComment}
+          isActive={isInputActive}
+          text={defaultInputValue}
+          buttonLabel={'Зберегти'}
+          placeholder='Напишіть коментар'
+          onCancel={() => {
+            setIsInputActive(false);
+            setDefaultInputValue('');
+          }}
+        />
+      </div>
       {currentObj &&
         currentObj.comments &&
         currentObj.comments.map((comment: IComment, index: number) => {
