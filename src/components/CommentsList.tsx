@@ -38,7 +38,7 @@ export const CommentsList: React.FC<IProps> = ({
 
     const id = uuidv4();
 
-    const mentionRegex = /@[a-zA-Z0-9_]+/;
+    const mentionRegex = /@[a-zA-Zа-яА-Я0-9_]+/;
     const mentions = value.match(mentionRegex);
     const taggedUsers =
       mentions && mentions.input ? mentions.input.split(' ') : [];

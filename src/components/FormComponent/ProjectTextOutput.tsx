@@ -18,6 +18,7 @@ const phoneRegex =
 const hashtagRegex = /(^|\b)#[\w-]+(\b|$)/g;
 const urlRegex =
   /https?:\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/;
+const mentionRegex = /@[\wа-яА-Я]+/;
 
 export const ProjectTextOutput = ({ text, fieldId }: Props) => {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ export const ProjectTextOutput = ({ text, fieldId }: Props) => {
               {match}
             </a>
           )}
-          regex={/@\w+/}
+          regex={mentionRegex}
         >
           {word}
         </LinkIt>
