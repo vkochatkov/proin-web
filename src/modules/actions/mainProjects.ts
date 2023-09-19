@@ -145,7 +145,7 @@ export const updateComment =
         }),
       );
 
-      await Api.Comments.update({ ...updatedComment }, updatedComment.id);
+      await Api.Comments.update({ ...updatedComment }, currentProject._id);
     } catch (e) {
       dispatch(
         changeSnackbarState({
