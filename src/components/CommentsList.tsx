@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentBox } from './CommentBox';
 import { DynamicInput } from './FormComponent/DynamicInput';
@@ -29,9 +29,10 @@ export const CommentsList: React.FC<IProps> = ({
     '',
   ]);
   const [defaultInputValue, setDefaultInputValue] = useState('');
-  const [isInputActive, setIsInputActive] = useState(false);
+  const [isInputActive, setIsInputActive] = useState<boolean>(false);
+  const [isEditableInputActive, setIsEditableInputActive] = useState(true);
   const [selectedParentId, setSelectedParentId] = useState<string>('');
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
 
   const handleCreatingComment = (value: string) => {
@@ -78,10 +79,7 @@ export const CommentsList: React.FC<IProps> = ({
 
     // Scroll to the DynamicInput
     if (inputRef.current) {
-      inputRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+      inputRef.current.focus();
     }
 
     if (name) {
@@ -135,21 +133,27 @@ export const CommentsList: React.FC<IProps> = ({
     navigator.clipboard.writeText(textToCopy);
   };
 
+  const handleCloseInput = () => {
+    if (inputRef.current) {
+      inputRef.current.blur(); // This will unfocus the input element.
+    }
+
+    setIsInputActive(false);
+    setDefaultInputValue('');
+    setSelectedParentId('');
+  };
+
   return (
     <>
-      <div ref={inputRef}>
-        <DynamicInput
-          onClick={handleCreatingComment}
-          isActive={isInputActive}
-          text={defaultInputValue}
-          buttonLabel={'Зберегти'}
-          placeholder='Напишіть коментар'
-          onCancel={() => {
-            setIsInputActive(false);
-            setDefaultInputValue('');
-          }}
-        />
-      </div>
+      <DynamicInput
+        onClick={handleCreatingComment}
+        isActive={isInputActive}
+        text={defaultInputValue}
+        buttonLabel={'Зберегти'}
+        placeholder='Напишіть коментар'
+        onCancel={handleCloseInput}
+        ref={inputRef}
+      />
       {currentObj &&
         currentObj.comments &&
         currentObj.comments.map((comment: IComment, index: number) => {
@@ -175,7 +179,7 @@ export const CommentsList: React.FC<IProps> = ({
                   placeholder='Напишіть коментар'
                   onClick={(value) => handleUpdateComment(comment.id, value)}
                   onCancel={() => setSelectedCommentIds(updatedSelectedIds)}
-                  isActive={true}
+                  isActive={isEditableInputActive}
                   text={comment.text}
                   buttonLabel={'Зберегти'}
                 />

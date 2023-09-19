@@ -19,6 +19,12 @@
   width: 100%;
 }
 
+textarea {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   margin: 0;
   background: $mainBackgroundColor;
