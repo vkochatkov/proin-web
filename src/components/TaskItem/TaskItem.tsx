@@ -23,6 +23,8 @@ import { selectTask } from '../../modules/actions/selectedTask';
 import { RootState } from '../../modules/store/store';
 import { updateTaskById } from '../../modules/actions/tasks';
 import { getUserTask } from '../../modules/selectors/userTasks';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 import './TaskItem.scss';
 
@@ -66,6 +68,7 @@ export const TaskItem = ({
   const [selectedValue, setSelectedValue] = useState(
     currentTask ? currentTask.status : statusValues[0],
   );
+  const [isHidden, setIsHidden] = useState(true);
   const modalId = 'remove-task';
 
   // Convert the timestamp to a Date object
@@ -135,6 +138,12 @@ export const TaskItem = ({
     dispatch(updateTaskById({ status: newValue }, _id, pid) as any);
   };
 
+  const handleToggleVisibility = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+
+    setIsHidden(!isHidden);
+  };
+
   return (
     <Draggable draggableId={task.taskId} index={index}>
       {(provided) => (
@@ -188,59 +197,84 @@ export const TaskItem = ({
             >
               <MoreVertIcon className='item__icon' />
             </Button>
-            <div className='task-item__select-wrapper'>
-              <Typography
-                variant='inherit'
-                sx={{ color: '#979797' }}
-              >{`${formattedDate} ${formattedTime}`}</Typography>
-              <TaskStatusSelect
-                id={_id}
-                selectedValue={selectedValue}
-                setSelectedValue={setSelectedValue}
-                valuesArray={statusValues}
-              />
-            </div>
-            {lastAction && firstLetter && (
-              <div className='task-item__align-center'>
-                <Avatar
-                  alt='Remy Sharp'
-                  // src={logoLink}
-                  sx={{
-                    bgcolor: () => backgroundColor(firstLetter),
-                    width: 20,
-                    height: 20,
-                    fontSize: '.7rem',
-                  }}
-                >
-                  {firstLetter}
-                </Avatar>
-                <Typography variant='inherit' className='task-item__text'>
-                  {formattedShortDate}:
-                </Typography>
-                <Typography
-                  variant='inherit'
-                  className='task-item__text'
-                  sx={{
-                    minWidth: '80px',
-                  }}
-                >
-                  {lastAction.description}
-                </Typography>
-                {!isFilesInfo && (
-                  <>
-                    <div style={{ marginLeft: '5px' }}>&#8594;</div>
+            {!isHidden && (
+              <>
+                <div className='task-item__select-wrapper'>
+                  <Typography
+                    variant='inherit'
+                    sx={{ color: '#979797' }}
+                  >{`${formattedDate} ${formattedTime}`}</Typography>
+                  <TaskStatusSelect
+                    id={_id}
+                    selectedValue={selectedValue}
+                    setSelectedValue={setSelectedValue}
+                    valuesArray={statusValues}
+                  />
+                </div>
+                {lastAction && firstLetter && (
+                  <div className='task-item__align-center'>
+                    <Avatar
+                      alt='Remy Sharp'
+                      // src={logoLink}
+                      sx={{
+                        bgcolor: () => backgroundColor(firstLetter),
+                        width: 20,
+                        height: 20,
+                        fontSize: '.7rem',
+                      }}
+                    >
+                      {firstLetter}
+                    </Avatar>
+                    <Typography variant='inherit' className='task-item__text'>
+                      {formattedShortDate}:
+                    </Typography>
                     <Typography
                       variant='inherit'
-                      className='task-item__value-text'
+                      className='task-item__text'
+                      sx={{
+                        minWidth: '80px',
+                      }}
                     >
-                      {isStatusInfo
-                        ? getStatusLabel(lastAction.newValue)
-                        : lastAction.newValue}
+                      {lastAction.description}
                     </Typography>
+                    {!isFilesInfo && (
+                      <>
+                        <div style={{ marginLeft: '5px' }}>&#8594;</div>
+                        <Typography
+                          variant='inherit'
+                          className='task-item__value-text'
+                        >
+                          {isStatusInfo
+                            ? getStatusLabel(lastAction.newValue)
+                            : lastAction.newValue}
+                        </Typography>
+                      </>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className='task-item__toggle-button'>
+              <Button
+                icon
+                transparent
+                onClick={handleToggleVisibility}
+                customClassName='task-item__toggled-btn'
+              >
+                {isHidden ? (
+                  <>
+                    Показати
+                    <ExpandMoreIcon />
+                  </>
+                ) : (
+                  <>
+                    Приховати
+                    <ExpandLessIcon />
                   </>
                 )}
-              </div>
-            )}
+              </Button>
+            </div>
           </Paper>
         </div>
       )}

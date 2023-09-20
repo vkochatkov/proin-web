@@ -38,4 +38,9 @@
   &__checkbox-wrapper {
     display: flex;
   }
+
+  &__toggled-btn {
+    display: flex;
+    align-items: center;
+  }
 }
