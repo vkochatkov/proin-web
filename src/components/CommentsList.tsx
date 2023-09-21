@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentBox } from './CommentBox';
 import { DynamicInput } from './FormComponent/DynamicInput';

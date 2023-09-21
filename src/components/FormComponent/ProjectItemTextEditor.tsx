@@ -32,7 +32,6 @@ export const ProjectItemTextEditor = ({
 }: IProps) => {
   const projects = useSelector(getCurrentProjects);
   const { pid } = useParams();
-  const { token } = useSelector(getAuth);
   const dispatch = useDispatch();
   const { inputHandler } = useForm(
     {
@@ -41,7 +40,7 @@ export const ProjectItemTextEditor = ({
         isValid: true,
       },
     },
-    true
+    true,
   );
   const { saveChanges } = useDebounce();
 
@@ -57,7 +56,7 @@ export const ProjectItemTextEditor = ({
               (subProject: Project) =>
                 subProject._id === id
                   ? { ...subProject, [inputKey]: value }
-                  : subProject
+                  : subProject,
             );
             return { ...p, subProjects: updatedSubProjects };
           }
@@ -65,7 +64,7 @@ export const ProjectItemTextEditor = ({
         });
 
         const updatedProject = updatedProjects.find(
-          (project) => project._id === pid
+          (project) => project._id === pid,
         );
 
         if (!updatedProject) return;
@@ -78,19 +77,19 @@ export const ProjectItemTextEditor = ({
         };
 
         updatedProjects = projects.map((p) =>
-          p._id === id ? updatedProject : p
+          p._id === id ? updatedProject : p,
         );
       }
 
       saveChanges(() =>
-        dispatch(updateProject({ [inputKey]: value }, id) as any)
+        dispatch(updateProject({ [inputKey]: value }, id) as any),
       );
 
       dispatch(updateProjectsSuccess(updatedProjects));
       inputHandler(inputKey, value, isValid);
     },
 
-    [id, inputHandler, dispatch]
+    [id, inputHandler, dispatch],
   );
 
   return (
@@ -106,11 +105,11 @@ export const ProjectItemTextEditor = ({
             isUpdateValue={true}
             project={project}
             isActive={isActive}
-            className="project-item-text-editor__input"
+            className='project-item-text-editor__input'
           />
         </div>
       ) : (
-        <p className="item__name">{name}</p>
+        <p className='item__name'>{name}</p>
       )}
     </>
   );

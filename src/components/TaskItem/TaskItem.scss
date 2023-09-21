@@ -29,11 +29,16 @@
     margin-bottom: 10px;
   }
 
-  &__btn {
-    position: absolute;
-    top: 15px;
-    right: 5px;
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
   }
+
+  // &__btn {
+  //   position: absolute;
+  //   top: 15px;
+  //   right: 5px;
+  // }
 
   &__checkbox-wrapper {
     display: flex;
@@ -42,5 +47,18 @@
   &__toggled-btn {
     display: flex;
     align-items: center;
+  }
+
+  &__toggle-button {
+    display: flex;
+    justify-content: end;
+  }
+
+  &__section.hidden {
+    height: 0; /* Hide the element by reducing its height to 0 */
+    opacity: 0; /* Make it transparent */
+    padding: 0; /* Optionally remove padding to collapse the element */
+    margin: 0; /* Optionally remove margin */
+    overflow: hidden; /* Hide overflow content */
   }
 }

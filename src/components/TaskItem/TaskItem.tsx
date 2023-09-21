@@ -25,6 +25,7 @@ import { updateTaskById } from '../../modules/actions/tasks';
 import { getUserTask } from '../../modules/selectors/userTasks';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { getCurrentUserProject } from '../../modules/selectors/mainProjects';
 
 import './TaskItem.scss';
 
@@ -37,7 +38,7 @@ export const TaskItem = ({
   index: number;
   generateNavigationString: (id: string) => void;
 }) => {
-  const { timestamp, actions, _id, status } = task;
+  const { timestamp, actions, _id, status, projectId } = task;
   const navigate = useNavigate();
   const { pid } = useParams();
   const dispatch = useDispatch();
@@ -70,6 +71,9 @@ export const TaskItem = ({
   );
   const [isHidden, setIsHidden] = useState(true);
   const modalId = 'remove-task';
+  const currentProject = useSelector((state: RootState) =>
+    getCurrentUserProject(state)(projectId),
+  );
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -168,93 +172,104 @@ export const TaskItem = ({
                 Видалити
               </MenuItem>
             </Menu>
-            <div className='task-item__checkbox-wrapper'>
-              <Checkbox
-                sx={{
-                  padding: 0,
-                  marginRight: '10px',
-                }}
-                checked={checked}
-                onChange={handleChangeCeckbox}
-                inputProps={{ 'aria-label': 'controlled' }}
-              />
+            {currentProject && !pid && (
               <Typography
                 sx={{
-                  marginRight: '10px',
                   whiteSpace: 'nowrap',
                   textOverflow: 'ellipsis',
                   overflow: 'hidden',
+                  fontWeight: 'bold',
                 }}
               >
-                {task.name}
+                {currentProject.projectName}
               </Typography>
+            )}
+            <div className='task-item__wrapper'>
+              <div className='task-item__checkbox-wrapper'>
+                <Checkbox
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                  }}
+                  checked={checked}
+                  onChange={handleChangeCeckbox}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+                <Typography
+                  sx={{
+                    marginRight: '10px',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {task.name}
+                </Typography>
+              </div>
+              <Button
+                icon
+                transparent
+                customClassName='task-item__btn'
+                onClick={handleContextMenu}
+              >
+                <MoreVertIcon className='item__icon' />
+              </Button>
             </div>
-            <Button
-              icon
-              transparent
-              customClassName='task-item__btn'
-              onClick={handleContextMenu}
-            >
-              <MoreVertIcon className='item__icon' />
-            </Button>
-            {!isHidden && (
-              <>
-                <div className='task-item__select-wrapper'>
+            <div className={`task-item__section ${isHidden ? 'hidden' : ''}`}>
+              <div className='task-item__select-wrapper'>
+                <Typography
+                  variant='inherit'
+                  sx={{ color: '#979797' }}
+                >{`${formattedDate} ${formattedTime}`}</Typography>
+                <TaskStatusSelect
+                  id={_id}
+                  selectedValue={selectedValue}
+                  setSelectedValue={setSelectedValue}
+                  valuesArray={statusValues}
+                />
+              </div>
+              {lastAction && firstLetter && (
+                <div className='task-item__align-center'>
+                  <Avatar
+                    alt='Remy Sharp'
+                    // src={logoLink}
+                    sx={{
+                      bgcolor: () => backgroundColor(firstLetter),
+                      width: 20,
+                      height: 20,
+                      fontSize: '.7rem',
+                    }}
+                  >
+                    {firstLetter}
+                  </Avatar>
+                  <Typography variant='inherit' className='task-item__text'>
+                    {formattedShortDate}:
+                  </Typography>
                   <Typography
                     variant='inherit'
-                    sx={{ color: '#979797' }}
-                  >{`${formattedDate} ${formattedTime}`}</Typography>
-                  <TaskStatusSelect
-                    id={_id}
-                    selectedValue={selectedValue}
-                    setSelectedValue={setSelectedValue}
-                    valuesArray={statusValues}
-                  />
+                    className='task-item__text'
+                    sx={{
+                      minWidth: '80px',
+                    }}
+                  >
+                    {lastAction.description}
+                  </Typography>
+                  {!isFilesInfo && (
+                    <>
+                      <div style={{ marginLeft: '5px' }}>&#8594;</div>
+                      <Typography
+                        variant='inherit'
+                        className='task-item__value-text'
+                      >
+                        {isStatusInfo
+                          ? getStatusLabel(lastAction.newValue)
+                          : lastAction.newValue}
+                      </Typography>
+                    </>
+                  )}
                 </div>
-                {lastAction && firstLetter && (
-                  <div className='task-item__align-center'>
-                    <Avatar
-                      alt='Remy Sharp'
-                      // src={logoLink}
-                      sx={{
-                        bgcolor: () => backgroundColor(firstLetter),
-                        width: 20,
-                        height: 20,
-                        fontSize: '.7rem',
-                      }}
-                    >
-                      {firstLetter}
-                    </Avatar>
-                    <Typography variant='inherit' className='task-item__text'>
-                      {formattedShortDate}:
-                    </Typography>
-                    <Typography
-                      variant='inherit'
-                      className='task-item__text'
-                      sx={{
-                        minWidth: '80px',
-                      }}
-                    >
-                      {lastAction.description}
-                    </Typography>
-                    {!isFilesInfo && (
-                      <>
-                        <div style={{ marginLeft: '5px' }}>&#8594;</div>
-                        <Typography
-                          variant='inherit'
-                          className='task-item__value-text'
-                        >
-                          {isStatusInfo
-                            ? getStatusLabel(lastAction.newValue)
-                            : lastAction.newValue}
-                        </Typography>
-                      </>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-
+              )}
+            </div>
             <div className='task-item__toggle-button'>
               <Button
                 icon
@@ -264,12 +279,10 @@ export const TaskItem = ({
               >
                 {isHidden ? (
                   <>
-                    Показати
                     <ExpandMoreIcon />
                   </>
                 ) : (
                   <>
-                    Приховати
                     <ExpandLessIcon />
                   </>
                 )}

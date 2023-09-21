@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Card } from '../components/UIElements/Card';
 import { Input } from '../components/FormElement/Input';
 import { Button } from '../components/FormElement/Button';
