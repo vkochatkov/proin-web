@@ -32,6 +32,7 @@ export interface Project {
   creator: string;
   status?: string;
   comments?: IComment[];
+  subProjects: Project[];
   [key: string]: any;
 }
 

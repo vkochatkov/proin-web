@@ -25,6 +25,7 @@ export const ProjectSelect = ({ selectedValue, handleChange }: IProps) => {
   const filtered = projects
     .filter((project) => {
       return projects.every((p) => {
+        //@ts-ignore
         return !p.subProjects.includes(project._id);
       });
     })

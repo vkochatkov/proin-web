@@ -1,0 +1,9 @@
+.toolbar {
+    display: flex;
+    height: 40px;
+
+    &__btns-wrapper {
+        display: flex;
+        margin: 0 0 0 auto;
+    }
+}

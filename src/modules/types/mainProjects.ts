@@ -3,8 +3,8 @@ import { Project } from '../reducers/mainProjects';
 export interface IProject {
   projectName: string;
   _id: string;
-  subProjects: string[];
-  classifier: string[]
+  subProjects: Project[];
+  classifier: string[];
 }
 
 export interface ISubProjectAction {

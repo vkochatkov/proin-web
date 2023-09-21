@@ -1,5 +1,27 @@
+import { Project } from '../reducers/mainProjects';
 import { RootState } from '../store/store';
 import { createSelector } from 'reselect';
+import { IProject } from '../types/mainProjects';
+
+export const findProjectById = (
+  projectId: string,
+  projects: (IProject | Project)[],
+): IProject | Project | undefined => {
+  for (const project of projects) {
+    if (project._id === projectId) {
+      return project;
+    }
+
+    if (project.subProjects && project.subProjects.length > 0) {
+      const foundProject = findProjectById(projectId, project.subProjects);
+      if (foundProject) {
+        return foundProject;
+      }
+    }
+  }
+
+  return undefined; // Project not found
+};
 
 export const getCurrentProject = (state: RootState) => {
   return state.mainProjects.currentProject;
@@ -19,7 +41,16 @@ export const getAllUserProjects = (state: RootState) =>
 
 export const getCurrentUserProject = createSelector(
   getAllUserProjects,
-  (projects) => (id: string) => projects.find((project) => project._id === id),
+  (projects) => (id: string) => {
+    const project = projects.find((p) => p._id === id);
+
+    if (!project) {
+      // If the project is not found in top-level projects, search in subProjects
+      return findProjectById(id, projects);
+    }
+
+    return project;
+  },
 );
 
 export const getSelectedProjectId = (state: RootState) =>
