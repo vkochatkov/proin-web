@@ -8,6 +8,7 @@ import { getAllUserTasks } from '../modules/selectors/userTasks';
 import { ITask } from '../modules/types/tasks';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
 import { Toolbar } from '../components/Toolbar/Toolbar';
+import { useDebounce } from '../hooks/useDebounce';
 
 type Props = {};
 
@@ -15,6 +16,8 @@ const TaskListPage: React.FC<Props> = () => {
   const tasks = useSelector(getAllUserTasks);
   const dispatch = useDispatch();
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const [filteredTasks, setFilteredTasks] = useState(tasks);
+  const { saveChanges } = useDebounce();
 
   useEffect(() => {
     dispatch(fetchAllUserTasks() as any);
@@ -28,6 +31,22 @@ const TaskListPage: React.FC<Props> = () => {
     return `/tasks/${id}`;
   };
 
+  const handleSearching = (props: {
+    action: string;
+    type: string;
+    newValue: string;
+  }) => {
+    const { newValue } = props;
+
+    saveChanges(() => {
+      setFilteredTasks(
+        tasks.filter((task) =>
+          task.name.toLowerCase().includes(newValue.toLowerCase()),
+        ),
+      );
+    });
+  };
+
   return (
     <>
       <Container
@@ -38,6 +57,7 @@ const TaskListPage: React.FC<Props> = () => {
         <Toolbar
           showSearchInput={showSearchInput}
           setShowSearchInput={setShowSearchInput}
+          handleSearching={handleSearching}
         />
         <Card
           sx={{
@@ -48,7 +68,7 @@ const TaskListPage: React.FC<Props> = () => {
           }}
         >
           <TaskItemList
-            tasks={tasks}
+            tasks={filteredTasks}
             changeOrder={handleSaveTaskItemOrder}
             generateNavigationString={handleGenerateNavigationQuery}
           />

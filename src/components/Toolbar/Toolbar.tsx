@@ -10,31 +10,36 @@ import './Toolbar.scss';
 interface Props {
   showSearchInput: boolean;
   setShowSearchInput: Dispatch<SetStateAction<boolean>>;
+  handleSearching: (props: {
+    action: string;
+    type: string;
+    newValue: string;
+    value: string;
+  }) => void;
 }
 
 export const Toolbar: React.FC<Props> = ({
   showSearchInput,
   setShowSearchInput,
+  handleSearching,
 }) => {
-  const handleCreateNewTask = (props: {
-    action: string;
-    type: string;
-    newValue: string;
-  }) => {
-    const { newValue } = props;
-  };
   return (
     <div className='toolbar'>
       <ConfirmInputComponent
         isActive={showSearchInput}
-        onConfirm={handleCreateNewTask}
+        onConfirm={handleSearching}
         setIsActive={setShowSearchInput}
         type={'task'}
         action={'addTask'}
         placeholder=' пошук'
+        isSearching
       />
       <div className='toolbar__btns-wrapper'>
-        <Button icon transparent onClick={() => setShowSearchInput(true)}>
+        <Button
+          icon
+          transparent
+          onClick={() => setShowSearchInput((prevState) => !prevState)}
+        >
           <SearchIcon />
         </Button>
         <Button icon transparent>

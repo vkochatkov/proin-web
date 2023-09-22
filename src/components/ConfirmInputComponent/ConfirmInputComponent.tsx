@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Action } from 'redux-act';
 import { Button } from '../FormElement/Button';
 import CheckIcon from '@mui/icons-material/Check';
@@ -21,6 +21,7 @@ interface IProps {
   type: string;
   value?: string;
   placeholder: string;
+  isSearching?: boolean;
 }
 
 export const ConfirmInputComponent: React.FC<IProps> = ({
@@ -31,6 +32,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
   action,
   type,
   value = '',
+  isSearching,
 }) => {
   const [changedValue, setChangedValue] = useState(value);
 
@@ -39,6 +41,12 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
     setIsActive(false);
     setChangedValue('');
   };
+
+  useEffect(() => {
+    if (isSearching) {
+      onConfirm({ action, type, newValue: changedValue, value });
+    }
+  }, [isSearching, changedValue]);
 
   return (
     <>
@@ -59,9 +67,11 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
             value={changedValue}
             onChange={(e) => setChangedValue(e.target.value)}
           />
-          <Button icon transparent onClick={handleConfirm}>
-            <CheckIcon />
-          </Button>
+          {!isSearching && (
+            <Button icon transparent onClick={handleConfirm}>
+              <CheckIcon />
+            </Button>
+          )}
         </div>
       )}
     </>
