@@ -11,12 +11,14 @@ import './TaskItemList.scss';
 
 interface IProps {
   tasks: ITask[];
+  isDraggable?: boolean;
   changeOrder: (tasks: ITask[]) => void;
   generateNavigationString: (id: string) => void;
 }
 
 export const TaskItemList: React.FC<IProps> = ({
   tasks,
+  isDraggable = false,
   changeOrder,
   generateNavigationString,
 }) => {
@@ -46,26 +48,41 @@ export const TaskItemList: React.FC<IProps> = ({
   return (
     <div className='tasks-items'>
       <div>
-        <DragDropContext
-          onDragEnd={onDragEnd}
-          onDragStart={() => dispatch(setIsDragging(true))}
-        >
-          <Droppable droppableId='droppable'>
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {tasks.map((task, index) => (
-                  <TaskItem
-                    task={task}
-                    index={index}
-                    key={task._id}
-                    generateNavigationString={generateNavigationString}
-                  />
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+        {isDraggable && (
+          <DragDropContext
+            onDragEnd={onDragEnd}
+            onDragStart={() => dispatch(setIsDragging(true))}
+          >
+            <Droppable droppableId='droppable'>
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {tasks.map((task, index) => (
+                    <TaskItem
+                      task={task}
+                      index={index}
+                      key={task._id}
+                      isDraggable={isDraggable}
+                      generateNavigationString={generateNavigationString}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        )}
+        {!isDraggable && (
+          <>
+            {tasks.map((task, index) => (
+              <TaskItem
+                task={task}
+                index={index}
+                key={task._id}
+                generateNavigationString={generateNavigationString}
+              />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

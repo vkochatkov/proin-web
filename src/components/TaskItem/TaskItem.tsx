@@ -29,14 +29,18 @@ import { getCurrentUserProject } from '../../modules/selectors/mainProjects';
 
 import './TaskItem.scss';
 
-export const TaskItem = ({
-  task,
-  index,
-  generateNavigationString,
-}: {
+interface IProps {
   task: ITask;
   index: number;
+  isDraggable?: boolean;
   generateNavigationString: (id: string) => void;
+}
+
+export const TaskItem: React.FC<IProps> = ({
+  task,
+  index,
+  isDraggable = false,
+  generateNavigationString,
 }) => {
   const { timestamp, actions, _id, status, projectId } = task;
   const navigate = useNavigate();
@@ -148,149 +152,153 @@ export const TaskItem = ({
     setIsHidden(!isHidden);
   };
 
-  return (
-    <Draggable draggableId={task.taskId} index={index}>
-      {(provided) => (
-        <div
-          onClick={(e) => handleOpenTaskPage(e)}
-          ref={provided.innerRef}
-          className='task-item'
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
+  const renderItem = () => (
+    <Paper style={taskWrapperStyle}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorPosition={{
+          top: contextMenuPosition.top,
+          left: contextMenuPosition.left,
+        }}
+      >
+        <MenuItem onClick={() => handleOpenModal(modalId)}>Видалити</MenuItem>
+      </Menu>
+      {currentProject && !pid && (
+        <Typography
+          sx={{
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            fontWeight: 'bold',
+          }}
         >
-          <Paper style={taskWrapperStyle}>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorPosition={{
-                top: contextMenuPosition.top,
-                left: contextMenuPosition.left,
+          {currentProject.projectName}
+        </Typography>
+      )}
+      <div className='task-item__wrapper'>
+        <div className='task-item__checkbox-wrapper'>
+          <Checkbox
+            sx={{
+              padding: 0,
+              marginRight: '10px',
+            }}
+            checked={checked}
+            onChange={handleChangeCeckbox}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+          <Typography
+            sx={{
+              marginRight: '10px',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            }}
+          >
+            {task.name}
+          </Typography>
+        </div>
+        <Button
+          icon
+          transparent
+          customClassName='task-item__btn'
+          onClick={handleContextMenu}
+        >
+          <MoreVertIcon className='item__icon' />
+        </Button>
+      </div>
+      <div className={`task-item__section ${isHidden ? 'hidden' : ''}`}>
+        <div className='task-item__select-wrapper'>
+          <Typography
+            variant='inherit'
+            sx={{ color: '#979797' }}
+          >{`${formattedDate} ${formattedTime}`}</Typography>
+          <TaskStatusSelect
+            id={_id}
+            selectedValue={selectedValue}
+            setSelectedValue={setSelectedValue}
+            valuesArray={statusValues}
+          />
+        </div>
+        {lastAction && firstLetter && (
+          <div className='task-item__align-center'>
+            <Avatar
+              alt='Remy Sharp'
+              // src={logoLink}
+              sx={{
+                bgcolor: () => backgroundColor(firstLetter),
+                width: 20,
+                height: 20,
+                fontSize: '.7rem',
               }}
             >
-              <MenuItem onClick={() => handleOpenModal(modalId)}>
-                Видалити
-              </MenuItem>
-            </Menu>
-            {currentProject && !pid && (
-              <Typography
-                sx={{
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  fontWeight: 'bold',
-                }}
-              >
-                {currentProject.projectName}
-              </Typography>
-            )}
-            <div className='task-item__wrapper'>
-              <div className='task-item__checkbox-wrapper'>
-                <Checkbox
-                  sx={{
-                    padding: 0,
-                    marginRight: '10px',
-                  }}
-                  checked={checked}
-                  onChange={handleChangeCeckbox}
-                  inputProps={{ 'aria-label': 'controlled' }}
-                />
-                <Typography
-                  sx={{
-                    marginRight: '10px',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {task.name}
+              {firstLetter}
+            </Avatar>
+            <Typography variant='inherit' className='task-item__text'>
+              {formattedShortDate}:
+            </Typography>
+            <Typography
+              variant='inherit'
+              className='task-item__text'
+              sx={{
+                minWidth: '80px',
+              }}
+            >
+              {lastAction.description}
+            </Typography>
+            {!isFilesInfo && (
+              <>
+                <div style={{ marginLeft: '5px' }}>&#8594;</div>
+                <Typography variant='inherit' className='task-item__value-text'>
+                  {isStatusInfo
+                    ? getStatusLabel(lastAction.newValue)
+                    : lastAction.newValue}
                 </Typography>
-              </div>
-              <Button
-                icon
-                transparent
-                customClassName='task-item__btn'
-                onClick={handleContextMenu}
-              >
-                <MoreVertIcon className='item__icon' />
-              </Button>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+      <div className='task-item__toggle-button'>
+        <Button
+          icon
+          transparent
+          onClick={handleToggleVisibility}
+          customClassName='task-item__toggled-btn'
+        >
+          {isHidden ? (
+            <>
+              <ExpandMoreIcon />
+            </>
+          ) : (
+            <>
+              <ExpandLessIcon />
+            </>
+          )}
+        </Button>
+      </div>
+    </Paper>
+  );
+
+  return (
+    <>
+      {isDraggable && (
+        <Draggable draggableId={task.taskId} index={index}>
+          {(provided) => (
+            <div
+              onClick={(e) => handleOpenTaskPage(e)}
+              ref={provided.innerRef}
+              className='task-item'
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              {renderItem()}
             </div>
-            <div className={`task-item__section ${isHidden ? 'hidden' : ''}`}>
-              <div className='task-item__select-wrapper'>
-                <Typography
-                  variant='inherit'
-                  sx={{ color: '#979797' }}
-                >{`${formattedDate} ${formattedTime}`}</Typography>
-                <TaskStatusSelect
-                  id={_id}
-                  selectedValue={selectedValue}
-                  setSelectedValue={setSelectedValue}
-                  valuesArray={statusValues}
-                />
-              </div>
-              {lastAction && firstLetter && (
-                <div className='task-item__align-center'>
-                  <Avatar
-                    alt='Remy Sharp'
-                    // src={logoLink}
-                    sx={{
-                      bgcolor: () => backgroundColor(firstLetter),
-                      width: 20,
-                      height: 20,
-                      fontSize: '.7rem',
-                    }}
-                  >
-                    {firstLetter}
-                  </Avatar>
-                  <Typography variant='inherit' className='task-item__text'>
-                    {formattedShortDate}:
-                  </Typography>
-                  <Typography
-                    variant='inherit'
-                    className='task-item__text'
-                    sx={{
-                      minWidth: '80px',
-                    }}
-                  >
-                    {lastAction.description}
-                  </Typography>
-                  {!isFilesInfo && (
-                    <>
-                      <div style={{ marginLeft: '5px' }}>&#8594;</div>
-                      <Typography
-                        variant='inherit'
-                        className='task-item__value-text'
-                      >
-                        {isStatusInfo
-                          ? getStatusLabel(lastAction.newValue)
-                          : lastAction.newValue}
-                      </Typography>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className='task-item__toggle-button'>
-              <Button
-                icon
-                transparent
-                onClick={handleToggleVisibility}
-                customClassName='task-item__toggled-btn'
-              >
-                {isHidden ? (
-                  <>
-                    <ExpandMoreIcon />
-                  </>
-                ) : (
-                  <>
-                    <ExpandLessIcon />
-                  </>
-                )}
-              </Button>
-            </div>
-          </Paper>
-        </div>
+          )}
+        </Draggable>
       )}
-    </Draggable>
+      {!isDraggable && renderItem()}
+    </>
   );
 };

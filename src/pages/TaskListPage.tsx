@@ -13,10 +13,13 @@ import { useDebounce } from '../hooks/useDebounce';
 type Props = {};
 
 const TaskListPage: React.FC<Props> = () => {
+  const defaultSortOption = 'default';
   const tasks = useSelector(getAllUserTasks);
   const dispatch = useDispatch();
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [filteredTasks, setFilteredTasks] = useState(tasks);
+  const [selectedSortOption, setSelectedSortOption] =
+    useState<string>(defaultSortOption);
   const { saveChanges } = useDebounce();
 
   useEffect(() => {
@@ -27,9 +30,7 @@ const TaskListPage: React.FC<Props> = () => {
     dispatch(changeUserTasksOrder(newOrder) as any);
   };
 
-  const handleGenerateNavigationQuery = (id: string) => {
-    return `/tasks/${id}`;
-  };
+  const handleGenerateNavigationQuery = (id: string) => `/tasks/${id}`;
 
   const handleSearching = (props: { newValue: string }) => {
     const { newValue } = props;
@@ -43,6 +44,30 @@ const TaskListPage: React.FC<Props> = () => {
     });
   };
 
+  const handleSortByAddingDate = () => {
+    const sortedTasks = [...tasks].sort((a, b) => {
+      const timestampA = new Date(a.timestamp).getTime();
+      const timestampB = new Date(b.timestamp).getTime();
+      return timestampA - timestampB;
+    });
+
+    setFilteredTasks(sortedTasks);
+    setSelectedSortOption('byAddingDate');
+  };
+
+  const handleSortByDeadline = () => {
+    setSelectedSortOption('byDeadlineDate');
+  };
+
+  const handleSortbyLastCommentDate = () => {
+    setSelectedSortOption('byLastCommentDate');
+  };
+
+  const handleSortByDefault = () => {
+    setFilteredTasks(tasks);
+    setSelectedSortOption('default');
+  };
+
   return (
     <>
       <Container
@@ -52,8 +77,13 @@ const TaskListPage: React.FC<Props> = () => {
       >
         <Toolbar
           showSearchInput={showSearchInput}
+          selectedSortOption={selectedSortOption}
           setShowSearchInput={setShowSearchInput}
           handleSearching={handleSearching}
+          onSortByAddingDate={handleSortByAddingDate}
+          onSortByDeadline={handleSortByDeadline}
+          onSortByLastCommentDate={handleSortbyLastCommentDate}
+          onSortDefaultState={handleSortByDefault}
         />
         <Card
           sx={{
@@ -64,7 +94,10 @@ const TaskListPage: React.FC<Props> = () => {
           }}
         >
           <TaskItemList
-            tasks={filteredTasks}
+            tasks={
+              selectedSortOption === defaultSortOption ? tasks : filteredTasks
+            }
+            isDraggable={selectedSortOption === defaultSortOption}
             changeOrder={handleSaveTaskItemOrder}
             generateNavigationString={handleGenerateNavigationQuery}
           />
