@@ -60,6 +60,22 @@ const TaskListPage: React.FC<Props> = () => {
   };
 
   const handleSortbyLastCommentDate = () => {
+    const sortedTasks = [...tasks].sort((a, b) => {
+      // Get the timestamps of the last comments for both tasks
+      const lastCommentA = a.comments?.length
+        ? a.comments[a.comments.length - 1].timestamp
+        : a.timestamp; // Use task's timestamp if there are no comments
+      const lastCommentB = b.comments?.length
+        ? b.comments[b.comments.length - 1].timestamp
+        : b.timestamp; // Use task's timestamp if there are no comments
+
+      // Compare the timestamps
+      const timestampA = new Date(lastCommentA).getTime();
+      const timestampB = new Date(lastCommentB).getTime();
+      return timestampA - timestampB;
+    });
+
+    setFilteredTasks(sortedTasks);
     setSelectedSortOption('byLastCommentDate');
   };
 

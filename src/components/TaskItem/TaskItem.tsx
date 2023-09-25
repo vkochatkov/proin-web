@@ -298,7 +298,9 @@ export const TaskItem: React.FC<IProps> = ({
           )}
         </Draggable>
       )}
-      {!isDraggable && renderItem()}
+      {!isDraggable && (
+        <div onClick={(e) => handleOpenTaskPage(e)}>{renderItem()}</div>
+      )}
     </>
   );
 };
