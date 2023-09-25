@@ -45,8 +45,12 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
   useEffect(() => {
     if (isSearching) {
       onConfirm({ action, type, newValue: changedValue, value });
+
+      if (!isActive) {
+        setChangedValue('');
+      }
     }
-  }, [isSearching, changedValue]);
+  }, [isSearching, changedValue, isActive]);
 
   return (
     <>

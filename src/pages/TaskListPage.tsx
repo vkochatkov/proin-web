@@ -31,11 +31,7 @@ const TaskListPage: React.FC<Props> = () => {
     return `/tasks/${id}`;
   };
 
-  const handleSearching = (props: {
-    action: string;
-    type: string;
-    newValue: string;
-  }) => {
+  const handleSearching = (props: { newValue: string }) => {
     const { newValue } = props;
 
     saveChanges(() => {
