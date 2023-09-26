@@ -14,7 +14,7 @@ interface IProps {
     newValue: string;
     value: string;
   }) => void;
-  setIsActive:
+  setIsActive?:
     | Dispatch<SetStateAction<boolean>>
     | ((value: boolean) => Action<boolean, {}>);
   action: string;
@@ -25,7 +25,7 @@ interface IProps {
 }
 
 export const ConfirmInputComponent: React.FC<IProps> = ({
-  isActive,
+  isActive = false,
   onConfirm,
   setIsActive,
   placeholder,
@@ -38,7 +38,11 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
 
   const handleConfirm = () => {
     onConfirm({ action, type, newValue: changedValue, value });
-    setIsActive(false);
+
+    if (setIsActive) {
+      setIsActive(false);
+    }
+
     setChangedValue('');
   };
 
@@ -58,7 +62,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
         <div
           className='confirm-input__input-wrapper'
           onBlur={() => {
-            if (!changedValue) {
+            if (!changedValue && setIsActive) {
               setIsActive(false);
             }
           }}

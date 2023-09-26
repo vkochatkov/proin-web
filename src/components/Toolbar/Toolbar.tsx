@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -11,9 +10,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import './Toolbar.scss';
 
 interface Props {
-  showSearchInput: boolean;
   selectedSortOption: string;
-  setShowSearchInput: Dispatch<SetStateAction<boolean>>;
   handleSearching: (props: {
     action: string;
     type: string;
@@ -27,9 +24,7 @@ interface Props {
 }
 
 export const Toolbar: React.FC<Props> = ({
-  showSearchInput,
   selectedSortOption,
-  setShowSearchInput,
   handleSearching,
   onSortByAddingDate,
   onSortByDeadline,
@@ -59,22 +54,17 @@ export const Toolbar: React.FC<Props> = ({
   return (
     <div className='toolbar'>
       <ConfirmInputComponent
-        isActive={showSearchInput}
+        isActive={true}
         onConfirm={handleSearching}
-        setIsActive={setShowSearchInput}
         type={'task'}
         action={'addTask'}
         placeholder=' пошук'
         isSearching
       />
       <div className='toolbar__btns-wrapper'>
-        <Button
-          icon
-          transparent
-          onClick={() => setShowSearchInput((prevState) => !prevState)}
-        >
+        {/* <Button icon transparent>
           <SearchIcon />
-        </Button>
+        </Button> */}
         <Button icon transparent onClick={handleContextMenu}>
           <SortIcon />
         </Button>
