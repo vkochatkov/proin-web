@@ -22,6 +22,7 @@ const TaskListPage: React.FC<Props> = () => {
     useState<string>(defaultSortOption);
   const { saveChanges } = useDebounce();
   const [isSearching, setIsSearching] = useState(false);
+  const [searchedValue, setSearchedValue] = useState('');
 
   useEffect(() => {
     dispatch(fetchAllUserTasks() as any);
@@ -51,6 +52,8 @@ const TaskListPage: React.FC<Props> = () => {
           : tasks,
       );
     });
+
+    setSearchedValue(newValue);
 
     if (!newValue) {
       const timeoutId = setTimeout(() => {
@@ -98,7 +101,11 @@ const TaskListPage: React.FC<Props> = () => {
   };
 
   const handleSortByDefault = () => {
-    setFilteredTasks(searchedTasks);
+    setFilteredTasks(
+      tasks.filter((task) =>
+        task.name.toLowerCase().includes(searchedValue.toLowerCase()),
+      ),
+    );
     setSelectedSortOption('default');
   };
 
