@@ -36,6 +36,7 @@ export const ProjectTasksComponent = () => {
       <CreateTaskInput />
       <TaskItemList
         tasks={tasks}
+        isDraggable
         changeOrder={handleChangeTaskItemOrder}
         generateNavigationString={handleGenerateNavigationQuery}
       />
