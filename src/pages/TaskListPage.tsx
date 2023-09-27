@@ -28,28 +28,38 @@ const TaskListPage: React.FC<Props> = () => {
     dispatch(fetchAllUserTasks() as any);
   }, [dispatch]);
 
-  useEffect(() => {
-    setSearchedTasks(filteredTasks);
-  }, [filteredTasks]);
-
   const handleSaveTaskItemOrder = (newOrder: ITask[]) => {
     dispatch(changeUserTasksOrder(newOrder) as any);
   };
 
   const handleGenerateNavigationQuery = (id: string) => `/tasks/${id}`;
 
+  const handleFilteringTasks = ({
+    value,
+    sortedTasks,
+  }: {
+    value?: string;
+    sortedTasks?: ITask[];
+  }) =>
+    (sortedTasks || tasks).filter((task) =>
+      task.name.toLowerCase().includes((value ?? searchedValue).toLowerCase()),
+    );
+
   const handleSearching = (props: { newValue: string }) => {
     const { newValue } = props;
 
-    setIsSearching(true);
+    if (newValue) {
+      setIsSearching(true);
+    }
 
     saveChanges(() => {
       setSearchedTasks(
         newValue
-          ? tasks.filter((task) =>
-              task.name.toLowerCase().includes(newValue.toLowerCase()),
-            )
-          : tasks,
+          ? handleFilteringTasks({
+              value: newValue,
+              sortedTasks: filteredTasks,
+            })
+          : filteredTasks,
       );
     });
 
@@ -58,6 +68,7 @@ const TaskListPage: React.FC<Props> = () => {
     if (!newValue) {
       const timeoutId = setTimeout(() => {
         setIsSearching(false);
+        handleSortBySelectedOption();
       }, 1000);
 
       // Clear the timeout on component unmount or when searchedValue changes
@@ -66,13 +77,13 @@ const TaskListPage: React.FC<Props> = () => {
   };
 
   const handleSortByAddingDate = () => {
-    const sortedTasks = [...searchedTasks].sort((a, b) => {
+    const sortedTasks = [...tasks].sort((a, b) => {
       const timestampA = new Date(a.timestamp).getTime();
       const timestampB = new Date(b.timestamp).getTime();
       return timestampA - timestampB;
     });
-
     setFilteredTasks(sortedTasks);
+    setSearchedTasks(handleFilteringTasks({ sortedTasks }));
     setSelectedSortOption('byAddingDate');
   };
 
@@ -81,7 +92,7 @@ const TaskListPage: React.FC<Props> = () => {
   };
 
   const handleSortbyLastCommentDate = () => {
-    const sortedTasks = [...searchedTasks].sort((a, b) => {
+    const sortedTasks = [...tasks].sort((a, b) => {
       // Get the timestamps of the last comments for both tasks
       const lastCommentA = a.comments?.length
         ? a.comments[a.comments.length - 1].timestamp
@@ -97,17 +108,32 @@ const TaskListPage: React.FC<Props> = () => {
     });
 
     setFilteredTasks(sortedTasks);
+    setSearchedTasks(handleFilteringTasks({ sortedTasks }));
     setSelectedSortOption('byLastCommentDate');
   };
 
   const handleSortByDefault = () => {
-    setFilteredTasks(
-      tasks.filter((task) =>
-        task.name.toLowerCase().includes(searchedValue.toLowerCase()),
-      ),
-    );
+    setFilteredTasks(tasks);
+    setSearchedTasks(handleFilteringTasks({ sortedTasks: tasks }));
     setSelectedSortOption('default');
   };
+
+  function handleSortBySelectedOption() {
+    switch (selectedSortOption) {
+      case 'byAddingDate':
+        handleSortByAddingDate();
+        break;
+      case 'byDeadlineDate':
+        handleSortByDeadline();
+        break;
+      case 'byLastCommentDate':
+        handleSortbyLastCommentDate();
+        break;
+      default:
+        handleSortByDefault();
+        break;
+    }
+  }
 
   return (
     <>
@@ -138,9 +164,7 @@ const TaskListPage: React.FC<Props> = () => {
                 ? isSearching
                   ? searchedTasks
                   : tasks
-                : isSearching
-                ? searchedTasks
-                : filteredTasks
+                : searchedTasks
             }
             isDraggable={
               selectedSortOption === defaultSortOption && !isSearching
