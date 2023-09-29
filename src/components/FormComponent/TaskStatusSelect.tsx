@@ -1,49 +1,37 @@
-import { Dispatch, SetStateAction } from 'react';
-import { useDispatch } from 'react-redux';
+import { CSSProperties } from 'react';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
 import { CustomSelect } from './CustomSelect';
-import { updateTaskById } from '../../modules/actions/tasks';
-import { useParams } from 'react-router-dom';
 import { getStatusLabel } from '../../utils/utils';
 
 interface IProps {
-  id: string;
   selectedValue: string;
-  setSelectedValue: Dispatch<SetStateAction<string>>;
   valuesArray: string[];
+  handleChange: (e: SelectChangeEvent) => void;
+  isGetStatusLabel?: boolean;
+  style?: CSSProperties;
 }
 
 export const TaskStatusSelect = ({
-  id,
   selectedValue,
-  setSelectedValue,
+  isGetStatusLabel = false,
   valuesArray,
+  handleChange,
+  style,
 }: IProps) => {
-  const dispatch = useDispatch();
-  const { pid } = useParams();
-
-  const handleChange = (e: SelectChangeEvent) => {
-    const newValue = e.target.value;
-
-    setSelectedValue(newValue);
-
-    dispatch(updateTaskById({ status: newValue }, id, pid) as any);
-  };
-
   return (
     <CustomSelect
       label={''}
       onChange={handleChange}
       selectedValue={selectedValue}
-      styling={{ width: '45%' }}
+      styling={style}
     >
-      {valuesArray.map((status) => (
+      {valuesArray.map((value) => (
         <MenuItem
-          key={status}
+          key={value}
           onClick={(e) => e.stopPropagation()}
-          value={status}
+          value={value}
         >
-          {getStatusLabel(status)}
+          {isGetStatusLabel ? getStatusLabel(value) : value}
         </MenuItem>
       ))}
     </CustomSelect>

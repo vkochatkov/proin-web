@@ -5,6 +5,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 import { ITask } from '../../modules/types/tasks';
@@ -152,6 +153,14 @@ export const TaskItem: React.FC<IProps> = ({
     setIsHidden(!isHidden);
   };
 
+  const handleChangeTaskStatus = (e: SelectChangeEvent) => {
+    const newValue = e.target.value;
+
+    setSelectedValue(newValue);
+
+    dispatch(updateTaskById({ status: newValue }, _id, pid) as any);
+  };
+
   const renderItem = () => (
     <Paper style={taskWrapperStyle}>
       <Menu
@@ -215,10 +224,13 @@ export const TaskItem: React.FC<IProps> = ({
             sx={{ color: '#979797' }}
           >{`${formattedDate} ${formattedTime}`}</Typography>
           <TaskStatusSelect
-            id={_id}
             selectedValue={selectedValue}
-            setSelectedValue={setSelectedValue}
             valuesArray={statusValues}
+            handleChange={handleChangeTaskStatus}
+            isGetStatusLabel
+            style={{
+              width: '45%',
+            }}
           />
         </div>
         {lastAction && firstLetter && (

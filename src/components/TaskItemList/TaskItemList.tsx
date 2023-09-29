@@ -8,6 +8,7 @@ import { clearInputState } from '../../modules/actions/input';
 import { ITask } from '../../modules/types/tasks';
 import { Toolbar } from '../Toolbar/Toolbar';
 import { useFilter } from '../../hooks/useFilter';
+import { FilterModal } from '../Modals/FilterModal';
 
 import './TaskItemList.scss';
 
@@ -25,7 +26,6 @@ export const TaskItemList: React.FC<IProps> = ({
   const dispatch = useDispatch();
   const {
     searchedTasks,
-    sortedTasks,
     isSearching,
     selectedSortOption,
     defaultSortOption,
@@ -42,6 +42,7 @@ export const TaskItemList: React.FC<IProps> = ({
         ? searchedTasks
         : tasks
       : searchedTasks;
+  const modalId = 'filter-tasks-modal';
 
   useEffect(() => {
     return () => {
@@ -64,53 +65,64 @@ export const TaskItemList: React.FC<IProps> = ({
     dispatch(setIsDragging(false));
   };
 
+  const handleFilterTasksList = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+  };
+
   return (
-    <div className='tasks-items'>
-      <Toolbar
-        selectedSortOption={selectedSortOption}
-        handleSearching={handleSearching}
-        onSortByAddingDate={handleSortByAddingDate}
-        onSortByDeadline={handleSortByDeadline}
-        onSortByLastCommentDate={handleSortbyLastCommentDate}
-        onSortDefaultState={handleSortByDefault}
+    <>
+      <FilterModal
+        submitHandler={handleFilterTasksList}
+        modalId={modalId}
+        label={'Виберіть фільтр для задач'}
       />
-      <div>
-        {isDraggable && (
-          <DragDropContext
-            onDragEnd={onDragEnd}
-            onDragStart={() => dispatch(setIsDragging(true))}
-          >
-            <Droppable droppableId='droppable'>
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  {tasks.map((task, index) => (
-                    <TaskItem
-                      task={task}
-                      index={index}
-                      key={task._id}
-                      isDraggable={isDraggable}
-                      generateNavigationString={generateNavigationString}
-                    />
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-        )}
-        {!isDraggable && (
-          <>
-            {sortableTasks.map((task, index) => (
-              <TaskItem
-                task={task}
-                index={index}
-                key={task._id}
-                generateNavigationString={generateNavigationString}
-              />
-            ))}
-          </>
-        )}
+      <div className='tasks-items'>
+        <Toolbar
+          selectedSortOption={selectedSortOption}
+          handleSearching={handleSearching}
+          onSortByAddingDate={handleSortByAddingDate}
+          onSortByDeadline={handleSortByDeadline}
+          onSortByLastCommentDate={handleSortbyLastCommentDate}
+          onSortDefaultState={handleSortByDefault}
+        />
+        <div>
+          {isDraggable && (
+            <DragDropContext
+              onDragEnd={onDragEnd}
+              onDragStart={() => dispatch(setIsDragging(true))}
+            >
+              <Droppable droppableId='droppable'>
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {tasks.map((task, index) => (
+                      <TaskItem
+                        task={task}
+                        index={index}
+                        key={task._id}
+                        isDraggable={isDraggable}
+                        generateNavigationString={generateNavigationString}
+                      />
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
+          {!isDraggable && (
+            <>
+              {sortableTasks.map((task, index) => (
+                <TaskItem
+                  task={task}
+                  index={index}
+                  key={task._id}
+                  generateNavigationString={generateNavigationString}
+                />
+              ))}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

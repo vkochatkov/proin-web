@@ -5,6 +5,8 @@ import { ConfirmInputComponent } from '../ConfirmInputComponent/ConfirmInputComp
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { Menu, MenuItem } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import { openModal } from '../../modules/actions/modal';
+import { useDispatch } from 'react-redux';
 
 import './Toolbar.scss';
 
@@ -30,6 +32,9 @@ export const Toolbar: React.FC<Props> = ({
   onSortByLastCommentDate,
   onSortDefaultState,
 }) => {
+  const modalId = 'filter-tasks-modal';
+  const dispatch = useDispatch();
+
   const { handleClose, contextMenuPosition, anchorEl, handleContextMenu } =
     useContextMenu();
 
@@ -48,6 +53,10 @@ export const Toolbar: React.FC<Props> = ({
   const handleSortByDefault = () => {
     handleClose();
     onSortDefaultState();
+  };
+
+  const handleOpenFilterModal = () => {
+    dispatch(openModal({ id: modalId }));
   };
 
   return (
@@ -95,7 +104,7 @@ export const Toolbar: React.FC<Props> = ({
             <span> {selectedSortOption === 'default' && <CheckIcon />}</span>
           </MenuItem>
         </Menu>
-        <Button icon transparent>
+        <Button icon transparent onClick={handleOpenFilterModal}>
           <FilterListIcon />
         </Button>
       </div>
