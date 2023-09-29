@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Container } from '@mui/material';
 import { TaskItemList } from '../components/TaskItemList/TaskItemList';
@@ -7,8 +7,6 @@ import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
 import { ITask } from '../modules/types/tasks';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
-import { Toolbar } from '../components/Toolbar/Toolbar';
-import { useDebounce } from '../hooks/useDebounce';
 
 type Props = {};
 
