@@ -1,4 +1,3 @@
-import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Button } from '../FormElement/Button';

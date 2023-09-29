@@ -6,23 +6,42 @@ import { reorder } from '../../utils/utils';
 import { setIsDragging } from '../../modules/actions/dragging';
 import { clearInputState } from '../../modules/actions/input';
 import { ITask } from '../../modules/types/tasks';
+import { Toolbar } from '../Toolbar/Toolbar';
+import { useFilter } from '../../hooks/useFilter';
 
 import './TaskItemList.scss';
 
 interface IProps {
   tasks: ITask[];
-  isDraggable?: boolean;
   changeOrder: (tasks: ITask[]) => void;
   generateNavigationString: (id: string) => void;
 }
 
 export const TaskItemList: React.FC<IProps> = ({
   tasks,
-  isDraggable = false,
   changeOrder,
   generateNavigationString,
 }) => {
   const dispatch = useDispatch();
+  const {
+    searchedTasks,
+    sortedTasks,
+    isSearching,
+    selectedSortOption,
+    defaultSortOption,
+    handleSortByAddingDate,
+    handleSortbyLastCommentDate,
+    handleSortByDeadline,
+    handleSortByDefault,
+    handleSearching,
+  } = useFilter({ tasks });
+  const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
+  const sortableTasks =
+    selectedSortOption === defaultSortOption
+      ? isSearching
+        ? searchedTasks
+        : tasks
+      : searchedTasks;
 
   useEffect(() => {
     return () => {
@@ -47,6 +66,14 @@ export const TaskItemList: React.FC<IProps> = ({
 
   return (
     <div className='tasks-items'>
+      <Toolbar
+        selectedSortOption={selectedSortOption}
+        handleSearching={handleSearching}
+        onSortByAddingDate={handleSortByAddingDate}
+        onSortByDeadline={handleSortByDeadline}
+        onSortByLastCommentDate={handleSortbyLastCommentDate}
+        onSortDefaultState={handleSortByDefault}
+      />
       <div>
         {isDraggable && (
           <DragDropContext
@@ -73,7 +100,7 @@ export const TaskItemList: React.FC<IProps> = ({
         )}
         {!isDraggable && (
           <>
-            {tasks.map((task, index) => (
+            {sortableTasks.map((task, index) => (
               <TaskItem
                 task={task}
                 index={index}
