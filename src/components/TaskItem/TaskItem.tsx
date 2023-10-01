@@ -233,7 +233,6 @@ export const TaskItem: React.FC<IProps> = ({
             selectedValue={selectedValue}
             valuesArray={statusValues}
             handleChange={handleChangeTaskStatus}
-            isGetStatusLabel
             style={{
               width: '45%',
             }}
