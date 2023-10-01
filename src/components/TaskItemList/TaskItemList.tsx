@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { TaskItem } from '../TaskItem/TaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
@@ -34,15 +34,25 @@ export const TaskItemList: React.FC<IProps> = ({
     handleSortByDeadline,
     handleSortByDefault,
     handleSearching,
+    handleFilterByProjectName,
   } = useFilter({ tasks });
-  const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
-  const sortableTasks =
+  const [isDraggable, setIsDraggable] = useState(
+    selectedSortOption === defaultSortOption && !isSearching,
+  );
+  // const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
+  const [sortableTasks, setSortableTasks] = useState(
     selectedSortOption === defaultSortOption
       ? isSearching
         ? searchedTasks
         : tasks
-      : searchedTasks;
+      : searchedTasks,
+  );
   const modalId = 'filter-tasks-modal';
+
+  useEffect(() => {
+    console.log(searchedTasks);
+    setSortableTasks(searchedTasks);
+  }, [searchedTasks]);
 
   useEffect(() => {
     return () => {
@@ -65,14 +75,20 @@ export const TaskItemList: React.FC<IProps> = ({
     dispatch(setIsDragging(false));
   };
 
-  const handleFilterTasksList = (e: { preventDefault: () => void }) => {
+  const handleFilterTasks = (
+    e: { preventDefault: () => void },
+    projectId: string,
+  ) => {
     e.preventDefault();
+
+    handleFilterByProjectName(projectId);
+    setIsDraggable(false);
   };
 
   return (
     <>
       <FilterModal
-        submitHandler={handleFilterTasksList}
+        submitHandler={handleFilterTasks}
         modalId={modalId}
         label={'Виберіть фільтр для задач'}
       />

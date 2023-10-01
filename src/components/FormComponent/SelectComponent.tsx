@@ -1,19 +1,16 @@
 import { CSSProperties } from 'react';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
 import { CustomSelect } from './CustomSelect';
-import { getStatusLabel } from '../../utils/utils';
 
 interface IProps {
   selectedValue: string;
-  valuesArray: string[];
+  valuesArray: { id: string; value: string }[];
   handleChange: (e: SelectChangeEvent) => void;
-  isGetStatusLabel?: boolean;
   style?: CSSProperties;
 }
 
-export const TaskStatusSelect = ({
+export const SelectComponent = ({
   selectedValue,
-  isGetStatusLabel = false,
   valuesArray,
   handleChange,
   style,
@@ -25,13 +22,13 @@ export const TaskStatusSelect = ({
       selectedValue={selectedValue}
       styling={style}
     >
-      {valuesArray.map((value) => (
+      {valuesArray.map((option) => (
         <MenuItem
-          key={value}
+          key={option.id}
           onClick={(e) => e.stopPropagation()}
-          value={value}
+          value={option.id}
         >
-          {isGetStatusLabel ? getStatusLabel(value) : value}
+          {option.value}
         </MenuItem>
       ))}
     </CustomSelect>

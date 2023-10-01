@@ -13,6 +13,7 @@ interface IFilterFunctions {
   handleSortByDeadline: () => void;
   handleSortByDefault: () => void;
   handleSearching: ({ newValue }: { newValue: string }) => void;
+  handleFilterByProjectName: (id: string) => void;
 }
 
 export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
@@ -108,6 +109,12 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
     setSelectedSortOption('default');
   };
 
+  const handleFilterByProjectName = (id: string) => {
+    const filteredTasks = [...tasks].filter((task) => task.projectId === id);
+
+    setSearchedTasks(filteredTasks);
+  };
+
   function handleSortBySelectedOption() {
     switch (selectedSortOption) {
       case 'byAddingDate':
@@ -136,5 +143,6 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
     handleSortByDeadline,
     handleSortByDefault,
     handleSearching,
+    handleFilterByProjectName,
   };
 };

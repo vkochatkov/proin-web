@@ -1,15 +1,20 @@
 import { useState } from 'react';
-import { DialogActions, DialogContent } from '@mui/material';
+import { DialogActions, DialogContent, SelectChangeEvent } from '@mui/material';
 import { Modal } from './Modal';
 import { Button } from '../FormElement/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { getModalStateById } from '../../modules/selectors/modal';
 import { RootState } from '../../modules/store/store';
 import { closeModal } from '../../modules/actions/modal';
-import { TaskStatusSelect } from '../FormComponent/TaskStatusSelect';
+import { SelectComponent } from '../FormComponent/SelectComponent';
+import {
+  getAllUserProjects,
+  getCurrentProjects,
+} from '../../modules/selectors/mainProjects';
+import { useParams } from 'react-router-dom';
 
 interface IProps {
-  submitHandler: (e: { preventDefault: () => void }) => void;
+  submitHandler: (e: { preventDefault: () => void }, value: string) => void;
   modalId: string;
   label: string;
 }
@@ -21,6 +26,17 @@ export const FilterModal: React.FC<IProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [selectedValue, setSelectedValue] = useState<string>('');
+  const usersProjectNames = useSelector(getAllUserProjects).map((project) => ({
+    id: project._id,
+    value: project.projectName,
+  }));
+  const projectNames = useSelector(getCurrentProjects)
+    .map((project) => ({ id: project._id, value: project.projectName }))
+    .filter((project) => project !== undefined) as {
+    id: string;
+    value: string;
+  }[];
+  const { pid } = useParams();
 
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
@@ -28,17 +44,28 @@ export const FilterModal: React.FC<IProps> = ({
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
+    setSelectedValue('');
+  };
+
+  const handleChangeValue = (e: SelectChangeEvent) => {
+    const value = e.target.value;
+
+    setSelectedValue(value);
   };
 
   return (
     <Modal open={open} handleClose={handleClose} label={label}>
-      <form onSubmit={submitHandler}>
+      <form
+        onSubmit={(e) => {
+          submitHandler(e, selectedValue);
+          dispatch(closeModal({ id: modalId }));
+        }}
+      >
         <DialogContent>
-          <TaskStatusSelect
+          <SelectComponent
             selectedValue={selectedValue}
-            valuesArray={[]}
-            handleChange={() => console.log('handleChange')}
-            isGetStatusLabel
+            valuesArray={pid ? projectNames : usersProjectNames}
+            handleChange={handleChangeValue}
           />
         </DialogContent>
         <DialogActions>

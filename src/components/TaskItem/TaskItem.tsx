@@ -15,7 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { chooseCurrentTaskSuccess } from '../../modules/actions/currentTask';
 import { getFirstLetter, getStatusLabel } from '../../utils/utils';
 import { backgroundColor } from '../../utils/avatar-view';
-import { TaskStatusSelect } from '../FormComponent/TaskStatusSelect';
+import { SelectComponent } from '../FormComponent/SelectComponent';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { Button } from '../FormElement/Button';
@@ -70,9 +70,14 @@ export const TaskItem: React.FC<IProps> = ({
   const currentTask = useSelector((state: RootState) =>
     getUserTask(state)(_id),
   );
-  const statusValues = ['new', 'in progress', 'done', 'canceled'];
+  const statusValues = [
+    { id: 'new', value: 'Новий' },
+    { id: 'in progress', value: 'У процесі' },
+    { id: 'done', value: 'Зроблено' },
+    { id: 'canceled', value: 'Відмінено' },
+  ];
   const [selectedValue, setSelectedValue] = useState(
-    currentTask ? currentTask.status : statusValues[0],
+    currentTask ? currentTask.status : statusValues[0].id,
   );
   const [isHidden, setIsHidden] = useState(true);
   const modalId = 'remove-task';
@@ -155,6 +160,7 @@ export const TaskItem: React.FC<IProps> = ({
 
   const handleChangeTaskStatus = (e: SelectChangeEvent) => {
     const newValue = e.target.value;
+    console.log(newValue);
 
     setSelectedValue(newValue);
 
@@ -223,7 +229,7 @@ export const TaskItem: React.FC<IProps> = ({
             variant='inherit'
             sx={{ color: '#979797' }}
           >{`${formattedDate} ${formattedTime}`}</Typography>
-          <TaskStatusSelect
+          <SelectComponent
             selectedValue={selectedValue}
             valuesArray={statusValues}
             handleChange={handleChangeTaskStatus}
