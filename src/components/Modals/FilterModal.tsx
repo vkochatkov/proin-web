@@ -66,6 +66,9 @@ export const FilterModal: React.FC<IProps> = ({
             selectedValue={selectedValue}
             valuesArray={pid ? projectNames : usersProjectNames}
             handleChange={handleChangeValue}
+            style={{
+              width: '100%',
+            }}
           />
         </DialogContent>
         <DialogActions>
