@@ -72,7 +72,8 @@ export const FilterModal: React.FC<IProps> = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button type='submit'>Фільтрувати</Button>
+          <Button onClick={() => setSelectedValue('')}>Очистити фільтр</Button>
+          <Button type='submit'>Застосувати</Button>
         </DialogActions>
       </form>
     </Modal>

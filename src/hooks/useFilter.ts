@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ITask } from '../modules/types/tasks';
-import { useDebounce } from './useDebounce';
 
 interface IFilterFunctions {
   sortedTasks: ITask[];
@@ -22,51 +21,59 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
   const [searchedTasks, setSearchedTasks] = useState(sortedTasks);
   const [selectedSortOption, setSelectedSortOption] =
     useState<string>(defaultSortOption);
-  const { saveChanges } = useDebounce();
   const [isSearching, setIsSearching] = useState(false);
   const [searchedValue, setSearchedValue] = useState('');
+  const [projectIdValue, setProjectIdValue] = useState('');
 
   const handleFilteringTasks = ({
     value,
     sortedTasks,
+    projectId,
   }: {
     value?: string;
     sortedTasks?: ITask[];
+    projectId?: string;
   }) =>
-    (sortedTasks || tasks).filter((task) =>
-      task.name.toLowerCase().includes((value ?? searchedValue).toLowerCase()),
-    );
+    (sortedTasks || tasks).filter((task) => {
+      const nameMatch = task.name
+        .toLowerCase()
+        .includes((value ?? searchedValue).toLowerCase());
+
+      if (projectId) {
+        const projectIdMatch = task.projectId === projectId;
+        return nameMatch && projectIdMatch;
+      }
+
+      return nameMatch;
+    });
 
   const handleSearching = (props: { newValue: string }) => {
     const { newValue } = props;
 
     if (newValue) {
       setIsSearching(true);
-    }
-
-    saveChanges(() => {
       setSearchedTasks(
-        newValue
-          ? handleFilteringTasks({
-              value: newValue,
-              sortedTasks: sortedTasks,
-            })
-          : sortedTasks,
+        handleFilteringTasks({
+          value: newValue,
+          sortedTasks,
+          projectId: projectIdValue,
+        }),
       );
-    });
+    }
 
     setSearchedValue(newValue);
 
     if (!newValue) {
-      const timeoutId = setTimeout(() => {
-        setIsSearching(false);
-        handleSortBySelectedOption();
-      }, 1000);
-
-      // Clear the timeout on component unmount or when searchedValue changes
-      return () => clearTimeout(timeoutId);
+      setSearchedTasks(
+        handleFilteringTasks({
+          value: newValue,
+          sortedTasks,
+          projectId: projectIdValue,
+        }),
+      );
     }
   };
+
   const handleSortByAddingDate = () => {
     const sortedTasks = [...tasks].sort((a, b) => {
       const timestampA = new Date(a.timestamp).getTime();
@@ -74,7 +81,9 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
       return timestampA - timestampB;
     });
     setSortingTasks(sortedTasks);
-    setSearchedTasks(handleFilteringTasks({ sortedTasks }));
+    setSearchedTasks(
+      handleFilteringTasks({ sortedTasks, projectId: projectIdValue }),
+    );
     setSelectedSortOption('byAddingDate');
   };
 
@@ -99,38 +108,38 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
     });
 
     setSortingTasks(sortedTasks);
-    setSearchedTasks(handleFilteringTasks({ sortedTasks }));
+    setSearchedTasks(
+      handleFilteringTasks({ sortedTasks, projectId: projectIdValue }),
+    );
     setSelectedSortOption('byLastCommentDate');
   };
 
   const handleSortByDefault = () => {
     setSortingTasks(tasks);
-    setSearchedTasks(handleFilteringTasks({ sortedTasks: tasks }));
+    setSearchedTasks(
+      handleFilteringTasks({ sortedTasks: tasks, projectId: projectIdValue }),
+    );
     setSelectedSortOption('default');
   };
 
   const handleFilterByProjectName = (id: string) => {
-    const filteredTasks = [...tasks].filter((task) => task.projectId === id);
+    if (id) {
+      const filteredTasks = [...sortedTasks].filter(
+        (task) => task.projectId === id,
+      );
 
-    setSearchedTasks(filteredTasks);
-  };
+      setSearchedTasks(
+        handleFilteringTasks({ sortedTasks: filteredTasks, projectId: id }),
+      );
 
-  function handleSortBySelectedOption() {
-    switch (selectedSortOption) {
-      case 'byAddingDate':
-        handleSortByAddingDate();
-        break;
-      case 'byDeadlineDate':
-        handleSortByDeadline();
-        break;
-      case 'byLastCommentDate':
-        handleSortbyLastCommentDate();
-        break;
-      default:
-        handleSortByDefault();
-        break;
+      setIsSearching(true);
+      setProjectIdValue(id);
+      return;
     }
-  }
+
+    setProjectIdValue('');
+    setSearchedTasks(handleFilteringTasks({ sortedTasks }));
+  };
 
   return {
     searchedTasks,

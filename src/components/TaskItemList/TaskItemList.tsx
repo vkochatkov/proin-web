@@ -36,23 +36,15 @@ export const TaskItemList: React.FC<IProps> = ({
     handleSearching,
     handleFilterByProjectName,
   } = useFilter({ tasks });
-  const [isDraggable, setIsDraggable] = useState(
-    selectedSortOption === defaultSortOption && !isSearching,
-  );
-  // const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
-  const [sortableTasks, setSortableTasks] = useState(
+
+  const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
+  const sortableTasks =
     selectedSortOption === defaultSortOption
       ? isSearching
         ? searchedTasks
         : tasks
-      : searchedTasks,
-  );
+      : searchedTasks;
   const modalId = 'filter-tasks-modal';
-
-  useEffect(() => {
-    console.log(searchedTasks);
-    setSortableTasks(searchedTasks);
-  }, [searchedTasks]);
 
   useEffect(() => {
     return () => {
@@ -82,7 +74,6 @@ export const TaskItemList: React.FC<IProps> = ({
     e.preventDefault();
 
     handleFilterByProjectName(projectId);
-    setIsDraggable(false);
   };
 
   return (
