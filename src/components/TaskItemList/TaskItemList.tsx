@@ -46,7 +46,7 @@ export const TaskItemList: React.FC<IProps> = ({
     handleSortByDeadline,
     handleSortByDefault,
     handleSearching,
-    handleFilterByProjectName,
+    handleFilterByProjectId,
   } = useFilter({ items: tasks, filterFunction: tasksFilterFunction });
 
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
@@ -85,7 +85,7 @@ export const TaskItemList: React.FC<IProps> = ({
   ) => {
     e.preventDefault();
 
-    handleFilterByProjectName(projectId);
+    handleFilterByProjectId(projectId);
   };
 
   return (

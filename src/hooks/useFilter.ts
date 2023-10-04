@@ -13,7 +13,7 @@ interface IFilterFunctions<T> {
   handleSortByDeadline: () => void;
   handleSortByDefault: () => void;
   handleSearching: ({ newValue }: { newValue: string }) => void;
-  handleFilterByProjectName: (id: string) => void;
+  handleFilterByProjectId: (id: string) => void;
 }
 
 export const useFilter = <
@@ -76,6 +76,10 @@ export const useFilter = <
           projectId: projectIdValue,
         }),
       );
+
+      if (!projectIdValue) {
+        setIsSearching(false);
+      }
     }
   };
 
@@ -127,7 +131,7 @@ export const useFilter = <
     setSelectedSortOption('default');
   };
 
-  const handleFilterByProjectName = (id: string) => {
+  const handleFilterByProjectId = (id: string) => {
     if (id) {
       const filteredTasks = [...sortedItems].filter(
         (item) => item.projectId === id,
@@ -144,6 +148,10 @@ export const useFilter = <
 
     setProjectIdValue('');
     setSearchedItems(handleFilteringItems({ sortedItems }));
+
+    if (selectedSortOption === defaultSortOption && !searchedValue) {
+      setIsSearching(false);
+    }
   };
 
   return {
@@ -157,6 +165,6 @@ export const useFilter = <
     handleSortByDeadline,
     handleSortByDefault,
     handleSearching,
-    handleFilterByProjectName,
+    handleFilterByProjectId,
   };
 };

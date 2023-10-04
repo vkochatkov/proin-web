@@ -44,7 +44,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
     handleSortByDeadline,
     handleSortByDefault,
     handleSearching,
-    handleFilterByProjectName,
+    handleFilterByProjectId,
   } = useFilter({
     items: sortedTransactions,
     filterFunction: transactionsFilterFunction,
@@ -104,7 +104,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
   ) => {
     e.preventDefault();
 
-    handleFilterByProjectName(projectId);
+    handleFilterByProjectId(projectId);
   };
 
   return (
