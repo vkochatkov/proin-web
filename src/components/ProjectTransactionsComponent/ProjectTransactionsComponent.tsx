@@ -6,9 +6,9 @@ import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { RootState } from '../../modules/store/store';
 import { TransactionListSlider } from '../TransactionListSlider/TransactionListSlider';
 import { TransactionTabsMenu } from '../TransactionTabsMenu';
+import { ITransaction } from '../../modules/types/transactions';
 
 import './ProjectTransactionsComponent.scss';
-import { ITransaction } from '../../modules/types/transactions';
 
 interface IProps {}
 
