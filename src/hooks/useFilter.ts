@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { ITask } from '../modules/types/tasks';
+import { IComment } from '../modules/reducers/mainProjects';
+import { FilterFunction } from '../modules/types/filter';
 
-interface IFilterFunctions {
-  sortedTasks: ITask[];
-  searchedTasks: ITask[];
+interface IFilterFunctions<T> {
+  sortedItems: T[];
+  searchedItems: T[];
   isSearching: boolean;
   selectedSortOption: string;
   defaultSortOption: string;
@@ -15,36 +16,40 @@ interface IFilterFunctions {
   handleFilterByProjectName: (id: string) => void;
 }
 
-export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
+export const useFilter = <
+  T extends {
+    name?: string;
+    projectId: string;
+    timestamp: string;
+    comments?: IComment[];
+  },
+>({
+  items,
+  filterFunction,
+}: {
+  items: T[];
+  filterFunction: FilterFunction<T>;
+}): IFilterFunctions<T> => {
   const defaultSortOption = 'default';
-  const [sortedTasks, setSortingTasks] = useState(tasks);
-  const [searchedTasks, setSearchedTasks] = useState(sortedTasks);
+  const [sortedItems, setSortingItems] = useState(items);
+  const [searchedItems, setSearchedItems] = useState(sortedItems);
   const [selectedSortOption, setSelectedSortOption] =
     useState<string>(defaultSortOption);
   const [isSearching, setIsSearching] = useState(false);
   const [searchedValue, setSearchedValue] = useState('');
   const [projectIdValue, setProjectIdValue] = useState('');
 
-  const handleFilteringTasks = ({
+  const handleFilteringItems = ({
     value,
-    sortedTasks,
+    sortedItems,
     projectId,
   }: {
     value?: string;
-    sortedTasks?: ITask[];
+    sortedItems?: T[];
     projectId?: string;
   }) =>
-    (sortedTasks || tasks).filter((task) => {
-      const nameMatch = task.name
-        .toLowerCase()
-        .includes((value ?? searchedValue).toLowerCase());
-
-      if (projectId) {
-        const projectIdMatch = task.projectId === projectId;
-        return nameMatch && projectIdMatch;
-      }
-
-      return nameMatch;
+    (sortedItems || items).filter((item) => {
+      return filterFunction(item, value ?? searchedValue, projectId);
     });
 
   const handleSearching = (props: { newValue: string }) => {
@@ -52,10 +57,10 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
 
     if (newValue) {
       setIsSearching(true);
-      setSearchedTasks(
-        handleFilteringTasks({
+      setSearchedItems(
+        handleFilteringItems({
           value: newValue,
-          sortedTasks,
+          sortedItems,
           projectId: projectIdValue,
         }),
       );
@@ -64,10 +69,10 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
     setSearchedValue(newValue);
 
     if (!newValue) {
-      setSearchedTasks(
-        handleFilteringTasks({
+      setSearchedItems(
+        handleFilteringItems({
           value: newValue,
-          sortedTasks,
+          sortedItems,
           projectId: projectIdValue,
         }),
       );
@@ -75,14 +80,14 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
   };
 
   const handleSortByAddingDate = () => {
-    const sortedTasks = [...tasks].sort((a, b) => {
+    const sortedItems = [...items].sort((a, b) => {
       const timestampA = new Date(a.timestamp).getTime();
       const timestampB = new Date(b.timestamp).getTime();
       return timestampA - timestampB;
     });
-    setSortingTasks(sortedTasks);
-    setSearchedTasks(
-      handleFilteringTasks({ sortedTasks, projectId: projectIdValue }),
+    setSortingItems(sortedItems);
+    setSearchedItems(
+      handleFilteringItems({ sortedItems, projectId: projectIdValue }),
     );
     setSelectedSortOption('byAddingDate');
   };
@@ -92,14 +97,14 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
   };
 
   const handleSortbyLastCommentDate = () => {
-    const sortedTasks = [...tasks].sort((a, b) => {
-      // Get the timestamps of the last comments for both tasks
+    const sortedItems = [...items].sort((a, b) => {
+      // Get the timestamps of the last comments for both items
       const lastCommentA = a.comments?.length
         ? a.comments[a.comments.length - 1].timestamp
-        : a.timestamp; // Use task's timestamp if there are no comments
+        : a.timestamp; // Use item's timestamp if there are no comments
       const lastCommentB = b.comments?.length
         ? b.comments[b.comments.length - 1].timestamp
-        : b.timestamp; // Use task's timestamp if there are no comments
+        : b.timestamp; // Use item's timestamp if there are no comments
 
       // Compare the timestamps
       const timestampA = new Date(lastCommentA).getTime();
@@ -107,29 +112,29 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
       return timestampA - timestampB;
     });
 
-    setSortingTasks(sortedTasks);
-    setSearchedTasks(
-      handleFilteringTasks({ sortedTasks, projectId: projectIdValue }),
+    setSortingItems(sortedItems);
+    setSearchedItems(
+      handleFilteringItems({ sortedItems, projectId: projectIdValue }),
     );
     setSelectedSortOption('byLastCommentDate');
   };
 
   const handleSortByDefault = () => {
-    setSortingTasks(tasks);
-    setSearchedTasks(
-      handleFilteringTasks({ sortedTasks: tasks, projectId: projectIdValue }),
+    setSortingItems(items);
+    setSearchedItems(
+      handleFilteringItems({ sortedItems: items, projectId: projectIdValue }),
     );
     setSelectedSortOption('default');
   };
 
   const handleFilterByProjectName = (id: string) => {
     if (id) {
-      const filteredTasks = [...sortedTasks].filter(
-        (task) => task.projectId === id,
+      const filteredTasks = [...sortedItems].filter(
+        (item) => item.projectId === id,
       );
 
-      setSearchedTasks(
-        handleFilteringTasks({ sortedTasks: filteredTasks, projectId: id }),
+      setSearchedItems(
+        handleFilteringItems({ sortedItems: filteredTasks, projectId: id }),
       );
 
       setIsSearching(true);
@@ -138,12 +143,12 @@ export const useFilter = ({ tasks }: { tasks: ITask[] }): IFilterFunctions => {
     }
 
     setProjectIdValue('');
-    setSearchedTasks(handleFilteringTasks({ sortedTasks }));
+    setSearchedItems(handleFilteringItems({ sortedItems }));
   };
 
   return {
-    searchedTasks,
-    sortedTasks,
+    searchedItems,
+    sortedItems,
     isSearching,
     selectedSortOption,
     defaultSortOption,

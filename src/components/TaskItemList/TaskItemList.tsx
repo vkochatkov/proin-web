@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { TaskItem } from '../TaskItem/TaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
@@ -9,6 +9,7 @@ import { ITask } from '../../modules/types/tasks';
 import { Toolbar } from '../Toolbar/Toolbar';
 import { useFilter } from '../../hooks/useFilter';
 import { FilterModal } from '../Modals/FilterModal';
+import { FilterFunction } from '../../modules/types/filter';
 
 import './TaskItemList.scss';
 
@@ -18,6 +19,17 @@ interface IProps {
   generateNavigationString: (id: string) => void;
 }
 
+const tasksFilterFunction: FilterFunction<ITask> = (item, value, projectId) => {
+  const nameMatch = item.name.toLowerCase().includes(value.toLowerCase());
+
+  if (projectId) {
+    const projectIdMatch = item.projectId === projectId;
+    return nameMatch && projectIdMatch;
+  }
+
+  return nameMatch;
+};
+
 export const TaskItemList: React.FC<IProps> = ({
   tasks,
   changeOrder,
@@ -25,7 +37,7 @@ export const TaskItemList: React.FC<IProps> = ({
 }) => {
   const dispatch = useDispatch();
   const {
-    searchedTasks,
+    searchedItems,
     isSearching,
     selectedSortOption,
     defaultSortOption,
@@ -35,15 +47,15 @@ export const TaskItemList: React.FC<IProps> = ({
     handleSortByDefault,
     handleSearching,
     handleFilterByProjectName,
-  } = useFilter({ tasks });
+  } = useFilter({ items: tasks, filterFunction: tasksFilterFunction });
 
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
   const sortableTasks =
     selectedSortOption === defaultSortOption
       ? isSearching
-        ? searchedTasks
+        ? searchedItems
         : tasks
-      : searchedTasks;
+      : searchedItems;
   const modalId = 'filter-tasks-modal';
 
   useEffect(() => {
@@ -85,6 +97,7 @@ export const TaskItemList: React.FC<IProps> = ({
       />
       <div className='tasks-items'>
         <Toolbar
+          modalId={modalId}
           selectedSortOption={selectedSortOption}
           handleSearching={handleSearching}
           onSortByAddingDate={handleSortByAddingDate}

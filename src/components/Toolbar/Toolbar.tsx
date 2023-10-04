@@ -22,6 +22,7 @@ interface Props {
   onSortByDeadline: () => void;
   onSortByLastCommentDate: () => void;
   onSortDefaultState: () => void;
+  modalId: string;
 }
 
 export const Toolbar: React.FC<Props> = ({
@@ -31,8 +32,8 @@ export const Toolbar: React.FC<Props> = ({
   onSortByDeadline,
   onSortByLastCommentDate,
   onSortDefaultState,
+  modalId,
 }) => {
-  const modalId = 'filter-tasks-modal';
   const dispatch = useDispatch();
 
   const { handleClose, contextMenuPosition, anchorEl, handleContextMenu } =
@@ -64,8 +65,8 @@ export const Toolbar: React.FC<Props> = ({
       <ConfirmInputComponent
         isActive={true}
         onConfirm={handleSearching}
-        type={'task'}
-        action={'addTask'}
+        type={'item'}
+        action={'addItem'}
         placeholder=' пошук'
         isSearching
       />
