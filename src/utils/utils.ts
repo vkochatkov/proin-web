@@ -1,5 +1,7 @@
 import { IStatusLabels } from '../modules/types/tasks';
 import { IFile } from '../modules/types/mainProjects';
+import { FilterFunction } from '../modules/types/filter';
+import { ITransaction } from '../modules/types/transactions';
 
 // drag and drop reorder
 export const reorder = <T>(list: T[], startIndex: number, endIndex: number) => {
@@ -56,4 +58,25 @@ export const updateEnitites = (entities: any[], id: string, files: IFile[]) => {
 
 export const updateObjects = (array: any, obj: any) => {
   return array.map((item: any) => (item._id === obj._id ? obj : item));
+};
+
+export const transactionsFilterFunction: FilterFunction<ITransaction> = (
+  item,
+  value,
+  projectId,
+) => {
+  const classifierMatch = item.classifier
+    .toLowerCase()
+    .includes(value.toLowerCase());
+
+  const descriptionMatch = item.description
+    .toLowerCase()
+    .includes(value.toLowerCase());
+
+  if (projectId) {
+    const projectIdMatch = item.projectId === projectId;
+    return (classifierMatch || descriptionMatch) && projectIdMatch;
+  }
+
+  return classifierMatch || descriptionMatch;
 };

@@ -7,6 +7,10 @@ import { RootState } from '../../modules/store/store';
 import { TransactionListSlider } from '../TransactionListSlider/TransactionListSlider';
 import { TransactionTabsMenu } from '../TransactionTabsMenu';
 import { ITransaction } from '../../modules/types/transactions';
+import { Toolbar } from '../Toolbar/Toolbar';
+import { useFilter } from '../../hooks/useFilter';
+import { FilterModal } from '../Modals/FilterModal';
+import { transactionsFilterFunction } from '../../utils/utils';
 
 import './ProjectTransactionsComponent.scss';
 
@@ -29,6 +33,29 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
     getValueByTabId(state)('transaction-tabs'),
   );
   const classifierTab = 'Класифікатори';
+  const modalId = 'filter-transaction-modal';
+  const {
+    searchedItems,
+    isSearching,
+    selectedSortOption,
+    defaultSortOption,
+    handleSortByAddingDate,
+    handleSortbyLastCommentDate,
+    handleSortByDeadline,
+    handleSortByDefault,
+    handleSearching,
+    handleFilterByProjectName,
+  } = useFilter({
+    items: sortedTransactions,
+    filterFunction: transactionsFilterFunction,
+  });
+
+  const sortableTasks =
+    selectedSortOption === defaultSortOption
+      ? isSearching
+        ? searchedItems
+        : sortedTransactions
+      : searchedItems;
 
   const handleCountTotal = () => {
     return transactions.reduce((acc, transaction) => {
@@ -71,8 +98,31 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
     return query;
   };
 
+  const handleFilteringTransactions = (
+    e: { preventDefault: () => void },
+    projectId: string,
+  ) => {
+    e.preventDefault();
+
+    handleFilterByProjectName(projectId);
+  };
+
   return (
     <>
+      <FilterModal
+        submitHandler={handleFilteringTransactions}
+        modalId={modalId}
+        label={'Виберіть фільтр для фінансів'}
+      />
+      <Toolbar
+        selectedSortOption={selectedSortOption}
+        modalId={modalId}
+        handleSearching={handleSearching}
+        onSortByAddingDate={handleSortByAddingDate}
+        onSortByDeadline={handleSortByDeadline}
+        onSortByLastCommentDate={handleSortbyLastCommentDate}
+        onSortDefaultState={handleSortByDefault}
+      />
       <div className='project-transactions__top'>
         <p
           style={{
@@ -90,7 +140,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
           <div>
             <TransactionListSlider
               generateNavigationString={handleGenerateNavigationQuery}
-              transactions={sortedTransactions}
+              transactions={sortableTasks}
             />
           </div>
         )}
