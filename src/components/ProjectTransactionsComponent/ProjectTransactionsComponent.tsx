@@ -8,11 +8,19 @@ import { TransactionListSlider } from '../TransactionListSlider/TransactionListS
 import { TransactionTabsMenu } from '../TransactionTabsMenu';
 
 import './ProjectTransactionsComponent.scss';
+import { ITransaction } from '../../modules/types/transactions';
 
 interface IProps {}
 
 export const ProjectTransactionsComponent: React.FC<IProps> = () => {
-  const transactions = useSelector(getProjectTransactions);
+  const transactions: ITransaction[] = JSON.parse(
+    JSON.stringify(useSelector(getProjectTransactions)),
+  );
+  const sortedTransactions = transactions.sort((a, b) => {
+    const timestampA = new Date(a.timestamp).getTime();
+    const timestampB = new Date(b.timestamp).getTime();
+    return timestampB - timestampA;
+  });
   const { pid, subprojectId } = useParams();
   const tabValue = useSelector((state: RootState) =>
     getValueByTabId(state)('main-tabs'),
@@ -76,18 +84,18 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
       </div>
       <TransactionTabsMenu />
       {tabValue === 'Фінанси' &&
-        transactions &&
-        transactions.length > 0 &&
+        sortedTransactions &&
+        sortedTransactions.length > 0 &&
         transactionsTabValue !== classifierTab && (
           <div>
             <TransactionListSlider
               generateNavigationString={handleGenerateNavigationQuery}
-              transactions={transactions}
+              transactions={sortedTransactions}
             />
           </div>
         )}
-      {transactions &&
-        transactions.length === 0 &&
+      {sortedTransactions &&
+        sortedTransactions.length === 0 &&
         transactionsTabValue !== classifierTab && (
           <h2 className='project-transactions__empty-field'>
             Транзакції відсутні
