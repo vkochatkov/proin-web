@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentsList } from './CommentsList';
 import { getCurrentTask } from '../modules/selectors/currentTask';
-import { IComment } from '../modules/reducers/mainProjects';
 import { updateTaskState } from '../modules/actions/currentTask';
 import {
   createTaskComment,
@@ -14,6 +13,7 @@ import { closeModal } from '../modules/actions/modal';
 import { getIdForRemove } from '../modules/selectors/idForRemove';
 import { setIdForDelete } from '../modules/actions/idForRemove';
 import { RemoveModal } from './Modals/RemoveModal';
+import { IComment } from '../modules/types/mainProjects';
 
 interface IProps {
   currentObj: any;

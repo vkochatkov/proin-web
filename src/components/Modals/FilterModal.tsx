@@ -7,17 +7,35 @@ import { getModalStateById } from '../../modules/selectors/modal';
 import { RootState } from '../../modules/store/store';
 import { closeModal } from '../../modules/actions/modal';
 import { SelectComponent } from '../FormComponent/SelectComponent';
-import {
-  getAllUserProjects,
-  getCurrentProjects,
-} from '../../modules/selectors/mainProjects';
-import { useParams } from 'react-router-dom';
+import { getAllUserProjects } from '../../modules/selectors/mainProjects';
+import { IProject } from '../../modules/types/mainProjects';
 
 interface IProps {
   submitHandler: (e: { preventDefault: () => void }, value: string) => void;
   modalId: string;
   label: string;
 }
+
+const getProjectsNames = (projects: IProject[]) =>
+  projects.reduce((accumulator: { id: string; value: string }[], project) => {
+    const projectItem = {
+      id: project._id as string,
+      value: project.projectName as string,
+    };
+
+    accumulator.push(projectItem);
+
+    if (project.subProjects && project.subProjects.length > 0) {
+      const subprojectItems: { id: string; value: string }[] =
+        project.subProjects.map((subProject) => ({
+          id: subProject._id as string,
+          value: subProject.projectName as string,
+        }));
+      accumulator.push(...subprojectItems);
+    }
+
+    return accumulator;
+  }, []);
 
 export const FilterModal: React.FC<IProps> = ({
   submitHandler,
@@ -26,18 +44,8 @@ export const FilterModal: React.FC<IProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [selectedValue, setSelectedValue] = useState<string>('');
-  const usersProjectNames = useSelector(getAllUserProjects).map((project) => ({
-    id: project._id,
-    value: project.projectName,
-  }));
-  const projectNames = useSelector(getCurrentProjects)
-    .map((project) => ({ id: project._id, value: project.projectName }))
-    .filter((project) => project !== undefined) as {
-    id: string;
-    value: string;
-  }[];
-  const { pid } = useParams();
-
+  const userProjects = useSelector(getAllUserProjects) as IProject[];
+  const usersProjectNames = getProjectsNames(userProjects);
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
   );
@@ -64,7 +72,7 @@ export const FilterModal: React.FC<IProps> = ({
         <DialogContent>
           <SelectComponent
             selectedValue={selectedValue}
-            valuesArray={pid ? projectNames : usersProjectNames}
+            valuesArray={usersProjectNames}
             handleChange={handleChangeValue}
             style={{
               width: '100%',

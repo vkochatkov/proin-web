@@ -15,12 +15,12 @@ import {
   updateTaskState,
 } from '../../modules/actions/currentTask';
 import { useDebounce } from '../../hooks/useDebounce';
-import { Project } from '../../modules/reducers/mainProjects';
 import { fetchAllUserTasks, fetchTasks } from '../../modules/actions/tasks';
 import {
   setCurrentTransaction,
   updateTransactionOnServer,
 } from '../../modules/actions/transactions';
+import { Project } from '../../modules/types/mainProjects';
 
 import './InteractiveInput.scss';
 
@@ -57,7 +57,7 @@ export const InteractiveInput: React.FC<Props> = ({
     ) {
       setIsActive(true);
     }
-  }, [id, text]);
+  }, [id, text, setIsActive]);
 
   const handleUpdatingArray = (updatedEntity: any, id: string) => {
     const entityIndex = entities.findIndex((entity) => entity._id === id);

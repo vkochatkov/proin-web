@@ -1,8 +1,8 @@
 import { HTTPClient as HTTPClientCore, IRequestConfig } from '../HTTPSClient';
 import axios, { AxiosRequestConfig } from 'axios';
-import { IComment, Project } from '../../modules/reducers/mainProjects';
 import { ITask, ITasks } from '../../modules/types/tasks';
 import { ITransaction } from '../../modules/types/transactions';
+import { IComment, Project } from '../../modules/types/mainProjects';
 
 class HTTPClient extends HTTPClientCore {
   private token: string | null;
@@ -29,8 +29,8 @@ class HTTPClient extends HTTPClientCore {
         Authorization: this.token
           ? `Bearer ${this.token}`
           : storedData.token
-            ? `Bearer ${storedData.token}`
-            : undefined,
+          ? `Bearer ${storedData.token}`
+          : undefined,
         'Content-Type': 'application/json',
       },
     };
@@ -86,8 +86,8 @@ export const Api = {
     get: (projectId: string) => APIClient.get(`/project-members/${projectId}`),
     delete: (props: { userId: string }, projectId: string) =>
       APIClient.delete(`/project-members/${projectId}/${props.userId}`),
-    find: ((userId: string, search: string) =>
-      APIClient.get(`/users?id=${userId}&search=${search}`))
+    find: (userId: string, search: string) =>
+      APIClient.get(`/users?id=${userId}&search=${search}`),
   },
   Files: {
     post: (props: Partial<Project>, pid: string) =>
@@ -100,8 +100,10 @@ export const Api = {
       APIClient.post(`/project-tasks/files/${tid}`, props),
     deleteTransactionsFile: (transactionId: string, fileId: string) =>
       APIClient.delete(`/transactions-list/files/${transactionId}/${fileId}`),
-    updateTransactionFilesOrder: (props: Partial<ITransaction>, transactionId: string) =>
-      APIClient.post(`/transactions-list/files/${transactionId}`, props),
+    updateTransactionFilesOrder: (
+      props: Partial<ITransaction>,
+      transactionId: string,
+    ) => APIClient.post(`/transactions-list/files/${transactionId}`, props),
   },
   Tasks: {
     create: (props: Partial<ITask>, id: string) =>
@@ -125,14 +127,21 @@ export const Api = {
       APIClient.post(`/transactions-list/transaction/`, props),
     update: (props: Partial<ITransaction>, transactionId: string) =>
       APIClient.patch(`transactions-list/transaction/${transactionId}`, props),
-    delete: (id: string) => APIClient.delete(`/transactions-list/transaction/${id}`),
-    getTransactionById: (id: string) => APIClient.get(`/transactions-list/transaction/${id}`),
+    delete: (id: string) =>
+      APIClient.delete(`/transactions-list/transaction/${id}`),
+    getTransactionById: (id: string) =>
+      APIClient.get(`/transactions-list/transaction/${id}`),
     getProjectTransactions: (projectId: string) =>
       APIClient.get(`/transactions-list/project/${projectId}`),
-    updateTransactionsByProjectId: (transactions: ITransaction[], projectId: string) =>
-      APIClient.patch(`/transactions-list/project/${projectId}`, { transactions }),
+    updateTransactionsByProjectId: (
+      transactions: ITransaction[],
+      projectId: string,
+    ) =>
+      APIClient.patch(`/transactions-list/project/${projectId}`, {
+        transactions,
+      }),
     getUserTransactions: () => APIClient.get(`/transactions-list/all`),
     updateTransactionsByUserId: (transactions: ITransaction[], id: string) =>
-      APIClient.patch(`/transactions-list/user/${id}`, { transactions })
+      APIClient.patch(`/transactions-list/user/${id}`, { transactions }),
   },
 };

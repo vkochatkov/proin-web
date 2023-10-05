@@ -19,7 +19,6 @@ import { Card } from '@mui/joy';
 import { SnackbarUI } from '../../components/UIElements/SnackbarUI';
 import { InviteModal } from '../../components/Modals/InviteModal';
 import { MoveProjectModal } from '../../components/Modals/MoveProjectModal';
-import { Project } from '../../modules/reducers/mainProjects';
 import { RemoveProjectModal } from '../../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../../modules/actions/form';
 import { ImageUpload } from '../../components/FormComponent/ImageUpload';
@@ -33,6 +32,7 @@ import { fetchTransactions } from '../../modules/actions/transactions';
 import { RemoveTransactionModal } from '../../components/Modals/RemoveTransactionModal';
 import { PROJECTS_PATH } from '../../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Project } from '../../modules/types/mainProjects';
 
 import '../../index.scss';
 

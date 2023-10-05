@@ -8,8 +8,8 @@ import {
   getSelectedProjectId,
 } from '../../modules/selectors/mainProjects';
 import { CustomSelect } from './CustomSelect';
-import { Project } from '../../modules/reducers/mainProjects';
 import { PROJECTS_PATH } from '../../config/routes';
+import { Project } from '../../modules/types/mainProjects';
 
 interface IProps {
   handleChange: (e: SelectChangeEvent) => void;

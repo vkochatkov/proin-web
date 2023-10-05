@@ -1,11 +1,15 @@
 import { createAction } from 'redux-act';
-import { Project } from '../reducers/mainProjects';
 import { Dispatch } from 'redux';
 import { RootState } from '../store/store';
-import { IComment } from '../reducers/mainProjects';
 import axios from 'axios';
 import { changeSnackbarState } from './snackbar';
-import { IFile, IProject, ISubProjectAction } from '../types/mainProjects';
+import {
+  IComment,
+  IFile,
+  IProject,
+  ISubProjectAction,
+  Project,
+} from '../types/mainProjects';
 import { endLoading, startLoading } from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';

@@ -18,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 import { getIsLoading } from '../modules/selectors/loading';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
-import { Project } from '../modules/reducers/mainProjects';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
@@ -26,6 +25,7 @@ import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { fetchUserTransactions } from '../modules/actions/transactions';
 import AddIcon from '@mui/icons-material/Add';
 import { PROJECTS_PATH } from '../config/routes';
+import { Project } from '../modules/types/mainProjects';
 
 import '../index.scss';
 

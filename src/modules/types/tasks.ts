@@ -1,5 +1,4 @@
-import { IComment } from '../reducers/mainProjects';
-import { IFile } from './mainProjects';
+import { IComment, IFile } from './mainProjects';
 
 export interface IAction {
   [key: string]: string;

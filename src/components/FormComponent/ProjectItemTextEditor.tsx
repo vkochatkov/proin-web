@@ -8,10 +8,9 @@ import {
   updateProject,
   updateProjectsSuccess,
 } from '../../modules/actions/mainProjects';
-import { Project } from '../../modules/reducers/mainProjects';
 import { getCurrentProjects } from '../../modules/selectors/mainProjects';
-import { getAuth } from '../../modules/selectors/user';
 import { Input } from '../FormElement/Input';
+import { Project } from '../../modules/types/mainProjects';
 
 import './ProjectItemTextEditor.scss';
 

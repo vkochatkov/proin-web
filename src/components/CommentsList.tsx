@@ -4,9 +4,9 @@ import { CommentBox } from './CommentBox';
 import { DynamicInput } from './FormComponent/DynamicInput';
 import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
-import { IComment } from '../modules/reducers/mainProjects';
 import { openModal } from '../modules/actions/modal';
 import { setIdForDelete } from '../modules/actions/idForRemove';
+import { IComment } from '../modules/types/mainProjects';
 
 interface IProps {
   currentObj: any;
@@ -30,7 +30,6 @@ export const CommentsList: React.FC<IProps> = ({
   ]);
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const [isInputActive, setIsInputActive] = useState<boolean>(false);
-  const [isEditableInputActive, setIsEditableInputActive] = useState(true);
   const [selectedParentId, setSelectedParentId] = useState<string>('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
@@ -179,7 +178,7 @@ export const CommentsList: React.FC<IProps> = ({
                   placeholder='Напишіть коментар'
                   onClick={(value) => handleUpdateComment(comment.id, value)}
                   onCancel={() => setSelectedCommentIds(updatedSelectedIds)}
-                  isActive={isEditableInputActive}
+                  isActive
                   text={comment.text}
                   buttonLabel={'Зберегти'}
                 />

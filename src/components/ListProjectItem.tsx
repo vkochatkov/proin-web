@@ -1,9 +1,9 @@
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { useDispatch } from 'react-redux';
 import { setIsDragging } from '../modules/actions/dragging';
-import { Project } from '../modules/reducers/mainProjects';
 import { reorder } from '../utils/utils';
 import { ProjectItem } from './ProjectItem/ProjectItem';
+import { Project } from '../modules/types/mainProjects';
 
 interface Props {
   projects: Project[];

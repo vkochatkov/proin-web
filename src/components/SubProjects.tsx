@@ -5,9 +5,9 @@ import {
   openCurrentProject,
   updatedSubProjectsOrder,
 } from '../modules/actions/mainProjects';
-import { Project } from '../modules/reducers/mainProjects';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import { ListProjectItem } from './ListProjectItem';
+import { Project } from '../modules/types/mainProjects';
 
 export const SubProjects = () => {
   const currentProject = useSelector(getCurrentProject);

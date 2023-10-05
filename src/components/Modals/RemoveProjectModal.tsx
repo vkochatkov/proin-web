@@ -19,12 +19,12 @@ import {
 } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
 import { useParams } from 'react-router-dom';
-import { Project } from '../../modules/reducers/mainProjects';
+import { Project } from '../../modules/types/mainProjects';
 
 export const RemoveProjectModal = () => {
   const modalId = 'remove-project';
   const open = useSelector((state: RootState) =>
-    getModalStateById(state)(modalId)
+    getModalStateById(state)(modalId),
   );
   const dispatch = useDispatch();
   const projects = useSelector(getCurrentProjects);
@@ -50,14 +50,14 @@ export const RemoveProjectModal = () => {
     if (pid && currentProject) {
       const updatedCurrentProject = JSON.parse(JSON.stringify(currentProject));
       updatedCurrentProject.subProjects = currentProject.subProjects.filter(
-        (project: Project) => project.id !== projectToRemoveId
+        (project: Project) => project.id !== projectToRemoveId,
       );
 
       updatedProjectsList = JSON.parse(JSON.stringify(projects));
       updatedProjectsList.forEach((p: Project) => {
         if (p.id === pid) {
           p.subProjects = p.subProjects.filter(
-            (subproject: Project) => subproject.id !== projectToRemoveId
+            (subproject: Project) => subproject.id !== projectToRemoveId,
           );
         }
       });
@@ -65,7 +65,7 @@ export const RemoveProjectModal = () => {
       dispatch(setCurrentProject(updatedCurrentProject));
     } else {
       updatedProjectsList = projects.filter(
-        (project) => project._id !== projectToRemoveId
+        (project) => project._id !== projectToRemoveId,
       );
     }
 
@@ -81,7 +81,7 @@ export const RemoveProjectModal = () => {
           можливим
         </DialogContent>
         <DialogActions>
-          <Button type="submit">Видалити</Button>
+          <Button type='submit'>Видалити</Button>
         </DialogActions>
       </form>
     </Modal>

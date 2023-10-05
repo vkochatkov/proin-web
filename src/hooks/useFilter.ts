@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { IComment } from '../modules/reducers/mainProjects';
 import { FilterFunction } from '../modules/types/filter';
+import { IComment } from '../modules/types/mainProjects';
 
 interface IFilterFunctions<T> {
   sortedItems: T[];

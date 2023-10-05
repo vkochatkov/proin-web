@@ -5,12 +5,12 @@ import {
   setCurrentProject,
   updateComment,
 } from '../modules/actions/mainProjects';
-import { IComment } from '../modules/reducers/mainProjects';
 import { CommentsList } from './CommentsList';
 import { RemoveModal } from './Modals/RemoveModal';
 import { getIdForRemove } from '../modules/selectors/idForRemove';
 import { closeModal } from '../modules/actions/modal';
 import { setIdForDelete } from '../modules/actions/idForRemove';
+import { IComment } from '../modules/types/mainProjects';
 
 interface IProps {
   currentObj: any;

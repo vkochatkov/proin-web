@@ -1,7 +1,6 @@
-import { Project } from '../reducers/mainProjects';
 import { RootState } from '../store/store';
 import { createSelector } from 'reselect';
-import { IProject } from '../types/mainProjects';
+import { IProject, Project } from '../types/mainProjects';
 
 export const findProjectById = (
   projectId: string,

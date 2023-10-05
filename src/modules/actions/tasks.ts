@@ -5,27 +5,28 @@ import { ITask, ITaskRequest, ITasks } from '../types/tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
-import { IFile } from '../types/mainProjects';
+import { IComment, IFile } from '../types/mainProjects';
 import { updateEnitites, updateObjects } from '../../utils/utils';
 import { updateCurrentTaskSuccess, updateTaskState } from './currentTask';
 import { endLoading, startLoading } from './loading';
 import ApiErrors from '../../utils/API/APIErrors';
 import { updateUserTasksSuccess } from './userTasks';
-import { IComment } from '../reducers/mainProjects';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
 export const updateTasksSuccess = createAction<ITasks>('updateTasksSuccess');
 export const updateTaskId = createAction<{ taskId: string; _id: string }>(
-  'updateTaskId'
+  'updateTaskId',
 );
 export const fetchAllUserTasksSuccess = createAction<ITasks>(
-  'fetchAllUserTasksSuccess'
+  'fetchAllUserTasksSuccess',
 );
 export const deleteTaskCommentSuccess = createAction(
-  'deleteTaskCommentSuccess'
+  'deleteTaskCommentSuccess',
 );
-export const deleteFileFromTaskSuccess = createAction('deleteFileFromTaskSuccess');
+export const deleteFileFromTaskSuccess = createAction(
+  'deleteFileFromTaskSuccess',
+);
 
 export const updateTasksFunction = ({
   tasks,
@@ -73,51 +74,53 @@ export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
     changeSnackbarState({
       id: 'error',
       open: true,
-      message: `${e.response.data
-        ? e.response.data.message
-        : 'Завантажити задачі не вдалося'
-        }. Перезавантажте сторінку`,
+      message: `${
+        e.response.data
+          ? e.response.data.message
+          : 'Завантажити задачі не вдалося'
+      }. Перезавантажте сторінку`,
     });
   }
 };
 
 export const createTask =
   ({ projectId, name }: { projectId: string; name: string }) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const { userId } = getState().user;
-      const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
-      const timestamp = new Date().toISOString();
-      const id = uuidv4();
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { userId } = getState().user;
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const timestamp = new Date().toISOString();
+    const id = uuidv4();
 
-      try {
-        const newTask = {
-          timestamp,
-          name,
-          taskId: id,
-          projectId,
-          description: '',
-          files: [],
-          status: 'new',
-          userId,
-          _id: '',
-        };
+    try {
+      const newTask = {
+        timestamp,
+        name,
+        taskId: id,
+        projectId,
+        description: '',
+        files: [],
+        status: 'new',
+        userId,
+        _id: '',
+      };
 
-        tasks.unshift(newTask);
-        dispatch(updateTasksSuccess({ tasks }));
-        const res = await Api.Tasks.create(newTask, projectId);
+      tasks.unshift(newTask);
+      dispatch(updateTasksSuccess({ tasks }));
+      const res = await Api.Tasks.create(newTask, projectId);
 
-        dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
-      } catch (e: any) {
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data
+      dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
             ? e.response.data.message
             : 'Створити задачу не вдалося'
-            }. Перезавантажте сторінку`,
-        });
-      }
-    };
+        }. Перезавантажте сторінку`,
+      });
+    }
+  };
 
 export const changeTasksOrder =
   (pid: string, newOrder: ITask[]) => async (dispatch: Dispatch) => {
@@ -128,75 +131,78 @@ export const changeTasksOrder =
       changeSnackbarState({
         id: 'error',
         open: true,
-        message: `${e.response.data
-          ? e.response.data.message
-          : 'Зберегти послідовність задач не вдалося'
-          }. Перезавантажте сторінку`,
+        message: `${
+          e.response.data
+            ? e.response.data.message
+            : 'Зберегти послідовність задач не вдалося'
+        }. Перезавантажте сторінку`,
       });
     }
   };
 
 export const updateTaskById =
   (data: Partial<ITaskRequest>, taskId: string, pid?: string) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
-      const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
 
-      try {
-        const res = await Api.Tasks.updateTask(
-          { ...data, projectId: pid ? pid : '' },
-          taskId
-        );
+    try {
+      const res = await Api.Tasks.updateTask(
+        { ...data, projectId: pid ? pid : '' },
+        taskId,
+      );
 
-        ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
 
-        const updatedTask: ITask = res.task;
+      const updatedTask: ITask = res.task;
 
-        taskStateUpdater({
-          tasks,
-          task: updatedTask,
-          userTasks,
-          dispatch,
-        });
-      } catch (e: any) {
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data
+      taskStateUpdater({
+        tasks,
+        task: updatedTask,
+        userTasks,
+        dispatch,
+      });
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
             ? e.response.data.message
             : 'Оновити задачу не вдалося'
-            }. Перезавантажте сторінку`,
-        });
-      }
-    };
+        }. Перезавантажте сторінку`,
+      });
+    }
+  };
 
 export const updateTaskFilesOrder =
   ({ files, taskId }: { files: IFile[]; taskId: string }) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const tasks = getState().projectTasks;
-      try {
-        const result = updateEnitites(tasks, taskId, files);
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks = getState().projectTasks;
+    try {
+      const result = updateEnitites(tasks, taskId, files);
 
-        if (!result) return;
+      if (!result) return;
 
-        dispatch(updateTasksSuccess({ tasks: result.updatedEnities }));
-        dispatch(updateCurrentTaskSuccess({ task: result.updatedEntity }));
+      dispatch(updateTasksSuccess({ tasks: result.updatedEnities }));
+      dispatch(updateCurrentTaskSuccess({ task: result.updatedEntity }));
 
-        await Api.Files.updateTaskFilesOrder(
-          { files: result.updatedEntity.files },
-          taskId
-        );
-      } catch (e: any) {
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data
+      await Api.Files.updateTaskFilesOrder(
+        { files: result.updatedEntity.files },
+        taskId,
+      );
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `${
+          e.response.data
             ? e.response.data.message
             : 'Оновити задачу не вдалося'
-            }. Перезавантажте сторінку`,
-        });
-      }
-    };
+        }. Перезавантажте сторінку`,
+      });
+    }
+  };
 
 export const deleteTask =
   (taskId: string) => async (dispatch: Dispatch, getState: () => RootState) => {
@@ -204,7 +210,7 @@ export const deleteTask =
     const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
     const updatedTasks = tasks.filter((task: ITask) => task._id !== taskId);
     const updatedUserTasks = userTasks.filter(
-      (task: ITask) => task._id !== taskId
+      (task: ITask) => task._id !== taskId,
     );
 
     try {
@@ -234,84 +240,85 @@ export const fetchAllUserTasks = () => async (dispatch: Dispatch) => {
         id: 'error',
         open: true,
         message: `Виникла проблема.Перезавантажте сторінку`,
-      })
+      }),
     );
   }
 };
 
 export const createTaskComment =
   (comment: IComment, taskId: string) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const currentTask = getState().currentTask;
-      const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
-      const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const currentTask = getState().currentTask;
+    const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
 
-      try {
-        const updatedCurrentTask = {
-          ...currentTask,
-          comments: currentTask.comments
-            ? [comment, ...currentTask.comments]
-            : [comment],
-        };
+    try {
+      const updatedCurrentTask = {
+        ...currentTask,
+        comments: currentTask.comments
+          ? [comment, ...currentTask.comments]
+          : [comment],
+      };
 
-        taskStateUpdater({
-          tasks,
-          task: updatedCurrentTask,
-          userTasks,
-          dispatch,
-        });
+      taskStateUpdater({
+        tasks,
+        task: updatedCurrentTask,
+        userTasks,
+        dispatch,
+      });
 
-        const res = await Api.Tasks.createComment({ comment }, taskId);
+      const res = await Api.Tasks.createComment({ comment }, taskId);
 
-        ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
 
-        dispatch(
-          updateTaskState({
-            task: {
-              comments: res.task.comments,
-              actions: res.task.actions,
-            },
-          })
-        );
-      } catch (e) {
-        dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: `Виникла проблема.Перезавантажте сторінку`,
-          })
-        );
-      }
-    };
+      dispatch(
+        updateTaskState({
+          task: {
+            comments: res.task.comments,
+            actions: res.task.actions,
+          },
+        }),
+      );
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Виникла проблема.Перезавантажте сторінку`,
+        }),
+      );
+    }
+  };
 
 export const deleteTaskComment =
   (taskId: string, commentId: string) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const tasks: ITask[] = JSON.parse(JSON.stringify(getState().projectTasks));
-      const userTasks: ITask[] = JSON.parse(JSON.stringify(getState().userTasks));
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const tasks: ITask[] = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks: ITask[] = JSON.parse(JSON.stringify(getState().userTasks));
 
-      try {
-        const res = await Api.Tasks.deleteComment(taskId, commentId);
+    try {
+      const res = await Api.Tasks.deleteComment(taskId, commentId);
 
-        ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
 
-        dispatch(deleteTaskCommentSuccess());
+      dispatch(deleteTaskCommentSuccess());
 
-        const task: ITask = res.task;
+      const task: ITask = res.task;
 
-        taskStateUpdater({ tasks, task, userTasks, dispatch });
-      } catch (e) {
-        dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: `Виникла проблема.Перезавантажте сторінку`,
-          })
-        );
-      }
-    };
+      taskStateUpdater({ tasks, task, userTasks, dispatch });
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Виникла проблема.Перезавантажте сторінку`,
+        }),
+      );
+    }
+  };
 
-export const removeFileFromTask = (tid: string, fileId: string) =>
+export const removeFileFromTask =
+  (tid: string, fileId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const tasks: ITask[] = JSON.parse(JSON.stringify(getState().projectTasks));
     const userTasks: ITask[] = JSON.parse(JSON.stringify(getState().userTasks));
@@ -331,7 +338,7 @@ export const removeFileFromTask = (tid: string, fileId: string) =>
           id: 'error',
           open: true,
           message: `Неможливо видалити файл. Перезавантажте сторінку`,
-        })
+        }),
       );
     }
-  }
+  };

@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Draggable } from '@hello-pangea/dnd';
 import { Menu, MenuItem } from '@mui/material';
-import { Project } from '../../modules/reducers/mainProjects';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { Card } from '../UIElements/Card';
 import { getAuth } from '../../modules/selectors/user';
@@ -10,6 +9,7 @@ import { useActiveInput } from '../../hooks/useActiveInput';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { ProjectItemTextEditor } from '../FormComponent/ProjectItemTextEditor';
 import { Button } from '../FormElement/Button';
+import { Project } from '../../modules/types/mainProjects';
 
 import './ProjectItem.scss';
 
@@ -36,7 +36,7 @@ export const ProjectItem: React.FC<Props> = ({
   project,
   id,
 }) => {
-  const img = <img src={logo ? `${logo}` : ''} alt="logo" />;
+  const img = <img src={logo ? `${logo}` : ''} alt='logo' />;
   const { userId } = useSelector(getAuth);
   const {
     handleClose,
@@ -69,11 +69,11 @@ export const ProjectItem: React.FC<Props> = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Card className="item">
-            <div className="item__first-block">
-              {!logo && <div className="item__image-empty" />}
+          <Card className='item'>
+            <div className='item__first-block'>
+              {!logo && <div className='item__image-empty' />}
               {logo && img}
-              <div className="item__text-container">
+              <div className='item__text-container'>
                 <ProjectItemTextEditor
                   onBlur={handleHideInput}
                   isActive={isActive}
@@ -81,17 +81,17 @@ export const ProjectItem: React.FC<Props> = ({
                   id={id}
                   name={name}
                 />
-                <p className="item__description">{description}</p>
+                <p className='item__description'>{description}</p>
               </div>
             </div>
-            <div className="item__button">
-              <div className="item__icon-container">
+            <div className='item__button'>
+              <div className='item__icon-container'>
                 <Button
                   transparent
-                  customClassName="item__btn"
+                  customClassName='item__btn'
                   onClick={handleContextMenu}
                 >
-                  <MoreVertIcon className="item__icon" />
+                  <MoreVertIcon className='item__icon' />
                 </Button>
               </div>
               {contextMenuPosition && (

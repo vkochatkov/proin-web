@@ -11,30 +11,7 @@ import {
   selectProject,
   updateProjectFiles,
 } from '../../actions/mainProjects';
-import { IProject } from '../../types/mainProjects';
-
-export interface IComment {
-  taskId?: string;
-  id: string;
-  name: string;
-  text: string;
-  timestamp: string;
-  userId: string;
-  mentions: string[];
-  parentId?: string;
-}
-
-export interface Project {
-  _id: string;
-  projectName?: string;
-  description?: string;
-  logoUrl?: string;
-  creator: string;
-  status?: string;
-  comments?: IComment[];
-  subProjects: Project[];
-  [key: string]: any;
-}
+import { IProject, Project } from '../../types/mainProjects';
 
 const initialState: {
   projects: Project[];
