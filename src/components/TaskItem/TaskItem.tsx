@@ -6,6 +6,7 @@ import {
   MenuItem,
   Paper,
   SelectChangeEvent,
+  Skeleton,
   Typography,
 } from '@mui/material';
 import { ITask } from '../../modules/types/tasks';
@@ -27,6 +28,7 @@ import { getUserTask } from '../../modules/selectors/userTasks';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { getCurrentUserProject } from '../../modules/selectors/mainProjects';
+import { getIsLoading } from '../../modules/selectors/loading';
 
 import './TaskItem.scss';
 
@@ -84,6 +86,7 @@ export const TaskItem: React.FC<IProps> = ({
   const currentProject = useSelector((state: RootState) =>
     getCurrentUserProject(state)(projectId),
   );
+  const isLoading = useSelector(getIsLoading);
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -160,7 +163,6 @@ export const TaskItem: React.FC<IProps> = ({
 
   const handleChangeTaskStatus = (e: SelectChangeEvent) => {
     const newValue = e.target.value;
-    console.log(newValue);
 
     setSelectedValue(newValue);
 
@@ -205,6 +207,7 @@ export const TaskItem: React.FC<IProps> = ({
           />
           <Typography
             sx={{
+              display: isLoading ? 'none' : 'block',
               marginRight: '10px',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis',
@@ -213,6 +216,12 @@ export const TaskItem: React.FC<IProps> = ({
           >
             {task.name}
           </Typography>
+          <Skeleton
+            variant='rectangular'
+            width='100%'
+            height={20}
+            style={{ display: isLoading ? 'block' : 'none' }}
+          />
         </div>
         <Button
           icon

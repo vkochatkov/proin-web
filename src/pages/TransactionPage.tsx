@@ -16,7 +16,7 @@ import {
   fetchTransactionById,
   removeFileFromTransaction,
   updateTransactionOnServer,
-  uploadFilesToTHeServer,
+  uploadFilesToTheServer,
 } from '../modules/actions/transactions';
 import { getAllUserProjects } from '../modules/selectors/mainProjects';
 import { endLoading } from '../modules/actions/loading';
@@ -151,7 +151,7 @@ const TransactionPage: React.FC<IProps> = () => {
       if (!pid || !transactionId) return;
 
       dispatch(
-        uploadFilesToTHeServer(
+        uploadFilesToTheServer(
           { files: fileDataArray },
           transactionId,
           pid,

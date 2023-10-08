@@ -15,7 +15,7 @@ import {
   updateTaskState,
 } from '../../modules/actions/currentTask';
 import { useDebounce } from '../../hooks/useDebounce';
-import { fetchAllUserTasks, fetchTasks } from '../../modules/actions/tasks';
+// import { fetchAllUserTasks, fetchTasks } from '../../modules/actions/tasks';
 import {
   setCurrentTransaction,
   updateTransactionOnServer,
@@ -124,12 +124,6 @@ export const InteractiveInput: React.FC<Props> = ({
     if (tid && tid === updatedEntity._id) {
       const callback = () => {
         dispatch(updateCurrentTask(updatedValue, updatedEntity._id) as any);
-
-        if (pid) {
-          dispatch(fetchTasks(pid) as any);
-        } else {
-          dispatch(fetchAllUserTasks() as any);
-        }
       };
 
       dispatch(updateTaskState({ task: updatedEntity }) as any);

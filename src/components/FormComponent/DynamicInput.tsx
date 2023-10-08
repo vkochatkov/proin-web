@@ -39,7 +39,7 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
         setIsTextareaActive(false);
         setValue('');
       }
-    }, [props.isActive, props.text]);
+    }, [props.isActive, props.text, props.isActiveWithoutText, ref]);
 
     const handleChange = (
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

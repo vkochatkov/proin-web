@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Container } from '@mui/material';
 import { TaskItemList } from '../components/TaskItemList/TaskItemList';
-import { fetchAllUserTasks } from '../modules/actions/tasks';
+// import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
 import { ITask } from '../modules/types/tasks';
@@ -15,7 +15,7 @@ const TaskListPage: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchAllUserTasks() as any);
+    // dispatch(fetchAllUserTasks() as any);
   }, [dispatch]);
 
   const handleSaveTaskItemOrder = (newOrder: ITask[]) => {

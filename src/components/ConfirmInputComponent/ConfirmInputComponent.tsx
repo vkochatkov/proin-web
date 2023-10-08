@@ -54,6 +54,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
         setChangedValue('');
       }
     }
+    // eslint-disable-next-line
   }, [isSearching, changedValue, isActive]);
 
   return (

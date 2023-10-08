@@ -9,18 +9,28 @@ import { ITransaction } from '../types/transactions';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
 
-export const setCurrentTransaction = createAction<ITransaction>('setCurrentTransaction');
-export const fetchProjectTransactionsSuccess =
-  createAction<{ transactions: ITransaction[] }>('fetchProjectTransactionsSuccess');
-export const updateProjectTransactionsSuccess =
-  createAction<{ transactions: ITransaction[] }>('updateProjectTransactionsSuccess');
-export const clearProjectTransactions = createAction('clearProjectTransactions');
-export const updateUserTransactionsSuccess =
-  createAction<{ transactions: ITransaction[] }>('updateUserTransactionsSuccess');
-export const fetchUserTransactionsSuccess =
-  createAction<{ transactions: ITransaction[] }>('fetchUserTransactionsSuccess');
+export const setCurrentTransaction = createAction<ITransaction>(
+  'setCurrentTransaction',
+);
+export const fetchProjectTransactionsSuccess = createAction<{
+  transactions: ITransaction[];
+}>('fetchProjectTransactionsSuccess');
+export const updateProjectTransactionsSuccess = createAction<{
+  transactions: ITransaction[];
+}>('updateProjectTransactionsSuccess');
+export const clearProjectTransactions = createAction(
+  'clearProjectTransactions',
+);
+export const updateUserTransactionsSuccess = createAction<{
+  transactions: ITransaction[];
+}>('updateUserTransactionsSuccess');
+export const fetchUserTransactionsSuccess = createAction<{
+  transactions: ITransaction[];
+}>('fetchUserTransactionsSuccess');
 export const clearUserTransactions = createAction('clearProjectTransactions');
-export const deleteFileFromTransactionSuccess = createAction('deleteFileFromTransactionSuccess');
+export const deleteFileFromTransactionSuccess = createAction(
+  'deleteFileFromTransactionSuccess',
+);
 
 const updateTransactionStates = ({
   transactions,
@@ -36,48 +46,57 @@ const updateTransactionStates = ({
   const updatedTransactions = updateObjects(transactions, transaction);
   const updatedUserTransactions = updateObjects(userTransactions, transaction);
 
-  dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
+  dispatch(
+    updateProjectTransactionsSuccess({ transactions: updatedTransactions }),
+  );
   dispatch(setCurrentTransaction(transaction));
-  dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
-}
+  dispatch(
+    updateUserTransactionsSuccess({ transactions: updatedUserTransactions }),
+  );
+};
 
-export const fetchTransactionById = (id: string) => async (dispatch: Dispatch) => {
-  try {
-    const res = await Api.Transactions.getTransactionById(id);
+export const fetchTransactionById =
+  (id: string) => async (dispatch: Dispatch) => {
+    try {
+      const res = await Api.Transactions.getTransactionById(id);
 
-    ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
 
-    dispatch(setCurrentTransaction(res.transaction));
-  } catch (e) {
-    dispatch(
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Завантажити транзакцію не вдалося. Спробуйте перезавантажити сторінку!`,
-      })
-    );
-  }
-}
+      dispatch(setCurrentTransaction(res.transaction));
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Завантажити транзакцію не вдалося. Спробуйте перезавантажити сторінку!`,
+        }),
+      );
+    }
+  };
 
-export const fetchTransactions = (projectId: string) => async (dispatch: Dispatch) => {
-  try {
-    const res = await Api.Transactions.getProjectTransactions(projectId);
+export const fetchTransactions =
+  (projectId: string) => async (dispatch: Dispatch) => {
+    try {
+      const res = await Api.Transactions.getProjectTransactions(projectId);
 
-    ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
 
-    dispatch(fetchProjectTransactionsSuccess({ transactions: res.transactions }));
-  } catch (e) {
-    dispatch(
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Завантажити транзакції не вдалося. Перезавантажте сторінку!`,
-      })
-    );
-  }
-}
+      dispatch(
+        fetchProjectTransactionsSuccess({ transactions: res.transactions }),
+      );
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Завантажити транзакції не вдалося. Перезавантажте сторінку!`,
+        }),
+      );
+    }
+  };
 
-export const createTransaction = (projectId: string) =>
+export const createTransaction =
+  (projectId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const projectTransactions = getState().projectTransactions;
     const tabValue = getState().tabs['transaction-tabs'];
@@ -87,14 +106,15 @@ export const createTransaction = (projectId: string) =>
       transfer: 'Перекази',
     };
 
-    const selectedLabel = Object
-      .keys(transactionLabels).find(key => transactionLabels[key] === tabValue);
+    const selectedLabel = Object.keys(transactionLabels).find(
+      (key) => transactionLabels[key] === tabValue,
+    );
 
     try {
       const res = await Api.Transactions.create({
         projectId,
         timestamp: new Date().toISOString(),
-        type: selectedLabel ? selectedLabel : ''
+        type: selectedLabel ? selectedLabel : '',
       });
 
       ApiErrors.checkOnApiError(res);
@@ -102,7 +122,9 @@ export const createTransaction = (projectId: string) =>
       const updatedTransactions = [...projectTransactions, res.transaction];
 
       dispatch(setCurrentTransaction(res.transaction));
-      dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
+      dispatch(
+        updateProjectTransactionsSuccess({ transactions: updatedTransactions }),
+      );
 
       return res;
     } catch (e) {
@@ -111,64 +133,62 @@ export const createTransaction = (projectId: string) =>
           id: 'error',
           open: true,
           message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
-        })
+        }),
       );
     }
   };
 
-export const uploadFilesToTHeServer = (
-  data: { files: any[]; },
-  transactionId: string,
-  projectId: string
-) => async (dispatch: Dispatch, getState: () => RootState) => {
-  const projectTransactions = getState().projectTransactions;
-  const userTransactions = getState().userTransactions;
+export const uploadFilesToTheServer =
+  (data: { files: any[] }, transactionId: string, projectId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projectTransactions = getState().projectTransactions;
+    const userTransactions = getState().userTransactions;
 
-  try {
-    dispatch(startFilesLoading());
+    try {
+      dispatch(startFilesLoading());
 
-    const res = await Api.Transactions.update({
-      ...data,
-      projectId
-    }, transactionId);
+      const res = await Api.Transactions.update(
+        {
+          ...data,
+          projectId,
+        },
+        transactionId,
+      );
 
-    ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
 
-    const updatedTransaction = {
-      ...res.transaction
-    };
+      const updatedTransaction = {
+        ...res.transaction,
+      };
 
-    updateTransactionStates({
-      transactions: projectTransactions,
-      transaction: updatedTransaction,
-      userTransactions,
-      dispatch
-    });
+      updateTransactionStates({
+        transactions: projectTransactions,
+        transaction: updatedTransaction,
+        userTransactions,
+        dispatch,
+      });
 
-    dispatch(endFilesLoading());
-  } catch (e) {
-    dispatch(
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Завантажити файл не вдалося. Щось пішло не так!`,
-      })
-    );
-  }
-}
+      dispatch(endFilesLoading());
+    } catch (e) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `Завантажити файл не вдалося. Щось пішло не так!`,
+        }),
+      );
+    }
+  };
 
-export const updateTransactionOnServer = (
-  data: Partial<ITransaction>,
-  transactionId: string,
-  projectId: string
-) =>
+export const updateTransactionOnServer =
+  (data: Partial<ITransaction>, transactionId: string, projectId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const currentTransaction = getState().currentTransaction;
     const projectTransactions = getState().projectTransactions;
     const userTransactions = getState().userTransactions;
     const updatedTransaction = {
       ...currentTransaction,
-      ...data
+      ...data,
     };
 
     try {
@@ -176,13 +196,16 @@ export const updateTransactionOnServer = (
         transactions: projectTransactions,
         transaction: updatedTransaction,
         userTransactions,
-        dispatch
+        dispatch,
       });
 
-      const res = await Api.Transactions.update({
-        ...data,
-        projectId
-      }, transactionId);
+      const res = await Api.Transactions.update(
+        {
+          ...data,
+          projectId,
+        },
+        transactionId,
+      );
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
@@ -191,18 +214,21 @@ export const updateTransactionOnServer = (
           id: 'error',
           open: true,
           message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
-        })
+        }),
       );
     }
-  }
+  };
 
-export const saveProjectTransactionsOrder = (transactions: ITransaction[], projectId: string) =>
+export const saveProjectTransactionsOrder =
+  (transactions: ITransaction[], projectId: string) =>
   async (dispatch: Dispatch) => {
     try {
       dispatch(updateProjectTransactionsSuccess({ transactions }));
 
-      const res = await Api.Transactions
-        .updateTransactionsByProjectId(transactions, projectId);
+      const res = await Api.Transactions.updateTransactionsByProjectId(
+        transactions,
+        projectId,
+      );
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
@@ -211,22 +237,31 @@ export const saveProjectTransactionsOrder = (transactions: ITransaction[], proje
           id: 'error',
           open: true,
           message: `Зберегти порядок транзакцій не вийшло. Перезавантажте сторінку!`,
-        })
+        }),
       );
     }
-  }
+  };
 
-export const deleteTransaction = (id: string) =>
-  async (dispatch: Dispatch, getState: () => RootState) => {
+export const deleteTransaction =
+  (id: string) => async (dispatch: Dispatch, getState: () => RootState) => {
     const transactions = getState().projectTransactions;
     const userTransactions = getState().userTransactions;
     try {
-      const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
-      const updatedUserTransactions = userTransactions
-        .filter(transaction => transaction.id !== id);
+      const updatedTransactions = transactions.filter(
+        (transaction) => transaction.id !== id,
+      );
+      const updatedUserTransactions = userTransactions.filter(
+        (transaction) => transaction.id !== id,
+      );
 
-      dispatch(updateProjectTransactionsSuccess({ transactions: updatedTransactions }));
-      dispatch(updateUserTransactionsSuccess({ transactions: updatedUserTransactions }));
+      dispatch(
+        updateProjectTransactionsSuccess({ transactions: updatedTransactions }),
+      );
+      dispatch(
+        updateUserTransactionsSuccess({
+          transactions: updatedUserTransactions,
+        }),
+      );
 
       const res = await Api.Transactions.delete(id);
 
@@ -237,7 +272,7 @@ export const deleteTransaction = (id: string) =>
           id: 'error',
           open: true,
           message: `Видалити транзакцію не вийшло. Перезавантажте сторінку!`,
-        })
+        }),
       );
     }
   };
@@ -254,17 +289,21 @@ export const fetchUserTransactions = () => async (dispatch: Dispatch) => {
         id: 'error',
         open: true,
         message: `Сталася помилка. Перезавантажте сторінку!`,
-      })
+      }),
     );
   }
 };
 
-export const saveUserTransactionOrder = (transactions: ITransaction[], userId: string) =>
+export const saveUserTransactionOrder =
+  (transactions: ITransaction[], userId: string) =>
   async (dispatch: Dispatch) => {
     try {
       dispatch(updateUserTransactionsSuccess({ transactions }));
 
-      const res = await Api.Transactions.updateTransactionsByUserId(transactions, userId);
+      const res = await Api.Transactions.updateTransactionsByUserId(
+        transactions,
+        userId,
+      );
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
@@ -273,15 +312,20 @@ export const saveUserTransactionOrder = (transactions: ITransaction[], userId: s
           id: 'error',
           open: true,
           message: `Сталася помилка. Перезавантажте сторінку!`,
-        })
+        }),
       );
     }
-  }
+  };
 
-export const removeFileFromTransaction = (tid: string, fileId: string) =>
+export const removeFileFromTransaction =
+  (tid: string, fileId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const transactions: ITransaction[] = JSON.parse(JSON.stringify(getState().projectTransactions));
-    const userTransactions: ITransaction[] = JSON.parse(JSON.stringify(getState().userTransactions));
+    const transactions: ITransaction[] = JSON.parse(
+      JSON.stringify(getState().projectTransactions),
+    );
+    const userTransactions: ITransaction[] = JSON.parse(
+      JSON.stringify(getState().userTransactions),
+    );
 
     try {
       const res = await Api.Files.deleteTransactionsFile(tid, fileId);
@@ -295,7 +339,7 @@ export const removeFileFromTransaction = (tid: string, fileId: string) =>
         transactions: transactions,
         transaction,
         userTransactions,
-        dispatch
+        dispatch,
       });
     } catch (e) {
       dispatch(
@@ -303,32 +347,36 @@ export const removeFileFromTransaction = (tid: string, fileId: string) =>
           id: 'error',
           open: true,
           message: `Неможливо видалити файл. Перезавантажте сторінку`,
-        })
+        }),
       );
     }
-  }
+  };
 
 export const changeTransactionFilesOrder =
   ({ files, transactionId }: { files: IFile[]; transactionId: string }) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const projectTransactions = getState().projectTransactions;
-      try {
-        const result = updateEnitites(projectTransactions, transactionId, files);
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projectTransactions = getState().projectTransactions;
+    try {
+      const result = updateEnitites(projectTransactions, transactionId, files);
 
-        if (!result) return;
+      if (!result) return;
 
-        dispatch(setCurrentTransaction(result.updatedEntity));
-        dispatch(updateProjectTransactionsSuccess({ transactions: result.updatedEnities }));
+      dispatch(setCurrentTransaction(result.updatedEntity));
+      dispatch(
+        updateProjectTransactionsSuccess({
+          transactions: result.updatedEnities,
+        }),
+      );
 
-        await Api.Files.updateTransactionFilesOrder(
-          { files: result.updatedEntity.files },
-          transactionId
-        );
-      } catch (e: any) {
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Оновити транзакцію не вдалося`,
-        });
-      }
-    };
+      await Api.Files.updateTransactionFilesOrder(
+        { files: result.updatedEntity.files },
+        transactionId,
+      );
+    } catch (e: any) {
+      changeSnackbarState({
+        id: 'error',
+        open: true,
+        message: `Оновити транзакцію не вдалося`,
+      });
+    }
+  };
