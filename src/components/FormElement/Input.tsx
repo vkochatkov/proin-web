@@ -130,10 +130,10 @@ export const Input: React.FC<InputProps> = (props) => {
         value={inputState.value}
         ref={inputRef}
         className={props.className ? props.className : ''}
-        autoCorrect='off'
-        autoComplete='off'
-        autoCapitalize='off'
-        spellCheck='false'
+        // autoCorrect='off'
+        // autoComplete='off'
+        // autoCapitalize='off'
+        // spellCheck='false'
       />
     ) : (
       <textarea
@@ -143,10 +143,10 @@ export const Input: React.FC<InputProps> = (props) => {
         onBlur={touchHandler}
         value={inputState.value}
         ref={textareaRef}
-        autoComplete='off'
-        autoCorrect='off'
-        autoCapitalize='off'
-        spellCheck='false'
+        // autoComplete='off'
+        // autoCorrect='off'
+        // autoCapitalize='off'
+        // spellCheck='false'
         className={props.className ? props.className : ''}
         // onClick={openFullscreen}
         // onKeyDown={(event) => {
