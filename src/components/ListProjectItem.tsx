@@ -38,7 +38,7 @@ export const ListProjectItem: React.FC<Props> = ({
   const projectsToFilter = projects.map((project, index) => ({
     ...project,
     name: project.projectName,
-    timestamp: index.toString(),
+    timestamp: project.timestamp ? project.timestamp : new Date().toISOString(),
     _id: project._id,
   }));
   const {
@@ -51,7 +51,6 @@ export const ListProjectItem: React.FC<Props> = ({
     handleSearching,
     handleFilterByProjectId,
     isDraggable,
-    sortableItems,
   } = useFilter({
     items: projectsToFilter,
     filterFunction: ProjectsFilterFunction,

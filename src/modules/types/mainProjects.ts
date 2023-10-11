@@ -18,6 +18,7 @@ export interface Project {
   status?: string;
   comments?: IComment[];
   subProjects: SubProject[];
+  timestamp: string;
   [key: string]: any;
 }
 
