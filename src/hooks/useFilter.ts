@@ -14,12 +14,14 @@ interface IFilterFunctions<T> {
   handleSortByDefault: () => void;
   handleSearching: ({ newValue }: { newValue: string }) => void;
   handleFilterByProjectId: (id: string) => void;
+  isDraggable: boolean;
+  sortableItems: T[];
 }
 
 export const useFilter = <
   T extends {
     name?: string;
-    projectId: string;
+    projectId?: string;
     timestamp: string;
     comments?: IComment[];
   },
@@ -38,6 +40,14 @@ export const useFilter = <
   const [isSearching, setIsSearching] = useState(false);
   const [searchedValue, setSearchedValue] = useState('');
   const [projectIdValue, setProjectIdValue] = useState('');
+
+  const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
+  const sortableItems =
+    selectedSortOption === defaultSortOption
+      ? isSearching
+        ? searchedItems
+        : items
+      : searchedItems;
 
   const handleFilteringItems = ({
     value,
@@ -166,5 +176,7 @@ export const useFilter = <
     handleSortByDefault,
     handleSearching,
     handleFilterByProjectId,
+    isDraggable,
+    sortableItems,
   };
 };

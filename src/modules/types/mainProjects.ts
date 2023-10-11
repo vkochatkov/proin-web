@@ -17,9 +17,11 @@ export interface Project {
   creator: string;
   status?: string;
   comments?: IComment[];
-  subProjects: Project[];
+  subProjects: SubProject[];
   [key: string]: any;
 }
+
+export interface SubProject extends Project {}
 
 export interface IProject {
   projectName: string;

@@ -4,28 +4,59 @@ import { setIsDragging } from '../modules/actions/dragging';
 import { reorder } from '../utils/utils';
 import { ProjectItem } from './ProjectItem/ProjectItem';
 import { Project } from '../modules/types/mainProjects';
+import { useFilter } from '../hooks/useFilter';
+import { FilterFunction } from '../modules/types/filter';
+import { Toolbar } from './Toolbar/Toolbar';
 
 interface Props {
   projects: Project[];
   onClick: (id: string) => void;
   updateOrder: (newItem: Project[], index?: string) => void;
   isWrapped?: boolean;
+  isSearched?: boolean;
 }
 
-const getListStyle = (isDraggingOver: boolean, isWrapped: boolean) => ({
-  backgroundColor: 'rgba(248, 248, 248, .8)',
-  padding: isWrapped ? '0 5px' : 0,
-  borderRadius: '5px',
-  margin: '0 10px',
-});
+interface IProjectToFilter {
+  name?: string;
+  timestamp: string;
+  _id: string;
+}
+
+const ProjectsFilterFunction: FilterFunction<IProjectToFilter> = (
+  item,
+  value,
+) =>
+  item.name ? item.name.toLowerCase().includes(value.toLowerCase()) : false;
 
 export const ListProjectItem: React.FC<Props> = ({
   projects,
   onClick,
   updateOrder,
-  isWrapped = false,
+  isSearched = true,
 }) => {
   const dispatch = useDispatch();
+  const projectsToFilter = projects.map((project, index) => ({
+    ...project,
+    name: project.projectName,
+    timestamp: index.toString(),
+    _id: project._id,
+  }));
+  const {
+    searchedItems,
+    selectedSortOption,
+    handleSortByAddingDate,
+    handleSortbyLastCommentDate,
+    handleSortByDeadline,
+    handleSortByDefault,
+    handleSearching,
+    handleFilterByProjectId,
+    isDraggable,
+    sortableItems,
+  } = useFilter({
+    items: projectsToFilter,
+    filterFunction: ProjectsFilterFunction,
+  });
+  const modalId = 'filter-projects-modal';
 
   const onDragEnd = (result: any) => {
     if (!result.destination) {
@@ -43,44 +74,77 @@ export const ListProjectItem: React.FC<Props> = ({
   };
 
   return (
-    <>
-      <DragDropContext
-        onDragEnd={onDragEnd}
-        onDragStart={() => dispatch(setIsDragging(true))}
-      >
-        <Droppable droppableId='droppable'>
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={
-                projects && projects.length > 0
-                  ? getListStyle(snapshot.isDraggingOver, isWrapped)
-                  : undefined
-              }
-            >
-              {projects &&
-                projects.map((item: Project, index: number) => {
-                  return (
-                    <ProjectItem
-                      key={item._id}
-                      projectId={item._id}
-                      name={item.projectName ? item.projectName : ''}
-                      logo={item.logoUrl}
-                      description={item.description}
-                      index={index}
-                      onClick={onClick}
-                      sharedWith={item.sharedWith}
-                      id={item._id}
-                      project={item}
-                    />
-                  );
-                })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </>
+    <div
+      style={{
+        backgroundColor: 'rgba(248, 248, 248, .8)',
+        padding: '5px',
+        borderRadius: '5px',
+        margin: '0 10px',
+      }}
+    >
+      {isSearched && (
+        <Toolbar
+          modalId={modalId}
+          selectedSortOption={selectedSortOption}
+          handleSearching={handleSearching}
+          onSortByAddingDate={handleSortByAddingDate}
+          onSortByDeadline={handleSortByDeadline}
+          onSortByLastCommentDate={handleSortbyLastCommentDate}
+          onSortDefaultState={handleSortByDefault}
+        />
+      )}
+      {isDraggable ? (
+        <DragDropContext
+          onDragEnd={onDragEnd}
+          onDragStart={() => dispatch(setIsDragging(true))}
+        >
+          <Droppable droppableId='droppable'>
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {projects &&
+                  projects.map((item: Project, index: number) => {
+                    return (
+                      <ProjectItem
+                        key={item._id}
+                        projectId={item._id}
+                        name={item.projectName ? item.projectName : ''}
+                        logo={item.logoUrl}
+                        description={item.description}
+                        index={index}
+                        onClick={onClick}
+                        sharedWith={item.sharedWith}
+                        id={item._id}
+                        project={item}
+                        isDraggable={isDraggable}
+                      />
+                    );
+                  })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      ) : (
+        <>
+          {searchedItems &&
+            searchedItems.map((item: Project, index: number) => {
+              return (
+                <ProjectItem
+                  key={item._id}
+                  projectId={item._id}
+                  name={item.projectName ? item.projectName : ''}
+                  logo={item.logoUrl}
+                  description={item.description}
+                  index={index}
+                  onClick={onClick}
+                  sharedWith={item.sharedWith}
+                  id={item._id}
+                  project={item}
+                />
+              );
+            })}
+        </>
+      )}
+    </div>
   );
 };

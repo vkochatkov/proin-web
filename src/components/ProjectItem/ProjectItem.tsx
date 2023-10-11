@@ -23,6 +23,7 @@ interface Props {
   sharedWith: string[];
   id: string;
   project: Project;
+  isDraggable?: boolean;
 }
 
 export const ProjectItem: React.FC<Props> = ({
@@ -35,6 +36,7 @@ export const ProjectItem: React.FC<Props> = ({
   sharedWith,
   project,
   id,
+  isDraggable = false,
 }) => {
   const img = <img src={logo ? `${logo}` : ''} alt='logo' />;
   const { userId } = useSelector(getAuth);
@@ -60,81 +62,91 @@ export const ProjectItem: React.FC<Props> = ({
     handleClose();
   };
 
+  const renderElement = () => (
+    <Card className='item'>
+      <div className='item__first-block'>
+        {!logo && <div className='item__image-empty' />}
+        {logo && img}
+        <div className='item__text-container'>
+          <ProjectItemTextEditor
+            onBlur={handleHideInput}
+            isActive={isActive}
+            project={project}
+            id={id}
+            name={name}
+          />
+          <p className='item__description'>{description}</p>
+        </div>
+      </div>
+      <div className='item__button'>
+        <div className='item__icon-container'>
+          <Button
+            transparent
+            customClassName='item__btn'
+            onClick={handleContextMenu}
+          >
+            <MoreVertIcon className='item__icon' />
+          </Button>
+        </div>
+        {contextMenuPosition && (
+          <div>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClick={(e) => e.stopPropagation()}
+              onClose={(e: any) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              anchorPosition={{
+                top: contextMenuPosition.top,
+                left: contextMenuPosition.left,
+              }}
+            >
+              <MenuItem
+                onClick={(e) => {
+                  handleClickMenuItem(e);
+                  setIsActive(true);
+                }}
+              >
+                Редагувати
+              </MenuItem>
+              <MenuItem onClick={(e) => handleClickMenuItem(e, 'move-project')}>
+                Перемістити
+              </MenuItem>
+              <MenuItem
+                disabled={isMemberAdded}
+                onClick={(e) => handleClickMenuItem(e, 'remove-project')}
+              >
+                Видалити
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+
   return (
-    <Draggable draggableId={projectId} index={index} key={projectId}>
-      {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          onClick={(e) => (!isActive ? onClick(projectId) : null)}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <Card className='item'>
-            <div className='item__first-block'>
-              {!logo && <div className='item__image-empty' />}
-              {logo && img}
-              <div className='item__text-container'>
-                <ProjectItemTextEditor
-                  onBlur={handleHideInput}
-                  isActive={isActive}
-                  project={project}
-                  id={id}
-                  name={name}
-                />
-                <p className='item__description'>{description}</p>
-              </div>
+    <>
+      {isDraggable ? (
+        <Draggable draggableId={projectId} index={index} key={projectId}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              onClick={(e) => (!isActive ? onClick(projectId) : null)}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              {renderElement()}
             </div>
-            <div className='item__button'>
-              <div className='item__icon-container'>
-                <Button
-                  transparent
-                  customClassName='item__btn'
-                  onClick={handleContextMenu}
-                >
-                  <MoreVertIcon className='item__icon' />
-                </Button>
-              </div>
-              {contextMenuPosition && (
-                <div>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClick={(e) => e.stopPropagation()}
-                    onClose={(e: any) => {
-                      e.stopPropagation();
-                      handleClose();
-                    }}
-                    anchorPosition={{
-                      top: contextMenuPosition.top,
-                      left: contextMenuPosition.left,
-                    }}
-                  >
-                    <MenuItem
-                      onClick={(e) => {
-                        handleClickMenuItem(e);
-                        setIsActive(true);
-                      }}
-                    >
-                      Редагувати
-                    </MenuItem>
-                    <MenuItem
-                      onClick={(e) => handleClickMenuItem(e, 'move-project')}
-                    >
-                      Перемістити
-                    </MenuItem>
-                    <MenuItem
-                      disabled={isMemberAdded}
-                      onClick={(e) => handleClickMenuItem(e, 'remove-project')}
-                    >
-                      Видалити
-                    </MenuItem>
-                  </Menu>
-                </div>
-              )}
-            </div>
-          </Card>
+          )}
+        </Draggable>
+      ) : (
+        <div onClick={(e) => (!isActive ? onClick(projectId) : null)}>
+          {renderElement()}
         </div>
       )}
-    </Draggable>
+    </>
   );
 };

@@ -107,7 +107,6 @@ const HomePage: React.FC = () => {
             projects={projects}
             onClick={handleClickItem}
             updateOrder={handleUpdateProjectOrder}
-            isWrapped
           />
         )}
       </div>
