@@ -55,7 +55,6 @@ export const ListProjectItem: React.FC<Props> = ({
   } = useFilter({
     items: projectsToFilter,
     filterFunction: ProjectsFilterFunction,
-    isProjectsFiltering: true,
   });
   const modalId = 'filter-projects-modal';
 
@@ -80,7 +79,7 @@ export const ListProjectItem: React.FC<Props> = ({
   ) => {
     e.preventDefault();
 
-    handleFilterByProjectId(projectId);
+    // handleFilterByProjectId(projectId);
   };
 
   return (
