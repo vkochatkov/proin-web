@@ -7,6 +7,7 @@ import { Project } from '../modules/types/mainProjects';
 import { useFilter } from '../hooks/useFilter';
 import { FilterFunction } from '../modules/types/filter';
 import { Toolbar } from './Toolbar/Toolbar';
+import { FilterModal } from './Modals/FilterModal';
 
 interface Props {
   projects: Project[];
@@ -54,6 +55,7 @@ export const ListProjectItem: React.FC<Props> = ({
   } = useFilter({
     items: projectsToFilter,
     filterFunction: ProjectsFilterFunction,
+    isProjectsFiltering: true,
   });
   const modalId = 'filter-projects-modal';
 
@@ -72,78 +74,94 @@ export const ListProjectItem: React.FC<Props> = ({
     dispatch(setIsDragging(false));
   };
 
+  const handleFilterProjects = (
+    e: { preventDefault: () => void },
+    projectId: string,
+  ) => {
+    e.preventDefault();
+
+    handleFilterByProjectId(projectId);
+  };
+
   return (
-    <div
-      style={{
-        backgroundColor: 'rgba(248, 248, 248, .8)',
-        padding: '5px',
-        borderRadius: '5px',
-        margin: '0 10px',
-      }}
-    >
-      {isSearched && (
-        <Toolbar
-          modalId={modalId}
-          selectedSortOption={selectedSortOption}
-          handleSearching={handleSearching}
-          onSortByAddingDate={handleSortByAddingDate}
-          onSortByDeadline={handleSortByDeadline}
-          onSortByLastCommentDate={handleSortbyLastCommentDate}
-          onSortDefaultState={handleSortByDefault}
-        />
-      )}
-      {isDraggable ? (
-        <DragDropContext
-          onDragEnd={onDragEnd}
-          onDragStart={() => dispatch(setIsDragging(true))}
-        >
-          <Droppable droppableId='droppable'>
-            {(provided, snapshot) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {projects &&
-                  projects.map((item: Project, index: number) => {
-                    return (
-                      <ProjectItem
-                        key={item._id}
-                        projectId={item._id}
-                        name={item.projectName ? item.projectName : ''}
-                        logo={item.logoUrl}
-                        description={item.description}
-                        index={index}
-                        onClick={onClick}
-                        sharedWith={item.sharedWith}
-                        id={item._id}
-                        project={item}
-                        isDraggable={isDraggable}
-                      />
-                    );
-                  })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      ) : (
-        <>
-          {searchedItems &&
-            searchedItems.map((item: Project, index: number) => {
-              return (
-                <ProjectItem
-                  key={item._id}
-                  projectId={item._id}
-                  name={item.projectName ? item.projectName : ''}
-                  logo={item.logoUrl}
-                  description={item.description}
-                  index={index}
-                  onClick={onClick}
-                  sharedWith={item.sharedWith}
-                  id={item._id}
-                  project={item}
-                />
-              );
-            })}
-        </>
-      )}
-    </div>
+    <>
+      <FilterModal
+        submitHandler={handleFilterProjects}
+        modalId={modalId}
+        label={'Виберіть фільтр для проектів'}
+      />
+      <div
+        style={{
+          backgroundColor: 'rgba(248, 248, 248, .8)',
+          padding: '5px',
+          borderRadius: '5px',
+          margin: '0 10px',
+        }}
+      >
+        {isSearched && (
+          <Toolbar
+            modalId={modalId}
+            selectedSortOption={selectedSortOption}
+            handleSearching={handleSearching}
+            onSortByAddingDate={handleSortByAddingDate}
+            onSortByDeadline={handleSortByDeadline}
+            onSortByLastCommentDate={handleSortbyLastCommentDate}
+            onSortDefaultState={handleSortByDefault}
+          />
+        )}
+        {isDraggable ? (
+          <DragDropContext
+            onDragEnd={onDragEnd}
+            onDragStart={() => dispatch(setIsDragging(true))}
+          >
+            <Droppable droppableId='droppable'>
+              {(provided, snapshot) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {projects &&
+                    projects.map((item: Project, index: number) => {
+                      return (
+                        <ProjectItem
+                          key={item._id}
+                          projectId={item._id}
+                          name={item.projectName ? item.projectName : ''}
+                          logo={item.logoUrl}
+                          description={item.description}
+                          index={index}
+                          onClick={onClick}
+                          sharedWith={item.sharedWith}
+                          id={item._id}
+                          project={item}
+                          isDraggable={isDraggable}
+                        />
+                      );
+                    })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        ) : (
+          <>
+            {searchedItems &&
+              searchedItems.map((item: Project, index: number) => {
+                return (
+                  <ProjectItem
+                    key={item._id}
+                    projectId={item._id}
+                    name={item.projectName ? item.projectName : ''}
+                    logo={item.logoUrl}
+                    description={item.description}
+                    index={index}
+                    onClick={onClick}
+                    sharedWith={item.sharedWith}
+                    id={item._id}
+                    project={item}
+                  />
+                );
+              })}
+          </>
+        )}
+      </div>
+    </>
   );
 };
