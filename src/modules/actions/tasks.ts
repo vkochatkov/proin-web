@@ -301,13 +301,7 @@ export const deleteTaskComment =
 
       taskStateUpdater({ tasks, task, userTasks, dispatch });
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Виникла проблема.Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -327,12 +321,6 @@ export const removeFileFromTask =
 
       taskStateUpdater({ tasks, task, userTasks, dispatch });
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Неможливо видалити файл. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };

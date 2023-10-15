@@ -7,7 +7,11 @@ import { IComment } from '../modules/types/mainProjects';
 import { ITransaction } from '../modules/types/transactions';
 import { getIdForRemove } from '../modules/selectors/idForRemove';
 import { setIdForDelete } from '../modules/actions/idForRemove';
-import { createTransactionComment } from '../modules/actions/transactions';
+import {
+  createTransactionComment,
+  deleteTransactionComment,
+} from '../modules/actions/transactions';
+import { closeModal } from '../modules/actions/modal';
 
 interface IProps {
   currentObj: ITransaction;
@@ -19,6 +23,7 @@ export const TransactionCommentsComponent: React.FC<IProps> = ({
   const dispatch = useDispatch();
   const { transactionId } = useParams();
   const removedItemId = useSelector(getIdForRemove);
+  const modalId = 'remove-transaction-comment';
 
   const handeSaveUpdatedComment = (
     updatedComment: IComment,
@@ -38,7 +43,7 @@ export const TransactionCommentsComponent: React.FC<IProps> = ({
   const handleSaveDeletedComment = (id: string) => {
     if (!transactionId || !currentObj) return;
 
-    // dispatch(deleteTaskComment(transactionId, id) as any);
+    dispatch(deleteTransactionComment(transactionId, id) as any);
   };
 
   const handleCreateComment = (comment: IComment) => {
@@ -52,11 +57,20 @@ export const TransactionCommentsComponent: React.FC<IProps> = ({
     );
   };
 
-  const handleDeleteComment = () => {
+  const handleDeleteComment = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
     if (!currentObj || !removedItemId) return;
 
     const { comments } = currentObj;
+
     if (comments) {
+      dispatch(
+        closeModal({
+          id: modalId,
+        }),
+      );
+
       handleSaveDeletedComment(removedItemId);
     }
 
@@ -66,13 +80,13 @@ export const TransactionCommentsComponent: React.FC<IProps> = ({
   return (
     <>
       <RemoveModal
-        modalId='remove-task-comment'
+        modalId={modalId}
         submitHandler={handleDeleteComment}
         text='коментар'
       />
       <CommentsList
         currentObj={currentObj}
-        modalId='remove-task-comment'
+        modalId={modalId}
         updateComment={handeSaveUpdatedComment}
         createComment={handleCreateComment}
       />

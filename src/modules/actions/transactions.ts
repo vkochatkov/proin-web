@@ -412,10 +412,41 @@ export const createTransactionComment =
 
       const saveTransaction = {
         ...updatedCurrentTask,
-        comments: res.task.comments,
+        comments: res.transaction.comments,
       };
 
       dispatch(setCurrentTransaction(saveTransaction));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const deleteTransactionComment =
+  (transactionId: string, commentId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projectTransactions: ITransaction[] = JSON.parse(
+      JSON.stringify(getState().projectTransactions),
+    );
+    const userTransactions: ITransaction[] = JSON.parse(
+      JSON.stringify(getState().userTransactions),
+    );
+
+    try {
+      const res = await Api.Transactions.deleteComment(
+        transactionId,
+        commentId,
+      );
+
+      ApiErrors.checkOnApiError(res);
+
+      const transaction: ITransaction = res.transaction;
+
+      updateTransactionStates({
+        transactions: projectTransactions,
+        transaction,
+        userTransactions,
+        dispatch,
+      });
     } catch (e) {
       console.log(e);
     }

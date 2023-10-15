@@ -145,5 +145,7 @@ export const Api = {
       APIClient.patch(`/transactions-list/user/${id}`, { transactions }),
     createComment: (props: { comment: IComment }, id: string) =>
       APIClient.post(`/transactions-list/${id}/comments`, props),
+    deleteComment: (tid: string, commentId: string) =>
+      APIClient.delete(`transactions-list/${tid}/comments/${commentId}`),
   },
 };
