@@ -94,7 +94,7 @@ export const TaskItemList: React.FC<IProps> = ({
         submitHandler={handleFilterTasks}
         modalId={modalId}
         label={'Виберіть фільтр для задач'}
-        itemsName={filterNames.projects}
+        itemsName={itemsName}
       />
       <div className='tasks-items'>
         <Toolbar

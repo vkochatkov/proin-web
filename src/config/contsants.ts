@@ -1,4 +1,4 @@
-export const filterNames = {
+export const filterNames: { [key: string]: string } = {
   userTransactions: 'user-transactions',
   projects: 'projects',
   projectTasks: 'project-tasks',
