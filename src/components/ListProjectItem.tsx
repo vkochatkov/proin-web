@@ -50,11 +50,12 @@ export const ListProjectItem: React.FC<Props> = ({
     handleSortByDeadline,
     handleSortByDefault,
     handleSearching,
-    handleFilterByProjectId,
     isDraggable,
+    filterValue,
   } = useFilter({
     items: projectsToFilter,
     filterFunction: ProjectsFilterFunction,
+    itemsName: 'projects',
   });
   const modalId = 'filter-projects-modal';
 
@@ -106,6 +107,7 @@ export const ListProjectItem: React.FC<Props> = ({
             onSortByDeadline={handleSortByDeadline}
             onSortByLastCommentDate={handleSortbyLastCommentDate}
             onSortDefaultState={handleSortByDefault}
+            filterValue={filterValue}
           />
         )}
         {isDraggable ? (

@@ -27,6 +27,7 @@ const TransactionListPage: React.FC<Props> = () => {
     isSearching,
     selectedSortOption,
     defaultSortOption,
+    filterValue,
     handleSortByAddingDate,
     handleSortbyLastCommentDate,
     handleSortByDeadline,
@@ -36,6 +37,7 @@ const TransactionListPage: React.FC<Props> = () => {
   } = useFilter({
     items: transactions,
     filterFunction: transactionsFilterFunction,
+    itemsName: 'transactions',
   });
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
   const sortableTasks =
@@ -95,6 +97,7 @@ const TransactionListPage: React.FC<Props> = () => {
               onSortByDeadline={handleSortByDeadline}
               onSortByLastCommentDate={handleSortbyLastCommentDate}
               onSortDefaultState={handleSortByDefault}
+              filterValue={filterValue}
             />
             <TransactionItemList
               transactions={sortableTasks}

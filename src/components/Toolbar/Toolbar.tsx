@@ -23,6 +23,7 @@ interface Props {
   onSortByLastCommentDate: () => void;
   onSortDefaultState: () => void;
   modalId: string;
+  filterValue?: string;
 }
 
 export const Toolbar: React.FC<Props> = ({
@@ -33,6 +34,7 @@ export const Toolbar: React.FC<Props> = ({
   onSortByLastCommentDate,
   onSortDefaultState,
   modalId,
+  filterValue,
 }) => {
   const dispatch = useDispatch();
 
@@ -69,6 +71,7 @@ export const Toolbar: React.FC<Props> = ({
         action={'addItem'}
         placeholder=' пошук'
         isSearching
+        value={filterValue}
       />
       <div className='toolbar__btns-wrapper'>
         {/* <Button icon transparent>

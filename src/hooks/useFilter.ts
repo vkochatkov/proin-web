@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FilterFunction } from '../modules/types/filter';
 import { IComment } from '../modules/types/mainProjects';
 
@@ -16,6 +16,7 @@ interface IFilterFunctions<T> {
   handleFilterByProjectId: (id: string) => void;
   isDraggable: boolean;
   sortableItems: T[];
+  filterValue: string;
 }
 
 export const useFilter = <
@@ -28,17 +29,29 @@ export const useFilter = <
 >({
   items,
   filterFunction,
+  itemsName,
 }: {
   items: T[];
   filterFunction: FilterFunction<T>;
+  itemsName: string;
 }): IFilterFunctions<T> => {
   const defaultSortOption = 'default';
-  const [sortedItems, setSortingItems] = useState(items);
-  const [searchedItems, setSearchedItems] = useState(sortedItems);
-  const [selectedSortOption, setSelectedSortOption] =
-    useState<string>(defaultSortOption);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchedValue, setSearchedValue] = useState('');
+  const savedSettings = JSON.parse(sessionStorage.getItem(itemsName) || '{}');
+  const [sortedItems, setSortingItems] = useState(
+    savedSettings.sortedItems || items,
+  );
+  const [searchedItems, setSearchedItems] = useState(
+    savedSettings.searchedItems || sortedItems,
+  );
+  const [selectedSortOption, setSelectedSortOption] = useState<string>(
+    savedSettings.selectedSortOption || defaultSortOption,
+  );
+  const [isSearching, setIsSearching] = useState(
+    savedSettings.isSearching || false,
+  );
+  const [searchedValue, setSearchedValue] = useState(
+    savedSettings.searchedValue || '',
+  );
   const [projectIdValue, setProjectIdValue] = useState('');
 
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
@@ -48,6 +61,26 @@ export const useFilter = <
         ? searchedItems
         : items
       : searchedItems;
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      itemsName,
+      JSON.stringify({
+        sortedItems,
+        selectedSortOption,
+        isSearching,
+        searchedValue,
+        searchedItems,
+      }),
+    );
+  }, [
+    sortedItems,
+    selectedSortOption,
+    itemsName,
+    isSearching,
+    searchedValue,
+    searchedItems,
+  ]);
 
   const handleFilteringItems = ({
     value,
@@ -178,5 +211,6 @@ export const useFilter = <
     handleFilterByProjectId,
     isDraggable,
     sortableItems,
+    filterValue: searchedValue,
   };
 };

@@ -17,6 +17,7 @@ interface IProps {
   tasks: ITask[];
   changeOrder: (tasks: ITask[]) => void;
   generateNavigationString: (id: string) => void;
+  itemsName: string;
 }
 
 const tasksFilterFunction: FilterFunction<ITask> = (item, value, projectId) => {
@@ -34,13 +35,11 @@ export const TaskItemList: React.FC<IProps> = ({
   tasks,
   changeOrder,
   generateNavigationString,
+  itemsName,
 }) => {
   const dispatch = useDispatch();
   const {
-    searchedItems,
-    isSearching,
     selectedSortOption,
-    defaultSortOption,
     handleSortByAddingDate,
     handleSortbyLastCommentDate,
     handleSortByDeadline,
@@ -49,7 +48,12 @@ export const TaskItemList: React.FC<IProps> = ({
     handleFilterByProjectId,
     isDraggable,
     sortableItems,
-  } = useFilter({ items: tasks, filterFunction: tasksFilterFunction });
+    filterValue,
+  } = useFilter({
+    items: tasks,
+    filterFunction: tasksFilterFunction,
+    itemsName,
+  });
 
   const modalId = 'filter-tasks-modal';
 
@@ -99,6 +103,7 @@ export const TaskItemList: React.FC<IProps> = ({
           onSortByDeadline={handleSortByDeadline}
           onSortByLastCommentDate={handleSortbyLastCommentDate}
           onSortDefaultState={handleSortByDefault}
+          filterValue={filterValue}
         />
         <div>
           {isDraggable && (
@@ -126,14 +131,15 @@ export const TaskItemList: React.FC<IProps> = ({
           )}
           {!isDraggable && (
             <>
-              {sortableItems.map((task, index) => (
-                <TaskItem
-                  task={task}
-                  index={index}
-                  key={task._id}
-                  generateNavigationString={generateNavigationString}
-                />
-              ))}
+              {sortableItems &&
+                sortableItems.map((task, index) => (
+                  <TaskItem
+                    task={task}
+                    index={index}
+                    key={task._id}
+                    generateNavigationString={generateNavigationString}
+                  />
+                ))}
             </>
           )}
         </div>

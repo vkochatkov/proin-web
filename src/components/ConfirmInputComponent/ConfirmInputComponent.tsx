@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Action } from 'redux-act';
 import { Button } from '../FormElement/Button';
 import CheckIcon from '@mui/icons-material/Check';
@@ -35,6 +35,7 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
   isSearching,
 }) => {
   const [changedValue, setChangedValue] = useState(value);
+  const initialRender = useRef(true); // Use a ref to track initial render
 
   const handleConfirm = () => {
     onConfirm({ action, type, newValue: changedValue, value });
@@ -47,6 +48,12 @@ export const ConfirmInputComponent: React.FC<IProps> = ({
   };
 
   useEffect(() => {
+    if (initialRender.current) {
+      // Skip the first render
+      initialRender.current = false;
+      return;
+    }
+
     if (isSearching) {
       onConfirm({ action, type, newValue: changedValue, value });
 

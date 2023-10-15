@@ -38,6 +38,7 @@ export const ProjectTasksComponent = () => {
         tasks={tasks}
         changeOrder={handleChangeTaskItemOrder}
         generateNavigationString={handleGenerateNavigationQuery}
+        itemsName='project-tasks'
       />
     </>
   );

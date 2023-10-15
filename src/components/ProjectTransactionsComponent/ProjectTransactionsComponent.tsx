@@ -45,9 +45,11 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
     handleSortByDefault,
     handleSearching,
     handleFilterByProjectId,
+    filterValue,
   } = useFilter({
     items: sortedTransactions,
     filterFunction: transactionsFilterFunction,
+    itemsName: 'project-transactions',
   });
 
   const sortableTasks =
@@ -122,6 +124,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         onSortByDeadline={handleSortByDeadline}
         onSortByLastCommentDate={handleSortbyLastCommentDate}
         onSortDefaultState={handleSortByDefault}
+        filterValue={filterValue}
       />
       <div className='project-transactions__top'>
         <p
