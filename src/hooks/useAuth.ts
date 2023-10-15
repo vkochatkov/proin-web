@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signin, signout } from '../modules/actions/user';
 import { getAuth } from '../modules/selectors/user';
+import { filterNames } from '../config/contsants';
 
 interface UserData {
   userId: string;
@@ -19,7 +20,7 @@ export const useAuth = (): {
     token: string,
     email: string,
     name: string,
-    expirationDate?: Date
+    expirationDate?: Date,
   ) => void;
   logout: () => void;
   userId: string;
@@ -35,7 +36,7 @@ export const useAuth = (): {
       token: string,
       email: string,
       name: string,
-      expirationDate: Date = new Date(new Date().getTime() + 1000 * 60 * 60)
+      expirationDate: Date = new Date(new Date().getTime() + 1000 * 60 * 60),
     ) => {
       setTokenExpirationDate(expirationDate);
       localStorage.setItem(
@@ -46,16 +47,22 @@ export const useAuth = (): {
           email,
           name,
           expiration: expirationDate.toISOString(),
-        })
+        }),
       );
 
       dispatch(signin(uid, token, email, name) as any);
     },
-    [dispatch]
+    [dispatch],
   );
+
+  const removeFilteredValuesFromSessionStorage = () => {
+    Object.keys(filterNames).forEach((key) => sessionStorage.removeItem(key));
+  };
 
   const logout = useCallback(() => {
     localStorage.removeItem('userData');
+    removeFilteredValuesFromSessionStorage();
+
     dispatch(signout() as any);
     navigate('/auth');
   }, [dispatch, navigate]);
@@ -84,7 +91,7 @@ export const useAuth = (): {
           storedData.token,
           storedData.email,
           storedData.name,
-          new Date(storedData.expiration)
+          new Date(storedData.expiration),
         );
       }
     }
