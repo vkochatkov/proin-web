@@ -45,9 +45,12 @@ export const FilterModal: React.FC<IProps> = ({
   itemsName,
 }) => {
   const dispatch = useDispatch();
-  const storedSelectedValue = JSON.parse(
-    sessionStorage.getItem(`${itemsName}SelectedValue`) || '',
+  const valueFromSessionStorage = sessionStorage.getItem(
+    `${itemsName}SelectedValue`,
   );
+  const storedSelectedValue =
+    valueFromSessionStorage !== null ? JSON.parse(valueFromSessionStorage) : '';
+
   const [selectedValue, setSelectedValue] = useState<string>(
     storedSelectedValue || '',
   );
