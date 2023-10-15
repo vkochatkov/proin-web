@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DialogActions, DialogContent, SelectChangeEvent } from '@mui/material';
 import { Modal } from './Modal';
 import { Button } from '../FormElement/Button';
@@ -14,6 +14,7 @@ interface IProps {
   submitHandler: (e: { preventDefault: () => void }, value: string) => void;
   modalId: string;
   label: string;
+  itemsName: string;
 }
 
 const getProjectsNames = (projects: IProject[]) =>
@@ -41,14 +42,27 @@ export const FilterModal: React.FC<IProps> = ({
   submitHandler,
   modalId,
   label,
+  itemsName,
 }) => {
   const dispatch = useDispatch();
-  const [selectedValue, setSelectedValue] = useState<string>('');
+  const storedSelectedValue = JSON.parse(
+    sessionStorage.getItem(`${itemsName}SelectedValue`) || '',
+  );
+  const [selectedValue, setSelectedValue] = useState<string>(
+    storedSelectedValue || '',
+  );
   const userProjects = useSelector(getAllUserProjects) as IProject[];
   const usersProjectNames = getProjectsNames(userProjects);
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
   );
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      `${itemsName}SelectedValue`,
+      JSON.stringify(selectedValue),
+    );
+  }, [selectedValue]);
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));

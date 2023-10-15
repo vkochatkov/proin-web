@@ -10,6 +10,7 @@ import { Toolbar } from '../Toolbar/Toolbar';
 import { useFilter } from '../../hooks/useFilter';
 import { FilterModal } from '../Modals/FilterModal';
 import { FilterFunction } from '../../modules/types/filter';
+import { filterNames } from '../../config/contsants';
 
 import './TaskItemList.scss';
 
@@ -93,6 +94,7 @@ export const TaskItemList: React.FC<IProps> = ({
         submitHandler={handleFilterTasks}
         modalId={modalId}
         label={'Виберіть фільтр для задач'}
+        itemsName={filterNames.projects}
       />
       <div className='tasks-items'>
         <Toolbar

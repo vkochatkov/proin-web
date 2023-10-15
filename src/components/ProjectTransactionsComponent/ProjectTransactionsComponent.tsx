@@ -116,6 +116,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         submitHandler={handleFilteringTransactions}
         modalId={modalId}
         label={'Виберіть фільтр для фінансів'}
+        itemsName={filterNames.projects}
       />
       <Toolbar
         selectedSortOption={selectedSortOption}

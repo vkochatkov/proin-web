@@ -90,6 +90,7 @@ export const ListProjectItem: React.FC<Props> = ({
         submitHandler={handleFilterProjects}
         modalId={modalId}
         label={'Виберіть фільтр для проектів'}
+        itemsName={filterNames.projects}
       />
       <div
         style={{

@@ -75,6 +75,7 @@ const TransactionListPage: React.FC<Props> = () => {
         submitHandler={handleFilteringTransactions}
         modalId={modalId}
         label={'Виберіть фільтр для фінансів'}
+        itemsName={filterNames.projects}
       />
       <Container
         sx={{
