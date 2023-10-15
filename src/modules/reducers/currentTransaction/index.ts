@@ -5,7 +5,7 @@ import { IClassifiers, ITransaction } from '../../types/transactions';
 const initialClassifiers: IClassifiers = {
   expenses: [],
   income: [],
-  transfer: []
+  transfer: [],
 };
 
 const initialState: ITransaction = {
@@ -18,11 +18,12 @@ const initialState: ITransaction = {
   type: 'expenses',
   timestamp: '',
   classifiers: initialClassifiers,
-  files: []
+  files: [],
+  comments: [],
 };
 
 export const currentTransaction = createReducer({}, initialState);
 
 currentTransaction.on(setCurrentTransaction, (_, payload) => ({
-  ...payload
+  ...payload,
 }));

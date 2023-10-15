@@ -4,7 +4,7 @@ import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
 import { updateEnitites, updateObjects } from '../../utils/utils';
 import { RootState } from '../store/store';
-import { IFile } from '../types/mainProjects';
+import { IComment, IFile } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
@@ -378,5 +378,45 @@ export const changeTransactionFilesOrder =
         open: true,
         message: `Оновити транзакцію не вдалося`,
       });
+    }
+  };
+
+export const createTransactionComment =
+  (comment: IComment, transactionId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const projectTransactions = getState().projectTransactions;
+    const userTransactions = getState().userTransactions;
+    const currentTransaction = getState().currentTransaction;
+
+    try {
+      const updatedCurrentTask = {
+        ...currentTransaction,
+        comments: currentTransaction.comments
+          ? [comment, ...currentTransaction.comments]
+          : [comment],
+      };
+
+      updateTransactionStates({
+        transactions: projectTransactions,
+        transaction: updatedCurrentTask,
+        userTransactions,
+        dispatch,
+      });
+
+      const res = await Api.Transactions.createComment(
+        { comment },
+        transactionId,
+      );
+
+      ApiErrors.checkOnApiError(res);
+
+      const saveTransaction = {
+        ...updatedCurrentTask,
+        comments: res.task.comments,
+      };
+
+      dispatch(setCurrentTransaction(saveTransaction));
+    } catch (e) {
+      console.log(e);
     }
   };

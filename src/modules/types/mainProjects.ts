@@ -1,5 +1,6 @@
 export interface IComment {
   taskId?: string;
+  transactionId?: string;
   id: string;
   name: string;
   text: string;

@@ -29,6 +29,7 @@ import { RemoveModal } from '../components/Modals/RemoveModal';
 import { IFile } from '../modules/types/mainProjects';
 import { PROJECTS_PATH } from '../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { TransactionCommentsComponent } from '../components/TransactionCommentsComponent';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -259,6 +260,8 @@ const TransactionPage: React.FC<IProps> = () => {
               sendFilesToServer={sendFilesToServer}
             />
           </div>
+          <h3>Коментарі</h3>
+          <TransactionCommentsComponent currentObj={currentTransaction} />
         </Card>
       </div>
     </>

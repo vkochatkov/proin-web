@@ -1,7 +1,7 @@
-import { IFile } from "./mainProjects";
+import { IComment, IFile } from './mainProjects';
 
 export interface IClassifiers {
-  [key: string]: string[],
+  [key: string]: string[];
 }
 
 export interface ITransaction {
@@ -14,6 +14,7 @@ export interface ITransaction {
   id: string;
   timestamp: string;
   type: string;
-  classifiers: IClassifiers
+  classifiers: IClassifiers;
+  comments: IComment[];
   // [key: string]: string;
 }

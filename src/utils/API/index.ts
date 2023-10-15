@@ -143,5 +143,7 @@ export const Api = {
     getUserTransactions: () => APIClient.get(`/transactions-list/all`),
     updateTransactionsByUserId: (transactions: ITransaction[], id: string) =>
       APIClient.patch(`/transactions-list/user/${id}`, { transactions }),
+    createComment: (props: { comment: IComment }, id: string) =>
+      APIClient.post(`/transactions-list/${id}/comments`, props),
   },
 };

@@ -26,7 +26,7 @@ export const TaskCommentsComponent: React.FC<IProps> = ({ currentObj }) => {
   const { tid } = useParams();
   const removedItemId = useSelector(getIdForRemove);
 
-  const handeSaveUpdatedComment = (
+  const handleSaveUpdatedComment = (
     updatedComment: IComment,
     updatedComments: IComment[],
   ) => {
@@ -55,7 +55,7 @@ export const TaskCommentsComponent: React.FC<IProps> = ({ currentObj }) => {
     dispatch(deleteTaskComment(tid, id) as any);
   };
 
-  const handleSaveCreatedComment = (comment: IComment) => {
+  const handleCreateComment = (comment: IComment) => {
     if (!tid) return;
 
     dispatch(createTaskComment({ ...comment, taskId: tid }, tid) as any);
@@ -97,8 +97,8 @@ export const TaskCommentsComponent: React.FC<IProps> = ({ currentObj }) => {
       <CommentsList
         currentObj={currentTask}
         modalId={modalId}
-        updateComment={handeSaveUpdatedComment}
-        createComment={handleSaveCreatedComment}
+        updateComment={handleSaveUpdatedComment}
+        createComment={handleCreateComment}
       />
     </>
   );

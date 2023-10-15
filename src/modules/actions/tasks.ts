@@ -280,13 +280,7 @@ export const createTaskComment =
         }),
       );
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Виникла проблема.Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
