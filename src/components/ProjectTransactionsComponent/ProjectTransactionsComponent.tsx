@@ -11,6 +11,7 @@ import { Toolbar } from '../Toolbar/Toolbar';
 import { useFilter } from '../../hooks/useFilter';
 import { FilterModal } from '../Modals/FilterModal';
 import { transactionsFilterFunction } from '../../utils/utils';
+import { filterNames } from '../../config/contsants';
 
 import './ProjectTransactionsComponent.scss';
 
@@ -49,7 +50,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
   } = useFilter({
     items: sortedTransactions,
     filterFunction: transactionsFilterFunction,
-    itemsName: 'project-transactions',
+    itemsName: filterNames.projectTransactions,
   });
 
   const sortableTasks =

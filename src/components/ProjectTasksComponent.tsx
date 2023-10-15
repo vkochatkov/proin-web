@@ -6,6 +6,7 @@ import { getTasks } from '../modules/selectors/tasks';
 import { ITask } from '../modules/types/tasks';
 import { CreateTaskInput } from './CreateTaskInput';
 import { TaskItemList } from './TaskItemList/TaskItemList';
+import { filterNames } from '../config/contsants';
 
 export const ProjectTasksComponent = () => {
   const tasks = useSelector(getTasks);
@@ -38,7 +39,7 @@ export const ProjectTasksComponent = () => {
         tasks={tasks}
         changeOrder={handleChangeTaskItemOrder}
         generateNavigationString={handleGenerateNavigationQuery}
-        itemsName='project-tasks'
+        itemsName={filterNames.projectTasks}
       />
     </>
   );

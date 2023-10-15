@@ -14,6 +14,7 @@ import { useFilter } from '../hooks/useFilter';
 import { transactionsFilterFunction } from '../utils/utils';
 import { FilterModal } from '../components/Modals/FilterModal';
 import { Toolbar } from '../components/Toolbar/Toolbar';
+import { filterNames } from '../config/contsants';
 
 type Props = {};
 
@@ -37,7 +38,7 @@ const TransactionListPage: React.FC<Props> = () => {
   } = useFilter({
     items: transactions,
     filterFunction: transactionsFilterFunction,
-    itemsName: 'transactions',
+    itemsName: filterNames.userTransactions,
   });
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
   const sortableTasks =

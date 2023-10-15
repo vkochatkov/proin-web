@@ -8,6 +8,7 @@ import { useFilter } from '../hooks/useFilter';
 import { FilterFunction } from '../modules/types/filter';
 import { Toolbar } from './Toolbar/Toolbar';
 import { FilterModal } from './Modals/FilterModal';
+import { filterNames } from '../config/contsants';
 
 interface Props {
   projects: Project[];
@@ -55,7 +56,7 @@ export const ListProjectItem: React.FC<Props> = ({
   } = useFilter({
     items: projectsToFilter,
     filterFunction: ProjectsFilterFunction,
-    itemsName: 'projects',
+    itemsName: filterNames.projects,
   });
   const modalId = 'filter-projects-modal';
 

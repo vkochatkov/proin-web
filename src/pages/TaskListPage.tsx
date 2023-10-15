@@ -7,6 +7,7 @@ import { changeUserTasksOrder } from '../modules/actions/userTasks';
 import { getAllUserTasks } from '../modules/selectors/userTasks';
 import { ITask } from '../modules/types/tasks';
 import { RemoveTaskModal } from '../components/Modals/RemoveTaskModal';
+import { filterNames } from '../config/contsants';
 
 type Props = {};
 
@@ -43,7 +44,7 @@ const TaskListPage: React.FC<Props> = () => {
             tasks={tasks}
             changeOrder={handleSaveTaskItemOrder}
             generateNavigationString={handleGenerateNavigationQuery}
-            itemsName='user-tasks'
+            itemsName={filterNames.userTasks}
           />
         </Card>
       </Container>
