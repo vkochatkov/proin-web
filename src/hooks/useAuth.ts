@@ -56,7 +56,10 @@ export const useAuth = (): {
   );
 
   const removeFilteredValuesFromSessionStorage = () => {
-    Object.keys(filterNames).forEach((key) => sessionStorage.removeItem(key));
+    Object.keys(filterNames).forEach((key) => {
+      sessionStorage.removeItem(filterNames[key]);
+      sessionStorage.removeItem(`${filterNames[key]}SelectedValue`);
+    });
   };
 
   const logout = useCallback(() => {
