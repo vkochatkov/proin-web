@@ -355,9 +355,9 @@ export const removeFileFromTransaction =
 export const changeTransactionFilesOrder =
   ({ files, transactionId }: { files: IFile[]; transactionId: string }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const projectTransactions = getState().projectTransactions;
+    const userTransactions = getState().userTransactions;
     try {
-      const result = updateEnitites(projectTransactions, transactionId, files);
+      const result = updateEnitites(userTransactions, transactionId, files);
 
       if (!result) return;
 
