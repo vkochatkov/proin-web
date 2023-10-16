@@ -40,7 +40,7 @@ export const NavLinks = () => {
           <li className='nav-links__item'>
             <NavLink to='/transactions' className='nav-links__link-wrapper'>
               <AssignmentIcon />
-              <p>Транзакції</p>
+              <p>Фінанси</p>
             </NavLink>
           </li>
           <li className='nav-links__item'>
