@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { useDispatch } from 'react-redux';
 import { setIsDragging } from '../modules/actions/dragging';
@@ -59,6 +60,7 @@ export const ListProjectItem: React.FC<Props> = ({
     itemsName: filterNames.projects,
   });
   const modalId = 'filter-projects-modal';
+  const { pid } = useParams();
 
   const onDragEnd = (result: any) => {
     if (!result.destination) {
@@ -97,10 +99,10 @@ export const ListProjectItem: React.FC<Props> = ({
           backgroundColor: 'rgba(248, 248, 248, .8)',
           padding: '5px',
           borderRadius: '5px',
-          margin: '0 10px',
+          margin: `${!pid} ? 0 10px : 0`,
         }}
       >
-        {isSearched && (
+        {isSearched && !pid && (
           <Toolbar
             modalId={modalId}
             selectedSortOption={selectedSortOption}
