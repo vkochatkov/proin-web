@@ -178,7 +178,7 @@ export const updateTaskById =
 export const updateTaskFilesOrder =
   ({ files, taskId }: { files: IFile[]; taskId: string }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const tasks = getState().projectTasks;
+    const tasks = getState().userTasks;
     try {
       const result = updateEnitites(tasks, taskId, files);
 
