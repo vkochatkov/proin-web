@@ -148,14 +148,13 @@ const TransactionPage: React.FC<IProps> = () => {
   const sendFilesToServer = async (files: File[]) => {
     try {
       const fileDataArray = await generateDataUrl(files);
-
-      if (!pid || !transactionId) return;
+      if (!currentTransaction || !transactionId) return;
 
       dispatch(
         uploadFilesToTheServer(
           { files: fileDataArray },
           transactionId,
-          pid,
+          currentTransaction.projectId,
         ) as any,
       );
     } catch (err) {

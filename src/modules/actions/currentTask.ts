@@ -36,15 +36,27 @@ export const updateCurrentTask =
         dispatch(startFilesLoading());
       }
 
-      taskStateUpdater({
-        tasks,
-        task: updatedTask,
-        userTasks,
-        //@ts-ignore
-        dispatch,
-      });
+      if (!data.files) {
+        taskStateUpdater({
+          tasks,
+          task: updatedTask,
+          userTasks,
+          //@ts-ignore
+          dispatch,
+        });
+      }
 
       const res = await Api.Tasks.updateTask(data, tid);
+
+      if (data.files) {
+        taskStateUpdater({
+          tasks,
+          task: res.task,
+          userTasks,
+          //@ts-ignore
+          dispatch,
+        });
+      }
 
       ApiErrors.checkOnApiError(res);
       dispatch(endFilesLoading());

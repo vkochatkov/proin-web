@@ -80,10 +80,13 @@ export const TaskPage = () => {
     try {
       const fileDataArray = await generateDataUrl(files);
 
-      if (!pid || !tid) return;
+      if (!task.projectId || !tid) return;
 
       dispatch(
-        updateCurrentTask({ files: fileDataArray, projectId: pid }, tid) as any,
+        updateCurrentTask(
+          { files: fileDataArray, projectId: task.projectId },
+          tid,
+        ) as any,
       );
     } catch (err) {
       console.log(err);
