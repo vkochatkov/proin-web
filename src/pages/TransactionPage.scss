@@ -1,6 +1,10 @@
 @import '../utils/mixins.scss';
 
 .transaction {
+  &__card {
+    margin: 0;
+  }
+
   &__btn {
     @include button-absolute;
   }
@@ -23,6 +27,10 @@
   }
 
   &__title {
+    margin-top: 0;
+  }
+
+  &__head-top {
     margin-top: 0;
   }
 }

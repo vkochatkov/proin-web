@@ -21,6 +21,7 @@ import { updateCurrentTask } from '../../modules/actions/currentTask';
 import { PROJECTS_PATH } from '../../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Button } from '../../components/FormElement/Button';
+import { getAllUserProjects } from '../../modules/selectors/mainProjects';
 
 import '../../index.scss';
 import './TaskPage.scss';
@@ -43,6 +44,10 @@ export const TaskPage = () => {
   const { pid, subprojectId, tid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const projects = useSelector(getAllUserProjects);
+  const currentProject = projects.find(
+    (project) => project._id === task.projectId,
+  );
   const tabsId = 'main-tabs';
   const modalId = 'remove-file';
   const {
@@ -113,6 +118,8 @@ export const TaskPage = () => {
             <ArrowBackIosIcon />
             <p>Назад</p>
           </Button>
+          <h3 className='task-page__title'>Проект</h3>
+          <p>{currentProject && currentProject?.projectName}</p>
           <Card className='task-page__card'>
             <InteractiveInput
               id='name'

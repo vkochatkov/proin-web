@@ -202,65 +202,67 @@ const TransactionPage: React.FC<IProps> = () => {
           </Button>
           <h3 className='transaction__title'>Проект</h3>
           <p>{currentProject && currentProject?.projectName}</p>
-          <h3>Дата</h3>
-          <InteractiveDatePicker
-            timestamp={currentTransaction.timestamp}
-            handleChange={handleUpdateTransactionDate}
-          />
-          <TransactionSelect
-            label={'Тип транзакції'}
-            keyValue={'type'}
-            selectedValue={selectedTypeValue}
-            setSelectedValue={setSelectedTypeValue}
-            values={types}
-            getTranslation={getTransactionLabel}
-          />
-          <div
-            style={{
-              position: 'relative',
-            }}
-          >
-            <TransactionSelect
-              label={'Класифікатор'}
-              keyValue={'classifier'}
-              selectedValue={selectedClassifierValue}
-              setSelectedValue={setSelectedClassifierValue}
-              values={currentTransaction.classifiers[currentTransaction.type]}
+          <Card className='transaction__card'>
+            <h3 className='transaction__head-top'>Дата</h3>
+            <InteractiveDatePicker
+              timestamp={currentTransaction.timestamp}
+              handleChange={handleUpdateTransactionDate}
             />
-            <AddClassifierInputComponent />
-          </div>
-          <InteractiveInput
-            label='Сума'
-            id='sum'
-            type='number'
-            inputHandler={inputHandler}
-            entity={currentTransaction}
-          />
-          <div style={style}>
+            <TransactionSelect
+              label={'Тип транзакції'}
+              keyValue={'type'}
+              selectedValue={selectedTypeValue}
+              setSelectedValue={setSelectedTypeValue}
+              values={types}
+              getTranslation={getTransactionLabel}
+            />
+            <div
+              style={{
+                position: 'relative',
+              }}
+            >
+              <TransactionSelect
+                label={'Класифікатор'}
+                keyValue={'classifier'}
+                selectedValue={selectedClassifierValue}
+                setSelectedValue={setSelectedClassifierValue}
+                values={currentTransaction.classifiers[currentTransaction.type]}
+              />
+              <AddClassifierInputComponent />
+            </div>
             <InteractiveInput
-              label='Опис'
-              id='description'
+              label='Сума'
+              id='sum'
+              type='number'
               inputHandler={inputHandler}
               entity={currentTransaction}
             />
-          </div>
-          <div className='transaction__files-wrapper'>
-            <FilesList
-              files={currentTransaction.files}
-              saveFilesOrder={saveFilesOrder}
-              handleOpenModal={handleOpenRemoveFileModal}
-            />
-          </div>
-          <div className='transaction__files-wrapper'>
-            <FileUploadComponent
-              id={'files'}
-              files={files}
-              setFiles={setFiles}
-              sendFilesToServer={sendFilesToServer}
-            />
-          </div>
-          <h3>Коментарі</h3>
-          <TransactionCommentsComponent currentObj={currentTransaction} />
+            <div style={style}>
+              <InteractiveInput
+                label='Опис'
+                id='description'
+                inputHandler={inputHandler}
+                entity={currentTransaction}
+              />
+            </div>
+            <div className='transaction__files-wrapper'>
+              <FilesList
+                files={currentTransaction.files}
+                saveFilesOrder={saveFilesOrder}
+                handleOpenModal={handleOpenRemoveFileModal}
+              />
+            </div>
+            <div className='transaction__files-wrapper'>
+              <FileUploadComponent
+                id={'files'}
+                files={files}
+                setFiles={setFiles}
+                sendFilesToServer={sendFilesToServer}
+              />
+            </div>
+            <h3>Коментарі</h3>
+            <TransactionCommentsComponent currentObj={currentTransaction} />
+          </Card>
         </Card>
       </div>
     </>
