@@ -38,12 +38,16 @@ export const ListProjectItem: React.FC<Props> = ({
   isSearched = true,
 }) => {
   const dispatch = useDispatch();
-  const projectsToFilter = projects.map((project, index) => ({
-    ...project,
-    name: project.projectName,
-    timestamp: project.timestamp ? project.timestamp : new Date().toISOString(),
-    _id: project._id,
-  }));
+  const projectsToFilter = projects
+    ? projects.map((project) => ({
+        ...project,
+        name: project.projectName,
+        timestamp: project.timestamp
+          ? project.timestamp
+          : new Date().toISOString(),
+        _id: project._id,
+      }))
+    : [];
   const {
     searchedItems,
     selectedSortOption,
