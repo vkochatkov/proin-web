@@ -10,6 +10,7 @@ import { setIdForDelete } from '../modules/actions/idForRemove';
 import {
   createTransactionComment,
   deleteTransactionComment,
+  updateTransactionOnServer,
 } from '../modules/actions/transactions';
 import { closeModal } from '../modules/actions/modal';
 
@@ -26,18 +27,18 @@ export const TransactionCommentsComponent: React.FC<IProps> = ({
   const modalId = 'remove-transaction-comment';
 
   const handeSaveUpdatedComment = (
-    updatedComment: IComment,
+    _: IComment,
     updatedComments: IComment[],
   ) => {
     if (!currentObj || !transactionId) return;
 
-    // const task = { comments: updatedComments };
-    // dispatch(
-    //   updateTaskById(
-    //     { comments: updatedComments, comment: updatedComment },
-    //     transactionId,
-    //   ) as any,
-    // );
+    dispatch(
+      updateTransactionOnServer(
+        { comments: updatedComments },
+        transactionId,
+        currentObj.projectId,
+      ) as any,
+    );
   };
 
   const handleSaveDeletedComment = (id: string) => {
