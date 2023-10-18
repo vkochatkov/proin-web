@@ -11,6 +11,7 @@ import { setCurrentTransaction } from '../../modules/actions/transactions';
 import { openModal } from '../../modules/actions/modal';
 import { getCurrentUserProject } from '../../modules/selectors/mainProjects';
 import { RootState } from '../../modules/store/store';
+import { useOpenProjectLink } from '../../hooks/useOpenProjectLink';
 
 import './TransactionItem.scss';
 
@@ -42,6 +43,7 @@ export const TransactionItem: React.FC<IProps> = ({
   const currentProject = useSelector((state: RootState) =>
     getCurrentUserProject(state)(transaction.projectId),
   );
+  const { handleOpenTheProject } = useOpenProjectLink();
 
   // Format the date and time
   const formattedDate = transactionDate.toLocaleDateString('uk-UA', {
@@ -87,6 +89,7 @@ export const TransactionItem: React.FC<IProps> = ({
             overflow: 'hidden',
             fontWeight: 'bold',
           }}
+          onClick={(e) => handleOpenTheProject(e, currentProject)}
         >
           {currentProject.projectName}
         </Typography>

@@ -11,12 +11,12 @@ import {
   selectProject,
   updateProjectFiles,
 } from '../../actions/mainProjects';
-import { IProject, Project } from '../../types/mainProjects';
+import { IUserProject, Project } from '../../types/mainProjects';
 
 const initialState: {
   projects: Project[];
   currentProject: Project | null;
-  allUserProjects: IProject[] | [];
+  allUserProjects: IUserProject[] | [];
   selectedProject: string;
 } = {
   projects: [],

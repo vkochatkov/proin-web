@@ -1,11 +1,11 @@
 import { RootState } from '../store/store';
 import { createSelector } from 'reselect';
-import { IProject, Project } from '../types/mainProjects';
+import { IUserProject, Project } from '../types/mainProjects';
 
 export const findProjectById = (
   projectId: string,
-  projects: (IProject | Project)[],
-): IProject | Project | undefined => {
+  projects: (IUserProject | Project)[],
+): IUserProject | Project | undefined => {
   for (const project of projects) {
     if (project._id === projectId) {
       return project;

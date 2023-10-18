@@ -29,6 +29,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { getCurrentUserProject } from '../../modules/selectors/mainProjects';
 import { getIsLoading } from '../../modules/selectors/loading';
+import { useOpenProjectLink } from '../../hooks/useOpenProjectLink';
 
 import './TaskItem.scss';
 
@@ -108,6 +109,7 @@ export const TaskItem: React.FC<IProps> = ({
       day: 'numeric',
       month: 'numeric',
     });
+  const { handleOpenTheProject } = useOpenProjectLink();
 
   useEffect(() => {
     setChecked(status === 'done');
@@ -190,6 +192,7 @@ export const TaskItem: React.FC<IProps> = ({
             overflow: 'hidden',
             fontWeight: 'bold',
           }}
+          onClick={(e) => handleOpenTheProject(e, currentProject)}
         >
           {currentProject.projectName}
         </Typography>

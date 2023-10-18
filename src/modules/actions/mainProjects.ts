@@ -6,7 +6,7 @@ import { changeSnackbarState } from './snackbar';
 import {
   IComment,
   IFile,
-  IProject,
+  IUserProject,
   ISubProjectAction,
   Project,
 } from '../types/mainProjects';
@@ -34,7 +34,7 @@ export const updateMainProjectsSuccess = createAction<{
 export const clearCurrentProject = createAction('clearCurrentProject');
 export const clearProjects = createAction('clearProjects');
 export const setAllUserProjects =
-  createAction<IProject[]>('setAllUserProjects');
+  createAction<IUserProject[]>('setAllUserProjects');
 export const selectProject = createAction<string>('selectProject');
 export const updateProjectFiles = createAction<{
   projectId: string;
@@ -445,13 +445,7 @@ export const fetchAllUserProjects =
 
     const response = await Api.Projects.get(userId);
 
-    const allUserProjects = response.projects.map((project: Project) => ({
-      projectName: project.projectName,
-      _id: project._id,
-      subProjects: project.subProjects,
-    }));
-
-    dispatch(setAllUserProjects(allUserProjects));
+    dispatch(setAllUserProjects(response.projects));
     try {
     } catch (e: any) {
       dispatch(

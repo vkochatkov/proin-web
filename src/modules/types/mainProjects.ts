@@ -25,12 +25,7 @@ export interface Project {
 
 export interface SubProject extends Project {}
 
-export interface IProject {
-  projectName: string;
-  _id: string;
-  subProjects: Project[];
-  classifier: string[];
-}
+export interface IUserProject extends Project {}
 
 export interface ISubProjectAction {
   projectId: string;

@@ -8,7 +8,7 @@ import { RootState } from '../../modules/store/store';
 import { closeModal } from '../../modules/actions/modal';
 import { SelectComponent } from '../FormComponent/SelectComponent';
 import { getAllUserProjects } from '../../modules/selectors/mainProjects';
-import { IProject } from '../../modules/types/mainProjects';
+import { IUserProject } from '../../modules/types/mainProjects';
 
 interface IProps {
   submitHandler: (e: { preventDefault: () => void }, value: string) => void;
@@ -17,7 +17,7 @@ interface IProps {
   itemsName: string;
 }
 
-const getProjectsNames = (projects: IProject[]) =>
+const getProjectsNames = (projects: IUserProject[]) =>
   projects.reduce((accumulator: { id: string; value: string }[], project) => {
     const projectItem = {
       id: project._id as string,
@@ -54,7 +54,7 @@ export const FilterModal: React.FC<IProps> = ({
   const [selectedValue, setSelectedValue] = useState<string>(
     storedSelectedValue || '',
   );
-  const userProjects = useSelector(getAllUserProjects) as IProject[];
+  const userProjects = useSelector(getAllUserProjects) as IUserProject[];
   const usersProjectNames = getProjectsNames(userProjects);
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
