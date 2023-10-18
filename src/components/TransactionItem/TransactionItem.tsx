@@ -1,5 +1,5 @@
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Draggable } from '@hello-pangea/dnd';
 import { Menu, MenuItem, Paper, Typography } from '@mui/material';
 import { useContextMenu } from '../../hooks/useContextMenu';
@@ -9,6 +9,8 @@ import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { getTransactionLabel } from '../../utils/utils';
 import { setCurrentTransaction } from '../../modules/actions/transactions';
 import { openModal } from '../../modules/actions/modal';
+import { getCurrentUserProject } from '../../modules/selectors/mainProjects';
+import { RootState } from '../../modules/store/store';
 
 import './TransactionItem.scss';
 
@@ -27,6 +29,7 @@ export const TransactionItem: React.FC<IProps> = ({
 }) => {
   const { handleClose, handleContextMenu, contextMenuPosition, anchorEl } =
     useContextMenu();
+  const { pid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const modalId = 'remove-transaction';
@@ -36,6 +39,9 @@ export const TransactionItem: React.FC<IProps> = ({
   };
   // Convert the timestamp to a Date object
   const transactionDate = new Date(transaction.timestamp);
+  const currentProject = useSelector((state: RootState) =>
+    getCurrentUserProject(state)(transaction.projectId),
+  );
 
   // Format the date and time
   const formattedDate = transactionDate.toLocaleDateString('uk-UA', {
@@ -73,6 +79,18 @@ export const TransactionItem: React.FC<IProps> = ({
       >
         <MenuItem onClick={() => handleOpenModal(modalId)}>Видалити</MenuItem>
       </Menu>
+      {currentProject && !pid && (
+        <Typography
+          sx={{
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            fontWeight: 'bold',
+          }}
+        >
+          {currentProject.projectName}
+        </Typography>
+      )}
       <Typography
         variant='inherit'
         sx={{ display: 'inline' }}
