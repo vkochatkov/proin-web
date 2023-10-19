@@ -22,6 +22,7 @@ import { PROJECTS_PATH } from '../../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Button } from '../../components/FormElement/Button';
 import { getAllUserProjects } from '../../modules/selectors/mainProjects';
+import { useOpenProjectLink } from '../../hooks/useOpenProjectLink';
 
 import '../../index.scss';
 import './TaskPage.scss';
@@ -57,6 +58,7 @@ export const TaskPage = () => {
     selectedFileId,
     handleOpenRemoveFileModal,
   } = useFiles(modalId);
+  const { handleOpenTheProject } = useOpenProjectLink();
 
   const handleCloseTaskPage = () => {
     if (pid && !subprojectId) {
@@ -119,7 +121,18 @@ export const TaskPage = () => {
             <p>Назад</p>
           </Button>
           <h3 className='task-page__title'>Проект</h3>
-          <p>{currentProject && currentProject?.projectName}</p>
+          <p
+            style={{
+              cursor: 'pointer',
+            }}
+            onClick={
+              currentProject
+                ? (e) => handleOpenTheProject(e, currentProject)
+                : undefined
+            }
+          >
+            {currentProject?.projectName}
+          </p>
           <Card className='task-page__card'>
             <InteractiveInput
               id='name'

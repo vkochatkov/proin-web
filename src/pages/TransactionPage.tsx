@@ -30,6 +30,7 @@ import { IFile } from '../modules/types/mainProjects';
 import { PROJECTS_PATH } from '../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { TransactionCommentsComponent } from '../components/TransactionCommentsComponent';
+import { useOpenProjectLink } from '../hooks/useOpenProjectLink';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -76,6 +77,7 @@ const TransactionPage: React.FC<IProps> = () => {
     handleOpenRemoveFileModal,
     selectedFileId,
   } = useFiles(modalId);
+  const { handleOpenTheProject } = useOpenProjectLink();
 
   useEffect(() => {
     if (!transactionId) return;
@@ -201,7 +203,18 @@ const TransactionPage: React.FC<IProps> = () => {
             <p>Назад</p>
           </Button>
           <h3 className='transaction__title'>Проект</h3>
-          <p>{currentProject && currentProject?.projectName}</p>
+          <p
+            onClick={
+              currentProject
+                ? (e) => handleOpenTheProject(e, currentProject)
+                : undefined
+            }
+            style={{
+              cursor: 'pointer',
+            }}
+          >
+            {currentProject?.projectName}
+          </p>
           <Card className='transaction__card'>
             <h3 className='transaction__head-top'>Дата</h3>
             <InteractiveDatePicker
