@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Button } from '../FormElement/Button';
@@ -6,7 +7,6 @@ import { useContextMenu } from '../../hooks/useContextMenu';
 import { Menu, MenuItem } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { openModal } from '../../modules/actions/modal';
-import { useDispatch } from 'react-redux';
 
 import './Toolbar.scss';
 

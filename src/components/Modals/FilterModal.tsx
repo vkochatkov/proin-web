@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { DialogActions, DialogContent, SelectChangeEvent } from '@mui/material';
+import { DialogActions, DialogContent } from '@mui/material';
 import { Modal } from './Modal';
 import { Button } from '../FormElement/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { getModalStateById } from '../../modules/selectors/modal';
 import { RootState } from '../../modules/store/store';
 import { closeModal } from '../../modules/actions/modal';
-import { SelectComponent } from '../FormComponent/SelectComponent';
 import { getAllUserProjects } from '../../modules/selectors/mainProjects';
 import { IUserProject } from '../../modules/types/mainProjects';
+import { SearchSelectComponent } from '../FormComponent/SearchSelectComponent';
 
 interface IProps {
   submitHandler: (e: { preventDefault: () => void }, value: string) => void;
@@ -65,17 +65,15 @@ export const FilterModal: React.FC<IProps> = ({
       `${itemsName}SelectedValue`,
       JSON.stringify(selectedValue),
     );
-  }, [selectedValue]);
+  }, [selectedValue, itemsName]);
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
     setSelectedValue('');
   };
 
-  const handleChangeValue = (e: SelectChangeEvent) => {
-    const value = e.target.value;
-
-    setSelectedValue(value);
+  const handleChangeValue = (id: string) => {
+    setSelectedValue(id);
   };
 
   return (
@@ -87,13 +85,11 @@ export const FilterModal: React.FC<IProps> = ({
         }}
       >
         <DialogContent>
-          <SelectComponent
+          <SearchSelectComponent
+            label='Пошук'
             selectedValue={selectedValue}
             valuesArray={usersProjectNames}
             handleChange={handleChangeValue}
-            style={{
-              width: '100%',
-            }}
           />
         </DialogContent>
         <DialogActions>
