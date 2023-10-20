@@ -68,8 +68,6 @@ export const ListProjectItem: React.FC<Props> = ({
   const location = useLocation();
   const isHomePage = location.pathname === '/projects';
 
-  console.log(isHomePage);
-
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
