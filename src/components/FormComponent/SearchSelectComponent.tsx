@@ -6,12 +6,14 @@ interface IProps {
   valuesArray: { id: string; value: string }[];
   handleChange: (value: string) => void;
   style?: CSSProperties;
+  label: string;
 }
 
 export const SearchSelectComponent: React.FC<IProps> = ({
   selectedValue,
   valuesArray,
   handleChange,
+  label,
 }) => {
   return (
     <Autocomplete
@@ -20,16 +22,11 @@ export const SearchSelectComponent: React.FC<IProps> = ({
       getOptionLabel={(option) => option.value}
       onChange={(_, newValue) => {
         if (newValue) {
-          handleChange(newValue.value);
+          handleChange(newValue.id);
         }
       }}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          label='Select an option'
-          variant='outlined'
-          fullWidth
-        />
+        <TextField {...params} label={label} variant='outlined' fullWidth />
       )}
     />
   );
