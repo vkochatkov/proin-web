@@ -56,36 +56,34 @@ export const File: React.FC<IProps> = ({
         // {...provided.draggableProps}
         // {...provided.dragHandleProps}
       >
-        {loaded && (
-          <>
-            <Button
-              icon
-              transparent
-              customClassName='file__btn'
-              onClick={handleContextMenu}
-            >
-              <MoreVertIcon className='file__icon' />
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorPosition={{
-                top: contextMenuPosition.top,
-                left: contextMenuPosition.left,
+        <>
+          <Button
+            icon
+            transparent
+            customClassName='file__btn'
+            onClick={handleContextMenu}
+          >
+            <MoreVertIcon className='file__icon' />
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorPosition={{
+              top: contextMenuPosition.top,
+              left: contextMenuPosition.left,
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                onDelete(id);
+                handleClose();
               }}
             >
-              <MenuItem
-                onClick={() => {
-                  onDelete(id);
-                  handleClose();
-                }}
-              >
-                Видалити
-              </MenuItem>
-            </Menu>
-          </>
-        )}
+              Видалити
+            </MenuItem>
+          </Menu>
+        </>
         {isImage ? (
           <>
             <Skeleton
