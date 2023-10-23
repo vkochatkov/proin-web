@@ -21,18 +21,36 @@ export const useFiles = (modalId: string) => {
 
   const generateDataUrl = async (files: File[]) => {
     return await Promise.all(
-      files.map(async (file) => {
+      files.map(async (file, i) => {
+        const isImageFile = file.type.startsWith('image/');
         const dataUrl = await new Promise((resolve) => {
           const fileReader = new FileReader();
           fileReader.onload = () => resolve(fileReader.result as string);
           fileReader.readAsDataURL(file);
         });
 
-        return {
-          dataUrl,
-          name: file.name,
-        };
-      })
+        if (isImageFile) {
+          const image = new Image();
+          image.src = dataUrl as string;
+
+          return new Promise((resolve) => {
+            image.onload = () => {
+              const width = image.naturalWidth;
+              const height = image.naturalHeight;
+              resolve({ dataUrl, name: file.name, width, height });
+            };
+
+            image.onerror = () => {
+              // Handle image loading errors here
+              console.log(`Image ${i + 1} failed to load.`);
+              resolve({ dataUrl, name: file.name, width: 0, height: 0 });
+            };
+          });
+        }
+
+        // For non-image files, return dataUrl, name, width, and height as 0
+        return { dataUrl, name: file.name, width: 0, height: 0 };
+      }),
     );
   };
 
@@ -47,6 +65,6 @@ export const useFiles = (modalId: string) => {
     generateDataUrl,
     selectedFileId,
     setSelectedFileId,
-    handleOpenRemoveFileModal
+    handleOpenRemoveFileModal,
   };
 };

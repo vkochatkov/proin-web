@@ -24,18 +24,6 @@ export const ProjectFilesUpload: React.FC<IFileUpload> = ({
   const { files, setFiles, generateDataUrl } = useFiles(modalId);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!files.length) {
-      return;
-    }
-
-    files.forEach((file, i) => {
-      const fileReader = new FileReader();
-
-      fileReader.readAsDataURL(file);
-    });
-  }, [files]);
-
   const sendFilesToServer = async (id: string, files: File[]) => {
     const fileDataArray = await generateDataUrl(files);
 

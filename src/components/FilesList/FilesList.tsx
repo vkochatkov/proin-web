@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { LoadingSpinner } from '../UIElements/LoadingSpinner';
 import { getIsFilesLoading } from '../../modules/selectors/loading';
 import { Button } from '../FormElement/Button';
-import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+// import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { setIsDragging } from '../../modules/actions/dragging';
 import { reorder } from '../../utils/utils';
+import { Gallery } from 'react-photoswipe-gallery';
 
 import './FilesList.scss';
 
@@ -51,29 +52,33 @@ export const FilesList = ({
 
   return (
     <>
-      <DragDropContext
+      {/* <DragDropContext
         onDragEnd={onDragEnd}
         onDragStart={() => dispatch(setIsDragging(true))}
-      >
-        <Droppable droppableId='droppable'>
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {filesToShow &&
-                filesToShow.map((file: IFile, index: number) => (
-                  <File
-                    key={file.id}
-                    name={file.name}
-                    url={file.url}
-                    id={file.id}
-                    onDelete={handleOpenModal}
-                    index={index}
-                  />
-                ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      > */}
+      {/* <Droppable droppableId='droppable'> */}
+      {/* {(provided) => ( */}
+      <Gallery>
+        <div className='files-list'>
+          {filesToShow &&
+            filesToShow.map((file: IFile, index: number) => (
+              <File
+                key={file.id}
+                name={file.name}
+                url={file.url}
+                id={file.id}
+                width={file.width ? file.width : 1024}
+                height={file.height ? file.height : 768}
+                onDelete={handleOpenModal}
+                index={index}
+              />
+            ))}
+          {/* {provided.placeholder} */}
+        </div>
+      </Gallery>
+      {/* )} */}
+      {/* </Droppable> */}
+      {/* </DragDropContext> */}
       {files.length > 20 && (
         <Button onClick={toggleShowAllFiles} customClassName='files-list__btn'>
           {showAllFiles ? 'Показати менше' : 'Показати більше'}
