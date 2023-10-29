@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-// import { Draggable } from '@hello-pangea/dnd';
+import { useState } from 'react';
 import { CardMedia, Typography, Link, MenuItem, Menu } from '@mui/material';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { Button } from '../FormElement/Button';
@@ -16,9 +15,9 @@ interface IProps {
   url: string;
   id: string;
   onDelete: (id: string) => void;
-  index: number;
   width: number;
   height: number;
+  style?: { transform: string | undefined; transition: string | undefined };
 }
 
 export const File: React.FC<IProps> = ({
@@ -26,7 +25,6 @@ export const File: React.FC<IProps> = ({
   url,
   id,
   onDelete,
-  index,
   width,
   height,
 }) => {
@@ -49,12 +47,9 @@ export const File: React.FC<IProps> = ({
 
   return (
     <>
-      {/* {(provided, snapshot) => ( */}
       <div
         className='file'
-        // ref={provided.innerRef}
-        // {...provided.draggableProps}
-        // {...provided.dragHandleProps}
+        // ref={ref} {...props}
       >
         <>
           <Button
@@ -130,7 +125,6 @@ export const File: React.FC<IProps> = ({
           </Link>
         )}
       </div>
-      {/* )} */}
     </>
   );
 };
