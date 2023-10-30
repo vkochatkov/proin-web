@@ -36,7 +36,7 @@ export const File: React.FC<IProps> = ({
 
   const emptyImageContainerStyle = {
     backgroundColor: 'grey.300',
-    height: '140px',
+    height: '100%',
     margin: '0 auto',
     width: '85%',
   };
