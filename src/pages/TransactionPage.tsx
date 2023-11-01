@@ -31,6 +31,8 @@ import { PROJECTS_PATH } from '../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { TransactionCommentsComponent } from '../components/TransactionCommentsComponent';
 import { useOpenProjectLink } from '../hooks/useOpenProjectLink';
+import { FormControlLabel, Switch } from '@mui/material';
+import { useDraggingMode } from '../hooks/useDraggingMode';
 
 import '../index.scss';
 import './TransactionPage.scss';
@@ -78,6 +80,7 @@ const TransactionPage: React.FC<IProps> = () => {
     selectedFileId,
   } = useFiles(modalId);
   const { handleOpenTheProject } = useOpenProjectLink();
+  const { draggingMode, handleChangeDraggingMode } = useDraggingMode();
 
   useEffect(() => {
     if (!transactionId) return;
@@ -258,11 +261,20 @@ const TransactionPage: React.FC<IProps> = () => {
                 entity={currentTransaction}
               />
             </div>
+            {currentTransaction.files.length > 0 && (
+              <>
+                <FormControlLabel
+                  control={<Switch onChange={handleChangeDraggingMode} />}
+                  label='Режим перетягування'
+                />
+              </>
+            )}
             <div className='transaction__files-wrapper'>
               <FilesList
                 files={currentTransaction.files}
                 saveFilesOrder={saveFilesOrder}
                 handleOpenModal={handleOpenRemoveFileModal}
+                draggingMode={draggingMode}
               />
             </div>
             <div className='transaction__files-wrapper'>

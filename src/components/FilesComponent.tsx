@@ -14,6 +14,7 @@ import { closeModal, openModal } from '../modules/actions/modal';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { useDraggingMode } from '../hooks/useDraggingMode';
 
 interface IProps {
   subprojectId?: string;
@@ -25,7 +26,7 @@ export const FilesComponent: React.FC<IProps> = ({ subprojectId }) => {
   const { pid } = useParams();
   const dispatch = useDispatch();
   const currentProject = useSelector(getCurrentProject);
-  const [draggingMode, setDraggingMode] = useState<boolean>(false);
+  const { draggingMode, handleChangeDraggingMode } = useDraggingMode();
 
   const saveFilesOrder = (order: IFile[]) => {
     if (!pid) return;
@@ -48,10 +49,6 @@ export const FilesComponent: React.FC<IProps> = ({ subprojectId }) => {
     dispatch(openModal({ id: modalId }));
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDraggingMode(event.target.checked);
-  };
-
   return (
     <>
       <RemoveModal
@@ -59,12 +56,10 @@ export const FilesComponent: React.FC<IProps> = ({ subprojectId }) => {
         modalId={modalId}
         text='файл'
       />
-      <div>
-        <FormControlLabel
-          control={<Switch onChange={handleChange} />}
-          label='Режим перетягування'
-        />
-      </div>
+      <FormControlLabel
+        control={<Switch onChange={handleChangeDraggingMode} />}
+        label='Режим перетягування'
+      />
       <FilesList
         files={
           currentProject && currentProject.files ? currentProject.files : []

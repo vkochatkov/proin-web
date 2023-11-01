@@ -23,6 +23,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Button } from '../../components/FormElement/Button';
 import { getAllUserProjects } from '../../modules/selectors/mainProjects';
 import { useOpenProjectLink } from '../../hooks/useOpenProjectLink';
+import { useDraggingMode } from '../../hooks/useDraggingMode';
+import { FormControlLabel, Switch } from '@mui/material';
 
 import '../../index.scss';
 import './TaskPage.scss';
@@ -59,6 +61,7 @@ export const TaskPage = () => {
     handleOpenRemoveFileModal,
   } = useFiles(modalId);
   const { handleOpenTheProject } = useOpenProjectLink();
+  const { draggingMode, handleChangeDraggingMode } = useDraggingMode();
 
   const handleCloseTaskPage = () => {
     if (pid && !subprojectId) {
@@ -147,10 +150,17 @@ export const TaskPage = () => {
                 entity={task}
               />
             </div>
+            {task.files.length > 0 && (
+              <FormControlLabel
+                control={<Switch onChange={handleChangeDraggingMode} />}
+                label='Режим перетягування'
+              />
+            )}
             <FilesList
               files={task.files}
               saveFilesOrder={saveFilesOrder}
               handleOpenModal={handleOpenRemoveFileModal}
+              draggingMode={draggingMode}
             />
             <div className='task-page__uploader'>
               <FileUploadComponent
