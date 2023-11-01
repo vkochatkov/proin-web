@@ -40,3 +40,5 @@ export interface IFile {
   width: number;
   height: number;
 }
+
+export interface ISortableFile extends IFile {}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { CardMedia, Typography, Link, MenuItem, Menu } from '@mui/material';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { Button } from '../FormElement/Button';
@@ -18,113 +18,190 @@ interface IProps {
   width: number;
   height: number;
   style?: { transform: string | undefined; transition: string | undefined };
+  isDragging?: boolean;
+  draggingMode?: boolean;
 }
 
-export const File: React.FC<IProps> = ({
-  name,
-  url,
-  id,
-  onDelete,
-  width,
-  height,
-}) => {
-  const isImage = /\.(jpg|jpeg|png|gif)$/i.test(name);
-  const extension = '.' + (name?.split('.')?.pop() ?? '');
-  const { handleContextMenu, handleClose, contextMenuPosition, anchorEl } =
-    useContextMenu();
-  const [loaded, setLoaded] = useState(!isImage);
+export const File = forwardRef<HTMLDivElement, IProps>(
+  (
+    {
+      name,
+      url,
+      id,
+      onDelete,
+      width,
+      height,
+      isDragging,
+      draggingMode = false,
+      ...props
+    },
+    ref,
+  ) => {
+    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(name);
+    const extension = '.' + (name?.split('.')?.pop() ?? '');
+    const { handleContextMenu, handleClose, contextMenuPosition, anchorEl } =
+      useContextMenu();
+    const [loaded, setLoaded] = useState(!isImage);
+    const fileStyle = {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    };
 
-  const emptyImageContainerStyle = {
-    backgroundColor: 'grey.300',
-    height: '100%',
-    margin: '0 auto',
-    width: '85%',
-  };
+    const emptyImageContainerStyle = {
+      backgroundColor: 'grey.300',
+      height: '100%',
+      margin: '0 auto',
+      width: '85%',
+    };
 
-  const handleDownload = () => {
-    window.open(url, '_blank');
-  };
+    const handleDownload = () => {
+      window.open(url, '_blank');
+    };
 
-  return (
-    <>
-      <div
-        className='file'
-        // ref={ref} {...props}
-      >
-        <>
-          <Button
-            icon
-            transparent
-            customClassName='file__btn'
-            onClick={handleContextMenu}
-          >
-            <MoreVertIcon className='file__icon' />
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            anchorPosition={{
-              top: contextMenuPosition.top,
-              left: contextMenuPosition.left,
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                onDelete(id);
-                handleClose();
+    const draggingElement = () => (
+      <>
+        <div className='file' ref={ref} {...props}>
+          {isImage ? (
+            <>
+              <Skeleton
+                variant='rectangular'
+                width='100%'
+                height='100%'
+                style={{
+                  position: 'absolute',
+                  display: loaded ? 'none' : 'block',
+                }}
+              />
+              <Item
+                original={url}
+                thumbnail={url}
+                width={width}
+                height={height}
+              >
+                {({ ref, open }) => (
+                  <img
+                    //@ts-ignore
+                    ref={ref}
+                    onClick={open}
+                    src={url}
+                    alt={name}
+                    onLoad={() => setLoaded(true)}
+                  />
+                )}
+              </Item>
+            </>
+          ) : (
+            <Link
+              onClick={handleDownload}
+              style={{
+                textDecoration: 'none',
+                color: '#000',
+                width: '100%',
               }}
             >
-              Видалити
-            </MenuItem>
-          </Menu>
-        </>
-        {isImage ? (
+              <CardMedia component='div' sx={emptyImageContainerStyle}>
+                <Typography
+                  variant='h6'
+                  component='h2'
+                  align='center'
+                  sx={fileStyle}
+                >
+                  {extension.replace('.', '')}
+                </Typography>
+              </CardMedia>
+            </Link>
+          )}
+        </div>
+      </>
+    );
+
+    const commonElement = () => (
+      <>
+        <div className='file'>
           <>
-            <Skeleton
-              variant='rectangular'
-              width='100%'
-              height='100%'
-              style={{
-                position: 'absolute',
-                display: loaded ? 'none' : 'block',
+            <Button
+              icon
+              transparent
+              customClassName='file__btn'
+              onClick={handleContextMenu}
+            >
+              <MoreVertIcon className='file__icon' />
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorPosition={{
+                top: contextMenuPosition.top,
+                left: contextMenuPosition.left,
               }}
-            />
-            <Item original={url} thumbnail={url} width={width} height={height}>
-              {({ ref, open }) => (
-                <img
-                  //@ts-ignore
-                  ref={ref}
-                  onClick={open}
-                  src={url}
-                  alt={name}
-                  onLoad={() => setLoaded(true)}
-                />
-              )}
-            </Item>
-          </>
-        ) : (
-          <Link
-            onClick={handleDownload}
-            style={{
-              textDecoration: 'none',
-              color: '#000',
-              width: '100%',
-            }}
-          >
-            <CardMedia component='div' sx={emptyImageContainerStyle}>
-              <Typography
-                variant='h6'
-                component='h2'
-                align='center'
-                sx={{ paddingTop: '60px' }}
+            >
+              <MenuItem
+                onClick={() => {
+                  onDelete(id);
+                  handleClose();
+                }}
               >
-                {extension.replace('.', '')}
-              </Typography>
-            </CardMedia>
-          </Link>
-        )}
-      </div>
-    </>
-  );
-};
+                Видалити
+              </MenuItem>
+            </Menu>
+          </>
+          {isImage ? (
+            <>
+              <Skeleton
+                variant='rectangular'
+                width='100%'
+                height='100%'
+                style={{
+                  position: 'absolute',
+                  display: loaded ? 'none' : 'block',
+                }}
+              />
+              <Item
+                original={url}
+                thumbnail={url}
+                width={width}
+                height={height}
+              >
+                {({ ref, open }) => (
+                  <img
+                    //@ts-ignore
+                    ref={ref}
+                    onClick={open}
+                    src={url}
+                    alt={name}
+                    onLoad={() => setLoaded(true)}
+                  />
+                )}
+              </Item>
+            </>
+          ) : (
+            <Link
+              onClick={handleDownload}
+              style={{
+                textDecoration: 'none',
+                color: '#000',
+                width: '100%',
+              }}
+            >
+              <CardMedia component='div' sx={emptyImageContainerStyle}>
+                <Typography
+                  variant='h6'
+                  component='h2'
+                  align='center'
+                  sx={fileStyle}
+                >
+                  {extension.replace('.', '')}
+                </Typography>
+              </CardMedia>
+            </Link>
+          )}
+        </div>
+      </>
+    );
+
+    return <>{draggingMode ? draggingElement() : commonElement()}</>;
+  },
+);

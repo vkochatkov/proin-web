@@ -10,9 +10,8 @@ const Grid: FC<GridProps> = ({ children, columns }) => {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: `repeat( auto-fill, minmax(120px, 1fr) )`,
+        gridTemplateColumns: `repeat( auto-fill, minmax(100px, 1fr) )`,
         gridGap: 10,
-        // maxWidth: '800px',
         margin: '10px auto',
       }}
     >

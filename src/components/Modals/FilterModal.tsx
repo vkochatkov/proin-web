@@ -18,25 +18,30 @@ interface IProps {
 }
 
 const getProjectsNames = (projects: IUserProject[]) =>
-  projects.reduce((accumulator: { id: string; value: string }[], project) => {
-    const projectItem = {
-      id: project._id as string,
-      value: project.projectName as string,
-    };
+  projects
+    ? projects.reduce(
+        (accumulator: { id: string; value: string }[], project) => {
+          const projectItem = {
+            id: project._id as string,
+            value: project.projectName as string,
+          };
 
-    accumulator.push(projectItem);
+          accumulator.push(projectItem);
 
-    if (project.subProjects && project.subProjects.length > 0) {
-      const subprojectItems: { id: string; value: string }[] =
-        project.subProjects.map((subProject) => ({
-          id: subProject._id as string,
-          value: subProject.projectName as string,
-        }));
-      accumulator.push(...subprojectItems);
-    }
+          if (project.subProjects && project.subProjects.length > 0) {
+            const subprojectItems: { id: string; value: string }[] =
+              project.subProjects.map((subProject) => ({
+                id: subProject._id as string,
+                value: subProject.projectName as string,
+              }));
+            accumulator.push(...subprojectItems);
+          }
 
-    return accumulator;
-  }, []);
+          return accumulator;
+        },
+        [],
+      )
+    : [];
 
 export const FilterModal: React.FC<IProps> = ({
   submitHandler,
