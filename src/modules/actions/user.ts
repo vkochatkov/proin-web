@@ -16,20 +16,21 @@ const httpSource = axios.CancelToken.source();
 
 export const signin =
   (uid: string, token: string, email: string, name: string) =>
-    (dispatch: Dispatch) => {
-      try {
-        APIClient.setToken(token);
-        dispatch(
-          loginSuccess({
-            userId: uid,
-            token,
-            email,
-            name,
-          })
-        );
-        dispatch(endLoading());
-      } catch (e) { }
-    };
+  (dispatch: Dispatch) => {
+    try {
+      APIClient.setToken(token);
+      dispatch(
+        loginSuccess({
+          userId: uid,
+          token,
+          email,
+          name,
+        }),
+      );
+    } catch (e) {
+      console.log('signin', e);
+    }
+  };
 
 export const signout = () => (dispatch: Dispatch) => {
   dispatch(logoutSuccess());
@@ -59,7 +60,7 @@ export const sendRecaveryEmail =
           id: 'success',
           open: true,
           message: 'Лист з інструкціями відправлено на вашу електронну адресу',
-        })
+        }),
       );
 
       setTimeout(() => {
@@ -68,13 +69,7 @@ export const sendRecaveryEmail =
 
       dispatch(clearFormInput());
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        })
-      );
+      console.log(e);
     }
   };
 
@@ -102,19 +97,13 @@ export const resetPassword =
           id: 'success',
           open: true,
           message: 'Пароль успішно змінено',
-        })
+        }),
       );
 
       setTimeout(() => {
         window.location.href = PROJECTS_PATH;
       }, 6000);
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        })
-      );
+      console.log(e);
     }
   };

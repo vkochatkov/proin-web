@@ -58,7 +58,6 @@ const HomePage: React.FC = () => {
     dispatch(fetchAllUserTasks() as any);
     dispatch(fetchAllUserProjects() as any);
     dispatch(fetchUserTransactions() as any);
-    dispatch(endLoading());
   }, [sendRequest, userId, dispatch]);
 
   useEffect(() => {

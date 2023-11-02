@@ -100,13 +100,7 @@ const Auth = () => {
         navigate(PROJECTS_PATH);
       } catch (e: any) {
         dispatch(endLoading());
-        dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: `${e.response.data.message}. Перезавантажте сторінку`,
-          }),
-        );
+        console.log(e);
       }
     } else {
       try {
@@ -128,13 +122,7 @@ const Auth = () => {
         navigate(`${PROJECTS_PATH}`);
       } catch (err: any) {
         dispatch(endLoading());
-        dispatch(
-          changeSnackbarState({
-            id: 'error',
-            message: err.response.data.message,
-            open: true,
-          }),
-        );
+        console.log(err)
       }
     }
   };

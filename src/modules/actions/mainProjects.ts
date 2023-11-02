@@ -429,13 +429,7 @@ export const fetchProjects =
       const res = await Api.Projects.get(userId);
       dispatch(updateProjectsSuccess(res.projects));
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Завантажити проекти не вдалося. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
