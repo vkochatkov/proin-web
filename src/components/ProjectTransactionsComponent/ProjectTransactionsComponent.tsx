@@ -118,6 +118,15 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         label={'Виберіть фільтр для фінансів'}
         itemsName={filterNames.projectTransactions}
       />
+      <div className='project-transactions__top'>
+        <p
+          style={{
+            margin: 0,
+          }}
+        >
+          Загалом: {handleCountTotal()}
+        </p>
+      </div>
       <Toolbar
         selectedSortOption={selectedSortOption}
         modalId={modalId}
@@ -128,15 +137,6 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         onSortDefaultState={handleSortByDefault}
         filterValue={filterValue}
       />
-      <div className='project-transactions__top'>
-        <p
-          style={{
-            margin: 0,
-          }}
-        >
-          Загалом: {handleCountTotal()}
-        </p>
-      </div>
       <TransactionTabsMenu />
       {tabValue === 'Фінанси' &&
         sortedTransactions &&
