@@ -10,6 +10,8 @@ import { FilterFunction } from '../modules/types/filter';
 import { Toolbar } from './Toolbar/Toolbar';
 import { FilterModal } from './Modals/FilterModal';
 import { filterNames } from '../config/contsants';
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from './FormElement/Button';
 
 interface Props {
   projects: Project[];
@@ -17,6 +19,7 @@ interface Props {
   updateOrder: (newItem: Project[], index?: string) => void;
   isWrapped?: boolean;
   isSearched?: boolean;
+  handleCreateProject?: () => void;
 }
 
 interface IProjectToFilter {
@@ -36,6 +39,7 @@ export const ListProjectItem: React.FC<Props> = ({
   onClick,
   updateOrder,
   isSearched = true,
+  handleCreateProject,
 }) => {
   const dispatch = useDispatch();
   const projectsToFilter = projects
@@ -118,7 +122,11 @@ export const ListProjectItem: React.FC<Props> = ({
             onSortByLastCommentDate={handleSortbyLastCommentDate}
             onSortDefaultState={handleSortByDefault}
             filterValue={filterValue}
-          />
+          >
+            <Button transparent icon onClick={handleCreateProject}>
+              <AddIcon />
+            </Button>
+          </Toolbar>
         )}
         {isDraggable ? (
           <DragDropContext

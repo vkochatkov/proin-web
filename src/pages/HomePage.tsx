@@ -13,7 +13,6 @@ import {
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 import { RootState } from '../modules/store/store';
 import { ListProjectItem } from '../components/ListProjectItem';
-import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
 import { getIsLoading } from '../modules/selectors/loading';
 import { endLoading, startLoading } from '../modules/actions/loading';
@@ -23,7 +22,6 @@ import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { fetchUserTransactions } from '../modules/actions/transactions';
-import AddIcon from '@mui/icons-material/Add';
 import { PROJECTS_PATH } from '../config/routes';
 import { Project } from '../modules/types/mainProjects';
 
@@ -93,10 +91,6 @@ const HomePage: React.FC = () => {
       <RemoveProjectModal />
       <SnackbarUI />
       <div className='container'>
-        <Button transparent icon onClick={handleCreateProject}>
-          <AddIcon />
-        </Button>
-
         {isLoading && (
           <div className='loading'>
             <LoadingSpinner />
@@ -107,6 +101,7 @@ const HomePage: React.FC = () => {
             projects={projects}
             onClick={handleClickItem}
             updateOrder={handleUpdateProjectOrder}
+            handleCreateProject={handleCreateProject}
           />
         )}
       </div>

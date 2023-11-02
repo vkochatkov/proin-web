@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -24,6 +25,7 @@ interface Props {
   onSortDefaultState: () => void;
   modalId: string;
   filterValue?: string;
+  children?: ReactNode;
 }
 
 export const Toolbar: React.FC<Props> = ({
@@ -35,6 +37,7 @@ export const Toolbar: React.FC<Props> = ({
   onSortDefaultState,
   modalId,
   filterValue,
+  children,
 }) => {
   const dispatch = useDispatch();
 
@@ -74,9 +77,6 @@ export const Toolbar: React.FC<Props> = ({
         value={filterValue}
       />
       <div className='toolbar__btns-wrapper'>
-        {/* <Button icon transparent>
-          <SearchIcon />
-        </Button> */}
         <Button icon transparent onClick={handleContextMenu}>
           <SortIcon />
         </Button>
@@ -111,6 +111,7 @@ export const Toolbar: React.FC<Props> = ({
         <Button icon transparent onClick={handleOpenFilterModal}>
           <FilterListIcon />
         </Button>
+        {children}
       </div>
     </div>
   );
