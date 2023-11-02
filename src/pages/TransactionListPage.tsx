@@ -15,6 +15,8 @@ import { transactionsFilterFunction } from '../utils/utils';
 import { FilterModal } from '../components/Modals/FilterModal';
 import { Toolbar } from '../components/Toolbar/Toolbar';
 import { filterNames } from '../config/contsants';
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from '../components/FormElement/Button';
 
 type Props = {};
 
@@ -69,6 +71,10 @@ const TransactionListPage: React.FC<Props> = () => {
     handleFilterByProjectId(projectId);
   };
 
+  const handleCreateTransaction = () => {
+    console.log('create transaction');
+  };
+
   return (
     <>
       <FilterModal
@@ -100,7 +106,11 @@ const TransactionListPage: React.FC<Props> = () => {
               onSortByLastCommentDate={handleSortbyLastCommentDate}
               onSortDefaultState={handleSortByDefault}
               filterValue={filterValue}
-            />
+            >
+              <Button transparent icon onClick={handleCreateTransaction}>
+                <AddIcon />
+              </Button>
+            </Toolbar>
             <TransactionItemList
               transactions={sortableTasks}
               changeOrder={handleSaveTransactionItemOrder}
