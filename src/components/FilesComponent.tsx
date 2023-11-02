@@ -56,10 +56,12 @@ export const FilesComponent: React.FC<IProps> = ({ subprojectId }) => {
         modalId={modalId}
         text='файл'
       />
-      <FormControlLabel
-        control={<Switch onChange={handleChangeDraggingMode} />}
-        label='Режим перетягування'
-      />
+      {currentProject && currentProject.files.length > 0 && (
+        <FormControlLabel
+          control={<Switch onChange={handleChangeDraggingMode} />}
+          label='Режим перетягування'
+        />
+      )}
       <FilesList
         files={
           currentProject && currentProject.files ? currentProject.files : []
