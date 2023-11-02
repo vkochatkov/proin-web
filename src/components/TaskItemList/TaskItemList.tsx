@@ -10,14 +10,17 @@ import { Toolbar } from '../Toolbar/Toolbar';
 import { useFilter } from '../../hooks/useFilter';
 import { FilterModal } from '../Modals/FilterModal';
 import { FilterFunction } from '../../modules/types/filter';
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from '../FormElement/Button';
 
 import './TaskItemList.scss';
 
 interface IProps {
   tasks: ITask[];
+  itemsName: string;
   changeOrder: (tasks: ITask[]) => void;
   generateNavigationString: (id: string) => void;
-  itemsName: string;
+  onAdd?: () => void;
 }
 
 const tasksFilterFunction: FilterFunction<ITask> = (item, value, projectId) => {
@@ -36,6 +39,7 @@ export const TaskItemList: React.FC<IProps> = ({
   changeOrder,
   generateNavigationString,
   itemsName,
+  onAdd,
 }) => {
   const dispatch = useDispatch();
   const {
@@ -105,7 +109,15 @@ export const TaskItemList: React.FC<IProps> = ({
           onSortByLastCommentDate={handleSortbyLastCommentDate}
           onSortDefaultState={handleSortByDefault}
           filterValue={filterValue}
-        />
+        >
+          <>
+            {onAdd && (
+              <Button transparent icon onClick={onAdd}>
+                <AddIcon />
+              </Button>
+            )}
+          </>
+        </Toolbar>
         <div>
           {isDraggable && (
             <DragDropContext

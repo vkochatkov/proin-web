@@ -45,6 +45,7 @@ const TaskListPage: React.FC<Props> = () => {
             changeOrder={handleSaveTaskItemOrder}
             generateNavigationString={handleGenerateNavigationQuery}
             itemsName={filterNames.userTasks}
+            onAdd={() => console.log('onAdd')}
           />
         </Card>
       </Container>
