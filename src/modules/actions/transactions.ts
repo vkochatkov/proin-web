@@ -464,13 +464,7 @@ export const createUserTransaction =
 
       ApiErrors.checkOnApiError(res);
 
-      const updatedTransactions = [...userTransactions, res.transaction];
-
-      console.log({
-        transactions: projectTransactions,
-        transaction: res.transaction,
-        userTransactions: updatedTransactions,
-      });
+      const updatedTransactions = [res.transaction, ...userTransactions];
 
       updateTransactionStates({
         transactions: projectTransactions,
