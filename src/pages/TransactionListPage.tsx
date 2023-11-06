@@ -19,6 +19,9 @@ import { filterNames } from '../config/contsants';
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '../components/FormElement/Button';
 import { useNavigate } from 'react-router-dom';
+import { startLoading } from '../modules/actions/loading';
+import { getIsLoading } from '../modules/selectors/loading';
+import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
 
 type Props = {};
 
@@ -52,6 +55,7 @@ const TransactionListPage: React.FC<Props> = () => {
         ? searchedItems
         : transactions
       : searchedItems;
+  const isLoading = useSelector(getIsLoading);
 
   useEffect(() => {
     dispatch(fetchUserTransactions() as any);
@@ -75,6 +79,7 @@ const TransactionListPage: React.FC<Props> = () => {
   };
 
   const handleCreateTransaction = async () => {
+    dispatch(startLoading());
     const {
       transaction: { id },
     } = await dispatch(createUserTransaction() as any);
@@ -95,6 +100,11 @@ const TransactionListPage: React.FC<Props> = () => {
           padding: '0 10px',
         }}
       >
+        {isLoading && (
+          <div className='loading'>
+            <LoadingSpinner />
+          </div>
+        )}
         {transactions.length > 0 && (
           <Card
             sx={{
