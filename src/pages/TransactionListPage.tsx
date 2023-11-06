@@ -5,6 +5,7 @@ import { TransactionItemList } from '../components/TransactionItemList/Transacti
 import { ITransaction } from '../modules/types/transactions';
 import { getUserTransactions } from '../modules/selectors/transactions';
 import {
+  createUserTransaction,
   fetchUserTransactions,
   saveUserTransactionOrder,
 } from '../modules/actions/transactions';
@@ -17,6 +18,7 @@ import { Toolbar } from '../components/Toolbar/Toolbar';
 import { filterNames } from '../config/contsants';
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '../components/FormElement/Button';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {};
 
@@ -42,6 +44,7 @@ const TransactionListPage: React.FC<Props> = () => {
     filterFunction: transactionsFilterFunction,
     itemsName: filterNames.userTransactions,
   });
+  const navigate = useNavigate();
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
   const sortableTasks =
     selectedSortOption === defaultSortOption
@@ -71,8 +74,12 @@ const TransactionListPage: React.FC<Props> = () => {
     handleFilterByProjectId(projectId);
   };
 
-  const handleCreateTransaction = () => {
-    console.log('create transaction');
+  const handleCreateTransaction = async () => {
+    const {
+      transaction: { id },
+    } = await dispatch(createUserTransaction() as any);
+
+    navigate(`/transactions/${id}`); //navigate to transaction page
   };
 
   return (

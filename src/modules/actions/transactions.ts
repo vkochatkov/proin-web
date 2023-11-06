@@ -451,3 +451,36 @@ export const deleteTransactionComment =
       console.log(e);
     }
   };
+
+export const createUserTransaction =
+  () => async (dispatch: Dispatch, getState: () => RootState) => {
+    const userTransactions = getState().userTransactions;
+    const projectTransactions = getState().projectTransactions;
+
+    try {
+      const res = await Api.Transactions.createCommonTransaction({
+        timestamp: new Date().toISOString(),
+      });
+
+      ApiErrors.checkOnApiError(res);
+
+      const updatedTransactions = [...userTransactions, res.transaction];
+
+      console.log({
+        transactions: projectTransactions,
+        transaction: res.transaction,
+        userTransactions: updatedTransactions,
+      });
+
+      updateTransactionStates({
+        transactions: projectTransactions,
+        transaction: res.transaction,
+        userTransactions: updatedTransactions,
+        dispatch,
+      });
+
+      return res;
+    } catch (e) {
+      console.log(e);
+    }
+  };

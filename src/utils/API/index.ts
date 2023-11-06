@@ -125,6 +125,8 @@ export const Api = {
   Transactions: {
     create: (props: Partial<ITransaction>) =>
       APIClient.post(`/transactions-list/transaction/`, props),
+    createCommonTransaction: (props: Partial<ITransaction>) =>
+      APIClient.post(`/transactions-list/user-transaction`, props),
     update: (props: Partial<ITransaction>, transactionId: string) =>
       APIClient.patch(`transactions-list/transaction/${transactionId}`, props),
     delete: (id: string) =>
