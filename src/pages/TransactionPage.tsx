@@ -216,7 +216,9 @@ const TransactionPage: React.FC<IProps> = () => {
               cursor: 'pointer',
             }}
           >
-            {currentProject?.projectName}
+            {currentProject && currentProject.projectName
+              ? currentProject.projectName
+              : 'проект не вказаний'}
           </p>
           <Card className='transaction__card'>
             <h3 className='transaction__head-top'>Дата</h3>
