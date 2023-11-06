@@ -5,7 +5,11 @@ import { createTask } from '../modules/actions/tasks';
 import { getIsActiveInputStatus } from '../modules/selectors/input';
 import { ConfirmInputComponent } from './ConfirmInputComponent/ConfirmInputComponent';
 
-export const CreateTaskInput = () => {
+interface IProps {
+  isUserPage?: boolean;
+}
+
+export const CreateTaskInput: React.FC<IProps> = ({ isUserPage }) => {
   const isActiveInput = useSelector(getIsActiveInputStatus);
   const dispatch = useDispatch();
   const { pid, subprojectId } = useParams();
@@ -17,13 +21,15 @@ export const CreateTaskInput = () => {
   }) => {
     const { newValue } = props;
 
-    if (!pid) return;
+    if (!pid && !isUserPage) return;
     if (!newValue) return;
 
     if (!subprojectId) {
       dispatch(createTask({ projectId: pid, name: newValue }) as any);
-    } else {
+    } else if (subprojectId) {
       dispatch(createTask({ projectId: subprojectId, name: newValue }) as any);
+    } else if (isUserPage) {
+      dispatch(createTask({ name: newValue }) as any);
     }
   };
 

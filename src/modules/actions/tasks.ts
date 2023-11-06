@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
-import { ITask, ITaskRequest, ITasks } from '../types/tasks';
+import { ITask, ITaskRequest, ITaskUpdate, ITasks } from '../types/tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
@@ -52,7 +52,7 @@ export const taskStateUpdater = ({
   dispatch,
 }: {
   tasks: ITask[];
-  task?: ITask;
+  task?: ITaskUpdate;
   userTasks: ITask[];
   dispatch: Dispatch;
 }) => {
@@ -84,10 +84,11 @@ export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
 };
 
 export const createTask =
-  ({ projectId, name }: { projectId: string; name: string }) =>
+  ({ projectId, name }: { projectId?: string; name: string }) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     const { userId } = getState().user;
     const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
+    const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
     const timestamp = new Date().toISOString();
     const id = uuidv4();
 
@@ -104,21 +105,40 @@ export const createTask =
         _id: '',
       };
 
-      tasks.unshift(newTask);
-      dispatch(updateTasksSuccess({ tasks }));
-      const res = await Api.Tasks.create(newTask, projectId);
+      userTasks.unshift(newTask);
 
-      dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
-    } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `${
-          e.response.data
-            ? e.response.data.message
-            : 'Створити задачу не вдалося'
-        }. Перезавантажте сторінку`,
-      });
+      if (projectId) {
+        tasks.unshift(newTask);
+        dispatch(updateTasksSuccess({ tasks }));
+      } else {
+        userTasks.unshift(newTask);
+        dispatch(updateUserTasksSuccess(userTasks));
+      }
+
+      const res = await Api.Tasks.create(newTask);
+
+      if (projectId) {
+        dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
+      } else {
+        const updatedUserTasks = JSON.parse(JSON.stringify(userTasks)).map(
+          (task: ITask) => {
+            if (task.taskId === res.task.taskId) {
+              task._id = res.task._id;
+            }
+
+            return task;
+          },
+        );
+
+        taskStateUpdater({
+          tasks,
+          task: res.task,
+          userTasks: updatedUserTasks,
+          dispatch,
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 

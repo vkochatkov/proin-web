@@ -1,7 +1,7 @@
 import { createAction, Dispatch } from 'redux-act';
 import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
-import { ITask } from '../types/tasks';
+import { ITask, ITaskUpdate } from '../types/tasks';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
 import { taskStateUpdater } from './tasks';
@@ -10,7 +10,7 @@ import { RootState } from '../store/store';
 export const chooseCurrentTaskSuccess = createAction<{ task: ITask }>(
   'chooseCurrentTaskSuccess',
 );
-export const updateCurrentTaskSuccess = createAction<{ task: ITask }>(
+export const updateCurrentTaskSuccess = createAction<{ task: ITaskUpdate }>(
   'updateCurrentTaskSuccess',
 );
 

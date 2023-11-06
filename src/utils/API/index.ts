@@ -106,8 +106,8 @@ export const Api = {
     ) => APIClient.post(`/transactions-list/files/${transactionId}`, props),
   },
   Tasks: {
-    create: (props: Partial<ITask>, id: string) =>
-      APIClient.post(`/project-tasks/${id}/create`, props),
+    create: (props: Partial<ITask>) =>
+      APIClient.post(`/project-tasks/create`, props),
     get: (pid: string) => APIClient.get(`/project-tasks/${pid}/tasks`),
     updateTasksByProjectId: (props: ITasks, pid: string) =>
       APIClient.post(`/project-tasks/${pid}`, props),
