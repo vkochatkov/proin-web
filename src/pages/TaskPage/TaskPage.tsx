@@ -124,6 +124,7 @@ export const TaskPage = () => {
             <p>Назад</p>
           </Button>
           <h3 className='task-page__title'>Проект</h3>
+
           <p
             style={{
               cursor: 'pointer',
@@ -134,7 +135,9 @@ export const TaskPage = () => {
                 : undefined
             }
           >
-            {currentProject?.projectName}
+            {currentProject?.projectName
+              ? currentProject.projectName
+              : 'проект не вказаний'}
           </p>
           <Card className='task-page__card'>
             <InteractiveInput
