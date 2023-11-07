@@ -105,8 +105,6 @@ export const createTask =
         _id: '',
       };
 
-      userTasks.unshift(newTask);
-
       if (projectId) {
         tasks.unshift(newTask);
         dispatch(updateTasksSuccess({ tasks }));
@@ -119,6 +117,10 @@ export const createTask =
 
       if (projectId) {
         dispatch(updateTaskId({ taskId: res.task.taskId, _id: res.task._id }));
+
+        userTasks.unshift(res.task);
+
+        dispatch(updateUserTasksSuccess(userTasks));
       } else {
         const updatedUserTasks = JSON.parse(JSON.stringify(userTasks)).map(
           (task: ITask) => {
@@ -130,12 +132,7 @@ export const createTask =
           },
         );
 
-        taskStateUpdater({
-          tasks,
-          task: res.task,
-          userTasks: updatedUserTasks,
-          dispatch,
-        });
+        dispatch(updateUserTasksSuccess(updatedUserTasks));
       }
     } catch (e) {
       console.log(e);
