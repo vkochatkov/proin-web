@@ -35,7 +35,7 @@ export const clearCurrentProject = createAction('clearCurrentProject');
 export const clearProjects = createAction('clearProjects');
 export const setAllUserProjects =
   createAction<IUserProject[]>('setAllUserProjects');
-export const selectProject = createAction<string>('selectProject');
+export const selectItemId = createAction<string>('selectItemId');
 export const updateProjectFiles = createAction<{
   projectId: string;
   files: IFile[];
@@ -47,6 +47,10 @@ export const removeProjectFileSuccess = createAction(
   'removeProjectFileSuccess',
 );
 export const createCommentSuccess = createAction('createCommentSuccess');
+export const updateProjectTasks = createAction<{
+  oldProject: Project;
+  newProject: Project;
+}>('updateProjectTasks');
 
 const httpSource = axios.CancelToken.source();
 

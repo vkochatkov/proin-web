@@ -44,7 +44,7 @@ export const ProjectItem: React.FC<Props> = ({
     handleClose,
     contextMenuPosition,
     anchorEl,
-    handleSelectProject,
+    handleSelectItem,
     handleContextMenu,
   } = useContextMenu();
   const isMemberAdded = sharedWith
@@ -56,7 +56,7 @@ export const ProjectItem: React.FC<Props> = ({
     e.stopPropagation();
 
     if (modal) {
-      handleSelectProject(projectId, modal);
+      handleSelectItem(projectId, modal);
     }
 
     handleClose();

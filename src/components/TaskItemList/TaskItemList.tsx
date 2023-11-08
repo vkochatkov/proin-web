@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TaskItem } from '../TaskItem/TaskItem';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { reorder } from '../../utils/utils';
@@ -12,6 +12,9 @@ import { FilterModal } from '../Modals/FilterModal';
 import { FilterFunction } from '../../modules/types/filter';
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '../FormElement/Button';
+import { MoveItemModal } from '../Modals/MoveItemModal';
+import { changeTaskProject } from '../../modules/actions/tasks';
+import { getSelectedTaskId } from '../../modules/selectors/selectedTask';
 
 import './TaskItemList.scss';
 
@@ -58,8 +61,8 @@ export const TaskItemList: React.FC<IProps> = ({
     filterFunction: tasksFilterFunction,
     itemsName,
   });
-
-  const modalId = 'filter-tasks-modal';
+  const selectedTaskId = useSelector(getSelectedTaskId);
+  const filterModalId = 'filter-tasks-modal';
 
   useEffect(() => {
     return () => {
@@ -91,17 +94,25 @@ export const TaskItemList: React.FC<IProps> = ({
     handleFilterByProjectId(projectId);
   };
 
+  const handleSubmitTaskMoving = (projectId: string) => {
+    dispatch(changeTaskProject(selectedTaskId, projectId) as any);
+  };
+
   return (
     <>
       <FilterModal
         submitHandler={handleFilterTasks}
-        modalId={modalId}
+        modalId={filterModalId}
         label={'Виберіть фільтр для задач'}
         itemsName={itemsName}
       />
+      <MoveItemModal
+        modalId='move-task'
+        handleSubmit={handleSubmitTaskMoving}
+      />
       <div className='tasks-items'>
         <Toolbar
-          modalId={modalId}
+          modalId={filterModalId}
           selectedSortOption={selectedSortOption}
           handleSearching={handleSearching}
           onSortByAddingDate={handleSortByAddingDate}

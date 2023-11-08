@@ -1,69 +1,51 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { DialogActions, DialogContent, SelectChangeEvent } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal } from '../../modules/actions/modal';
 import { getModalStateById } from '../../modules/selectors/modal';
 import { RootState } from '../../modules/store/store';
 import { Button } from '../FormElement/Button';
-import {
-  getCurrentProject,
-  getCurrentProjects,
-  getSelectedProjectId,
-} from '../../modules/selectors/mainProjects';
-import {
-  moveToProject,
-  selectItemId,
-} from '../../modules/actions/mainProjects';
+import { getCurrentProjects } from '../../modules/selectors/mainProjects';
+import { selectItemId } from '../../modules/actions/mainProjects';
 import { Modal } from './Modal';
 import { ProjectSelect } from '../FormComponent/ProjectSelect';
 
-export const MoveProjectModal = () => {
-  const [selectedId, setSelectedId] = React.useState('');
-  const modalId = 'move-project';
+interface IProps {
+  modalId: string;
+  handleSubmit: (projectId: string) => void;
+}
+
+export const MoveItemModal: React.FC<IProps> = ({ modalId, handleSubmit }) => {
+  const [selectedProjectId, setSelectedProjectId] = React.useState('');
+  const projects = useSelector(getCurrentProjects);
+
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
   );
-  const currentProjectId = useSelector(getSelectedProjectId);
   const dispatch = useDispatch();
-  const { pid } = useParams();
-  const projects = useSelector(getCurrentProjects);
-  const selectedProjectId = useSelector(getSelectedProjectId);
-  const openedProject = useSelector(getCurrentProject);
-  const filtered = projects
-    .filter((project) => {
-      return projects.every((p) => {
-        //@ts-ignore
-        return !p.subProjects.includes(project._id);
-      });
-    })
-    .filter((project) => project._id !== selectedProjectId)
-    .filter((project) => {
-      if (!openedProject) return true;
-      else return project._id !== openedProject.id;
+  const filtered = projects.filter((project) => {
+    return projects.every((p) => {
+      //@ts-ignore
+      return !p.subProjects.includes(project._id);
     });
+  });
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
     dispatch(selectItemId(''));
-    setSelectedId('');
+    setSelectedProjectId('');
   };
 
   const submitHandler = (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
-    if (!currentProjectId) {
-      dispatch(closeModal({ id: modalId }));
-      return;
-    }
-
+    handleSubmit(selectedProjectId);
     dispatch(closeModal({ id: modalId }));
-    dispatch(moveToProject(selectedId, currentProjectId, !pid) as any);
-    setSelectedId('');
+    setSelectedProjectId('');
   };
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedId(event.target.value);
+    setSelectedProjectId(event.target.value);
   };
 
   return (
@@ -73,9 +55,8 @@ export const MoveProjectModal = () => {
           <DialogContent>
             <ProjectSelect
               handleChange={handleChange}
-              selectedValue={selectedId}
+              selectedValue={selectedProjectId}
               projects={filtered}
-              withRootMenuItem
             />
           </DialogContent>
           <DialogActions>

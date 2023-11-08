@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { closeModal } from '../../modules/actions/modal';
 import {
   deleteCurrentProject,
-  selectProject,
+  selectItemId,
   setCurrentProject,
   updateProjectsSuccess,
 } from '../../modules/actions/mainProjects';
@@ -35,7 +35,7 @@ export const RemoveProjectModal = () => {
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
-    dispatch(selectProject(''));
+    dispatch(selectItemId(''));
   };
 
   const submitHandler = (event: { preventDefault: () => void }) => {

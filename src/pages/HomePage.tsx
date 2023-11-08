@@ -7,7 +7,7 @@ import {
   fetchAllUserProjects,
   fetchProjects,
   openCurrentProject,
-  selectProject,
+  selectItemId,
   updateOrderProjects,
 } from '../modules/actions/mainProjects';
 import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
@@ -15,7 +15,7 @@ import { RootState } from '../modules/store/store';
 import { ListProjectItem } from '../components/ListProjectItem';
 import { useNavigate } from 'react-router-dom';
 import { getIsLoading } from '../modules/selectors/loading';
-import { endLoading, startLoading } from '../modules/actions/loading';
+import { startLoading } from '../modules/actions/loading';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
 import { useAuth } from '../hooks/useAuth';
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
   const handleClickItem = (id: string) => {
     dispatch(startLoading());
     dispatch(openCurrentProject(id) as any);
-    dispatch(selectProject(id));
+    dispatch(selectItemId(id));
     navigate(`${PROJECTS_PATH}/${id}`);
   };
 

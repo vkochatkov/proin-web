@@ -83,11 +83,12 @@ export const TaskItem: React.FC<IProps> = ({
     currentTask ? currentTask.status : statusValues[0].id,
   );
   const [isHidden, setIsHidden] = useState(true);
-  const modalId = 'remove-task';
+  const removeModalId = 'remove-task';
   const currentProject = useSelector((state: RootState) =>
     getCurrentUserProject(state)(projectId),
   );
   const isLoading = useSelector(getIsLoading);
+  const moveTaskModalId = 'move-task';
 
   // Convert the timestamp to a Date object
   const taskDate = new Date(timestamp);
@@ -130,8 +131,8 @@ export const TaskItem: React.FC<IProps> = ({
     }
   };
 
-  const handleOpenModal = (modalId: string) => {
-    dispatch(openModal({ id: modalId }));
+  const handleOpenModal = (id: string) => {
+    dispatch(openModal({ id }));
     dispatch(selectTask(task._id));
   };
 
@@ -182,7 +183,12 @@ export const TaskItem: React.FC<IProps> = ({
           left: contextMenuPosition.left,
         }}
       >
-        <MenuItem onClick={() => handleOpenModal(modalId)}>Видалити</MenuItem>
+        <MenuItem onClick={() => handleOpenModal(removeModalId)}>
+          Видалити
+        </MenuItem>
+        <MenuItem onClick={() => handleOpenModal(moveTaskModalId)}>
+          Перемістити
+        </MenuItem>
       </Menu>
       {currentProject && !pid && (
         <Typography

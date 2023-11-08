@@ -3,17 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteTask } from '../../modules/actions/tasks';
 import { closeModal } from '../../modules/actions/modal';
 import { getModalStateById } from '../../modules/selectors/modal';
-import { getSelectedTask } from '../../modules/selectors/selectedTask';
+import { getSelectedTaskId } from '../../modules/selectors/selectedTask';
 import { RootState } from '../../modules/store/store';
 import { Modal } from './Modal';
 
 export const RemoveTaskModal = () => {
   const modalId = 'remove-task';
   const open = useSelector((state: RootState) =>
-    getModalStateById(state)(modalId)
+    getModalStateById(state)(modalId),
   );
   const dispatch = useDispatch();
-  const selectedTaskId = useSelector(getSelectedTask);
+  const selectedTaskId = useSelector(getSelectedTaskId);
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
@@ -34,7 +34,7 @@ export const RemoveTaskModal = () => {
       <form onSubmit={submitHandler}>
         <DialogContent>Ви впевнені, що бажаєте видалити задачу?</DialogContent>
         <DialogActions>
-          <Button type="submit">Видалити</Button>
+          <Button type='submit'>Видалити</Button>
         </DialogActions>
       </form>
     </Modal>

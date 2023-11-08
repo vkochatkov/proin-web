@@ -1,12 +1,5 @@
-import React from 'react';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import {
-  getCurrentProject,
-  getCurrentProjects,
-  getSelectedProjectId,
-} from '../../modules/selectors/mainProjects';
 import { CustomSelect } from './CustomSelect';
 import { PROJECTS_PATH } from '../../config/routes';
 import { Project } from '../../modules/types/mainProjects';
@@ -14,26 +7,18 @@ import { Project } from '../../modules/types/mainProjects';
 interface IProps {
   handleChange: (e: SelectChangeEvent) => void;
   selectedValue: string;
+  projects: Project[];
+  withRootMenuItem?: boolean;
 }
 
-export const ProjectSelect = ({ selectedValue, handleChange }: IProps) => {
-  const selectedProjectId = useSelector(getSelectedProjectId);
+export const ProjectSelect = ({
+  selectedValue,
+  handleChange,
+  projects,
+  withRootMenuItem = false,
+}: IProps) => {
   const location = useLocation();
   const isRoot = location.pathname === PROJECTS_PATH;
-  const openedProject = useSelector(getCurrentProject);
-  const projects = useSelector(getCurrentProjects);
-  const filtered = projects
-    .filter((project) => {
-      return projects.every((p) => {
-        //@ts-ignore
-        return !p.subProjects.includes(project._id);
-      });
-    })
-    .filter((project) => project._id !== selectedProjectId)
-    .filter((project) => {
-      if (!openedProject) return true;
-      else return project._id !== openedProject.id;
-    });
 
   return (
     <CustomSelect
@@ -41,8 +26,10 @@ export const ProjectSelect = ({ selectedValue, handleChange }: IProps) => {
       selectedValue={selectedValue}
       onChange={handleChange}
     >
-      {!isRoot && <MenuItem value='В корінь'>В корінь</MenuItem>}
-      {filtered.map((project: Project) => (
+      {!isRoot && withRootMenuItem && (
+        <MenuItem value='В корінь'>В корінь</MenuItem>
+      )}
+      {projects.map((project: Project) => (
         <MenuItem key={project._id} value={project._id}>
           {project.projectName}
         </MenuItem>
