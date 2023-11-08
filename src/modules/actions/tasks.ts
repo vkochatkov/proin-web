@@ -70,17 +70,10 @@ export const taskStateUpdater = ({
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
   try {
     const res = await Api.Tasks.get(projectId);
+
     dispatch(fetchTasksSuccess({ tasks: res.tasks }));
-  } catch (e: any) {
-    changeSnackbarState({
-      id: 'error',
-      open: true,
-      message: `${
-        e.response.data
-          ? e.response.data.message
-          : 'Завантажити задачі не вдалося'
-      }. Перезавантажте сторінку`,
-    });
+  } catch (e) {
+    console.log(e);
   }
 };
 

@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { PROJECTS_PATH } from '../config/routes';
-import { changeTasksOrder } from '../modules/actions/tasks';
+import { changeTasksOrder, fetchTasks } from '../modules/actions/tasks';
 import { getTasks } from '../modules/selectors/tasks';
 import { ITask } from '../modules/types/tasks';
 import { CreateTaskInput } from './CreateTaskInput';
@@ -12,6 +13,16 @@ export const ProjectTasksComponent = () => {
   const tasks = useSelector(getTasks);
   const { pid, subprojectId } = useParams();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!subprojectId && pid) {
+      dispatch(fetchTasks(pid) as any);
+    }
+
+    if (pid && subprojectId) {
+      dispatch(fetchTasks(subprojectId) as any);
+    }
+  }, [dispatch, pid, subprojectId]);
 
   const handleChangeTaskItemOrder = (newOrder: ITask[]) => {
     if (!pid) return;

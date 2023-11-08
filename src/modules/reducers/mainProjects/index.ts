@@ -104,7 +104,7 @@ mainProjects.on(updateProjectTasks, (state, payload) => {
   const updatedProjects = JSON.parse(JSON.stringify(state.projects));
 
   updatedProjects.forEach((project: Project) => {
-    if (oldProject._id === project._id) {
+    if (oldProject && oldProject._id === project._id) {
       project.tasks = oldProject.tasks;
     }
 

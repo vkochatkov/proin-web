@@ -23,7 +23,7 @@ import { RemoveProjectModal } from '../../components/Modals/RemoveProjectModal';
 import { clearFormInput } from '../../modules/actions/form';
 import { ImageUpload } from '../../components/FormComponent/ImageUpload';
 import { endLoading, startLoading } from '../../modules/actions/loading';
-import { fetchTasks } from '../../modules/actions/tasks';
+import { clearTasks, fetchTasks } from '../../modules/actions/tasks';
 import { ProjectTabsMenu } from '../../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../../components/Modals/RemoveTaskModal';
 import { setDefaultTabValue } from '../../modules/actions/tabs';
@@ -61,6 +61,12 @@ const EditProject: React.FC<Props> = () => {
   );
 
   useEffect(() => {
+    return () => {
+      dispatch(clearTasks());
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
     if (!currentProjectId || !pid) return;
 
     if (pid === currentProjectId) {
@@ -76,7 +82,7 @@ const EditProject: React.FC<Props> = () => {
     }
 
     // eslint-disable-next-line
-  }, [dispatch, currentProjectId]);
+  }, [dispatch, currentProjectId, subprojectId, pid]);
 
   useEffect(() => {
     if (!currentProject || (currentProject && !currentProject._id)) {
