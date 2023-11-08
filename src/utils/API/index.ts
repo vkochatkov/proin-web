@@ -121,6 +121,10 @@ export const Api = {
       APIClient.post(`project-tasks/${id}/comment`, props),
     deleteComment: (tid: string, commentId: string) =>
       APIClient.delete(`project-tasks/${tid}/comment/${commentId}`),
+    updateTaskProjectId: (
+      props: { oldProjectId: string; newProjectId: string },
+      tid: string,
+    ) => APIClient.post(`project-tasks/task-edit/${tid}`, props),
   },
   Transactions: {
     create: (props: Partial<ITransaction>) =>

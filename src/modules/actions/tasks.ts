@@ -357,7 +357,9 @@ export const changeTaskProject =
     );
 
     if (oldProject) {
-      oldProject.tasks = filteredProjectTasks.map((task) => task._id);
+      oldProject.tasks = filteredProjectTasks
+        ? filteredProjectTasks.map((task) => task._id)
+        : [];
     }
 
     if (newProject) {
@@ -366,7 +368,7 @@ export const changeTaskProject =
 
     dispatch(
       updateProjectTasks({
-        oldProject,
+        oldProject: oldProject ? oldProject : null,
         newProject,
       }),
     );
@@ -375,4 +377,14 @@ export const changeTaskProject =
     if (projectTasks) {
       dispatch(updateTasksSuccess({ tasks: filteredProjectTasks }));
     }
+
+    const res = await Api.Tasks.updateTaskProjectId(
+      {
+        oldProjectId: oldProject ? oldProject._id : '',
+        newProjectId: newProject._id,
+      },
+      id,
+    );
+
+    ApiErrors.checkOnApiError(res);
   };

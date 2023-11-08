@@ -48,7 +48,7 @@ export const removeProjectFileSuccess = createAction(
 );
 export const createCommentSuccess = createAction('createCommentSuccess');
 export const updateProjectTasks = createAction<{
-  oldProject: Project;
+  oldProject: Project | null;
   newProject: Project;
 }>('updateProjectTasks');
 
