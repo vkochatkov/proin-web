@@ -28,7 +28,10 @@ import { ProjectTabsMenu } from '../../components/ProjectTabsMenu';
 import { RemoveTaskModal } from '../../components/Modals/RemoveTaskModal';
 import { setDefaultTabValue } from '../../modules/actions/tabs';
 import { FilePickerRefProvider } from '../../components/ContextProvider/FilesPickerRefProvider';
-import { fetchTransactions } from '../../modules/actions/transactions';
+import {
+  clearProjectTransactions,
+  fetchTransactions,
+} from '../../modules/actions/transactions';
 import { RemoveTransactionModal } from '../../components/Modals/RemoveTransactionModal';
 import { PROJECTS_PATH } from '../../config/routes';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -63,6 +66,7 @@ const EditProject: React.FC<Props> = () => {
   useEffect(() => {
     return () => {
       dispatch(clearTasks());
+      dispatch(clearProjectTransactions());
     };
   }, [dispatch]);
 
