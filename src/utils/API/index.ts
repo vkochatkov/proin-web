@@ -153,5 +153,9 @@ export const Api = {
       APIClient.post(`/transactions-list/${id}/comments`, props),
     deleteComment: (tid: string, commentId: string) =>
       APIClient.delete(`transactions-list/${tid}/comments/${commentId}`),
+    updateTransactionProjectId: (
+      props: { oldProjectId: string; newProjectId: string },
+      tid: string,
+    ) => APIClient.post(`/transactions-list/transaction-edit/${tid}`, props),
   },
 };

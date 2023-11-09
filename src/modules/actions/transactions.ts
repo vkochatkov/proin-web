@@ -4,7 +4,7 @@ import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
 import { updateEnitites, updateObjects } from '../../utils/utils';
 import { RootState } from '../store/store';
-import { IComment, IFile } from '../types/mainProjects';
+import { IComment, IFile, Project } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';
@@ -482,8 +482,20 @@ export const createUserTransaction =
 export const changeTransactionProject =
   (id: string, projectId: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
-    const { projectTransactions, userTransactions } = getState();
-
+    const {
+      projectTransactions,
+      userTransactions,
+      mainProjects: { allUserProjects },
+    } = getState();
+    const oldProject = JSON.parse(JSON.stringify(allUserProjects)).find(
+      (project: Project) =>
+        project._id ===
+        userTransactions.find((transaction) => transaction.id === id)
+          ?.projectId,
+    );
+    const newProject = JSON.parse(JSON.stringify(allUserProjects)).find(
+      (project: Project) => project._id === projectId,
+    );
     const updatedUserTransactions = userTransactions.map((transaction) =>
       transaction.id === id ? { ...transaction, projectId } : transaction,
     );
@@ -503,5 +515,13 @@ export const changeTransactionProject =
       );
     }
 
-    // ApiErrors.checkOnApiError(res);
+    const res = await Api.Transactions.updateTransactionProjectId(
+      {
+        oldProjectId: oldProject ? oldProject._id : '',
+        newProjectId: newProject._id,
+      },
+      id,
+    );
+
+    ApiErrors.checkOnApiError(res);
   };
