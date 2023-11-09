@@ -122,7 +122,7 @@ const Auth = () => {
         navigate(`${PROJECTS_PATH}`);
       } catch (err: any) {
         dispatch(endLoading());
-        console.log(err)
+        console.log(err);
       }
     }
   };
@@ -180,7 +180,6 @@ const Auth = () => {
           {isLoginMode ? 'РЕЄСТРАЦІЯ' : 'АВТОРИЗАЦІЯ'}
         </Button>
       </Card>
-      <SnackbarUI />
     </React.Fragment>
   );
 };
