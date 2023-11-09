@@ -4,7 +4,6 @@ import { PROJECTS_PATH } from '../../config/routes';
 import { getValueByTabId } from '../../modules/selectors/tabs';
 import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { RootState } from '../../modules/store/store';
-import { TransactionListSlider } from '../TransactionListSlider/TransactionListSlider';
 import { TransactionTabsMenu } from '../TransactionTabsMenu';
 import { ITransaction } from '../../modules/types/transactions';
 import { Toolbar } from '../Toolbar/Toolbar';
@@ -137,18 +136,10 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         onSortDefaultState={handleSortByDefault}
         filterValue={filterValue}
       />
-      <TransactionTabsMenu />
-      {tabValue === 'Фінанси' &&
-        sortedTransactions &&
-        sortedTransactions.length > 0 &&
-        transactionsTabValue !== classifierTab && (
-          <div>
-            <TransactionListSlider
-              generateNavigationString={handleGenerateNavigationQuery}
-              transactions={sortableTasks}
-            />
-          </div>
-        )}
+      <TransactionTabsMenu
+        transactions={sortableTasks}
+        generateNavigationString={handleGenerateNavigationQuery}
+      />
       {sortedTransactions &&
         sortedTransactions.length === 0 &&
         transactionsTabValue !== classifierTab && (

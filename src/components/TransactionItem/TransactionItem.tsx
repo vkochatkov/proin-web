@@ -38,6 +38,7 @@ export const TransactionItem: React.FC<IProps> = ({
     padding: '10px',
     marginTop: '5px',
   };
+  const moveModalId = 'move-transaction';
   // Convert the timestamp to a Date object
   const transactionDate = new Date(transaction.timestamp);
   const currentProject = useSelector((state: RootState) =>
@@ -80,6 +81,9 @@ export const TransactionItem: React.FC<IProps> = ({
         }}
       >
         <MenuItem onClick={() => handleOpenModal(modalId)}>Видалити</MenuItem>
+        <MenuItem onClick={() => handleOpenModal(moveModalId)}>
+          Перемістити
+        </MenuItem>
       </Menu>
       {currentProject && !pid && (
         <Typography

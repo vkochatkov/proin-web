@@ -2,6 +2,10 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { ITransaction } from '../../modules/types/transactions';
 import { reorder } from '../../utils/utils';
 import { TransactionItem } from '../TransactionItem/TransactionItem';
+import { MoveItemModal } from '../Modals/MoveItemModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentTransaction } from '../../modules/selectors/currentTransaction';
+import { changeTransactionProject } from '../../modules/actions/transactions';
 
 interface IProps {
   transactions: ITransaction[];
@@ -18,6 +22,8 @@ export const TransactionItemList: React.FC<IProps> = ({
   droppableId = 'droppable',
   isDraggable = false,
 }) => {
+  const currentTransaction = useSelector(getCurrentTransaction);
+  const dispatch = useDispatch();
   const onDragEnd = (result: any) => {
     if (!result.destination || !changeOrder) {
       return;
@@ -32,43 +38,53 @@ export const TransactionItemList: React.FC<IProps> = ({
     changeOrder(newOrder);
   };
 
+  const handleSubmitTransactionMoving = (projectId: string) => {
+    dispatch(changeTransactionProject(currentTransaction.id, projectId) as any);
+  };
+
   return (
-    <div className='transaction-items'>
-      {isDraggable ? (
-        <div>
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={droppableId}>
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  {transactions.map((transaction, index) => (
-                    <TransactionItem
-                      transaction={transaction}
-                      index={index}
-                      key={transaction.id}
-                      generateNavigationString={generateNavigationString}
-                      isDraggable={isDraggable}
-                    />
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-        </div>
-      ) : (
-        <div>
+    <>
+      <MoveItemModal
+        modalId='move-transaction'
+        handleSubmit={handleSubmitTransactionMoving}
+      />
+      <div className='transaction-items'>
+        {isDraggable ? (
           <div>
-            {transactions.map((transaction, index) => (
-              <TransactionItem
-                transaction={transaction}
-                index={index}
-                key={transaction.id}
-                generateNavigationString={generateNavigationString}
-              />
-            ))}
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId={droppableId}>
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {transactions.map((transaction, index) => (
+                      <TransactionItem
+                        transaction={transaction}
+                        index={index}
+                        key={transaction.id}
+                        generateNavigationString={generateNavigationString}
+                        isDraggable={isDraggable}
+                      />
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </div>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div>
+            <div>
+              {transactions.map((transaction, index) => (
+                <TransactionItem
+                  transaction={transaction}
+                  index={index}
+                  key={transaction.id}
+                  generateNavigationString={generateNavigationString}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };

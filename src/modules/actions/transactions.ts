@@ -478,3 +478,30 @@ export const createUserTransaction =
       console.log(e);
     }
   };
+
+export const changeTransactionProject =
+  (id: string, projectId: string) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { projectTransactions, userTransactions } = getState();
+
+    const updatedUserTransactions = userTransactions.map((transaction) =>
+      transaction.id === id ? { ...transaction, projectId } : transaction,
+    );
+    const filteredProjectTransactions = projectTransactions.filter(
+      (transaction) => transaction.id !== id,
+    );
+
+    dispatch(
+      updateUserTransactionsSuccess({ transactions: updatedUserTransactions }),
+    );
+
+    if (projectTransactions) {
+      dispatch(
+        updateProjectTransactionsSuccess({
+          transactions: filteredProjectTransactions,
+        }),
+      );
+    }
+
+    // ApiErrors.checkOnApiError(res);
+  };
