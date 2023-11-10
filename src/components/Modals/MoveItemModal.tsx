@@ -9,26 +9,44 @@ import { getCurrentProjects } from '../../modules/selectors/mainProjects';
 import { selectItemId } from '../../modules/actions/mainProjects';
 import { Modal } from './Modal';
 import { ProjectSelect } from '../FormComponent/ProjectSelect';
+import { Project } from '../../modules/types/mainProjects';
 
 interface IProps {
   modalId: string;
   handleSubmit: (projectId: string) => void;
 }
 
+const flattenProjects = (projects: Project[]): Project[] => {
+  const flattened: Project[] = [];
+
+  const flattenRecursive = (project: Project) => {
+    flattened.push(project);
+
+    if (project.subProjects && project.subProjects.length > 0) {
+      project.subProjects.forEach(flattenRecursive);
+    }
+  };
+
+  projects.forEach(flattenRecursive);
+
+  return flattened;
+};
+
 export const MoveItemModal: React.FC<IProps> = ({ modalId, handleSubmit }) => {
   const [selectedProjectId, setSelectedProjectId] = React.useState('');
   const projects = useSelector(getCurrentProjects);
+  const allProjects = flattenProjects(projects);
 
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
   );
   const dispatch = useDispatch();
-  const filtered = projects.filter((project) => {
-    return projects.every((p) => {
-      //@ts-ignore
-      return !p.subProjects.includes(project._id);
-    });
-  });
+  //   const filtered = projects.filter((project) => {
+  //     return projects.every((p) => {
+  //       const subProjectsIds = p.subProjects.map((subp) => subp._id);
+  //       return !subProjectsIds.includes(project._id);
+  //     });
+  //   });
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
@@ -56,7 +74,7 @@ export const MoveItemModal: React.FC<IProps> = ({ modalId, handleSubmit }) => {
             <ProjectSelect
               handleChange={handleChange}
               selectedValue={selectedProjectId}
-              projects={filtered}
+              projects={allProjects}
             />
           </DialogContent>
           <DialogActions>

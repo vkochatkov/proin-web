@@ -31,12 +31,6 @@ export const MoveProjectModal = () => {
   const selectedProjectId = useSelector(getSelectedProjectId);
   const openedProject = useSelector(getCurrentProject);
   const filtered = projects
-    .filter((project) => {
-      return projects.every((p) => {
-        //@ts-ignore
-        return !p.subProjects.includes(project._id);
-      });
-    })
     .filter((project) => project._id !== selectedProjectId)
     .filter((project) => {
       if (!openedProject) return true;

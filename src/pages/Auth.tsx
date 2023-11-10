@@ -15,8 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { endLoading, startLoading } from '../modules/actions/loading';
 import { getIsLoading } from '../modules/selectors/loading';
 import axios from 'axios';
-import { SnackbarUI } from '../components/UIElements/SnackbarUI';
-import { changeSnackbarState } from '../modules/actions/snackbar';
 import { getAuth } from '../modules/selectors/user';
 import { PROJECTS_PATH } from '../config/routes';
 

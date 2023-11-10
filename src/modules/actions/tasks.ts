@@ -11,7 +11,6 @@ import { updateCurrentTaskSuccess, updateTaskState } from './currentTask';
 import { endLoading, startLoading } from './loading';
 import ApiErrors from '../../utils/API/APIErrors';
 import { updateUserTasksSuccess } from './userTasks';
-import { updateProjectTasks } from './mainProjects';
 
 export const fetchTasksSuccess = createAction<ITasks>('fetchTasksSuccess');
 export const clearTasks = createAction('clearTasks');
@@ -65,6 +64,22 @@ export const taskStateUpdater = ({
   dispatch(updateCurrentTaskSuccess({ task }));
   dispatch(updateTasksSuccess({ tasks: updatedTasks }));
   dispatch(updateUserTasksSuccess(updatedUserTasks));
+};
+
+const findProjectById = (
+  projects: Project[],
+  targetId?: string,
+): Project | undefined => {
+  for (const project of projects) {
+    if (project._id === targetId) {
+      return project;
+    }
+    const subproject = findProjectById(project.subProjects, targetId);
+    if (subproject) {
+      return subproject;
+    }
+  }
+  return undefined;
 };
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
@@ -347,13 +362,14 @@ export const changeTaskProject =
     );
     const filteredProjectTasks = projectTasks.filter((task) => task._id !== id);
 
-    const oldProject = JSON.parse(JSON.stringify(allUserProjects)).find(
-      (project: Project) =>
-        project._id === userTasks.find((task) => task._id === id)?.projectId,
+    const oldProject = findProjectById(
+      JSON.parse(JSON.stringify(allUserProjects)),
+      userTasks.find((task) => task._id === id)?.projectId,
     );
 
-    const newProject = JSON.parse(JSON.stringify(allUserProjects)).find(
-      (project: Project) => project._id === projectId,
+    const newProject = findProjectById(
+      JSON.parse(JSON.stringify(allUserProjects)),
+      projectId,
     );
 
     if (oldProject) {
@@ -366,25 +382,21 @@ export const changeTaskProject =
       newProject.tasks.unshift(id);
     }
 
-    dispatch(
-      updateProjectTasks({
-        oldProject: oldProject ? oldProject : null,
-        newProject,
-      }),
-    );
     dispatch(updateUserTasksSuccess(updatedUserTasks));
 
     if (projectTasks) {
       dispatch(updateTasksSuccess({ tasks: filteredProjectTasks }));
     }
 
-    const res = await Api.Tasks.updateTaskProjectId(
-      {
-        oldProjectId: oldProject ? oldProject._id : '',
-        newProjectId: newProject._id,
-      },
-      id,
-    );
+    if (newProject) {
+      const res = await Api.Tasks.updateTaskProjectId(
+        {
+          oldProjectId: oldProject ? oldProject._id : '',
+          newProjectId: newProject._id,
+        },
+        id,
+      );
 
-    ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
+    }
   };

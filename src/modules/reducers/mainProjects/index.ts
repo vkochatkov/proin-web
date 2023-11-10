@@ -10,7 +10,6 @@ import {
   setAllUserProjects,
   selectItemId,
   updateProjectFiles,
-  updateProjectTasks,
 } from '../../actions/mainProjects';
 import { IUserProject, Project } from '../../types/mainProjects';
 
@@ -96,25 +95,5 @@ mainProjects.on(clearProjects, (state) => {
   return {
     ...state,
     projects: initialState.projects,
-  };
-});
-
-mainProjects.on(updateProjectTasks, (state, payload) => {
-  const { oldProject, newProject } = payload;
-  const updatedProjects = JSON.parse(JSON.stringify(state.projects));
-
-  updatedProjects.forEach((project: Project) => {
-    if (oldProject && oldProject._id === project._id) {
-      project.tasks = oldProject.tasks;
-    }
-
-    if (newProject._id === project._id) {
-      project.tasks = newProject.tasks;
-    }
-  });
-
-  return {
-    ...state,
-    projects: updatedProjects,
   };
 });
