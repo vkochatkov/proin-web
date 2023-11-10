@@ -14,6 +14,7 @@ import { Project } from '../../modules/types/mainProjects';
 interface IProps {
   modalId: string;
   handleSubmit: (projectId: string) => void;
+  currentProjectId: string;
 }
 
 const flattenProjects = (projects: Project[]): Project[] => {
@@ -32,21 +33,22 @@ const flattenProjects = (projects: Project[]): Project[] => {
   return flattened;
 };
 
-export const MoveItemModal: React.FC<IProps> = ({ modalId, handleSubmit }) => {
+export const MoveItemModal: React.FC<IProps> = ({
+  modalId,
+  handleSubmit,
+  currentProjectId,
+}) => {
   const [selectedProjectId, setSelectedProjectId] = React.useState('');
   const projects = useSelector(getCurrentProjects);
   const allProjects = flattenProjects(projects);
+  const filteredProjects = allProjects.filter(
+    (project) => project._id !== currentProjectId,
+  );
 
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
   );
   const dispatch = useDispatch();
-  //   const filtered = projects.filter((project) => {
-  //     return projects.every((p) => {
-  //       const subProjectsIds = p.subProjects.map((subp) => subp._id);
-  //       return !subProjectsIds.includes(project._id);
-  //     });
-  //   });
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
@@ -74,7 +76,7 @@ export const MoveItemModal: React.FC<IProps> = ({ modalId, handleSubmit }) => {
             <ProjectSelect
               handleChange={handleChange}
               selectedValue={selectedProjectId}
-              projects={allProjects}
+              projects={filteredProjects}
             />
           </DialogContent>
           <DialogActions>

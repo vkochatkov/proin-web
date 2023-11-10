@@ -134,6 +134,7 @@ export const TaskItem: React.FC<IProps> = ({
   const handleOpenModal = (id: string) => {
     dispatch(openModal({ id }));
     dispatch(selectTask(task._id));
+    dispatch(chooseCurrentTaskSuccess({ task }));
   };
 
   const handleChangeCeckbox = (e: React.ChangeEvent<HTMLInputElement>) => {

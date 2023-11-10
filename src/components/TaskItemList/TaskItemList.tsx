@@ -15,6 +15,7 @@ import { Button } from '../FormElement/Button';
 import { MoveItemModal } from '../Modals/MoveItemModal';
 import { changeTaskProject } from '../../modules/actions/tasks';
 import { getSelectedTaskId } from '../../modules/selectors/selectedTask';
+import { getCurrentTask } from '../../modules/selectors/currentTask';
 
 import './TaskItemList.scss';
 
@@ -62,6 +63,7 @@ export const TaskItemList: React.FC<IProps> = ({
     itemsName,
   });
   const selectedTaskId = useSelector(getSelectedTaskId);
+  const currentTask = useSelector(getCurrentTask);
   const filterModalId = 'filter-tasks-modal';
 
   useEffect(() => {
@@ -109,6 +111,7 @@ export const TaskItemList: React.FC<IProps> = ({
       <MoveItemModal
         modalId='move-task'
         handleSubmit={handleSubmitTaskMoving}
+        currentProjectId={currentTask.projectId}
       />
       <div className='tasks-items'>
         <Toolbar

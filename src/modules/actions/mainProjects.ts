@@ -47,10 +47,6 @@ export const removeProjectFileSuccess = createAction(
   'removeProjectFileSuccess',
 );
 export const createCommentSuccess = createAction('createCommentSuccess');
-export const updateProjectTasks = createAction<{
-  oldProject: Project | null;
-  newProject: Project;
-}>('updateProjectTasks');
 
 const httpSource = axios.CancelToken.source();
 

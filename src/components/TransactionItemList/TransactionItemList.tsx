@@ -47,6 +47,7 @@ export const TransactionItemList: React.FC<IProps> = ({
       <MoveItemModal
         modalId='move-transaction'
         handleSubmit={handleSubmitTransactionMoving}
+        currentProjectId={currentTransaction.projectId}
       />
       <div className='transaction-items'>
         {isDraggable ? (
