@@ -2,7 +2,11 @@ import { Dispatch } from 'redux';
 import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
-import { updateEnitites, updateObjects } from '../../utils/utils';
+import {
+  findProjectByProjectId,
+  updateEnitites,
+  updateObjects,
+} from '../../utils/utils';
 import { RootState } from '../store/store';
 import { IComment, IFile, Project } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
@@ -487,15 +491,16 @@ export const changeTransactionProject =
       userTransactions,
       mainProjects: { allUserProjects },
     } = getState();
-    const oldProject = JSON.parse(JSON.stringify(allUserProjects)).find(
-      (project: Project) =>
-        project._id ===
-        userTransactions.find((transaction) => transaction.id === id)
-          ?.projectId,
+    const oldProject = findProjectByProjectId(
+      JSON.parse(JSON.stringify(allUserProjects)),
+      userTransactions.find((transaction) => transaction.id === id)?.projectId,
     );
-    const newProject = JSON.parse(JSON.stringify(allUserProjects)).find(
-      (project: Project) => project._id === projectId,
+
+    const newProject = findProjectByProjectId(
+      JSON.parse(JSON.stringify(allUserProjects)),
+      projectId,
     );
+
     const updatedUserTransactions = userTransactions.map((transaction) =>
       transaction.id === id ? { ...transaction, projectId } : transaction,
     );
@@ -515,13 +520,15 @@ export const changeTransactionProject =
       );
     }
 
-    const res = await Api.Transactions.updateTransactionProjectId(
-      {
-        oldProjectId: oldProject ? oldProject._id : '',
-        newProjectId: newProject._id,
-      },
-      id,
-    );
+    if (newProject) {
+      const res = await Api.Transactions.updateTransactionProjectId(
+        {
+          oldProjectId: oldProject ? oldProject._id : '',
+          newProjectId: newProject._id,
+        },
+        id,
+      );
 
-    ApiErrors.checkOnApiError(res);
+      ApiErrors.checkOnApiError(res);
+    }
   };

@@ -6,7 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
 import { IComment, IFile, Project } from '../types/mainProjects';
-import { updateEnitites, updateObjects } from '../../utils/utils';
+import {
+  findProjectByProjectId,
+  updateEnitites,
+  updateObjects,
+} from '../../utils/utils';
 import { updateCurrentTaskSuccess, updateTaskState } from './currentTask';
 import { endLoading, startLoading } from './loading';
 import ApiErrors from '../../utils/API/APIErrors';
@@ -64,22 +68,6 @@ export const taskStateUpdater = ({
   dispatch(updateCurrentTaskSuccess({ task }));
   dispatch(updateTasksSuccess({ tasks: updatedTasks }));
   dispatch(updateUserTasksSuccess(updatedUserTasks));
-};
-
-const findProjectById = (
-  projects: Project[],
-  targetId?: string,
-): Project | undefined => {
-  for (const project of projects) {
-    if (project._id === targetId) {
-      return project;
-    }
-    const subproject = findProjectById(project.subProjects, targetId);
-    if (subproject) {
-      return subproject;
-    }
-  }
-  return undefined;
 };
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
@@ -362,12 +350,12 @@ export const changeTaskProject =
     );
     const filteredProjectTasks = projectTasks.filter((task) => task._id !== id);
 
-    const oldProject = findProjectById(
+    const oldProject = findProjectByProjectId(
       JSON.parse(JSON.stringify(allUserProjects)),
       userTasks.find((task) => task._id === id)?.projectId,
     );
 
-    const newProject = findProjectById(
+    const newProject = findProjectByProjectId(
       JSON.parse(JSON.stringify(allUserProjects)),
       projectId,
     );

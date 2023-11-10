@@ -1,5 +1,5 @@
 import { IStatusLabels } from '../modules/types/tasks';
-import { IFile } from '../modules/types/mainProjects';
+import { IFile, Project } from '../modules/types/mainProjects';
 import { FilterFunction } from '../modules/types/filter';
 import { ITransaction } from '../modules/types/transactions';
 
@@ -79,4 +79,20 @@ export const transactionsFilterFunction: FilterFunction<ITransaction> = (
   }
 
   return classifierMatch || descriptionMatch;
+};
+
+export const findProjectByProjectId = (
+  projects: Project[],
+  targetId?: string,
+): Project | undefined => {
+  for (const project of projects) {
+    if (project._id === targetId) {
+      return project;
+    }
+    const subproject = findProjectByProjectId(project.subProjects, targetId);
+    if (subproject) {
+      return subproject;
+    }
+  }
+  return undefined;
 };
