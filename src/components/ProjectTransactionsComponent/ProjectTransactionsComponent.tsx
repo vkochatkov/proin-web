@@ -140,13 +140,6 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         transactions={sortableTasks}
         generateNavigationString={handleGenerateNavigationQuery}
       />
-      {sortedTransactions &&
-        sortedTransactions.length === 0 &&
-        transactionsTabValue !== classifierTab && (
-          <h2 className='project-transactions__empty-field'>
-            Транзакції відсутні
-          </h2>
-        )}
     </>
   );
 };
