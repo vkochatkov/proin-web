@@ -29,12 +29,16 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
     return transactions && transactions.length > 0;
   };
 
-  const renderElement = (transactions: ITransaction[]) => (
+  const renderElement = (
+    transactions: ITransaction[],
+    isDraggable?: boolean,
+  ) => (
     <div className='slider-transaction-list__wrapper'>
       {isTransactionsExist(transactions) ? (
         <TransactionItemList
           transactions={transactions}
           generateNavigationString={generateNavigationString}
+          isDraggable={isDraggable ? isDraggable : undefined}
         />
       ) : (
         <h2>Транзакцій немає</h2>
@@ -45,7 +49,7 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
   const tabs = [
     {
       label: 'Всі',
-      panel: <>{renderElement(transactions)}</>,
+      panel: <>{renderElement(transactions, true)}</>,
     },
     {
       label: 'Витрати',
