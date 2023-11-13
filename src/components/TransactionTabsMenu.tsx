@@ -1,3 +1,6 @@
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { saveProjectTransactionsOrder } from '../modules/actions/transactions';
 import { ITransaction } from '../modules/types/transactions';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { TransactionItemList } from './TransactionItemList/TransactionItemList';
@@ -12,6 +15,9 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
   transactions,
   generateNavigationString,
 }) => {
+  const dispatch = useDispatch();
+
+  const { pid } = useParams();
   const tabsId = 'transaction-tabs';
   const expensesTransactions = transactions.filter(
     (transaction) => transaction.type === 'expenses',
@@ -29,6 +35,12 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
     return transactions && transactions.length > 0;
   };
 
+  const handleChangeItemOrder = (transactions: ITransaction[]) => {
+    if (!pid) return;
+
+    dispatch(saveProjectTransactionsOrder(transactions, pid) as any);
+  };
+
   const renderElement = (
     transactions: ITransaction[],
     isDraggable?: boolean,
@@ -38,6 +50,7 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
         <TransactionItemList
           transactions={transactions}
           generateNavigationString={generateNavigationString}
+          changeOrder={handleChangeItemOrder}
           isDraggable={isDraggable ? isDraggable : undefined}
         />
       ) : (

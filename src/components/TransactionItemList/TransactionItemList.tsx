@@ -24,6 +24,7 @@ export const TransactionItemList: React.FC<IProps> = ({
 }) => {
   const currentTransaction = useSelector(getCurrentTransaction);
   const dispatch = useDispatch();
+
   const onDragEnd = (result: any) => {
     if (!result.destination || !changeOrder) {
       return;

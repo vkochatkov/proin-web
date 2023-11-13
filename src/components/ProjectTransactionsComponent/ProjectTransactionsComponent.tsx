@@ -5,7 +5,6 @@ import { getValueByTabId } from '../../modules/selectors/tabs';
 import { getProjectTransactions } from '../../modules/selectors/transactions';
 import { RootState } from '../../modules/store/store';
 import { TransactionTabsMenu } from '../TransactionTabsMenu';
-import { ITransaction } from '../../modules/types/transactions';
 import { Toolbar } from '../Toolbar/Toolbar';
 import { useFilter } from '../../hooks/useFilter';
 import { FilterModal } from '../Modals/FilterModal';
@@ -16,23 +15,18 @@ import './ProjectTransactionsComponent.scss';
 
 interface IProps {}
 
-export const ProjectTransactionsComponent: React.FC<IProps> = () => {
-  const transactions: ITransaction[] = JSON.parse(
-    JSON.stringify(useSelector(getProjectTransactions)),
-  );
-  const sortedTransactions = transactions.sort((a, b) => {
-    const timestampA = new Date(a.timestamp).getTime();
-    const timestampB = new Date(b.timestamp).getTime();
-    return timestampB - timestampA;
-  });
+export const ProjectTransactionsComponent: React.FC<IProps> = ({}) => {
+  const transactions = useSelector(getProjectTransactions);
+  // const sortedTransactions = [...transactions].sort((a, b) => {
+  //   console.log(a, b);
+  //   const timestampA = new Date(a.timestamp).getTime();
+  //   const timestampB = new Date(b.timestamp).getTime();
+  //   return timestampB - timestampA;
+  // });
   const { pid, subprojectId } = useParams();
-  const tabValue = useSelector((state: RootState) =>
-    getValueByTabId(state)('main-tabs'),
-  );
   const transactionsTabValue = useSelector((state: RootState) =>
     getValueByTabId(state)('transaction-tabs'),
   );
-  const classifierTab = 'Класифікатори';
   const modalId = 'filter-transaction-modal';
   const {
     searchedItems,
@@ -47,16 +41,16 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
     handleFilterByProjectId,
     filterValue,
   } = useFilter({
-    items: sortedTransactions,
+    items: transactions,
     filterFunction: transactionsFilterFunction,
     itemsName: filterNames.projectTransactions,
   });
 
-  const sortableTasks =
+  const sortableTransactions =
     selectedSortOption === defaultSortOption
       ? isSearching
         ? searchedItems
-        : sortedTransactions
+        : transactions
       : searchedItems;
 
   const handleCountTotal = () => {
@@ -137,7 +131,7 @@ export const ProjectTransactionsComponent: React.FC<IProps> = () => {
         filterValue={filterValue}
       />
       <TransactionTabsMenu
-        transactions={sortableTasks}
+        transactions={sortableTransactions}
         generateNavigationString={handleGenerateNavigationQuery}
       />
     </>

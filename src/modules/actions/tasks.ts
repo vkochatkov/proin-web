@@ -142,15 +142,7 @@ export const changeTasksOrder =
       dispatch(updateTasksSuccess({ tasks: newOrder }));
       await Api.Tasks.updateTasksByProjectId({ tasks: newOrder }, pid);
     } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `${
-          e.response.data
-            ? e.response.data.message
-            : 'Зберегти послідовність задач не вдалося'
-        }. Перезавантажте сторінку`,
-      });
+      console.log(e);
     }
   };
 
