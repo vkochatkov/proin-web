@@ -672,17 +672,7 @@ export const updateSubprojectFilesOrder =
 
     try {
       await Api.Files.post({ files }, updatedSubproject._id);
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${
-            e.response.data
-              ? e.response.data.message
-              : 'Зберегти нову послідовність файлів не вдалося'
-          }. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
