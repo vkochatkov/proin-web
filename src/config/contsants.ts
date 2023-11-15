@@ -5,3 +5,10 @@ export const filterNames: { [key: string]: string } = {
   userTasks: 'user-tasks',
   projectTransactions: 'project-transactions',
 };
+
+export const sortOptions = {
+  byAddingDate: 'byAddingDate',
+  byDeadlineDate: 'byDeadlineDate',
+  byLastCommentDate: 'byLastCommentDate',
+  default: 'default',
+};

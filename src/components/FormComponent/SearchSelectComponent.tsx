@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 
 interface IProps {
@@ -15,10 +15,27 @@ export const SearchSelectComponent: React.FC<IProps> = ({
   handleChange,
   label,
 }) => {
+  const EMPTY = 'пусто';
+  const [options, setOptions] =
+    useState<{ id: string; value: string }[]>(valuesArray);
+
+  useEffect(() => {
+    const emptyOption = options.find((option) => option.id === EMPTY);
+    if (!emptyOption) {
+      setOptions((prevState) => [
+        {
+          id: EMPTY,
+          value: EMPTY,
+        },
+        ...prevState,
+      ]);
+    }
+  }, [options]);
+
   return (
     <Autocomplete
-      value={valuesArray.find((option) => option.id === selectedValue) || null}
-      options={valuesArray}
+      value={options.find((option) => option.id === selectedValue) || null}
+      options={options}
       getOptionLabel={(option) => option.value}
       onChange={(_, newValue) => {
         if (newValue) {

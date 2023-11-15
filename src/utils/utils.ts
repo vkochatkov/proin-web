@@ -73,8 +73,13 @@ export const transactionsFilterFunction: FilterFunction<ITransaction> = (
     .toLowerCase()
     .includes(value.toLowerCase());
 
-  if (projectId) {
+  if (projectId && projectId !== 'пусто') {
     const projectIdMatch = item.projectId === projectId;
+    return (classifierMatch || descriptionMatch) && projectIdMatch;
+  }
+
+  if (projectId === 'пусто') {
+    const projectIdMatch = item.projectId === '';
     return (classifierMatch || descriptionMatch) && projectIdMatch;
   }
 

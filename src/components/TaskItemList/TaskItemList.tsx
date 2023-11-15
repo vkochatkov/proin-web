@@ -30,8 +30,13 @@ interface IProps {
 const tasksFilterFunction: FilterFunction<ITask> = (item, value, projectId) => {
   const nameMatch = item.name.toLowerCase().includes(value.toLowerCase());
 
-  if (projectId) {
+  if (projectId && projectId !== 'пусто') {
     const projectIdMatch = item.projectId === projectId;
+    return nameMatch && projectIdMatch;
+  }
+
+  if (projectId === 'пусто') {
+    const projectIdMatch = item.projectId === '' || !item.projectId;
     return nameMatch && projectIdMatch;
   }
 

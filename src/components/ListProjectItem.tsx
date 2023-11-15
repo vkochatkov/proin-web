@@ -66,6 +66,7 @@ export const ListProjectItem: React.FC<Props> = ({
     items: projectsToFilter,
     filterFunction: ProjectsFilterFunction,
     itemsName: filterNames.projects,
+    isProject: true,
   });
   const modalId = 'filter-projects-modal';
   const { pid } = useParams();

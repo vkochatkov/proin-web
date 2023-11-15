@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FilterFunction } from '../modules/types/filter';
 import { IComment } from '../modules/types/mainProjects';
+import { sortOptions } from '../config/contsants';
 
 interface IFilterFunctions<T> {
   sortedItems: T[];
@@ -30,12 +31,14 @@ export const useFilter = <
   items,
   filterFunction,
   itemsName,
+  isProject,
 }: {
   items: T[];
   filterFunction: FilterFunction<T>;
   itemsName: string;
+  isProject?: boolean;
 }): IFilterFunctions<T> => {
-  const defaultSortOption = 'default';
+  const defaultSortOption = sortOptions.default;
   const savedSettings = JSON.parse(sessionStorage.getItem(itemsName) || '{}');
   const [sortedItems, setSortingItems] = useState(
     savedSettings.sortedItems || items,
@@ -52,7 +55,9 @@ export const useFilter = <
   const [searchedValue, setSearchedValue] = useState(
     savedSettings.searchedValue || '',
   );
-  const [projectIdValue, setProjectIdValue] = useState('');
+  const [projectIdValue, setProjectIdValue] = useState(
+    savedSettings.projectIdValue || '',
+  );
 
   const isDraggable = selectedSortOption === defaultSortOption && !isSearching;
   const sortableItems =
@@ -63,6 +68,19 @@ export const useFilter = <
       : searchedItems;
 
   useEffect(() => {
+    if (isProject) return;
+
+    if (JSON.stringify(items) !== JSON.stringify(sortedItems)) {
+      setSortingItems(items);
+      handleUpdateSorting();
+    }
+  }, [items, projectIdValue]);
+
+  useEffect(() => {
+    handleFilterByProjectId(projectIdValue);
+  }, [sortedItems]);
+
+  useEffect(() => {
     sessionStorage.setItem(
       itemsName,
       JSON.stringify({
@@ -71,6 +89,7 @@ export const useFilter = <
         isSearching,
         searchedValue,
         searchedItems,
+        projectIdValue,
       }),
     );
   }, [
@@ -80,6 +99,7 @@ export const useFilter = <
     isSearching,
     searchedValue,
     searchedItems,
+    projectIdValue,
   ]);
 
   const handleFilteringItems = ({
@@ -136,11 +156,11 @@ export const useFilter = <
     setSearchedItems(
       handleFilteringItems({ sortedItems, projectId: projectIdValue }),
     );
-    setSelectedSortOption('byAddingDate');
+    setSelectedSortOption(sortOptions.byAddingDate);
   };
 
   const handleSortByDeadline = () => {
-    setSelectedSortOption('byDeadlineDate');
+    setSelectedSortOption(sortOptions.byDeadlineDate);
   };
 
   const handleSortbyLastCommentDate = () => {
@@ -163,7 +183,7 @@ export const useFilter = <
     setSearchedItems(
       handleFilteringItems({ sortedItems, projectId: projectIdValue }),
     );
-    setSelectedSortOption('byLastCommentDate');
+    setSelectedSortOption(sortOptions.byLastCommentDate);
   };
 
   const handleSortByDefault = () => {
@@ -171,21 +191,47 @@ export const useFilter = <
     setSearchedItems(
       handleFilteringItems({ sortedItems: items, projectId: projectIdValue }),
     );
-    setSelectedSortOption('default');
+    setSelectedSortOption(sortOptions.default);
   };
 
-  const handleFilterByProjectId = (id: string) => {
+  function handleUpdateSorting() {
+    switch (selectedSortOption) {
+      case 'byAddingDate':
+        handleSortByAddingDate();
+        break;
+      case 'byDeadlineDate':
+        handleSortByDeadline();
+        break;
+      case 'byLastCommentDate':
+        handleSortbyLastCommentDate();
+        break;
+      default:
+        handleSortByDefault();
+        break;
+    }
+  }
+
+  const handleFilterByProjectId = (id?: string) => {
+    const EMPTY = 'пусто';
     if (id) {
-      const filteredTasks = [...sortedItems].filter(
-        (item) => item.projectId === id,
-      );
+      let filteredTasks;
+      if (id === EMPTY) {
+        filteredTasks = [...sortedItems].filter((item) => {
+          console.log(item.projectId);
+          return item.projectId === '' || !item.projectId;
+        });
+      } else {
+        filteredTasks = [...sortedItems].filter(
+          (item) => item.projectId === id,
+        );
+      }
 
       setSearchedItems(
         handleFilteringItems({ sortedItems: filteredTasks, projectId: id }),
       );
 
       setIsSearching(true);
-      setProjectIdValue(id);
+      setProjectIdValue((prevId: string) => (prevId !== id ? id : prevId));
       return;
     }
 
