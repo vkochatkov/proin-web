@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { signin, signout } from '../modules/actions/user';
 import { getAuth } from '../modules/selectors/user';
 import { filterNames } from '../config/contsants';
+import { endLoading } from '../modules/actions/loading';
 
 interface UserData {
   userId: string;
@@ -97,6 +98,8 @@ export const useAuth = (): {
           new Date(storedData.expiration),
         );
       }
+    } else {
+      dispatch(endLoading());
     }
   }, [login, dispatch]);
 
