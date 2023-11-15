@@ -217,7 +217,6 @@ export const useFilter = <
       let filteredTasks;
       if (id === EMPTY) {
         filteredTasks = [...sortedItems].filter((item) => {
-          console.log(item.projectId);
           return item.projectId === '' || !item.projectId;
         });
       } else {

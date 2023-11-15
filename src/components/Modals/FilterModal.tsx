@@ -53,11 +53,13 @@ export const FilterModal: React.FC<IProps> = ({
   const valueFromSessionStorage = sessionStorage.getItem(
     `${itemsName}SelectedValue`,
   );
-  const storedSelectedValue =
+  const storedSettings =
     valueFromSessionStorage !== null ? JSON.parse(valueFromSessionStorage) : '';
-
   const [selectedValue, setSelectedValue] = useState<string>(
-    storedSelectedValue || '',
+    storedSettings.selectedValue || '',
+  );
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(
+    storedSettings.isSubmitted || false,
   );
   const userProjects = useSelector(getAllUserProjects) as IUserProject[];
   const usersProjectNames = getProjectsNames(userProjects);
@@ -68,27 +70,36 @@ export const FilterModal: React.FC<IProps> = ({
   useEffect(() => {
     sessionStorage.setItem(
       `${itemsName}SelectedValue`,
-      JSON.stringify(selectedValue),
+      JSON.stringify({ selectedValue, isSubmitted }),
     );
-  }, [selectedValue, itemsName]);
+  }, [selectedValue, itemsName, isSubmitted]);
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
-    setSelectedValue('');
+
+    if (!isSubmitted) {
+      setSelectedValue('');
+    }
   };
 
   const handleChangeValue = (id: string) => {
     setSelectedValue(id);
   };
 
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    submitHandler(e, selectedValue);
+    dispatch(closeModal({ id: modalId }));
+
+    if (selectedValue) {
+      setIsSubmitted(true);
+    } else {
+      setIsSubmitted(false);
+    }
+  };
+
   return (
     <Modal open={open} handleClose={handleClose} label={label}>
-      <form
-        onSubmit={(e) => {
-          submitHandler(e, selectedValue);
-          dispatch(closeModal({ id: modalId }));
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <DialogContent>
           <SearchSelectComponent
             label='Пошук'

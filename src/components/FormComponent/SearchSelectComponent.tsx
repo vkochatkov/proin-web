@@ -16,19 +16,31 @@ export const SearchSelectComponent: React.FC<IProps> = ({
   label,
 }) => {
   const EMPTY = 'пусто';
-  const [options, setOptions] =
-    useState<{ id: string; value: string }[]>(valuesArray);
+  const storedOptionsName = 'options';
+  const storedOptions = JSON.parse(
+    sessionStorage.getItem(storedOptionsName) || '[]',
+  );
+  const [options, setOptions] = useState<{ id: string; value: string }[]>(
+    storedOptions || valuesArray,
+  );
 
   useEffect(() => {
     const emptyOption = options.find((option) => option.id === EMPTY);
+
     if (!emptyOption) {
-      setOptions((prevState) => [
-        {
-          id: EMPTY,
-          value: EMPTY,
-        },
-        ...prevState,
-      ]);
+      setOptions((prevState) => {
+        const updatedState = [
+          {
+            id: EMPTY,
+            value: EMPTY,
+          },
+          ...prevState,
+        ];
+
+        sessionStorage.setItem(storedOptionsName, JSON.stringify(updatedState));
+
+        return updatedState;
+      });
     }
   }, [options]);
 
