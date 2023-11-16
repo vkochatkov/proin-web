@@ -58,24 +58,24 @@ export const ProjectTransactionsComponent: React.FC<IProps> = ({}) => {
       switch (transactionsTabValue) {
         case 'Всі':
           if (transaction.type === 'income') {
-            acc += transaction.sum;
+            acc += transaction.sum ? transaction.sum : 0;
           } else if (transaction.type === 'expenses') {
-            acc -= transaction.sum;
+            acc -= transaction.sum ? transaction.sum : 0;
           }
           break;
         case 'Витрати':
           if (transaction.type === 'expenses') {
-            acc -= transaction.sum;
+            acc -= transaction.sum ? transaction.sum : 0;
           }
           break;
         case 'Доходи':
           if (transaction.type === 'income') {
-            acc += transaction.sum;
+            acc += transaction.sum ? transaction.sum : 0;
           }
           break;
         case 'Перекази':
           if (transaction.type === 'transfer') {
-            acc += transaction.sum;
+            acc += transaction.sum ? transaction.sum : 0;
           }
           break;
         default:

@@ -16,6 +16,7 @@ import { MoveItemModal } from '../Modals/MoveItemModal';
 import { changeTaskProject } from '../../modules/actions/tasks';
 import { getSelectedTaskId } from '../../modules/selectors/selectedTask';
 import { getCurrentTask } from '../../modules/selectors/currentTask';
+import { clearSelectedTask } from '../../modules/actions/selectedTask';
 
 import './TaskItemList.scss';
 
@@ -74,6 +75,7 @@ export const TaskItemList: React.FC<IProps> = ({
   useEffect(() => {
     return () => {
       dispatch(clearInputState());
+      dispatch(clearSelectedTask());
     };
   }, [dispatch]);
 

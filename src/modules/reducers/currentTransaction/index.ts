@@ -1,5 +1,8 @@
 import { createReducer } from 'redux-act';
-import { setCurrentTransaction } from '../../actions/transactions';
+import {
+  clearCurrentTransaction,
+  setCurrentTransaction,
+} from '../../actions/transactions';
 import { IClassifiers, ITransaction } from '../../types/transactions';
 
 const initialClassifiers: IClassifiers = {
@@ -12,7 +15,7 @@ const initialState: ITransaction = {
   description: '',
   projectId: '',
   userId: '',
-  sum: 0,
+  sum: null,
   classifier: '',
   id: '',
   type: 'expenses',
@@ -27,3 +30,4 @@ export const currentTransaction = createReducer({}, initialState);
 currentTransaction.on(setCurrentTransaction, (_, payload) => ({
   ...payload,
 }));
+currentTransaction.on(clearCurrentTransaction, () => initialState);

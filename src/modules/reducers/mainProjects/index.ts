@@ -10,6 +10,7 @@ import {
   setAllUserProjects,
   selectItemId,
   updateProjectFiles,
+  clearMainProjects,
 } from '../../actions/mainProjects';
 import { IUserProject, Project } from '../../types/mainProjects';
 
@@ -97,3 +98,4 @@ mainProjects.on(clearProjects, (state) => {
     projects: initialState.projects,
   };
 });
+mainProjects.on(clearMainProjects, () => initialState);

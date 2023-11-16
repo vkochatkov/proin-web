@@ -8,6 +8,11 @@ import { RootState } from '../store/store';
 import { clearFormInput } from './form';
 import { endLoading } from './loading';
 import { changeSnackbarState, clearSnackbarState } from './snackbar';
+import { clearMainProjects } from './mainProjects';
+import { clearProjectMembers } from './projectMembers';
+import { clearCurrentTask } from './currentTask';
+import { clearUserTasks } from './userTasks';
+import { clearCurrentTransaction, clearUserTransactions } from './transactions';
 
 export const loginSuccess = createAction<UserState>('loginSuccess');
 export const logoutSuccess = createAction('logoutSuccess');
@@ -35,6 +40,13 @@ export const signin =
 export const signout = () => (dispatch: Dispatch) => {
   dispatch(logoutSuccess());
   dispatch(endLoading());
+  dispatch(clearMainProjects());
+  dispatch(clearProjectMembers());
+  dispatch(clearCurrentTask());
+  dispatch(clearUserTasks());
+  dispatch(clearUserTransactions());
+  dispatch(clearCurrentTransaction());
+
   APIClient.setToken(null);
 };
 

@@ -9,7 +9,7 @@ export interface ITransaction {
   description: string;
   projectId: string;
   userId: string;
-  sum: number;
+  sum: number | null;
   classifier: string;
   id: string;
   timestamp: string;

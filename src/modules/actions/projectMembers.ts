@@ -5,11 +5,12 @@ import { changeSnackbarState } from './snackbar';
 import { Api } from '../../utils/API';
 
 export const fetchMembersSuccess = createAction<IMembers>(
-  'fetchMembersSuccess'
+  'fetchMembersSuccess',
 );
 export const removeProjectMemberSuccess = createAction<IMembers>(
-  'removeProjectMemberSuccess'
+  'removeProjectMemberSuccess',
 );
+export const clearProjectMembers = createAction('clearProjectMembers');
 
 export const fetchMembers =
   (projectId: string) => async (dispatch: Dispatch) => {
@@ -31,29 +32,29 @@ export const fetchMembers =
           id: 'error',
           open: true,
           message: `${e.response.data.message}. Перезавантажте сторінку!`,
-        })
+        }),
       );
     }
   };
 
 export const removeProjectMember =
   (userId: string, projectId: string) =>
-    async (dispatch: Dispatch, getState: () => RootState) => {
-      const members = getState().projectMembers.filter(
-        (member) => member.userId !== userId
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const members = getState().projectMembers.filter(
+      (member) => member.userId !== userId,
+    );
+
+    dispatch(removeProjectMemberSuccess({ members }));
+
+    try {
+      await Api.ProjectMembers.delete({ userId }, projectId);
+    } catch (e: any) {
+      dispatch(
+        changeSnackbarState({
+          id: 'error',
+          open: true,
+          message: `${e.response.data.message}. Перезавантажте сторінку!`,
+        }),
       );
-
-      dispatch(removeProjectMemberSuccess({ members }));
-
-      try {
-        await Api.ProjectMembers.delete({ userId }, projectId);
-      } catch (e: any) {
-        dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: `${e.response.data.message}. Перезавантажте сторінку!`,
-          })
-        );
-      }
-    };
+    }
+  };

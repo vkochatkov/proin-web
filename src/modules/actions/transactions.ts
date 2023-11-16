@@ -16,6 +16,7 @@ import { changeSnackbarState } from './snackbar';
 export const setCurrentTransaction = createAction<ITransaction>(
   'setCurrentTransaction',
 );
+export const clearCurrentTransaction = createAction('clearCurrentTransaction');
 export const fetchProjectTransactionsSuccess = createAction<{
   transactions: ITransaction[];
 }>('fetchProjectTransactionsSuccess');

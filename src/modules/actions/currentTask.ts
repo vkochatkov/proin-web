@@ -13,13 +13,13 @@ export const chooseCurrentTaskSuccess = createAction<{ task: ITask }>(
 export const updateCurrentTaskSuccess = createAction<{ task: ITaskUpdate }>(
   'updateCurrentTaskSuccess',
 );
-
 export const updateTaskState = createAction<{ task: Partial<ITask> }>(
   'updateTaskState',
 );
 export const updateCurrentTaskDiarySuccess = createAction<{
   task: Partial<ITask>;
 }>('updateCurrentTaskDiarySuccess');
+export const clearCurrentTask = createAction('clearCurrentTask');
 
 export const updateCurrentTask =
   (data: any, tid: string) =>

@@ -5,8 +5,9 @@ import { ITask } from '../types/tasks';
 import { changeSnackbarState } from './snackbar';
 
 export const updateUserTasksSuccess = createAction<ITask[]>(
-  'updateUserTasksSuccess'
+  'updateUserTasksSuccess',
 );
+export const clearUserTasks = createAction('clearUserTasks');
 
 export const changeUserTasksOrder =
   (tasks: ITask[]) => async (dispatch: Dispatch) => {
@@ -23,7 +24,7 @@ export const changeUserTasksOrder =
           id: 'error',
           open: true,
           message: `Виникла проблема.Перезавантажте сторінку`,
-        })
+        }),
       );
     }
   };
