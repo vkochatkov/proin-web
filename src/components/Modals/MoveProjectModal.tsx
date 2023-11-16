@@ -30,12 +30,14 @@ export const MoveProjectModal = () => {
   const projects = useSelector(getCurrentProjects);
   const selectedProjectId = useSelector(getSelectedProjectId);
   const openedProject = useSelector(getCurrentProject);
-  const filtered = projects
-    .filter((project) => project._id !== selectedProjectId)
-    .filter((project) => {
-      if (!openedProject) return true;
-      else return project._id !== openedProject.id;
-    });
+  const filtered =
+    projects &&
+    projects
+      .filter((project) => project._id !== selectedProjectId)
+      .filter((project) => {
+        if (!openedProject) return true;
+        else return project._id !== openedProject.id;
+      });
 
   const handleClose = () => {
     dispatch(closeModal({ id: modalId }));
