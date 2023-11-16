@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCurrentProject } from '../modules/selectors/mainProjects';
@@ -20,6 +20,7 @@ import { openModal } from '../modules/actions/modal';
 import { MembersInfo } from './MembersInfo';
 import { PROJECTS_PATH } from '../config/routes';
 import { FilesComponent } from './FilesComponent';
+import { setDefaultTabValue } from '../modules/actions/tabs';
 
 interface IUsersTabsMenuProps {
   inputHandler: (id: string, value: string, isValid: boolean) => void;
@@ -69,6 +70,12 @@ export const ProjectTabsMenu: React.FC<IUsersTabsMenuProps> = ({
       panel: <MembersInfo />,
     },
   ];
+
+  useEffect(() => {
+    return () => {
+      dispatch(setDefaultTabValue());
+    };
+  }, [pid]);
 
   const handleOpenTaskNameInput = () => {
     dispatch(setIsActiveInput(true));

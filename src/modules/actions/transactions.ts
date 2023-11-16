@@ -8,7 +8,7 @@ import {
   updateObjects,
 } from '../../utils/utils';
 import { RootState } from '../store/store';
-import { IComment, IFile, Project } from '../types/mainProjects';
+import { IComment, IFile } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
 import { endFilesLoading, startFilesLoading } from './loading';
 import { changeSnackbarState } from './snackbar';

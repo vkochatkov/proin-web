@@ -5,7 +5,7 @@ import { ITask, ITaskRequest, ITaskUpdate, ITasks } from '../types/tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
-import { IComment, IFile, Project } from '../types/mainProjects';
+import { IComment, IFile } from '../types/mainProjects';
 import {
   findProjectByProjectId,
   updateEnitites,
