@@ -157,50 +157,44 @@ const EditProject: React.FC<Props> = () => {
   return (
     <>
       <div className='container'>
-        {isLoading ? (
-          <div className='loading'>
-            <LoadingSpinner />
-          </div>
-        ) : (
-          <>
-            <Card
-              sx={{
-                background: 'rgba(248, 248, 248, .8)',
-                margin: '0 1rem',
-              }}
-            >
-              <div>
-                <Button
-                  size='small'
-                  transparent
-                  icon
-                  customClassName='back__btn'
-                  onClick={handleCloseProject}
-                >
-                  <ArrowBackIosIcon />
-                  <p>Назад</p>
-                </Button>
-                <>
-                  <FilePickerRefProvider>
-                    <ImageUpload
-                      onInput={inputHandler}
-                      projectId={
-                        currentProject ? currentProject._id : undefined
-                      }
-                      id='logoUrl'
-                      inputHandler={inputHandler}
-                      isUpdateValue={true}
-                    />
-                    <ProjectTabsMenu
-                      subprojectId={subprojectId}
-                      inputHandler={inputHandler}
-                    />
-                  </FilePickerRefProvider>
-                </>
-              </div>
-            </Card>
-          </>
-        )}
+        (
+        <>
+          <Card
+            sx={{
+              background: 'rgba(248, 248, 248, .8)',
+              margin: '0 1rem',
+            }}
+          >
+            <div>
+              <Button
+                size='small'
+                transparent
+                icon
+                customClassName='back__btn'
+                onClick={handleCloseProject}
+              >
+                <ArrowBackIosIcon />
+                <p>Назад</p>
+              </Button>
+              <>
+                <FilePickerRefProvider>
+                  <ImageUpload
+                    onInput={inputHandler}
+                    projectId={currentProject ? currentProject._id : undefined}
+                    id='logoUrl'
+                    inputHandler={inputHandler}
+                    isUpdateValue={true}
+                  />
+                  <ProjectTabsMenu
+                    subprojectId={subprojectId}
+                    inputHandler={inputHandler}
+                  />
+                </FilePickerRefProvider>
+              </>
+            </div>
+          </Card>
+        </>
+        )
       </div>
       <InviteModal />
       <MoveProjectModal />

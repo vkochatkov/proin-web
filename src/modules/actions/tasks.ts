@@ -72,9 +72,11 @@ export const taskStateUpdater = ({
 
 export const fetchTasks = (projectId: string) => async (dispatch: Dispatch) => {
   try {
+    dispatch(startLoading());
     const res = await Api.Tasks.get(projectId);
 
     dispatch(fetchTasksSuccess({ tasks: res.tasks }));
+    dispatch(endLoading());
   } catch (e) {
     console.log(e);
   }

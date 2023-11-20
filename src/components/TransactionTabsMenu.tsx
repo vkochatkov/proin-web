@@ -1,10 +1,12 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { saveProjectTransactionsOrder } from '../modules/actions/transactions';
 import { ITransaction } from '../modules/types/transactions';
 import { TabsMenu } from './TabsMenu/TabsMenu';
 import { TransactionItemList } from './TransactionItemList/TransactionItemList';
 import { TransactionsSettings } from './TransactionSettings/TransactionsSettings';
+import { getIsLoading } from '../modules/selectors/loading';
+import { LoadingSpinner } from './UIElements/LoadingSpinner';
 
 interface IProps {
   transactions: ITransaction[];
@@ -16,6 +18,7 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
   generateNavigationString,
 }) => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(getIsLoading);
 
   const { pid } = useParams();
   const tabsId = 'transaction-tabs';
@@ -46,15 +49,25 @@ export const TransactionTabsMenu: React.FC<IProps> = ({
     isDraggable?: boolean,
   ) => (
     <div className='slider-transaction-list__wrapper'>
-      {isTransactionsExist(transactions) ? (
-        <TransactionItemList
-          transactions={transactions}
-          generateNavigationString={generateNavigationString}
-          changeOrder={handleChangeItemOrder}
-          isDraggable={isDraggable ? isDraggable : undefined}
-        />
+      {isLoading ? (
+        <div className='loading'>
+          <LoadingSpinner blue />
+        </div>
       ) : (
-        <h2>Транзакцій немає</h2>
+        <>
+          {isTransactionsExist(transactions) ? (
+            <>
+              <TransactionItemList
+                transactions={transactions}
+                generateNavigationString={generateNavigationString}
+                changeOrder={handleChangeItemOrder}
+                isDraggable={isDraggable ? isDraggable : undefined}
+              />
+            </>
+          ) : (
+            <h2>Транзакцій немає</h2>
+          )}
+        </>
       )}
     </div>
   );
