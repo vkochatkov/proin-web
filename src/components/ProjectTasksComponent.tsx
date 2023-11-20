@@ -19,7 +19,6 @@ export const ProjectTasksComponent = () => {
 
   useEffect(() => {
     if (!subprojectId && pid) {
-      console.log('dispatch(fetchTasks(pid) as any);');
       dispatch(fetchTasks(pid) as any);
     }
 
