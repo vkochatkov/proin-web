@@ -11,6 +11,7 @@ import { AuthWrapper } from './components/AuthWrapper';
 import { TaskPage } from './pages/TaskPage/TaskPage';
 import { MainNavigation } from './components/Navigation/MainNavigation';
 import { PROJECTS_PATH } from './config/routes';
+import { ErrorBoundaryComponent } from './components/ErrorBoundaryComponent';
 
 import './App.scss';
 
@@ -29,52 +30,57 @@ export const App: React.FC = () => {
   return (
     <Router>
       <MainNavigation />
-      <main>
-        <Suspense
-          fallback={
-            <div className='loading'>
-              <LoadingSpinner />
-            </div>
-          }
-        >
-          <Routes>
-            <Route element={<AuthWrapper />}>
-              <Route path={`${PROJECTS_PATH}`} element={<HomePage />} />
-              <Route path='/tasks' element={<TaskListPage />} />
-              <Route path='/transactions' element={<TransactionListPage />} />
+      <ErrorBoundaryComponent>
+        <main>
+          <Suspense
+            fallback={
+              <div className='loading'>
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            <Routes>
+              <Route element={<AuthWrapper />}>
+                <Route path={`${PROJECTS_PATH}`} element={<HomePage />} />
+                <Route path='/tasks' element={<TaskListPage />} />
+                <Route path='/transactions' element={<TransactionListPage />} />
+                <Route
+                  path={`${PROJECTS_PATH}/:pid/:subprojectId?`}
+                  element={<EditProject />}
+                />
+                <Route
+                  path={`${PROJECTS_PATH}/:pid/:subprojectId?/transaction/:transactionId`}
+                  element={<TransactionPage />}
+                />
+                <Route
+                  path='/transactions/:transactionId'
+                  element={<TransactionPage />}
+                />
+                <Route
+                  path={`${PROJECTS_PATH}/:pid/:subprojectId?/task/:tid`}
+                  element={<TaskPage />}
+                />
+                <Route path='/tasks/:tid' element={<TaskPage />} />
+                <Route
+                  path='*'
+                  element={<Navigate to={PROJECTS_PATH} replace />}
+                />
+              </Route>
+              <Route path='/auth' element={<Auth />} />
+              <Route path='/forgot-password' element={<ForgotPassword />} />
               <Route
-                path={`${PROJECTS_PATH}/:pid/:subprojectId?`}
-                element={<EditProject />}
+                path='/reset-password/:token'
+                element={<ResetPassword />}
               />
               <Route
-                path={`${PROJECTS_PATH}/:pid/:subprojectId?/transaction/:transactionId`}
-                element={<TransactionPage />}
+                path={`${PROJECTS_PATH}/:id/invitations/:invitationId`}
+                element={<InvitePage />}
               />
-              <Route
-                path='/transactions/:transactionId'
-                element={<TransactionPage />}
-              />
-              <Route
-                path={`${PROJECTS_PATH}/:pid/:subprojectId?/task/:tid`}
-                element={<TaskPage />}
-              />
-              <Route path='/tasks/:tid' element={<TaskPage />} />
-              <Route
-                path='*'
-                element={<Navigate to={PROJECTS_PATH} replace />}
-              />
-            </Route>
-            <Route path='/auth' element={<Auth />} />
-            <Route path='/forgot-password' element={<ForgotPassword />} />
-            <Route path='/reset-password/:token' element={<ResetPassword />} />
-            <Route
-              path={`${PROJECTS_PATH}/:id/invitations/:invitationId`}
-              element={<InvitePage />}
-            />
-            <Route path='*' element={<Navigate to='/auth' replace />} />
-          </Routes>
-        </Suspense>
-      </main>
+              <Route path='*' element={<Navigate to='/auth' replace />} />
+            </Routes>
+          </Suspense>
+        </main>
+      </ErrorBoundaryComponent>
     </Router>
   );
 };

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LoadingSpinner } from '../../components/UIElements/LoadingSpinner';
 import { useForm } from '../../hooks/useForm';
 import {
   getCurrentProject,
@@ -9,7 +8,6 @@ import {
 } from '../../modules/selectors/mainProjects';
 import { Button } from '../../components/FormElement/Button';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getIsLoading } from '../../modules/selectors/loading';
 import {
   clearCurrentProject,
   fetchProjects,
@@ -43,7 +41,6 @@ type Props = {};
 
 const EditProject: React.FC<Props> = () => {
   const { pid, subprojectId } = useParams();
-  const isLoading = useSelector(getIsLoading);
   const currentProject = useSelector(getCurrentProject);
   const currentProjectId = useSelector(getCurrentProjectId);
   const projects = useSelector(getCurrentProjects);
