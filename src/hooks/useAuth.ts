@@ -27,19 +27,15 @@ export const useAuth = (): {
   userId: string;
 } => {
   const { token, userId } = useSelector(getAuth);
-  const [tokenExpirationDate, setTokenExpirationDate] = useState<Date | null>();
+  const [lastActivityTime, setLastActivityTime] = useState<Date | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const sessionDuration = 1000 * 60 * 1;
 
   const login = useCallback(
-    (
-      uid: string,
-      token: string,
-      email: string,
-      name: string,
-      expirationDate: Date = new Date(new Date().getTime() + 1000 * 60 * 60),
-    ) => {
-      setTokenExpirationDate(expirationDate);
+    (uid: string, token: string, email: string, name: string) => {
+      setLastActivityTime(new Date());
+
       localStorage.setItem(
         'userData',
         JSON.stringify({
@@ -47,7 +43,9 @@ export const useAuth = (): {
           token,
           email,
           name,
-          expiration: expirationDate.toISOString(),
+          expiration: new Date(
+            new Date().getTime() + sessionDuration, // One hour in milliseconds
+          ).toISOString(),
         }),
       );
 
@@ -55,6 +53,25 @@ export const useAuth = (): {
     },
     [dispatch],
   );
+
+  const handleUserActivity = () => {
+    setLastActivityTime(new Date());
+
+    const updatedExpiration = new Date(
+      new Date().getTime() + sessionDuration, // One hour in milliseconds
+    ).toISOString();
+
+    if (token) {
+      console.log('token', token, updatedExpiration);
+      localStorage.setItem(
+        'userData',
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem('userData') || '{}'),
+          expiration: updatedExpiration,
+        }),
+      );
+    }
+  };
 
   const removeFilteredValuesFromSessionStorage = () => {
     Object.keys(filterNames).forEach((key) => {
@@ -72,19 +89,10 @@ export const useAuth = (): {
   }, [dispatch, navigate]);
 
   useEffect(() => {
-    let logoutTimer: NodeJS.Timeout;
-    if (token && tokenExpirationDate) {
-      const remainingTime =
-        tokenExpirationDate.getTime() - new Date().getTime();
-      logoutTimer = setTimeout(logout, remainingTime);
-    } else {
-      clearTimeout(logoutTimer!);
-    }
-    return () => clearTimeout(logoutTimer);
-  }, [token, logout, tokenExpirationDate]);
-
-  useEffect(() => {
     const storedDataString = localStorage.getItem('userData');
+
+    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener('keypress', handleUserActivity);
 
     if (storedDataString) {
       const storedData: UserData = JSON.parse(storedDataString);
@@ -95,13 +103,33 @@ export const useAuth = (): {
           storedData.token,
           storedData.email,
           storedData.name,
-          new Date(storedData.expiration),
         );
       }
     } else {
       dispatch(endLoading());
     }
+
+    return () => {
+      window.removeEventListener('mousemove', handleUserActivity);
+      window.removeEventListener('keypress', handleUserActivity);
+    };
   }, [login, dispatch]);
+
+  useEffect(() => {
+    let logoutTimer: NodeJS.Timeout;
+
+    if (token && lastActivityTime) {
+      const remainingTime =
+        lastActivityTime.getTime() + sessionDuration - new Date().getTime();
+
+      if (remainingTime > 0) {
+        logoutTimer = setTimeout(logout, remainingTime);
+      }
+    } else {
+      clearTimeout(logoutTimer!);
+    }
+    return () => clearTimeout(logoutTimer);
+  }, [token, logout, lastActivityTime]);
 
   return { token, login, logout, userId };
 };
