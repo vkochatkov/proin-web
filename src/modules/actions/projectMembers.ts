@@ -1,7 +1,6 @@
 import { createAction, Dispatch } from 'redux-act';
 import { RootState } from '../store/store';
 import { IMembers } from '../types/projectMembers';
-import { changeSnackbarState } from './snackbar';
 import { Api } from '../../utils/API';
 
 export const fetchMembersSuccess = createAction<IMembers>(
@@ -26,14 +25,8 @@ export const fetchMembers =
       }));
 
       dispatch(fetchMembersSuccess({ projectMembers }));
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку!`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -49,12 +42,6 @@ export const removeProjectMember =
     try {
       await Api.ProjectMembers.delete({ userId }, projectId);
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };

@@ -3,7 +3,6 @@ import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
 import { ITask, ITaskUpdate } from '../types/tasks';
 import { endFilesLoading, startFilesLoading } from './loading';
-import { changeSnackbarState } from './snackbar';
 import { taskStateUpdater } from './tasks';
 import { RootState } from '../store/store';
 
@@ -60,14 +59,8 @@ export const updateCurrentTask =
 
       ApiErrors.checkOnApiError(res);
       dispatch(endFilesLoading());
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Оновити задачу не вдалося. Перезавантажте сторінку!`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -78,13 +71,7 @@ export const updateCurrentTaskDiary =
 
       ApiErrors.checkOnApiError(res);
       dispatch(updateCurrentTaskDiarySuccess({ task: res.task }));
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Оновити задачу не вдалося. Перезавантажте сторінку!`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };

@@ -12,7 +12,7 @@ interface Snackbar {
 }
 
 const initialState: Snackbar = {
-  id: 'error',
+  id: 'success',
   open: false,
   message: '',
 };

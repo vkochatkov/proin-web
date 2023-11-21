@@ -2,7 +2,6 @@ import { createAction, Dispatch } from 'redux-act';
 import { Api } from '../../utils/API';
 import { RootState } from '../store/store';
 import { IFoundUser, IFoundUsers } from '../types/users';
-import { changeSnackbarState } from './snackbar';
 
 export const foundUsersSuccess = createAction<IFoundUsers>('foundUsersSuccess');
 
@@ -20,13 +19,7 @@ export const searchUsers =
       }));
 
       dispatch(foundUsersSuccess({ foundUsers }));
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        })
-      );
+    } catch (e) {
+      console.log(e);
     }
   };

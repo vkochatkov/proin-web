@@ -57,14 +57,7 @@ export const createProjectComment =
     try {
       const { currentProject, projects } = getState().mainProjects;
 
-      if (!currentProject)
-        return dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: 'Проекту немає, сталася помилка',
-          }),
-        );
+      if (!currentProject) return;
 
       const updatedCurrentProject = {
         ...currentProject,
@@ -89,14 +82,7 @@ export const createProjectComment =
       await Api.Comments.create(comment, currentProject._id);
       dispatch(createCommentSuccess());
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message:
-            'Щось пішло не так. Коментар не створено. Перезавантажте сторінку!',
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -113,23 +99,11 @@ export const updateComment =
       const { currentProject, projects } = getState().mainProjects;
 
       if (!currentProject) {
-        return dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: 'Проекту немає, сталася помилка',
-          }),
-        );
+        return;
       }
 
       if (!currentProject.comments) {
-        return dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: 'Коментарів немає, сталася помилка',
-          }),
-        );
+        return;
       }
 
       const updatedCurrentProject = {
@@ -152,14 +126,7 @@ export const updateComment =
 
       await Api.Comments.update({ ...updatedComment }, currentProject._id);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message:
-            'Щось пішло не так. Коментар не оновлено. Перезавантажте сторінку!',
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -169,14 +136,7 @@ export const deleteComment =
       const { currentProject } = getState().mainProjects;
       const { token } = getState().user;
 
-      if (!currentProject)
-        return dispatch(
-          changeSnackbarState({
-            id: 'error',
-            open: true,
-            message: 'Проекту немає, сталася помилка',
-          }),
-        );
+      if (!currentProject) return;
 
       await axios({
         method: 'DELETE',
@@ -189,14 +149,7 @@ export const deleteComment =
         cancelToken: httpSource.token,
       });
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message:
-            'Щось пішло не так. Коментар не видалено. Перезавантажте сторінку!',
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -268,13 +221,7 @@ export const updateOrderProjects =
 
       await Api.Projects.put(projects, userId);
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Порядок проектів не збережено. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -284,13 +231,7 @@ export const updateProject =
     try {
       await Api.Projects.patch(props, projectId);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Проекти не оновлено. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -330,13 +271,7 @@ export const updatedSubProjectsOrder =
         updatedProject._id,
       );
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -348,15 +283,7 @@ export const sendInvitation =
 
     try {
       if (!currentProject) {
-        return dispatch(
-          dispatch(
-            changeSnackbarState({
-              id: 'error',
-              open: true,
-              message: `Проект не знайдено. Перезавантажте сторінку`,
-            }),
-          ),
-        );
+        return;
       }
 
       await axios({
@@ -377,14 +304,8 @@ export const sendInvitation =
           message: `Запрошення успішно відправлене. Перевірте пошту"`,
         }),
       );
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -411,14 +332,8 @@ export const acceptInvitation =
           message: 'Учасник успішно доданий до проекту',
         }),
       );
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -443,13 +358,7 @@ export const fetchAllUserProjects =
     dispatch(setAllUserProjects(response.projects));
     try {
     } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${e.response.data.message}. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -514,18 +423,8 @@ export const moveToProject =
         projectId: currentProjectId,
         toProjectId,
       });
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${
-            e.response.data
-              ? e.response.data.message
-              : 'Переміщення проекту не вдалося'
-          }. Результат не збережено. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -547,18 +446,8 @@ export const removeFile =
       await Api.Files.delete(currentProject._id, fileId);
 
       dispatch(removeProjectFileSuccess());
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${
-            e.response.data
-              ? e.response.data.message
-              : 'Видалити файл не вдалося'
-          }. Результат не збережено. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -569,18 +458,8 @@ export const createNewSubproject =
       dispatch(setCurrentProject(response.subproject));
 
       return response.subproject;
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${
-            e.response.data
-              ? e.response.data.message
-              : 'Видалити файл не вдалося'
-          }. Результат не збережено. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -604,18 +483,8 @@ export const updateFilesOrder =
 
     try {
       await Api.Files.post({ files }, result.updatedEntity._id);
-    } catch (e: any) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `${
-            e.response.data
-              ? e.response.data.message
-              : 'Зберегти нову послідовність файлів не вдалося'
-          }. Перезавантажте сторінку`,
-        }),
-      );
+    } catch (e) {
+      console.log(e);
     }
   };
 

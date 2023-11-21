@@ -11,7 +11,6 @@ import { RootState } from '../store/store';
 import { IComment, IFile } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
 import { endFilesLoading, startFilesLoading } from './loading';
-import { changeSnackbarState } from './snackbar';
 
 export const setCurrentTransaction = createAction<ITransaction>(
   'setCurrentTransaction',
@@ -69,13 +68,7 @@ export const fetchTransactionById =
 
       dispatch(setCurrentTransaction(res.transaction));
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Завантажити транзакцію не вдалося. Спробуйте перезавантажити сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -90,13 +83,7 @@ export const fetchTransactions =
         fetchProjectTransactionsSuccess({ transactions: res.transactions }),
       );
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Завантажити транзакції не вдалося. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -133,13 +120,7 @@ export const createTransaction =
 
       return res;
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -175,13 +156,7 @@ export const uploadFilesToTheServer =
 
       dispatch(endFilesLoading());
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Завантажити файл не вдалося. Щось пішло не так!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -214,13 +189,7 @@ export const updateTransactionOnServer =
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Створити транзакцію не вдалося. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -237,13 +206,7 @@ export const saveProjectTransactionsOrder =
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Зберегти порядок транзакцій не вийшло. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -272,13 +235,7 @@ export const deleteTransaction =
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Видалити транзакцію не вийшло. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -289,13 +246,7 @@ export const fetchUserTransactions = () => async (dispatch: Dispatch) => {
 
     dispatch(fetchUserTransactionsSuccess({ transactions: res.transactions }));
   } catch (e) {
-    dispatch(
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Сталася помилка. Перезавантажте сторінку!`,
-      }),
-    );
+    console.log(e);
   }
 };
 
@@ -312,13 +263,7 @@ export const saveUserTransactionOrder =
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Сталася помилка. Перезавантажте сторінку!`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -347,13 +292,7 @@ export const removeFileFromTransaction =
         dispatch,
       });
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Неможливо видалити файл. Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };
 
@@ -377,12 +316,8 @@ export const changeTransactionFilesOrder =
         { files: result.updatedEntity.files },
         transactionId,
       );
-    } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Оновити транзакцію не вдалося`,
-      });
+    } catch (e) {
+      console.log(e);
     }
   };
 

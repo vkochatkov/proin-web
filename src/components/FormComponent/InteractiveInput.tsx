@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Api } from '../../utils/API';
 import { Input } from '../FormElement/Input';
 import { ProjectTextOutput } from './ProjectTextOutput';
 import { useActiveInput } from '../../hooks/useActiveInput';
@@ -8,8 +9,6 @@ import {
   setCurrentProject,
   updateProjectsSuccess,
 } from '../../modules/actions/mainProjects';
-import { Api } from '../../utils/API';
-import { changeSnackbarState } from '../../modules/actions/snackbar';
 import {
   updateCurrentTask,
   updateTaskState,
@@ -92,14 +91,8 @@ export const InteractiveInput: React.FC<Props> = ({
     const callback = () =>
       Api.Projects.patch(updatedValue, entity._id)
         .then(() => {})
-        .catch(() => {
-          dispatch(
-            changeSnackbarState({
-              id: 'error',
-              message: 'Не вдалося зберегти, щось пішло не так',
-              open: true,
-            }),
-          );
+        .catch((e) => {
+          console.log(e);
         });
 
     if (pid && pid === updatedEntity._id) {

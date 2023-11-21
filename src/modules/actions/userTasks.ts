@@ -2,7 +2,6 @@ import { createAction, Dispatch } from 'redux-act';
 import { Api } from '../../utils/API';
 import ApiErrors from '../../utils/API/APIErrors';
 import { ITask } from '../types/tasks';
-import { changeSnackbarState } from './snackbar';
 
 export const updateUserTasksSuccess = createAction<ITask[]>(
   'updateUserTasksSuccess',
@@ -19,12 +18,6 @@ export const changeUserTasksOrder =
 
       ApiErrors.checkOnApiError(res);
     } catch (e) {
-      dispatch(
-        changeSnackbarState({
-          id: 'error',
-          open: true,
-          message: `Виникла проблема.Перезавантажте сторінку`,
-        }),
-      );
+      console.log(e);
     }
   };

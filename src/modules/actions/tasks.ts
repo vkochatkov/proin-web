@@ -3,7 +3,6 @@ import { createAction } from 'redux-act';
 import { Api } from '../../utils/API';
 import { ITask, ITaskRequest, ITaskUpdate, ITasks } from '../types/tasks';
 import { v4 as uuidv4 } from 'uuid';
-import { changeSnackbarState } from './snackbar';
 import { RootState } from '../store/store';
 import { IComment, IFile } from '../types/mainProjects';
 import {
@@ -168,15 +167,7 @@ export const updateTaskById =
         dispatch,
       });
     } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `${
-          e.response.data
-            ? e.response.data.message
-            : 'Оновити задачу не вдалося'
-        }. Перезавантажте сторінку`,
-      });
+      console.log(e);
     }
   };
 
@@ -196,16 +187,8 @@ export const updateTaskFilesOrder =
         { files: result.updatedEntity.files },
         taskId,
       );
-    } catch (e: any) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `${
-          e.response.data
-            ? e.response.data.message
-            : 'Оновити задачу не вдалося'
-        }. Перезавантажте сторінку`,
-      });
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -224,11 +207,7 @@ export const deleteTask =
 
       await Api.Tasks.deleteTask(taskId);
     } catch (e) {
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Виникла проблема.Перезавантажте сторінку`,
-      });
+      console.log(e);
     }
   };
 
@@ -240,13 +219,7 @@ export const fetchAllUserTasks = () => async (dispatch: Dispatch) => {
     dispatch(fetchAllUserTasksSuccess({ tasks: res.tasks }));
     dispatch(endLoading());
   } catch (e) {
-    dispatch(
-      changeSnackbarState({
-        id: 'error',
-        open: true,
-        message: `Виникла проблема.Перезавантажте сторінку`,
-      }),
-    );
+    console.log(e);
   }
 };
 
