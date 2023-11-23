@@ -44,9 +44,7 @@ export const useAuth = (): {
           token,
           email,
           name,
-          expiration: new Date(
-            new Date().getTime() + sessionDuration, // One hour in milliseconds
-          ).toISOString(),
+          expiration: new Date(sessionDuration).toISOString(),
         }),
       );
 
@@ -58,9 +56,7 @@ export const useAuth = (): {
   const handleUserActivity = () => {
     setLastActivityTime(new Date());
 
-    const updatedExpiration = new Date(
-      new Date().getTime() + sessionDuration, // One hour in milliseconds
-    ).toISOString();
+    const updatedExpiration = new Date(sessionDuration).toISOString();
 
     if (token) {
       localStorage.setItem(
@@ -115,21 +111,21 @@ export const useAuth = (): {
     };
   }, [login, dispatch]);
 
-  useEffect(() => {
-    let logoutTimer: NodeJS.Timeout;
+  // useEffect(() => {
+  //   let logoutTimer: NodeJS.Timeout;
 
-    if (token && lastActivityTime) {
-      const remainingTime =
-        lastActivityTime.getTime() + sessionDuration - new Date().getTime();
+  //   // if (token && lastActivityTime) {
+  //   //   const remainingTime =
+  //   //     lastActivityTime.getTime() + sessionDuration - new Date().getTime();
 
-      if (remainingTime > 0) {
-        logoutTimer = setTimeout(logout, remainingTime);
-      }
-    } else {
-      clearTimeout(logoutTimer!);
-    }
-    return () => clearTimeout(logoutTimer);
-  }, [token, logout, lastActivityTime]);
+  //   //   if (remainingTime > 0) {
+  //   //     logoutTimer = setTimeout(logout, remainingTime);
+  //   //   }
+  //   // } else {
+  //   //   clearTimeout(logoutTimer!);
+  //   // }
+  //   return () => clearTimeout(logoutTimer);
+  // }, [token, logout, lastActivityTime]);
 
   return { token, login, logout, userId };
 };
