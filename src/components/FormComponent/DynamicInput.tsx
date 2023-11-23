@@ -16,6 +16,38 @@ interface Props {
   buttonLabel: string;
 }
 
+const formStyle = {
+  '&.MuiFormControl-root': {
+    borderRadius: '5px',
+    backgroundColor: 'white',
+    boxSizing: 'border-box',
+    padding: '5px',
+    border: '1px solid gray',
+    '&:focus-within': {
+      outline: '1px solid blue',
+    },
+    '& hr': {
+      margin: '0 0 5px',
+      opacity: '0.5',
+    },
+    '& textarea': {
+      border: 'none',
+      '&:focus-visible': {
+        outline: 'none',
+      },
+    },
+  },
+};
+
+const buttonContainerStyle = {
+  display: 'flex',
+  gap: 'var(--Textarea-paddingBlock)',
+  paddingTop: 'var(--Textarea-paddingBlock)',
+  // borderTop: props.isActiveWithoutText ? '' : '1px solid',
+  flex: 'auto',
+  justifyContent: 'flex-end',
+};
+
 export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
   (props, ref) => {
     const [value, setValue] = useState<string | undefined>(
@@ -57,7 +89,7 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
     };
 
     return (
-      <FormControl>
+      <FormControl sx={formStyle}>
         <TextareaAutosize
           ref={ref}
           placeholder={props.placeholder}
@@ -70,31 +102,26 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
           onChange={handleChange}
         />
         {isTextareaActive ? (
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--Textarea-paddingBlock)',
-              paddingTop: 'var(--Textarea-paddingBlock)',
-              // borderTop: props.isActiveWithoutText ? '' : '1px solid',
-              flex: 'auto',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <CloseButton
-              customClassName='comment-input__close-btn'
-              onClick={() => {
-                props.onCancel();
-                setIsTextareaActive(false);
-              }}
-            >
-              <img
-                src='/close.svg'
-                alt='close_logo'
-                className='comment-input__close-icon'
-              />
-            </CloseButton>
-            <Button onClick={handleSaveValue}>{props.buttonLabel}</Button>
-          </div>
+          <>
+            <hr />
+            <div style={buttonContainerStyle}>
+              <CloseButton
+                customClassName='comment-input__close-btn'
+                onClick={() => {
+                  props.onCancel();
+                  setIsTextareaActive(false);
+                  setValue('');
+                }}
+              >
+                <img
+                  src='/close.svg'
+                  alt='close_logo'
+                  className='comment-input__close-icon'
+                />
+              </CloseButton>
+              <Button onClick={handleSaveValue}>{props.buttonLabel}</Button>
+            </div>
+          </>
         ) : null}
       </FormControl>
     );
