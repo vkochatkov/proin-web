@@ -30,8 +30,8 @@ export const useAuth = (): {
   const [lastActivityTime, setLastActivityTime] = useState<Date | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const sessionDuration = 1000 * 60 * 60;
-  const sessionDuration = 8640000000000000;
+  const sessionDuration = 1000 * 60 * 1;
+  // const sessionDuration = 8640000000000000;
 
   const login = useCallback(
     (uid: string, token: string, email: string, name: string) => {
@@ -44,7 +44,9 @@ export const useAuth = (): {
           token,
           email,
           name,
-          expiration: new Date(sessionDuration).toISOString(),
+          expiration: new Date(
+            new Date().getTime() + sessionDuration,
+          ).toISOString(),
         }),
       );
 
@@ -56,7 +58,9 @@ export const useAuth = (): {
   const handleUserActivity = () => {
     setLastActivityTime(new Date());
 
-    const updatedExpiration = new Date(sessionDuration).toISOString();
+    const updatedExpiration = new Date(
+      new Date().getTime() + sessionDuration,
+    ).toISOString();
 
     if (token) {
       localStorage.setItem(
@@ -111,21 +115,21 @@ export const useAuth = (): {
     };
   }, [login, dispatch]);
 
-  // useEffect(() => {
-  //   let logoutTimer: NodeJS.Timeout;
+  useEffect(() => {
+    let logoutTimer: NodeJS.Timeout;
 
-  //   // if (token && lastActivityTime) {
-  //   //   const remainingTime =
-  //   //     lastActivityTime.getTime() + sessionDuration - new Date().getTime();
+    if (token && lastActivityTime) {
+      const remainingTime =
+        lastActivityTime.getTime() + sessionDuration - new Date().getTime();
 
-  //   //   if (remainingTime > 0) {
-  //   //     logoutTimer = setTimeout(logout, remainingTime);
-  //   //   }
-  //   // } else {
-  //   //   clearTimeout(logoutTimer!);
-  //   // }
-  //   return () => clearTimeout(logoutTimer);
-  // }, [token, logout, lastActivityTime]);
+      if (remainingTime > 0) {
+        logoutTimer = setTimeout(logout, remainingTime);
+      }
+    } else {
+      clearTimeout(logoutTimer!);
+    }
+    return () => clearTimeout(logoutTimer);
+  }, [token, logout, lastActivityTime]);
 
   return { token, login, logout, userId };
 };
