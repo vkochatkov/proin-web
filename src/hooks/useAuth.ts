@@ -30,7 +30,7 @@ export const useAuth = (): {
   const [lastActivityTime, setLastActivityTime] = useState<Date | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const sessionDuration = 1000 * 60 * 1;
+  const sessionDuration = 1000 * 60 * 60;
   // const sessionDuration = 8640000000000000;
 
   const login = useCallback(

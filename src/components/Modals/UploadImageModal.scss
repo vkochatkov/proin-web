@@ -1,0 +1,11 @@
+.upload-image-modal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+
+  &__img {
+    height: 12rem;
+    object-fit: cover;
+    width: 100%;
+  }
+}

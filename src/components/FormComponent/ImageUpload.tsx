@@ -20,7 +20,6 @@ import { getIsLogoLoading } from '../../modules/selectors/loading';
 import CircularProgress from '@mui/material/CircularProgress';
 
 interface IImageUpload {
-  inputHandler: (id: string, value: string, isValid: boolean) => void;
   isUpdateValue: boolean;
   onInput: (id: string, value: string, isValid: boolean) => void;
   projectId?: string;
@@ -51,7 +50,7 @@ export const ImageUpload = ({
         isValid: true,
       },
     },
-    true
+    true,
   );
   const filePickerRef = useRef<HTMLInputElement>(null);
 
@@ -95,7 +94,7 @@ export const ImageUpload = ({
             {
               Authorization: 'Bearer ' + token,
               'Content-Type': 'application/json',
-            }
+            },
           );
 
           resolve(res);
@@ -149,17 +148,17 @@ export const ImageUpload = ({
   return (
     <>
       <div className={`file-uploader ${center ? 'center' : ''}`}>
-        <Button icon transparent type="button" onClick={pickImageHandler}>
+        <Button icon transparent type='button' onClick={pickImageHandler}>
           {previewUrl && !isLoading ? (
-            <div className="file-uploader__preview">
-              <img src={previewUrl} alt="Preview" />
+            <div className='file-uploader__preview'>
+              <img src={previewUrl} alt='Preview' />
             </div>
           ) : (
-            <div className="file-uploader__preview">
+            <div className='file-uploader__preview'>
               {isLoading ? (
                 <CircularProgress />
               ) : (
-                <DriveFolderUploadIcon fontSize="large" />
+                <DriveFolderUploadIcon fontSize='large' />
               )}
             </div>
           )}
@@ -170,7 +169,7 @@ export const ImageUpload = ({
           }}
         >
           <InteractiveInput
-            id="projectName"
+            id='projectName'
             inputHandler={inputHandler}
             entity={currentProject}
             entities={projects}
@@ -179,7 +178,7 @@ export const ImageUpload = ({
             id={id}
             ref={filePickerRef}
             style={{ display: 'none' }}
-            type="file"
+            type='file'
             accept={'.jpg,.png,.jpeg'}
             onChange={pickedHandler}
             multiple={false}

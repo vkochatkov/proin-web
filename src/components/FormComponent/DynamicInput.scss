@@ -1,3 +1,18 @@
+.dynamic-input {
+  &__buttons-container {
+    display: flex;
+    gap: var(--Textarea-paddingBlock);
+    padding-top: var(--Textarea-paddingBlock);
+    justify-content: space-between;
+  }
+
+  &__flex-end {
+    display: flex;
+    flex: auto;
+    justify-content: flex-end
+  }
+}
+
 .comment-input {
   &__close-btn {
     display: flex;

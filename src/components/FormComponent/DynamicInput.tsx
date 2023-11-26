@@ -1,8 +1,11 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import Button from '@mui/joy/Button';
-import { Button as CloseButton } from '../FormElement/Button';
+import { Button as CustomButton } from '../FormElement/Button';
 import FormControl from '@mui/joy/FormControl';
 import TextareaAutosize from 'react-textarea-autosize';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import FilePickerRefContext from '../ContextProvider/FilesPickerRefProvider';
+import { CommentImageUploader } from '../CommentImageUploader';
 
 import './DynamicInput.scss';
 
@@ -14,6 +17,7 @@ interface Props {
   placeholder: string;
   isActiveWithoutText?: boolean;
   buttonLabel: string;
+  uploader?: boolean;
 }
 
 const formStyle = {
@@ -39,15 +43,6 @@ const formStyle = {
   },
 };
 
-const buttonContainerStyle = {
-  display: 'flex',
-  gap: 'var(--Textarea-paddingBlock)',
-  paddingTop: 'var(--Textarea-paddingBlock)',
-  // borderTop: props.isActiveWithoutText ? '' : '1px solid',
-  flex: 'auto',
-  justifyContent: 'flex-end',
-};
-
 export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
   (props, ref) => {
     const [value, setValue] = useState<string | undefined>(
@@ -56,6 +51,7 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
     const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
       props.isActive ? props.isActive : false,
     );
+    const filePickerRef = useContext(FilePickerRefContext);
 
     useEffect(() => {
       if (props.isActive || props.isActiveWithoutText) {
@@ -88,6 +84,13 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
       setValue('');
     };
 
+    const handlePickImages = () => {
+      // dispatch(openModal({ id: 'imageUploadModal' }));
+      if (!filePickerRef) return;
+
+      filePickerRef.current?.click();
+    };
+
     return (
       <FormControl sx={formStyle}>
         <TextareaAutosize
@@ -104,23 +107,32 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
         {isTextareaActive ? (
           <>
             <hr />
-            <div style={buttonContainerStyle}>
-              <CloseButton
+            <div className='dynamic-input__buttons-container'>
+              <CustomButton
                 customClassName='comment-input__close-btn'
-                onClick={() => {
-                  props.onCancel();
-                  setIsTextareaActive(false);
-                  setValue('');
-                }}
+                onClick={handlePickImages}
               >
-                <img
-                  src='/close.svg'
-                  alt='close_logo'
-                  className='comment-input__close-icon'
-                />
-              </CloseButton>
-              <Button onClick={handleSaveValue}>{props.buttonLabel}</Button>
+                <InsertPhotoIcon />
+              </CustomButton>
+              <div className='dynamic-input__flex-end'>
+                <CustomButton
+                  customClassName='comment-input__close-btn'
+                  onClick={() => {
+                    props.onCancel();
+                    setIsTextareaActive(false);
+                    setValue('');
+                  }}
+                >
+                  <img
+                    src='/close.svg'
+                    alt='close_logo'
+                    className='comment-input__close-icon'
+                  />
+                </CustomButton>
+                <Button onClick={handleSaveValue}>{props.buttonLabel}</Button>
+              </div>
             </div>
+            <CommentImageUploader />
           </>
         ) : null}
       </FormControl>

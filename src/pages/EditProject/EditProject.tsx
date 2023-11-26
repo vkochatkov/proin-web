@@ -179,7 +179,6 @@ const EditProject: React.FC<Props> = () => {
                     onInput={inputHandler}
                     projectId={currentProject ? currentProject._id : undefined}
                     id='logoUrl'
-                    inputHandler={inputHandler}
                     isUpdateValue={true}
                   />
                   <ProjectTabsMenu

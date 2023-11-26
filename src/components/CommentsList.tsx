@@ -7,6 +7,7 @@ import { getAuth } from '../modules/selectors/user';
 import { openModal } from '../modules/actions/modal';
 import { setIdForDelete } from '../modules/actions/idForRemove';
 import { IComment } from '../modules/types/mainProjects';
+import { FilePickerRefProvider } from './ContextProvider/FilesPickerRefProvider';
 
 interface IProps {
   currentObj: any;
@@ -143,16 +144,18 @@ export const CommentsList: React.FC<IProps> = ({
   };
 
   return (
-    <>
+    <FilePickerRefProvider>
       <DynamicInput
+        buttonLabel={'Зберегти'}
         onClick={handleCreatingComment}
         isActive={isInputActive}
         text={defaultInputValue}
-        buttonLabel={'Зберегти'}
         placeholder='Напишіть коментар'
         onCancel={handleCloseInput}
         ref={inputRef}
+        uploader
       />
+      {/* <ContentEditableWithImages /> */}
       {currentObj &&
         currentObj.comments &&
         currentObj.comments.map((comment: IComment, index: number) => {
@@ -209,6 +212,6 @@ export const CommentsList: React.FC<IProps> = ({
             );
           }
         })}
-    </>
+    </FilePickerRefProvider>
   );
 };

@@ -25,9 +25,8 @@ export const ProjectFilesUpload: React.FC<IFileUpload> = ({
   const dispatch = useDispatch();
 
   const sendFilesToServer = async (id: string, files: File[]) => {
-    const fileDataArray = await generateDataUrl(files);
-
     try {
+      const fileDataArray = await generateDataUrl(files);
       return await Api.Projects.patch({ files: fileDataArray }, id);
     } catch (err) {
       console.log(err);
