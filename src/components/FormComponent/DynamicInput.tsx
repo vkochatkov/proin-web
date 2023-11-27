@@ -47,9 +47,6 @@ const formStyle = {
 
 export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
   (props, ref) => {
-    const [value, setValue] = useState<string | undefined>(
-      props.isActive && props.text ? props.text : '',
-    );
     const { formState, inputHandler } = useForm(
       {
         comment: {
@@ -148,7 +145,7 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
                 <Button onClick={handleSaveValue}>{props.buttonLabel}</Button>
               </div>
             </div>
-            <CommentImageUploader />
+            <CommentImageUploader setIsTextareaActive={setIsTextareaActive} />
           </>
         ) : null}
       </FormControl>

@@ -1,4 +1,10 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { UploadImageModal } from './Modals/UploadImageModal';
 import { closeModal, openModal } from '../modules/actions/modal';
@@ -6,9 +12,13 @@ import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
 import { useFiles } from '../hooks/useFiles';
 import { useParams } from 'react-router-dom';
 
-interface IProps {}
+interface IProps {
+  setIsTextareaActive: Dispatch<SetStateAction<boolean>>;
+}
 
-export const CommentImageUploader: React.FC<IProps> = () => {
+export const CommentImageUploader: React.FC<IProps> = ({
+  setIsTextareaActive,
+}) => {
   const modalId = 'imageUploadModal';
   const { files, setFiles, generateDataUrl } = useFiles(modalId);
   const dispatch = useDispatch();
@@ -72,6 +82,7 @@ export const CommentImageUploader: React.FC<IProps> = () => {
         handleClose={handleClose}
         selectedImages={files}
         setSelectedImages={setFiles}
+        setIsTextareaActive={setIsTextareaActive}
       />
     </>
   );

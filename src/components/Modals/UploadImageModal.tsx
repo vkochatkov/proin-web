@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import { DialogActions, TextareaAutosize } from '@mui/material';
 import { Button } from '../FormElement/Button';
 import { Modal } from './Modal';
@@ -16,6 +16,7 @@ interface IProps {
   handleClose: () => void;
   selectedImages: File[] | null;
   setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
+  setIsTextareaActive: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export const UploadImageModal: React.FC<IProps> = ({
@@ -23,6 +24,7 @@ export const UploadImageModal: React.FC<IProps> = ({
   handleClose,
   selectedImages,
   setSelectedImages,
+  setIsTextareaActive,
 }) => {
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
@@ -52,6 +54,14 @@ export const UploadImageModal: React.FC<IProps> = ({
     event.preventDefault();
 
     handleCloseModal();
+    dispatch(
+      changeFormInput({
+        value: '',
+        isValid: true,
+        inputId,
+      }),
+    );
+    setIsTextareaActive(false);
   };
 
   const renderImages = () => <ImageComponent selectedImages={selectedImages} />;
