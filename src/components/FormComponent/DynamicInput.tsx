@@ -6,6 +6,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import FilePickerRefContext from '../ContextProvider/FilesPickerRefProvider';
 import { CommentImageUploader } from '../CommentImageUploader';
+import { useForm } from '../../hooks/useForm';
+import CloseIcon from '@mui/icons-material/Close';
 
 import './DynamicInput.scss';
 
@@ -48,6 +50,16 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
     const [value, setValue] = useState<string | undefined>(
       props.isActive && props.text ? props.text : '',
     );
+    const { formState, inputHandler } = useForm(
+      {
+        comment: {
+          value: props.isActive && props.text ? props.text : '',
+          isValid: false,
+        },
+      },
+      false,
+    );
+    const inputId = 'comment';
     const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
       props.isActive ? props.isActive : false,
     );
@@ -61,27 +73,35 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
         }
 
         if (props.text) {
-          setValue(props.text);
+          inputHandler(inputId, props.text, true);
         }
       } else {
         setIsTextareaActive(false);
-        setValue('');
+        inputHandler(inputId, '', true);
       }
     }, [props.isActive, props.text, props.isActiveWithoutText, ref]);
 
     const handleChange = (
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
-      setValue(event.target.value);
+      inputHandler(inputId, event.target.value, true);
     };
 
     const handleSaveValue = () => {
+      const value = formState.inputs[inputId]
+        ? formState.inputs[inputId].value
+        : '';
       if (!value) return;
 
       props.onClick(value);
-
       setIsTextareaActive(false);
-      setValue('');
+      inputHandler(inputId, '', true);
+    };
+
+    const handleCloseInput = () => {
+      props.onCancel();
+      setIsTextareaActive(false);
+      inputHandler(inputId, '', true);
     };
 
     const handlePickImages = () => {
@@ -97,7 +117,11 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
           ref={ref}
           placeholder={props.placeholder}
           minRows={props.isActiveWithoutText ? 1 : !isTextareaActive ? 1 : 3}
-          value={value}
+          value={
+            formState.inputs[inputId] && formState.inputs[inputId].value
+              ? formState.inputs[inputId].value
+              : ''
+          }
           autoFocus={props.isActive}
           onFocus={() => {
             setIsTextareaActive(true);
@@ -117,17 +141,9 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
               <div className='dynamic-input__flex-end'>
                 <CustomButton
                   customClassName='comment-input__close-btn'
-                  onClick={() => {
-                    props.onCancel();
-                    setIsTextareaActive(false);
-                    setValue('');
-                  }}
+                  onClick={handleCloseInput}
                 >
-                  <img
-                    src='/close.svg'
-                    alt='close_logo'
-                    className='comment-input__close-icon'
-                  />
+                  <CloseIcon />
                 </CustomButton>
                 <Button onClick={handleSaveValue}>{props.buttonLabel}</Button>
               </div>

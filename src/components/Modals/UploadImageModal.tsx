@@ -1,11 +1,13 @@
 import React from 'react';
-import { DialogActions } from '@mui/material';
+import { DialogActions, TextareaAutosize } from '@mui/material';
 import { Button } from '../FormElement/Button';
 import { Modal } from './Modal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getModalStateById } from '../../modules/selectors/modal';
 import { RootState } from '../../modules/store/store';
-import { v4 as uuidv4 } from 'uuid';
+import SendIcon from '@mui/icons-material/Send';
+import { changeFormInput } from '../../modules/actions/form';
+import { ImageComponent } from '../ImageComponent';
 
 import './UploadImageModal.scss';
 
@@ -25,10 +27,25 @@ export const UploadImageModal: React.FC<IProps> = ({
   const open = useSelector((state: RootState) =>
     getModalStateById(state)(modalId),
   );
+  const dispatch = useDispatch();
+  const inputId = 'comment';
+  const { inputs } = useSelector((state: RootState) => state.formData);
 
   const handleCloseModal = () => {
     handleClose();
     setSelectedImages([]);
+  };
+
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    dispatch(
+      changeFormInput({
+        value: e.target.value,
+        isValid: true,
+        inputId,
+      }),
+    );
   };
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -37,28 +54,7 @@ export const UploadImageModal: React.FC<IProps> = ({
     handleCloseModal();
   };
 
-  const renderImages = () => {
-    if (!selectedImages || selectedImages.length === 0) return null;
-
-    return (
-      <div
-        className={`upload-image-modal ${
-          selectedImages && selectedImages.length <= 2 ? 'short' : ''
-        }`}
-      >
-        {selectedImages &&
-          selectedImages.map((image, index) => (
-            <div key={uuidv4()}>
-              <img
-                src={URL.createObjectURL(image)}
-                alt={`selected image ${index}`}
-                className={'upload-image-modal__img'}
-              />
-            </div>
-          ))}
-      </div>
-    );
-  };
+  const renderImages = () => <ImageComponent selectedImages={selectedImages} />;
 
   return (
     <>
@@ -70,7 +66,19 @@ export const UploadImageModal: React.FC<IProps> = ({
         <form onSubmit={submitHandler}>
           {renderImages()}
           <DialogActions>
-            <Button type='submit'>Завантажити</Button>
+            <TextareaAutosize
+              placeholder={'Додайте повідомлення'}
+              className='textarea'
+              value={
+                inputs[inputId] && inputs[inputId].value
+                  ? inputs[inputId].value
+                  : ''
+              }
+              onChange={handleChangeInput}
+            />
+            <Button type='submit' icon transparent>
+              <SendIcon />
+            </Button>
           </DialogActions>
         </form>
       </Modal>
