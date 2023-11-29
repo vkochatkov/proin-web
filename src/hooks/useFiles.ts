@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { openModal } from '../modules/actions/modal';
+
+export interface FilesContextType {
+  files: File[];
+  setFiles: Dispatch<SetStateAction<File[]>>;
+  generateDataUrl: (files: File[]) => Promise<unknown[]>;
+}
 
 export const useFiles = (modalId: string) => {
   const [files, setFiles] = useState<File[]>([]);

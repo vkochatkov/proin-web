@@ -6,8 +6,8 @@ import {
   startLoading,
   startLogoLoading,
   endLogoLoading,
-  // startSliderLoading,
-  // endSliderLoading,
+  startCommentFilesLoading,
+  endCommentFilesLoading,
 } from '../../actions/loading';
 
 const initialState = {
@@ -15,6 +15,7 @@ const initialState = {
   files: false,
   logo: false,
   slider: false,
+  commentFiles: false,
 };
 
 export const loadingReducer = createReducer({}, initialState);
@@ -48,12 +49,12 @@ loadingReducer.on(endLogoLoading, (state) => ({
   logo: false,
 }));
 
-// loadingReducer.on(startSliderLoading, (state) => ({
-//   ...state,
-//   slider: true
-// }));
+loadingReducer.on(startCommentFilesLoading, (state) => ({
+  ...state,
+  commentFiles: true,
+}));
 
-// loadingReducer.on(endSliderLoading, (state) => ({
-//   ...state,
-//   slider: false
-// }))
+loadingReducer.on(endCommentFilesLoading, (state) => ({
+  ...state,
+  commentFiles: false,
+}));

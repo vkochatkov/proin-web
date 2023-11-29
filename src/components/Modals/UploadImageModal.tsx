@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react';
+import React, { SetStateAction, useContext } from 'react';
 import { DialogActions, TextareaAutosize } from '@mui/material';
 import { Button } from '../FormElement/Button';
 import { Modal } from './Modal';
@@ -8,6 +8,7 @@ import { RootState } from '../../modules/store/store';
 import SendIcon from '@mui/icons-material/Send';
 import { changeFormInput } from '../../modules/actions/form';
 import { ImageComponent } from '../ImageComponent';
+import { FilesContext } from '../FilesContextProvider';
 
 import './UploadImageModal.scss';
 
@@ -32,6 +33,8 @@ export const UploadImageModal: React.FC<IProps> = ({
   const dispatch = useDispatch();
   const inputId = 'comment';
   const { inputs } = useSelector((state: RootState) => state.formData);
+  const context = useContext(FilesContext);
+  const { onSubmit = () => {} } = context || {};
 
   const handleCloseModal = () => {
     handleClose();
@@ -52,6 +55,11 @@ export const UploadImageModal: React.FC<IProps> = ({
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const value =
+      inputs[inputId] && inputs[inputId].value ? inputs[inputId].value : '';
+
+    onSubmit(value);
 
     handleCloseModal();
     dispatch(

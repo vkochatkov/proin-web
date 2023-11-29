@@ -6,8 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from '../modules/selectors/user';
 import { openModal } from '../modules/actions/modal';
 import { setIdForDelete } from '../modules/actions/idForRemove';
-import { IComment } from '../modules/types/mainProjects';
+import { IComment, IFile } from '../modules/types/mainProjects';
 import { FilePickerRefProvider } from './ContextProvider/FilesPickerRefProvider';
+import { useFiles } from '../hooks/useFiles';
+import { FilesContextProvider } from './FilesContextProvider';
+import { getIsCommentLoading } from '../modules/selectors/loading';
+import { CommentSceleton } from './CommentSceleton';
 
 interface IProps {
   currentObj: any;
@@ -34,8 +38,11 @@ export const CommentsList: React.FC<IProps> = ({
   const [selectedParentId, setSelectedParentId] = useState<string>('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
+  const imageUploadModal = 'imageUploadModal';
+  const { files, setFiles, generateDataUrl } = useFiles(imageUploadModal);
+  const isCommentLoading = useSelector(getIsCommentLoading);
 
-  const handleCreatingComment = (value: string) => {
+  const handleCreatingComment = async (value: string) => {
     if (!currentObj) return;
 
     const id = uuidv4();
@@ -47,6 +54,12 @@ export const CommentsList: React.FC<IProps> = ({
 
     const sendTo = taggedUsers.map((name) => name.replace('@', ''));
 
+    let fileDataArray;
+
+    if (files.length > 0) {
+      fileDataArray = await generateDataUrl(files);
+    }
+
     const comment: IComment = {
       id,
       text: value,
@@ -54,6 +67,10 @@ export const CommentsList: React.FC<IProps> = ({
       timestamp: new Date().toISOString(),
       userId: auth.userId,
       mentions: sendTo,
+      files:
+        fileDataArray && fileDataArray.length > 0
+          ? (fileDataArray as IFile[])
+          : [],
     };
 
     if (selectedParentId) {
@@ -143,19 +160,8 @@ export const CommentsList: React.FC<IProps> = ({
     setSelectedParentId('');
   };
 
-  return (
-    <FilePickerRefProvider>
-      <DynamicInput
-        buttonLabel={'Зберегти'}
-        onClick={handleCreatingComment}
-        isActive={isInputActive}
-        text={defaultInputValue}
-        placeholder='Напишіть коментар'
-        onCancel={handleCloseInput}
-        ref={inputRef}
-        uploader
-      />
-      {/* <ContentEditableWithImages /> */}
+  const renderComment = () => (
+    <>
       {currentObj &&
         currentObj.comments &&
         currentObj.comments.map((comment: IComment, index: number) => {
@@ -177,14 +183,21 @@ export const CommentsList: React.FC<IProps> = ({
                 }}
                 key={`${comment.id}-${Math.random()}`}
               >
-                <DynamicInput
-                  placeholder='Напишіть коментар'
-                  onClick={(value) => handleUpdateComment(comment.id, value)}
-                  onCancel={() => setSelectedCommentIds(updatedSelectedIds)}
-                  isActive
-                  text={comment.text}
-                  buttonLabel={'Зберегти'}
-                />
+                <FilesContextProvider
+                  files={files}
+                  setFiles={setFiles}
+                  generateDataUrl={generateDataUrl}
+                  onSubmit={() => console.log('edit submit')}
+                >
+                  <DynamicInput
+                    placeholder='Напишіть коментар'
+                    onClick={(value) => handleUpdateComment(comment.id, value)}
+                    onCancel={() => setSelectedCommentIds(updatedSelectedIds)}
+                    isActive
+                    text={comment.text}
+                    buttonLabel={'Зберегти'}
+                  />
+                </FilesContextProvider>
               </div>
             );
           } else {
@@ -212,6 +225,30 @@ export const CommentsList: React.FC<IProps> = ({
             );
           }
         })}
+    </>
+  );
+
+  return (
+    <FilePickerRefProvider>
+      <FilesContextProvider
+        files={files}
+        setFiles={setFiles}
+        generateDataUrl={generateDataUrl}
+        onSubmit={handleCreatingComment}
+      >
+        <DynamicInput
+          buttonLabel={'Зберегти'}
+          onClick={(value) => handleCreatingComment(value)}
+          isActive={isInputActive}
+          text={defaultInputValue}
+          placeholder='Напишіть коментар'
+          onCancel={handleCloseInput}
+          ref={inputRef}
+          uploader
+        />
+      </FilesContextProvider>
+      {isCommentLoading && <CommentSceleton />}
+      {renderComment()}
     </FilePickerRefProvider>
   );
 };

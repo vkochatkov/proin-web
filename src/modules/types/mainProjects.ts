@@ -8,6 +8,7 @@ export interface IComment {
   userId: string;
   mentions: string[];
   parentId?: string;
+  files: IFile[] | [];
 }
 
 export interface Project {

@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { UploadImageModal } from './Modals/UploadImageModal';
 import { closeModal, openModal } from '../modules/actions/modal';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
-import { useFiles } from '../hooks/useFiles';
 import { useParams } from 'react-router-dom';
+import { FilesContext } from './FilesContextProvider';
 
 interface IProps {
   setIsTextareaActive: Dispatch<SetStateAction<boolean>>;
@@ -20,10 +20,10 @@ export const CommentImageUploader: React.FC<IProps> = ({
   setIsTextareaActive,
 }) => {
   const modalId = 'imageUploadModal';
-  const { files, setFiles, generateDataUrl } = useFiles(modalId);
+  const context = useContext(FilesContext);
+  const { files = [], setFiles = () => {} } = context || {};
   const dispatch = useDispatch();
   const filePickerRef = useContext(FilePickerRefContext);
-  const { pid } = useParams();
 
   useEffect(() => {
     if (files && files.length > 0) {
@@ -35,16 +35,6 @@ export const CommentImageUploader: React.FC<IProps> = ({
     }
   }, [files]);
 
-  const sendFilesToServer = async (id: string, files: File[]) => {
-    try {
-      const fileDataArray = await generateDataUrl(files);
-      console.log(fileDataArray);
-      //   return await request
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const pickedFiles = event.target.files;
 
@@ -55,10 +45,6 @@ export const CommentImageUploader: React.FC<IProps> = ({
     const newFiles = Array.from(pickedFiles);
 
     setFiles([...files, ...newFiles]);
-
-    if (pid) {
-      sendFilesToServer(pid, newFiles);
-    }
   };
 
   const handleClose = () => {
@@ -78,7 +64,7 @@ export const CommentImageUploader: React.FC<IProps> = ({
         }}
       />
       <UploadImageModal
-        modalId='imageUploadModal'
+        modalId={modalId}
         handleClose={handleClose}
         selectedImages={files}
         setSelectedImages={setFiles}

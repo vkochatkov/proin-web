@@ -10,7 +10,12 @@ import {
   ISubProjectAction,
   Project,
 } from '../types/mainProjects';
-import { endLoading, startLoading } from './loading';
+import {
+  endCommentFilesLoading,
+  endLoading,
+  startCommentFilesLoading,
+  startLoading,
+} from './loading';
 import { fetchMembers } from './projectMembers';
 import { IFoundUser } from '../types/users';
 import { Api } from '../../utils/API';
@@ -59,14 +64,46 @@ export const createProjectComment =
 
       if (!currentProject) return;
 
-      const updatedCurrentProject = {
+      let updatedCurrentProject: Project;
+      let updatedProjectsArray: Project[];
+
+      if (comment.files.length > 0) {
+        dispatch(startCommentFilesLoading());
+
+        const res = await Api.Comments.create(comment, currentProject._id);
+        const comments = res.comments;
+
+        updatedCurrentProject = {
+          ...currentProject,
+          comments,
+        };
+
+        updatedProjectsArray = projects.map((project) =>
+          project.id === updatedCurrentProject._id
+            ? updatedCurrentProject
+            : project,
+        );
+
+        dispatch(
+          updateMainProjectsSuccess({
+            updatedCurrentProject,
+            updatedProjectsArray,
+          }),
+        );
+
+        dispatch(endCommentFilesLoading());
+
+        return;
+      }
+
+      updatedCurrentProject = {
         ...currentProject,
         comments: currentProject.comments
           ? [comment, ...currentProject.comments]
           : [comment],
       };
 
-      const updatedProjectsArray = projects.map((project) =>
+      updatedProjectsArray = projects.map((project) =>
         project.id === updatedCurrentProject._id
           ? updatedCurrentProject
           : project,

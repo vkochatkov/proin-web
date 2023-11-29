@@ -107,7 +107,7 @@ export const InviteModal = () => {
                 setOpen(false);
               }}
               onChange={(_, value) => {
-                setSelectedUsers(value);
+                setSelectedUsers(value as any);
                 dispatch(foundUsersSuccess({ foundUsers: [] }));
               }}
               onInputChange={(event, value) => {

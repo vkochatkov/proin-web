@@ -8,3 +8,7 @@ export const startLogoLoading = createAction('startLogoLoading');
 export const endLogoLoading = createAction('endLoginLoading');
 // export const startSliderLoading = createAction('startSliderLoading');
 // export const endSliderLoading = createAction('endSliderLoading');
+export const startCommentFilesLoading = createAction(
+  'startCommentFilesLoading',
+);
+export const endCommentFilesLoading = createAction('endCommentFilesLoading');

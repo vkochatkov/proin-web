@@ -88,6 +88,7 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
       const value = formState.inputs[inputId]
         ? formState.inputs[inputId].value
         : '';
+
       if (!value) return;
 
       props.onClick(value);
@@ -102,7 +103,6 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
     };
 
     const handlePickImages = () => {
-      // dispatch(openModal({ id: 'imageUploadModal' }));
       if (!filePickerRef) return;
 
       filePickerRef.current?.click();
