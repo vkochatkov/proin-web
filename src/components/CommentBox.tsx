@@ -7,12 +7,16 @@ import { useContextMenu } from '../hooks/useContextMenu';
 import { backgroundColor } from '../utils/avatar-view';
 import { getFirstLetter } from '../utils/utils';
 import { ReplyCommentComponent } from './ReplyCommentComponent';
+import { IFile } from '../modules/types/mainProjects';
+import { Gallery } from 'react-photoswipe-gallery';
+import { CommentImages } from './CommentImages';
 
 import './CommentBox.scss';
 
 interface Props {
   text: string;
   name: string;
+  files: IFile[];
   timestamp: string;
   logoLink?: string;
   id: string;
@@ -28,6 +32,7 @@ interface Props {
 
 export const CommentBox: FC<Props> = ({
   text,
+  files,
   name,
   timestamp,
   logoLink = '',
@@ -46,6 +51,8 @@ export const CommentBox: FC<Props> = ({
   const { longPressProps, handleClose, contextMenuPosition, anchorEl } =
     useContextMenu();
   const firstLetter = getFirstLetter(name);
+
+  console.log({ files });
 
   const elapsedTime: string = useMemo(() => {
     const posted = new Date(timestamp);
@@ -73,6 +80,10 @@ export const CommentBox: FC<Props> = ({
               replyUserCommentText={replyUserCommentText}
             />
           )}
+          <Gallery>
+            {files && files.map((image) => <CommentImages image={image} />)}
+          </Gallery>
+          {files && files.length > 0 && <br />}
           <Grid
             sx={{
               display: 'flex',

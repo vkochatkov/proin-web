@@ -209,6 +209,7 @@ export const CommentsList: React.FC<IProps> = ({
                 key={`${comment.id}-${index}`}
                 text={comment.text}
                 name={comment.name}
+                files={comment.files}
                 timestamp={comment.timestamp}
                 id={comment.id}
                 userId={comment.userId}
