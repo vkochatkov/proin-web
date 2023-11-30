@@ -9,7 +9,8 @@ import { getFirstLetter } from '../utils/utils';
 import { ReplyCommentComponent } from './ReplyCommentComponent';
 import { IFile } from '../modules/types/mainProjects';
 import { Gallery } from 'react-photoswipe-gallery';
-import { CommentImages } from './CommentImages';
+import { CommentImage } from './CommentImage';
+import { v4 as uuidv4 } from 'uuid';
 
 import './CommentBox.scss';
 
@@ -52,8 +53,6 @@ export const CommentBox: FC<Props> = ({
     useContextMenu();
   const firstLetter = getFirstLetter(name);
 
-  console.log({ files });
-
   const elapsedTime: string = useMemo(() => {
     const posted = new Date(timestamp);
 
@@ -81,7 +80,10 @@ export const CommentBox: FC<Props> = ({
             />
           )}
           <Gallery>
-            {files && files.map((image) => <CommentImages image={image} />)}
+            {files &&
+              files.map((image) => (
+                <CommentImage key={uuidv4()} image={image} />
+              ))}
           </Gallery>
           {files && files.length > 0 && <br />}
           <Grid

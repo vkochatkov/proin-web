@@ -11,7 +11,12 @@ import {
   updateObjects,
 } from '../../utils/utils';
 import { updateCurrentTaskSuccess, updateTaskState } from './currentTask';
-import { endLoading, startLoading } from './loading';
+import {
+  endCommentFilesLoading,
+  endLoading,
+  startCommentFilesLoading,
+  startLoading,
+} from './loading';
 import ApiErrors from '../../utils/API/APIErrors';
 import { updateUserTasksSuccess } from './userTasks';
 
@@ -230,8 +235,32 @@ export const createTaskComment =
     const tasks = JSON.parse(JSON.stringify(getState().projectTasks));
     const userTasks = JSON.parse(JSON.stringify(getState().userTasks));
 
+    let updatedCurrentTask;
+
     try {
-      const updatedCurrentTask = {
+      if (comment.files.length > 0) {
+        dispatch(startCommentFilesLoading());
+        const res = await Api.Tasks.createComment({ comment }, taskId);
+
+        updatedCurrentTask = {
+          ...currentTask,
+          comments: res.task.comments,
+          actions: res.task.actions,
+        };
+
+        taskStateUpdater({
+          tasks,
+          task: updatedCurrentTask,
+          userTasks,
+          dispatch,
+        });
+
+        dispatch(endCommentFilesLoading());
+
+        return;
+      }
+
+      updatedCurrentTask = {
         ...currentTask,
         comments: currentTask.comments
           ? [comment, ...currentTask.comments]

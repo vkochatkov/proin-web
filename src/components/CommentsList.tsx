@@ -41,6 +41,12 @@ export const CommentsList: React.FC<IProps> = ({
   const imageUploadModal = 'imageUploadModal';
   const { files, setFiles, generateDataUrl } = useFiles(imageUploadModal);
   const isCommentLoading = useSelector(getIsCommentLoading);
+  const filesContextProps = {
+    files,
+    setFiles,
+    generateDataUrl,
+    onSubmit: () => {},
+  };
 
   const handleCreatingComment = async (value: string) => {
     if (!currentObj) return;
@@ -184,9 +190,7 @@ export const CommentsList: React.FC<IProps> = ({
                 key={`${comment.id}-${Math.random()}`}
               >
                 <FilesContextProvider
-                  files={files}
-                  setFiles={setFiles}
-                  generateDataUrl={generateDataUrl}
+                  {...filesContextProps}
                   onSubmit={() => console.log('edit submit')}
                 >
                   <DynamicInput
@@ -232,9 +236,7 @@ export const CommentsList: React.FC<IProps> = ({
   return (
     <FilePickerRefProvider>
       <FilesContextProvider
-        files={files}
-        setFiles={setFiles}
-        generateDataUrl={generateDataUrl}
+        {...filesContextProps}
         onSubmit={handleCreatingComment}
       >
         <DynamicInput

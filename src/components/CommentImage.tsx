@@ -5,7 +5,7 @@ interface IProps {
   image: IFile;
 }
 
-export const CommentImages: React.FC<IProps> = ({ image }) => {
+export const CommentImage: React.FC<IProps> = ({ image }) => {
   return (
     <>
       <Item
