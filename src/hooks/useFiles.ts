@@ -55,7 +55,12 @@ export const useFiles = (modalId: string) => {
         }
 
         // For non-image files, return dataUrl, name, width, and height as 0
-        return { dataUrl, name: file.name, width: 0, height: 0 };
+        return {
+          dataUrl,
+          name: file.name,
+          width: 0,
+          height: 0,
+        };
       }),
     );
   };

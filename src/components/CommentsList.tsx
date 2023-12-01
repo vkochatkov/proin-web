@@ -199,10 +199,7 @@ export const CommentsList: React.FC<IProps> = ({
                     className='comments-list__comment-image'
                   />
                 ))}
-                <FilesContextProvider
-                  {...filesContextProps}
-                  onSubmit={() => console.log('edit submit')}
-                >
+                <FilesContextProvider {...filesContextProps}>
                   <DynamicInput
                     placeholder='Напишіть коментар'
                     onClick={(value) => handleUpdateComment(comment.id, value)}

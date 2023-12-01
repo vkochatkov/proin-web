@@ -10,7 +10,12 @@ import {
 import { RootState } from '../store/store';
 import { IComment, IFile } from '../types/mainProjects';
 import { ITransaction } from '../types/transactions';
-import { endFilesLoading, startFilesLoading } from './loading';
+import {
+  endCommentFilesLoading,
+  endFilesLoading,
+  startCommentFilesLoading,
+  startFilesLoading,
+} from './loading';
 
 export const setCurrentTransaction = createAction<ITransaction>(
   'setCurrentTransaction',
@@ -327,9 +332,36 @@ export const createTransactionComment =
     const projectTransactions = getState().projectTransactions;
     const userTransactions = getState().userTransactions;
     const currentTransaction = getState().currentTransaction;
+    let updatedCurrentTask;
 
     try {
-      const updatedCurrentTask = {
+      if (comment.files && comment.files.length > 0) {
+        dispatch(startCommentFilesLoading());
+
+        const res = await Api.Transactions.createComment(
+          { comment },
+          transactionId,
+        );
+
+        ApiErrors.checkOnApiError(res);
+
+        updatedCurrentTask = {
+          ...currentTransaction,
+          comments: res.transaction.comments,
+        };
+
+        updateTransactionStates({
+          transactions: projectTransactions,
+          transaction: updatedCurrentTask,
+          userTransactions,
+          dispatch,
+        });
+        dispatch(endCommentFilesLoading());
+
+        return;
+      }
+
+      updatedCurrentTask = {
         ...currentTransaction,
         comments: currentTransaction.comments
           ? [comment, ...currentTransaction.comments]
