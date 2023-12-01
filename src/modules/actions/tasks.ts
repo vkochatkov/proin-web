@@ -240,7 +240,10 @@ export const createTaskComment =
     try {
       if (comment.files.length > 0) {
         dispatch(startCommentFilesLoading());
+
         const res = await Api.Tasks.createComment({ comment }, taskId);
+
+        ApiErrors.checkOnApiError(res);
 
         updatedCurrentTask = {
           ...currentTask,
