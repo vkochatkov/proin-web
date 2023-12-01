@@ -13,6 +13,8 @@ import { FilesContextProvider } from './FilesContextProvider';
 import { getIsCommentLoading } from '../modules/selectors/loading';
 import { CommentSceleton } from './CommentSceleton';
 
+import './CommentsList.scss';
+
 interface IProps {
   currentObj: any;
   modalId: string;
@@ -187,8 +189,16 @@ export const CommentsList: React.FC<IProps> = ({
                 style={{
                   marginTop: '1rem',
                 }}
-                key={`${comment.id}-${Math.random()}`}
+                key={comment.id}
               >
+                {comment.files.map((image) => (
+                  <img
+                    key={uuidv4()}
+                    src={image.url}
+                    alt={image.name}
+                    className='comments-list__comment-image'
+                  />
+                ))}
                 <FilesContextProvider
                   {...filesContextProps}
                   onSubmit={() => console.log('edit submit')}
