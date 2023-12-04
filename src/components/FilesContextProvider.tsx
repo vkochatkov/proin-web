@@ -5,6 +5,8 @@ interface IContextProps {
   setFiles: Dispatch<SetStateAction<File[]>>;
   generateDataUrl: (files: File[]) => Promise<unknown[]>;
   onSubmit: (value: string) => void;
+  inputValue: string;
+  setInputValue: Dispatch<SetStateAction<string>>;
 }
 
 interface IProps extends IContextProps {

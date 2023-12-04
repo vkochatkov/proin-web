@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { UploadImageModal } from './Modals/UploadImageModal';
 import { closeModal, openModal } from '../modules/actions/modal';
 import FilePickerRefContext from './ContextProvider/FilesPickerRefProvider';
-import { useParams } from 'react-router-dom';
 import { FilesContext } from './FilesContextProvider';
 
 interface IProps {

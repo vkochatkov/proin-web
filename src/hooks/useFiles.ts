@@ -8,7 +8,7 @@ export interface FilesContextType {
   generateDataUrl: (files: File[]) => Promise<unknown[]>;
 }
 
-export const useFiles = (modalId: string) => {
+export const useFiles = (modalId?: string) => {
   const [files, setFiles] = useState<File[]>([]);
   const [selectedFileId, setSelectedFileId] = useState('');
   const dispatch = useDispatch();
@@ -66,6 +66,8 @@ export const useFiles = (modalId: string) => {
   };
 
   const handleOpenRemoveFileModal = (id: string) => {
+    if (!modalId) return;
+
     setSelectedFileId(id);
     dispatch(openModal({ id: modalId }));
   };

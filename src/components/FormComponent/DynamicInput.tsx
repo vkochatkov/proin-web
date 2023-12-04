@@ -6,8 +6,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import FilePickerRefContext from '../ContextProvider/FilesPickerRefProvider';
 import { CommentImageUploader } from '../CommentImageUploader';
-import { useForm } from '../../hooks/useForm';
 import CloseIcon from '@mui/icons-material/Close';
+import { FilesContext } from '../FilesContextProvider';
 
 import './DynamicInput.scss';
 
@@ -20,6 +20,7 @@ interface Props {
   isActiveWithoutText?: boolean;
   buttonLabel: string;
   uploader?: boolean;
+  isImageUploadDisable?: boolean;
 }
 
 const formStyle = {
@@ -47,16 +48,12 @@ const formStyle = {
 
 export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
   (props, ref) => {
-    const { formState, inputHandler } = useForm(
-      {
-        comment: {
-          value: props.isActive && props.text ? props.text : '',
-          isValid: false,
-        },
-      },
-      false,
-    );
-    const inputId = 'comment';
+    const context = useContext(FilesContext);
+    const {
+      inputValue = props.isActive && props.text ? props.text : '',
+      setInputValue = () => {},
+    } = context || {};
+
     const [isTextareaActive, setIsTextareaActive] = useState<boolean>(
       props.isActive ? props.isActive : false,
     );
@@ -70,36 +67,32 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
         }
 
         if (props.text) {
-          inputHandler(inputId, props.text, true);
+          setInputValue(props.text);
         }
       } else {
         setIsTextareaActive(false);
-        inputHandler(inputId, '', true);
+        setInputValue('');
       }
     }, [props.isActive, props.text, props.isActiveWithoutText, ref]);
 
     const handleChange = (
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
-      inputHandler(inputId, event.target.value, true);
+      setInputValue(event.target.value);
     };
 
     const handleSaveValue = () => {
-      const value = formState.inputs[inputId]
-        ? formState.inputs[inputId].value
-        : '';
+      if (!inputValue) return;
 
-      if (!value) return;
-
-      props.onClick(value);
+      props.onClick(inputValue);
       setIsTextareaActive(false);
-      inputHandler(inputId, '', true);
+      setInputValue('');
     };
 
     const handleCloseInput = () => {
       props.onCancel();
       setIsTextareaActive(false);
-      inputHandler(inputId, '', true);
+      setInputValue('');
     };
 
     const handlePickImages = () => {
@@ -114,11 +107,7 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
           ref={ref}
           placeholder={props.placeholder}
           minRows={props.isActiveWithoutText ? 1 : !isTextareaActive ? 1 : 3}
-          value={
-            formState.inputs[inputId] && formState.inputs[inputId].value
-              ? formState.inputs[inputId].value
-              : ''
-          }
+          value={inputValue}
           autoFocus={props.isActive}
           onFocus={() => {
             setIsTextareaActive(true);
@@ -129,12 +118,14 @@ export const DynamicInput = forwardRef<HTMLTextAreaElement, Props>(
           <>
             <hr />
             <div className='dynamic-input__buttons-container'>
-              <CustomButton
-                customClassName='comment-input__close-btn'
-                onClick={handlePickImages}
-              >
-                <InsertPhotoIcon />
-              </CustomButton>
+              {!props.isImageUploadDisable && (
+                <CustomButton
+                  customClassName='comment-input__close-btn'
+                  onClick={handlePickImages}
+                >
+                  <InsertPhotoIcon />
+                </CustomButton>
+              )}
               <div className='dynamic-input__flex-end'>
                 <CustomButton
                   customClassName='comment-input__close-btn'
