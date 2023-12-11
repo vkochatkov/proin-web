@@ -10,11 +10,11 @@ import {
   deleteCurrentProject,
   selectItemId,
   setCurrentProject,
-  updateProjectsSuccess,
+  updateUserProjectsSuccess,
 } from '../../modules/actions/mainProjects';
 import {
+  getAllUserProjects,
   getCurrentProject,
-  getCurrentProjects,
   getSelectedProjectId,
 } from '../../modules/selectors/mainProjects';
 import { getAuth } from '../../modules/selectors/user';
@@ -27,7 +27,7 @@ export const RemoveProjectModal = () => {
     getModalStateById(state)(modalId),
   );
   const dispatch = useDispatch();
-  const projects = useSelector(getCurrentProjects);
+  const projects = useSelector(getAllUserProjects);
   const projectToRemoveId = useSelector(getSelectedProjectId);
   const { token } = useSelector(getAuth);
   const { pid } = useParams();
@@ -69,7 +69,7 @@ export const RemoveProjectModal = () => {
       );
     }
 
-    dispatch(updateProjectsSuccess(updatedProjectsList));
+    dispatch(updateUserProjectsSuccess(updatedProjectsList));
     dispatch(closeModal({ id: modalId }));
   };
 

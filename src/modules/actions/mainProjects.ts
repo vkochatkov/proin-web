@@ -28,6 +28,9 @@ export const setCurrentProject = createAction<Project>('setCurrentProject');
 export const updateProjectsSuccess = createAction<Project[]>(
   'updateProjectsSuccess',
 );
+export const updateUserProjectsSuccess = createAction<IUserProject[]>(
+  'updateUserProjectsSuccess',
+);
 export const editProjectFailure = createAction<string>('editProjectFailure');
 export const createProjectSuccess = createAction<Project>(
   'createProjectSuccess',
@@ -53,6 +56,9 @@ export const removeProjectFileSuccess = createAction(
 );
 export const createCommentSuccess = createAction('createCommentSuccess');
 export const clearMainProjects = createAction('clearMainProjects');
+export const changeUserProjectsOrderSuccess = createAction<IUserProject[]>(
+  'changeUserProjectsOrderSuccess',
+);
 
 const httpSource = axios.CancelToken.source();
 
@@ -249,14 +255,15 @@ export const deleteCurrentProject =
   };
 
 export const updateOrderProjects =
-  (projects: Project[]) =>
+  (projects: IUserProject[], newIndex: string) =>
   async (dispatch: Dispatch, getState: () => RootState) => {
     try {
       const { userId } = getState().user;
+      const projectId = projects[+newIndex]._id;
 
-      dispatch(updateProjectsSuccess(projects));
+      dispatch(changeUserProjectsOrderSuccess(projects));
 
-      await Api.Projects.put(projects, userId);
+      await Api.Projects.changeOrder(userId, { id: projectId, newIndex });
     } catch (e: any) {
       console.log(e);
     }
@@ -397,6 +404,20 @@ export const fetchAllUserProjects =
     } catch (e: any) {
       console.log(e);
     }
+  };
+
+export const fetchLimitedUserProjects =
+  (page: number, limit: number) =>
+  async (dispatch: Dispatch, getState: () => RootState) => {
+    const { userId } = getState().user;
+    const projects = getState().mainProjects.allUserProjects;
+
+    const response = await Api.Projects.fetch(page, limit, userId);
+    const updatedProjects = [...projects, ...response.projects];
+
+    dispatch(setAllUserProjects(updatedProjects));
+
+    return response.projects;
   };
 
 export const moveToProject =

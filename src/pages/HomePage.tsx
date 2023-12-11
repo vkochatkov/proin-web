@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHttpClient } from '../hooks/useHttpClient';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   acceptInvitation,
-  createNewProject,
-  fetchAllUserProjects,
   fetchProjects,
-  openCurrentProject,
-  selectItemId,
-  updateOrderProjects,
 } from '../modules/actions/mainProjects';
-import { LoadingSpinner } from '../components/UIElements/LoadingSpinner';
-import { RootState } from '../modules/store/store';
-import { ListProjectItem } from '../components/ListProjectItem';
-import { useNavigate } from 'react-router-dom';
-import { getIsLoading } from '../modules/selectors/loading';
 import { startLoading } from '../modules/actions/loading';
 import { SnackbarUI } from '../components/UIElements/SnackbarUI';
 import { MoveProjectModal } from '../components/Modals/MoveProjectModal';
@@ -22,21 +11,13 @@ import { useAuth } from '../hooks/useAuth';
 import { RemoveProjectModal } from '../components/Modals/RemoveProjectModal';
 import { fetchAllUserTasks } from '../modules/actions/tasks';
 import { fetchUserTransactions } from '../modules/actions/transactions';
-import { PROJECTS_PATH } from '../config/routes';
-import { Project } from '../modules/types/mainProjects';
+import { MainProjects } from '../components/MainProjects';
 
 import '../index.scss';
 
 const HomePage: React.FC = () => {
-  const { sendRequest } = useHttpClient();
-  const { projects, currentProject } = useSelector(
-    (state: RootState) => state.mainProjects,
-  );
   const { userId } = useAuth();
-  const navigate = useNavigate();
-  const [isPressed, setIsPressed] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const isLoading = useSelector(getIsLoading);
 
   useEffect(() => {
     const storedDataString = localStorage.getItem('accessInfo');
@@ -56,33 +37,8 @@ const HomePage: React.FC = () => {
 
     dispatch(fetchProjects() as any);
     dispatch(fetchAllUserTasks() as any);
-    dispatch(fetchAllUserProjects() as any);
     dispatch(fetchUserTransactions() as any);
-  }, [sendRequest, userId, dispatch]);
-
-  useEffect(() => {
-    if (isPressed && currentProject && currentProject.status === 'success') {
-      navigate(`${PROJECTS_PATH}/${currentProject._id}`);
-      setIsPressed(false);
-    }
-  }, [currentProject, isPressed, navigate]);
-
-  const handleCreateProject = () => {
-    setIsPressed(true);
-    dispatch(createNewProject() as any);
-    dispatch(startLoading());
-  };
-
-  const handleClickItem = (id: string) => {
-    dispatch(startLoading());
-    dispatch(openCurrentProject(id) as any);
-    dispatch(selectItemId(id));
-    navigate(`${PROJECTS_PATH}/${id}`);
-  };
-
-  const handleUpdateProjectOrder = (items: Project[]) => {
-    dispatch(updateOrderProjects(items) as any);
-  };
+  }, [userId, dispatch]);
 
   return (
     <>
@@ -90,19 +46,7 @@ const HomePage: React.FC = () => {
       <RemoveProjectModal />
       <SnackbarUI />
       <div className='container'>
-        {isLoading && (
-          <div className='loading'>
-            <LoadingSpinner />
-          </div>
-        )}
-        {!isLoading && (
-          <ListProjectItem
-            projects={projects}
-            onClick={handleClickItem}
-            updateOrder={handleUpdateProjectOrder}
-            handleCreateProject={handleCreateProject}
-          />
-        )}
+        <MainProjects />
       </div>
     </>
   );

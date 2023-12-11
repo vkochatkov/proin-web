@@ -11,6 +11,8 @@ import {
   selectItemId,
   updateProjectFiles,
   clearMainProjects,
+  changeUserProjectsOrderSuccess,
+  updateUserProjectsSuccess,
 } from '../../actions/mainProjects';
 import { IUserProject, Project } from '../../types/mainProjects';
 
@@ -81,6 +83,10 @@ mainProjects.on(updateProjectsSuccess, (state, payload: Project[]) => {
     projects: payload,
   };
 });
+mainProjects.on(updateUserProjectsSuccess, (state, payload) => ({
+  ...state,
+  allUserProjects: payload,
+}));
 
 mainProjects.on(setAllUserProjects, (state, payload) => ({
   ...state,
@@ -90,6 +96,10 @@ mainProjects.on(setAllUserProjects, (state, payload) => ({
 mainProjects.on(selectItemId, (state, payload) => ({
   ...state,
   selectedProject: payload,
+}));
+mainProjects.on(changeUserProjectsOrderSuccess, (state, payload) => ({
+  ...state,
+  allUserProjects: payload,
 }));
 
 mainProjects.on(clearProjects, (state) => {

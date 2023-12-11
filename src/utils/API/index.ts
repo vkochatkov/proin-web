@@ -50,7 +50,14 @@ export const Api = {
   Projects: {
     create: () => APIClient.post(`/projects`),
     getAll: (userId: string) => APIClient.get(`/projects/all/${userId}`),
+    // fetch all user projects
     get: (id: string) => APIClient.get(`/projects/user/${id}`),
+    // fetch part of userProjects
+    fetch: (page: number, limit: number, id: string) =>
+      APIClient.get(`/projects/user/${id}?page=${page}&limit=${limit}`),
+    // change user projects order
+    changeOrder: (userId: string, props: { id: string; newIndex: string }) =>
+      APIClient.put(`/projects/user-order/${userId}`, props),
     put: (projects: Project[], id: string) =>
       APIClient.put(`projects/user/${id}`, { projects }),
     patch: (props: Partial<Project>, pid: string) =>

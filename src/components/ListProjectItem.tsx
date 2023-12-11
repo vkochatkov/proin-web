@@ -12,14 +12,18 @@ import { FilterModal } from './Modals/FilterModal';
 import { filterNames } from '../config/contsants';
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from './FormElement/Button';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { LoadingSpinner } from './UIElements/LoadingSpinner';
 
 interface Props {
   projects: Project[];
   onClick: (id: string) => void;
-  updateOrder: (newItem: Project[], index?: string) => void;
+  updateOrder: (newItem: Project[], oldIndex: string, newIndex: string) => void;
   isWrapped?: boolean;
   isSearched?: boolean;
   handleCreateProject?: () => void;
+  hasMore?: boolean;
+  handleLoadMoreProjects?: () => void;
 }
 
 interface IProjectToFilter {
@@ -40,6 +44,8 @@ export const ListProjectItem: React.FC<Props> = ({
   updateOrder,
   isSearched = true,
   handleCreateProject,
+  hasMore,
+  handleLoadMoreProjects,
 }) => {
   const dispatch = useDispatch();
   const projectsToFilter = projects
@@ -84,7 +90,7 @@ export const ListProjectItem: React.FC<Props> = ({
       result.destination.index,
     );
 
-    updateOrder(newItems, result.destination.index);
+    updateOrder(newItems, result.source.index, result.destination.index);
     dispatch(setIsDragging(false));
   };
 
@@ -137,24 +143,37 @@ export const ListProjectItem: React.FC<Props> = ({
             <Droppable droppableId='droppable'>
               {(provided, snapshot) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {projects &&
-                    projects.map((item: Project, index: number) => {
-                      return (
-                        <ProjectItem
-                          key={item._id}
-                          projectId={item._id}
-                          name={item.projectName ? item.projectName : ''}
-                          logo={item.logoUrl}
-                          description={item.description}
-                          index={index}
-                          onClick={onClick}
-                          sharedWith={item.sharedWith}
-                          id={item._id}
-                          project={item}
-                          isDraggable={isDraggable}
-                        />
-                      );
-                    })}
+                  <InfiniteScroll
+                    dataLength={projects ? projects.length : 0}
+                    next={
+                      handleLoadMoreProjects ? handleLoadMoreProjects : () => {}
+                    }
+                    hasMore={hasMore ?? false} // Replace with a condition based on your data source
+                    loader={
+                      <div className='loading'>
+                        <LoadingSpinner blue />
+                      </div>
+                    }
+                  >
+                    {projects &&
+                      projects.map((item: Project, index: number) => {
+                        return (
+                          <ProjectItem
+                            key={item._id}
+                            projectId={item._id}
+                            name={item.projectName ? item.projectName : ''}
+                            logo={item.logoUrl}
+                            description={item.description}
+                            index={index}
+                            onClick={onClick}
+                            sharedWith={item.sharedWith}
+                            id={item._id}
+                            project={item}
+                            isDraggable={isDraggable}
+                          />
+                        );
+                      })}
+                  </InfiniteScroll>
                   {provided.placeholder}
                 </div>
               )}
