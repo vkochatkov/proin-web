@@ -175,7 +175,7 @@ export const deleteComment =
 
       await axios({
         method: 'DELETE',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
+        url: `${import.meta.env.REACT_APP_BACKEND_URL}/projects/${currentProject._id}/comment`,
         data: { id },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -243,7 +243,7 @@ export const deleteCurrentProject =
     try {
       await axios({
         method: 'DELETE',
-        url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
+        url: `${import.meta.env.REACT_APP_BACKEND_URL}/projects/${id}`,
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -357,7 +357,7 @@ export const sendInvitation =
 
         await axios({
           method: 'POST',
-          url: `${process.env.REACT_APP_BACKEND_URL}/projects/${currentProject.id}/invite`,
+          url: `${import.meta.env.REACT_APP_BACKEND_URL}/projects/${currentProject.id}/invite`,
           data: JSON.stringify({ users }),
           headers: {
             Authorization: 'Bearer ' + token,
@@ -392,7 +392,7 @@ export const acceptInvitation =
       try {
         await axios({
           method: 'POST',
-          url: `${process.env.REACT_APP_BACKEND_URL}/projects/${id}/invitations/${invitationId}`,
+          url: `${import.meta.env.REACT_APP_BACKEND_URL}/projects/${id}/invitations/${invitationId}`,
           headers: {
             Authorization: 'Bearer ' + token,
           },

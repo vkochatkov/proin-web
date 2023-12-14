@@ -77,7 +77,7 @@ const Auth = () => {
       try {
         const { data } = await axios({
           method: 'POST',
-          url: `${process.env.REACT_APP_BACKEND_URL}/users/login`,
+          url: `${import.meta.env.REACT_APP_BACKEND_URL}/users/login`,
           data: JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
@@ -104,7 +104,7 @@ const Auth = () => {
       try {
         const { data } = await axios({
           method: 'POST',
-          url: `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
+          url: `${import.meta.env.REACT_APP_BACKEND_URL}/users/signup`,
           data: JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,

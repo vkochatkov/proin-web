@@ -87,7 +87,7 @@ export const ImageUpload = ({
 
         try {
           const res = await sendRequest(
-            `${process.env.REACT_APP_BACKEND_URL}/projects/${id}`,
+            `${import.meta.env.REACT_APP_BACKEND_URL}/projects/${id}`,
             'PATCH',
             JSON.stringify({
               logoUrl: dataUrl,

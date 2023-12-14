@@ -61,7 +61,7 @@ export const useAuth = (): {
   }, [dispatch, navigate]);
 
   useEffect(() => {
-    let logoutTimer: NodeJS.Timeout;
+    let logoutTimer: number;
     if (token && tokenExpirationDate) {
       const remainingTime =
         tokenExpirationDate.getTime() - new Date().getTime();
