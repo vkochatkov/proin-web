@@ -104,7 +104,7 @@ interface IHTTPClientConfig extends AxiosRequestConfig {
  * // Example below show how to set all data as FormData representation.
  *
  * const APIClient = new HTTPClient({
- * 	baseURL: process.env.REACT_APP_API_URL || '',
+ * 	baseURL: import.meta.env.REACT_APP_API_URL || '',
  * 	withCredentials: true,
  * 	transformRequest: [data => qs.stringify(data)],
  * });
@@ -113,7 +113,7 @@ interface IHTTPClientConfig extends AxiosRequestConfig {
  * APIClient.get('user/show_my');
  *
  * const JSONClient = new HTTPClient({
- * 	baseURL: process.env.REACT_APP_JSON_URL || '',
+ * 	baseURL: import.meta.env.REACT_APP_JSON_URL || '',
  * });
  *
  * JSONClient.get('players.json');

@@ -42,7 +42,7 @@ class HTTPClient extends HTTPClientCore {
 }
 
 const baseURL =
-  process.env.REACT_APP_BACKEND_URL || 'https://pro-in.herokuapp.com';
+  import.meta.env.REACT_APP_BACKEND_URL || 'https://pro-in.herokuapp.com';
 
 export const APIClient = new HTTPClient(baseURL);
 

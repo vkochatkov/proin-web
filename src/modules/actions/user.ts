@@ -43,7 +43,7 @@ export const sendRecaveryEmail =
 
       await axios({
         method: 'POST',
-        url: `${process.env.REACT_APP_BACKEND_URL}/users/forgot-password`,
+        url: `${import.meta.env.REACT_APP_BACKEND_URL}/users/forgot-password`,
         data: JSON.stringify({
           email: inputs.email.value,
         }),
@@ -84,7 +84,7 @@ export const resetPassword =
 
       await axios({
         method: 'POST',
-        url: `${process.env.REACT_APP_BACKEND_URL}/users/reset-password`,
+        url: `${import.meta.env.REACT_APP_BACKEND_URL}/users/reset-password`,
         data: JSON.stringify({
           password: inputs.password.value,
           token,
